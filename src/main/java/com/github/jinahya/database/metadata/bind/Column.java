@@ -26,7 +26,6 @@ import java.sql.Types;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
@@ -42,20 +41,37 @@ public class Column
     private static final long serialVersionUID = -409653682729081530L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Column> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return Comparator
-                .comparing(Column::getTableCat, comparator)
-                .thenComparing(Column::getTableSchem, comparator)
-                .thenComparing(Column::getTableName, comparator)
-                .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder());
-    }
 
+    /**
+     * .
+     * <blockquote>
+     * They are ordered by <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, <code>TABLE_NAME</code>, and
+     * <code>ORDINAL_POSITION</code>.
+     * </blockquote>
+     *
+     * @param context    .
+     * @param comparator .
+     * @return .
+     * @throws SQLException .
+     * @see DatabaseMetaData#getColumns(String, String, String, String)
+     */
     static Comparator<Column> comparingInSpecifiedOrder(final Context context,
                                                         final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        return Comparator
+                .comparing(Column::getTableCat, nullSafe)
+                .thenComparing(Column::getTableSchem, nullSafe)
+                .thenComparing(Column::getTableName, nullSafe)
+                .thenComparing(Column::getOrdinalPosition,
+                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()));
+    }
+
+    static Comparator<Column> comparingInSpecifiedOrder(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -112,12 +128,36 @@ public class Column
      */
     public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
 
+    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_YES = "YES";
+
+    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_NO = "NO";
+
+    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_UNKNOWN = "";
+
+    static final List<String> COLUMN_VALUES_IS_AUTOINCREMENT = List.of(
+            COLUMN_VALUE_IS_AUTOINCREMENT_YES,
+            COLUMN_VALUE_IS_AUTOINCREMENT_NO,
+            COLUMN_VALUE_IS_AUTOINCREMENT_UNKNOWN
+    );
+
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
+
+    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_YES = "YES";
+
+    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_NO = "NO";
+
+    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_UNKNOWN = "";
+
+    static final List<String> COLUMN_VALUES_IS_GENERATEDCOLUMN = List.of(
+            COLUMN_VALUE_IS_GENERATEDCOLUMN_YES,
+            COLUMN_VALUE_IS_GENERATEDCOLUMN_NO,
+            COLUMN_VALUE_IS_GENERATEDCOLUMN_UNKNOWN
+    );
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -210,6 +250,18 @@ public class Column
      */
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
+    public static final String COLUMN_VALUE_IS_NULLABLE_YES = "YES";
+
+    public static final String COLUMN_VALUE_IS_NULLABLE_NO = "NO";
+
+    public static final String COLUMN_VALUE_IS_NULLABLE_UNKNOWN = "";
+
+    static final List<String> COLUMN_VALUES_IS_NULLABLE = List.of(
+            COLUMN_VALUE_IS_NULLABLE_YES,
+            COLUMN_VALUE_IS_NULLABLE_NO,
+            COLUMN_VALUE_IS_NULLABLE_UNKNOWN
+    );
+
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
@@ -253,7 +305,7 @@ public class Column
     /**
      * Creates a new instance.
      */
-     Column() {
+    Column() {
         super();
     }
 
@@ -289,22 +341,6 @@ public class Column
                '}';
     }
 
-    private String getTableCatEffective() {
-        return Optional.ofNullable(getTableCat())
-                .map(String::strip)
-                .filter(v -> !v.isBlank())
-                .map(String::toUpperCase)
-                .orElse(null);
-    }
-
-    private String getTableSchemEffective() {
-        return Optional.ofNullable(getTableSchem())
-                .map(String::strip)
-                .filter(v -> !v.isBlank())
-                .map(String::toUpperCase)
-                .orElse(null);
-    }
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -317,8 +353,8 @@ public class Column
             return false;
         }
         final var that = (Column) obj;
-        return Objects.equals(getTableCatEffective(), that.getTableCatEffective()) &&
-               Objects.equals(getTableSchemEffective(), that.getTableSchemEffective()) &&
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableName) &&
                Objects.equals(tableName, that.tableName) &&
                Objects.equals(columnName, that.columnName);
     }
@@ -327,8 +363,8 @@ public class Column
     public int hashCode() {
         return Objects.hash(
                 super.hashCode(),
-                getTableCatEffective(),
-                getTableSchemEffective(),
+                tableCat,
+                tableSchem,
                 tableName,
                 columnName
         );
@@ -578,6 +614,9 @@ public class Column
      * Returns the value of {@value #COLUMN_LABEL_NULLABLE} column.
      *
      * @return the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     * @see DatabaseMetaData#columnNoNulls
+     * @see DatabaseMetaData#columnNullable
+     * @see DatabaseMetaData#columnNullableUnknown
      */
     public Integer getNullable() {
         return nullable;
@@ -923,6 +962,7 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
+    // starting at 1
     @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 
@@ -930,7 +970,6 @@ public class Column
     private String isNullable;
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_CATALOG)

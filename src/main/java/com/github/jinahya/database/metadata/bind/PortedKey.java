@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -38,24 +39,34 @@ abstract class PortedKey
     private static final long serialVersionUID = 6713872409315471232L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static <T extends PortedKey> Comparator<T> comparingPktable(final Comparator<? super String> comparator) {
+    static <T extends PortedKey> Comparator<T> comparingPktable(final Context context,
+                                                                final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .<T, String>comparing(PortedKey::getPktableCat, comparator)
-                .thenComparing(PortedKey::getPktableSchem, comparator)
-                .thenComparing(PortedKey::getPktableName, comparator)
-                .thenComparing(PortedKey::getPkName, comparator)
-                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
+                .<T, String>comparing(PortedKey::getPktableCat, nullSafe)
+                .thenComparing(PortedKey::getPktableSchem, nullSafe)
+                .thenComparing(PortedKey::getPktableName, nullSafe)
+                .thenComparing(PortedKey::getPkName, nullSafe)
+                .thenComparing(PortedKey::getKeySeq,
+                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()));
     }
 
-    static <T extends PortedKey> Comparator<T> comparingFktable(final Comparator<? super String> comparator) {
+    static <T extends PortedKey> Comparator<T> comparingFktable(final Context context,
+                                                                final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .<T, String>comparing(PortedKey::getFktableCat, comparator)
-                .thenComparing(PortedKey::getFktableSchem, comparator)
-                .thenComparing(PortedKey::getFktableName, comparator)
-                .thenComparing(PortedKey::getFkName, comparator)
-                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
+                .<T, String>comparing(PortedKey::getFktableCat, nullSafe)
+                .thenComparing(PortedKey::getFktableSchem, nullSafe)
+                .thenComparing(PortedKey::getFktableName, nullSafe)
+                .thenComparing(PortedKey::getFkName, nullSafe)
+                .thenComparing(PortedKey::getKeySeq,
+                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

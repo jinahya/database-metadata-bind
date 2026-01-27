@@ -37,42 +37,23 @@ import java.util.Optional;
 public class Schema
         extends AbstractMetadataType {
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (Schema) obj;
-        return Objects.equals(tableCatalog, that.tableCatalog) &&
-               Objects.equals(tableSchem, that.tableSchem);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableCatalog, tableSchem);
-    }
-
     private static final long serialVersionUID = 7457236468401244963L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Schema> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return Comparator
-                .comparing(Schema::getTableCatalog, comparator)
-                .thenComparing(Schema::getTableSchem, comparator);
-    }
-
     static Comparator<Schema> comparingInSpecifiedOrder(final Context context,
                                                         final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        return Comparator
+                .comparing(Schema::getTableCatalog, nullSafe)
+                .thenComparing(Schema::getTableSchem, nullSafe);
+    }
+
+    static Comparator<Schema> comparingInSpecifiedOrder(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -114,7 +95,7 @@ public class Schema
     @SuppressWarnings({
             "java:S2637" // "@NonNull" values should not be set to null
     })
-     Schema() {
+    Schema() {
         super();
     }
 
@@ -128,6 +109,26 @@ public class Schema
                '}';
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Schema) obj;
+        return Objects.equals(tableCatalog, that.tableCatalog) &&
+               Objects.equals(tableSchem, that.tableSchem);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCatalog, tableSchem);
+    }
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**

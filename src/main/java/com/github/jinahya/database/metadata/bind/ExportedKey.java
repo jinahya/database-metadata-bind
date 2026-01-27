@@ -39,14 +39,18 @@ public class ExportedKey
     private static final long serialVersionUID = -6561660015694928357L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ExportedKey> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return PortedKey.comparingFktable(comparator);
-    }
-
     static Comparator<ExportedKey> comparingInSpecifiedOrder(final Context context,
                                                              final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(ContextUtils.nullPrecedence(context, comparator));
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return PortedKey.comparingFktable(context, comparator);
+    }
+
+    static Comparator<ExportedKey> comparingInSpecifiedOrder(final Context context)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS

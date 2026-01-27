@@ -39,16 +39,18 @@ public class ImportedKey
     private static final long serialVersionUID = -1900794151555506751L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ImportedKey> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return PortedKey.comparingPktable(comparator);
-    }
-
     static Comparator<ImportedKey> comparingInSpecifiedOrder(final Context context,
                                                              final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return PortedKey.comparingPktable(context, comparator);
+    }
+
+    static Comparator<ImportedKey> comparingInSpecifiedOrder(final Context context)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

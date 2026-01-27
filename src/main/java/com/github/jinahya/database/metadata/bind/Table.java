@@ -48,20 +48,23 @@ public class Table
     private static final long serialVersionUID = 6590036695540141125L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Table> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return Comparator
-                .comparing(Table::getTableType, comparator)
-                .thenComparing(Table::getTableCat, comparator)
-                .thenComparing(Table::getTableSchem, comparator)
-                .thenComparing(Table::getTableName, comparator);
-    }
-
     static Comparator<Table> comparingInSpecifiedOrder(final Context context,
                                                        final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        return Comparator
+                .comparing(Table::getTableType, nullSafe)
+                .thenComparing(Table::getTableCat, nullSafe)
+                .thenComparing(Table::getTableSchem, nullSafe)
+                .thenComparing(Table::getTableName, nullSafe);
+    }
+
+    static Comparator<Table> comparingInSpecifiedOrder(final Context context)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

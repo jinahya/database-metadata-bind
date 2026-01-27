@@ -62,19 +62,23 @@ public class TablePrivilege
     private static final long serialVersionUID = -2142097373603478881L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return Comparator.comparing(TablePrivilege::getTableCat, comparator)
-                .thenComparing(TablePrivilege::getTableSchem, comparator)
-                .thenComparing(TablePrivilege::getTableName, comparator)
-                .thenComparing(TablePrivilege::getPrivilege, comparator);
-    }
-
     static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Context context,
                                                                 final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        return Comparator
+                .comparing(TablePrivilege::getTableCat, nullSafe)
+                .thenComparing(TablePrivilege::getTableSchem, nullSafe)
+                .thenComparing(TablePrivilege::getTableName, nullSafe)
+                .thenComparing(TablePrivilege::getPrivilege, nullSafe);
+    }
+
+    static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Context context)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

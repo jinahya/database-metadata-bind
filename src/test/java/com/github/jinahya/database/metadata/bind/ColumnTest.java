@@ -29,6 +29,7 @@ class ColumnTest
         super(Column.class);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     void equals__() {
         super.equals__();
@@ -40,6 +41,7 @@ class ColumnTest
                 .withOnlyTheseFields("tableCat", "tableSchem", "tableName", "columnName");
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     Column newTypeInstance() {
         final var instance = super.newTypeInstance();

@@ -37,42 +37,24 @@ import java.util.function.Consumer;
 public class Catalog
         extends AbstractMetadataType {
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (Catalog) obj;
-        return Objects.equals(tableCat, that.tableCat);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableCat);
-    }
-
     private static final long serialVersionUID = 6239185259128825953L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Catalog> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return Comparator.comparing(Catalog::getTableCat, comparator);
-    }
-
     static Comparator<Catalog> comparingInSpecifiedOrder(final Context context,
                                                          final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        return Comparator.comparing(Catalog::getTableCat, nullSafe);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    static Comparator<Catalog> comparingInSpecifiedOrder(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
+    }
+
+    // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 
     /**
      * A column label of {@value}.
@@ -91,15 +73,36 @@ public class Catalog
     /**
      * Creates a new instance.
      */
-     Catalog() {
+    Catalog() {
         super();
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
                "tableCat=" + tableCat +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Catalog) obj;
+        return Objects.equals(tableCat, that.tableCat);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCat);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

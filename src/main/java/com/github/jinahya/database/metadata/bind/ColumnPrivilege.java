@@ -39,18 +39,21 @@ public class ColumnPrivilege
     private static final long serialVersionUID = 4384654744147773380L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ColumnPrivilege> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
+    static Comparator<ColumnPrivilege> comparingInSpecifiedOrder(final Context context,
+                                                                 final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .comparing(ColumnPrivilege::getColumnName, comparator)
-                .thenComparing(ColumnPrivilege::getPrivilege, comparator);
+                .comparing(ColumnPrivilege::getColumnName, nullSafe)
+                .thenComparing(ColumnPrivilege::getPrivilege, nullSafe);
     }
 
-    static Comparator<ColumnPrivilege> comparingComparingInSpecifiedOrder(final Context context,
-                                                                          final Comparator<? super String> comparator)
+    static Comparator<ColumnPrivilege> comparingInSpecifiedOrder(final Context context)
             throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

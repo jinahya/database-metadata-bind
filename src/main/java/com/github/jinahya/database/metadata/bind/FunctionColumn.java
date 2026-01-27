@@ -64,19 +64,23 @@ public class FunctionColumn
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return Comparator.comparing(FunctionColumn::getFunctionCat, comparator)
-                .thenComparing(FunctionColumn::getFunctionSchem, comparator)
-                .thenComparing(FunctionColumn::getFunctionName, comparator)
-                .thenComparing(FunctionColumn::getSpecificName, comparator);
-    }
-
     static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Context context,
                                                                 final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        return Comparator
+                .comparing(FunctionColumn::getFunctionCat, nullSafe)
+                .thenComparing(FunctionColumn::getFunctionSchem, nullSafe)
+                .thenComparing(FunctionColumn::getFunctionName, nullSafe)
+                .thenComparing(FunctionColumn::getSpecificName, nullSafe);
+    }
+
+    static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Context context)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

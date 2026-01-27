@@ -181,20 +181,32 @@ static Column of(final String tableCat, final String tableSchem, final String ta
 ```
 
 ### Comparators
-Add static comparators for JDBC-specified ordering:
+Add static comparators for JDBC-specified ordering. Apply null-safe wrapping only to nullable fields:
 ```java
-static Comparator<Column> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-    return Comparator.comparing(Column::getTableCat, comparator)
-            .thenComparing(Column::getTableSchem, comparator)
-            .thenComparing(Column::getTableName, comparator)
+static Comparator<Column> comparingInSpecifiedOrder(final Context context,
+                                                    final Comparator<? super String> comparator)
+        throws SQLException {
+    Objects.requireNonNull(context, "context is null");
+    Objects.requireNonNull(comparator, "comparator is null");
+    final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+    return Comparator
+            .comparing(Column::getTableCat, nullSafe)      // nullable - use nullSafe
+            .thenComparing(Column::getTableSchem, nullSafe) // nullable - use nullSafe
+            .thenComparing(Column::getTableName, comparator) // NOT nullable - use raw comparator
             .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder());
 }
 
-static Comparator<Column> comparingInSpecifiedOrder(final Context context, final Comparator<? super String> comparator)
-        throws SQLException {
-    return comparingInSpecifiedOrder(ContextUtils.nullPrecedence(context, comparator));
+static Comparator<Column> comparingInSpecifiedOrder(final Context context) throws SQLException {
+    Objects.requireNonNull(context, "context is null");
+    return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
 }
 ```
+
+**Important**:
+- Always require `Context` to determine null precedence from database metadata
+- Apply `ContextUtils.nullPrecedence()` only to fields marked `@_NullableBySpecification`
+- Use `String.CASE_INSENSITIVE_ORDER` as default for case-insensitive comparison
+- Do NOT create a basic comparator without Context (footgun - won't handle nulls correctly)
 
 ## Type Relationships
 

@@ -97,63 +97,47 @@ final class ContextUtils {
             field.set(obj, value);
             return;
         } catch (final IllegalArgumentException iae) {
+            // This block is reached if getObject() returns a type that is not directly assignable
+            // to the field type (e.g., a Short for an Integer field).
+            // We can now try to perform a conversion.
         }
         if (value == null) {
             return;
         }
+        // The initial assignment failed, so let's try to coerce the type
+        // by asking the JDBC driver to do the conversion for us.
         if (fieldType == Boolean.class) {
-            if (true) {
-                field.set(obj, results.getBoolean(label));
-                return;
-            }
-            if (value instanceof String) {
-                field.set(obj, Boolean.valueOf((String) value));
-                return;
-            }
-            if (value instanceof Number) {
-                field.set(obj, ((Number) value).intValue() != 0);
-                return;
-            }
+            field.set(obj, results.getBoolean(label));
+            return;
+        }
+        if (fieldType == Short.class) {
+            field.set(obj, results.getShort(label));
+            return;
         }
         if (fieldType == Integer.class) {
-            if (true) {
-                field.set(obj, results.getInt(label));
-                return;
-            }
-            try {
-                field.set(obj, ((Number) value).intValue());
-                return;
-            } catch (final ClassCastException cce) {
-                if (value instanceof String) {
-                    field.set(obj, Integer.valueOf((String) value));
-                    return;
-                }
-            }
+            field.set(obj, results.getInt(label));
+            return;
         }
         if (fieldType == Long.class) {
-            if (true) {
-                field.set(obj, results.getLong(label));
-                return;
-            }
-            try {
-                field.set(obj, ((Number) value).longValue());
-                return;
-            } catch (final ClassCastException cce) {
-                if (value instanceof String) {
-                    field.set(obj, Long.valueOf((String) value));
-                    return;
-                }
-            }
+            field.set(obj, results.getLong(label));
+            return;
         }
-        // should we add java.long.Number case?
+        // As a last resort, try the modern getObject(label, type) method.
+        try {
+            field.set(obj, results.getObject(label, fieldType));
+            return;
+        } catch (final Exception e) {
+            // empty
+        }
+        // If we've reached this point, all attempts have failed.
         logger.log(
                 System.Logger.Level.ERROR,
-                () -> String.format("failed to set; label: %s, value: %s, field: %s", label, value, field)
+                () -> String.format("failed to set; label: %s, value: %s (%s), field: %s",
+                                    label, value, value.getClass().getName(), field)
         );
     }
 
-    static <T> Comparator<T> nullPrecedence(final Context context,
-                                            final Comparator<? super T> comparator)
+    static <T> Comparator<T> nullPrecedence(final Context context, final Comparator<? super T> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");

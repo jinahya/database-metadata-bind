@@ -59,17 +59,19 @@ public class TypeInfo
     private static final long serialVersionUID = -3964147654019495313L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<TypeInfo> comparingInSpecifiedOrder(final Comparator<? super Integer> comparator) {
-        return Comparator
-                .comparing(TypeInfo::getDataType, comparator);
-    }
-
     static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context,
                                                           final Comparator<? super Integer> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        return Comparator.comparing(TypeInfo::getDataType, nullSafe);
+    }
+
+    static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(context, Comparator.naturalOrder());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

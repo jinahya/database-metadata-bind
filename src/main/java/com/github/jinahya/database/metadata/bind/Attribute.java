@@ -49,47 +49,35 @@ public class Attribute
      * They are ordered by {@link #COLUMN_LABEL_TYPE_CAT TYPE_CAT}, {@link #COLUMN_LABEL_TYPE_SCHEM TYPE_SCHEM},
      * {@link #COLUMN_LABEL_TYPE_NAME TYPE_NAME} and {@link #COLUMN_LABEL_ORDINAL_POSITION ORDINAL_POSITION}.
      * </p>
-     *
-     * @param comparator a comparator for comparing string values; must be not {@code null}.
-     * @return a comparator for comparing instances in the specified order.
-     * @see #comparingInSpecifiedOrder(Context, Comparator)
-     */
-    static Comparator<Attribute> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .comparing(Attribute::getTypeCat, comparator)
-                .thenComparing(Attribute::getTypeSchem, comparator)
-                .thenComparing(Attribute::getTypeName, comparator)
-                .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder());
-    }
-
-    /**
-     * Returns a comparator for comparing instances in the order specified by the JDBC specification.
      * <p>
      * This method uses {@link ContextUtils#nullPrecedence(Context, Comparator)} to handle the null precedence of the
-     * specified {@code context}.
+     * specified {@code context} for nullable columns ({@code TYPE_CAT} and {@code TYPE_SCHEM}).
      * </p>
      *
      * @param context    the context; must be not {@code null}.
      * @param comparator a comparator for comparing string values; must be not {@code null}.
      * @return a comparator for comparing instances in the specified order.
      * @throws SQLException if a database error occurs.
-     * @see #comparingInSpecifiedOrder(Comparator)
+     * @see #comparingInSpecifiedOrder(Context)
      */
     static Comparator<Attribute> comparingInSpecifiedOrder(final Context context,
                                                            final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        return Comparator
+                .comparing(Attribute::getTypeCat, nullSafe)
+                .thenComparing(Attribute::getTypeSchem, nullSafe)
+                .thenComparing(Attribute::getTypeName, nullSafe)
+                .thenComparing(Attribute::getOrdinalPosition,
+                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()));
     }
 
     /**
      * Returns a comparator for comparing instances in the order specified by the JDBC specification.
      * <p>
-     * This method uses {@link Comparator#naturalOrder()} for comparing string values.
+     * This method uses {@link String#CASE_INSENSITIVE_ORDER} for comparing string values.
      * </p>
      *
      * @param context the context; must be not {@code null}.
@@ -99,10 +87,7 @@ public class Attribute
      */
     static Comparator<Attribute> comparingInSpecifiedOrder(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(
-                context,
-                Comparator.naturalOrder()
-        );
+        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT

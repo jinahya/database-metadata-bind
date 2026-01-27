@@ -39,20 +39,24 @@ public class CrossReference
     private static final long serialVersionUID = -5343386346721125961L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<CrossReference> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return Comparator
-                .comparing(CrossReference::getFktableCat, comparator)
-                .thenComparing(CrossReference::getFktableSchem, comparator)
-                .thenComparing(CrossReference::getFktableName, comparator)
-                .thenComparing(CrossReference::getKeySeq, Comparator.naturalOrder());
-    }
-
     static Comparator<CrossReference> comparingInSpecifiedOrder(final Context context,
                                                                 final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        return Comparator
+                .comparing(CrossReference::getFktableCat, nullSafe)
+                .thenComparing(CrossReference::getFktableSchem, nullSafe)
+                .thenComparing(CrossReference::getFktableName, nullSafe)
+                .thenComparing(CrossReference::getKeySeq,
+                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()));
+    }
+
+    static Comparator<CrossReference> comparingInSpecifiedOrder(final Context context)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     /**

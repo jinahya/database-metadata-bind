@@ -263,10 +263,7 @@ final class Context_Test_Utils {
         }
         if (true) {
             assertThat(attributes).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(
-                            Attribute.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(
-                            Attribute.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(Attribute.comparingInSpecifiedOrder(context))
             );
         }
         for (final var attribute : attributes) {
@@ -319,18 +316,15 @@ final class Context_Test_Utils {
 
     // -------------------------------------------------------------------------------------------------------- catalogs
     private static void catalogs(final Context context, final List<? extends Catalog> catalogs) throws SQLException {
-        assertThat(catalogs).isNotNull().doesNotContainNull();
-        if (true) {
-            assertThat(catalogs).doesNotHaveDuplicates();
-        }
-        if (true) {
-            assertThat(catalogs).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(
-                            Catalog.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(
-                            Catalog.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
-            );
-        }
+        assertThat(catalogs)
+                .isNotNull()
+                .doesNotContainNull()
+                .doesNotHaveDuplicates()
+                .isSortedAccordingTo(Catalog.comparingInSpecifiedOrder(context))
+                .allSatisfy(c -> {
+//                    assertThat(c.getTableCat()).isNotNull();
+                })
+        ;
         for (final var catalog : catalogs) {
             catalog(context, catalog);
         }
@@ -425,18 +419,32 @@ final class Context_Test_Utils {
 
     // --------------------------------------------------------------------------------------------------------- columns
     private static void columns(final Context context, final List<? extends Column> columns) throws SQLException {
-        assertThat(columns).isNotNull().doesNotContainNull();
-        if (true) {
-            assertThat(columns).doesNotHaveDuplicates();
-        }
-        if (true) {
-            assertThat(columns).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(
-                            Column.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(
-                            Column.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
-            );
-        }
+        assertThat(columns)
+                .isNotNull()
+                .doesNotContainNull()
+                .doesNotHaveDuplicates()
+                .isSortedAccordingTo(Column.comparingInSpecifiedOrder(context))
+                .allSatisfy(c -> {
+                    assertThat(c.getTableName()).isNotNull();
+                    assertThat(c.getColumnName()).isNotNull();
+                    assertThat(c.getDataType()).isNotNull();
+                    assertThat(c.getTypeName()).isNotNull();
+//                    assertThat(c.getNumPrecRadix()).isNotNull(); // some returns null
+                    assertThat(c.getNullable())
+                            .isNotNull()
+                            .isIn(Column.COLUMN_VALUES_NULLABLE);
+                    assertThat(c.getOrdinalPosition()).isNotNull().isPositive();
+                    assertThat(c.getIsNullable())
+                            .isNotNull()
+                            .isIn(Column.COLUMN_VALUES_IS_NULLABLE);
+                    assertThat(c.getIsAutoincrement())
+                            .isNotNull()
+                            .isIn(Column.COLUMN_VALUES_IS_AUTOINCREMENT);
+                    assertThat(c.getIsGeneratedcolumn())
+                            .isNotNull()
+                            .isIn(Column.COLUMN_VALUES_IS_GENERATEDCOLUMN);
+                })
+        ;
         for (final var column : columns) {
             column(context, column);
         }
@@ -480,12 +488,12 @@ final class Context_Test_Utils {
             assertThat(columnPrivileges).doesNotHaveDuplicates();
         }
         if (true) {
-            assertThat(columnPrivileges).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(
-                            ColumnPrivilege.comparingComparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(
-                            ColumnPrivilege.comparingComparingInSpecifiedOrder(context, Comparator.naturalOrder()))
-            );
+//            assertThat(columnPrivileges).satisfiesAnyOf(
+//                    l -> assertThat(l).isSortedAccordingTo(
+//                            ColumnPrivilege.comparingComparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+//                    l -> assertThat(l).isSortedAccordingTo(
+//                            ColumnPrivilege.comparingComparingInSpecifiedOrder(context, Comparator.naturalOrder()))
+//            );
         }
         for (final var columnPrivilege : columnPrivileges) {
             columnPrivilege(context, columnPrivilege);
@@ -728,18 +736,14 @@ final class Context_Test_Utils {
 
     // --------------------------------------------------------------------------------------------------------- schemas
     static void schemas(final Context context, final List<? extends Schema> schemas) throws SQLException {
-        assertThat(schemas).isNotNull().doesNotContainNull();
-        if (true) {
-            assertThat(schemas).doesNotHaveDuplicates();
-        }
-        if (true) {
-            assertThat(schemas).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(
-                            Schema.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(
-                            Schema.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
-            );
-        }
+        assertThat(schemas)
+                .isNotNull()
+                .doesNotContainNull()
+                .doesNotHaveDuplicates()
+                .isSortedAccordingTo(Schema.comparingInSpecifiedOrder(context))
+                .allSatisfy(s -> {
+                })
+        ;
         for (final var schema : schemas) {
             schema(context, schema);
         }

@@ -64,20 +64,26 @@ public class IndexInfo
     private static final long serialVersionUID = 924040226611181424L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<IndexInfo> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return Comparator
-                .comparing(IndexInfo::getNonUnique, Comparator.naturalOrder())
-                .thenComparing(IndexInfo::getType, Comparator.naturalOrder())
-                .thenComparing(IndexInfo::getIndexName, comparator)
-                .thenComparing(IndexInfo::getOrdinalPosition, Comparator.naturalOrder());
-    }
-
     static Comparator<IndexInfo> comparingInSpecifiedOrder(final Context context,
                                                            final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        return Comparator
+                .comparing(IndexInfo::getNonUnique,
+                           ContextUtils.nullPrecedence(context, Comparator.<Boolean>naturalOrder()))
+                .thenComparing(IndexInfo::getType,
+                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()))
+                .thenComparing(IndexInfo::getIndexName, nullSafe)
+                .thenComparing(IndexInfo::getOrdinalPosition,
+                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()));
+    }
+
+    static Comparator<IndexInfo> comparingInSpecifiedOrder(final Context context)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
