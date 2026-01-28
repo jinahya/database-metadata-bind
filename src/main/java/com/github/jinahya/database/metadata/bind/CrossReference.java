@@ -46,11 +46,10 @@ public class CrossReference
         Objects.requireNonNull(comparator, "comparator is null");
         final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .comparing(CrossReference::getFktableCat, nullSafe)
-                .thenComparing(CrossReference::getFktableSchem, nullSafe)
-                .thenComparing(CrossReference::getFktableName, nullSafe)
-                .thenComparing(CrossReference::getKeySeq,
-                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()));
+                .comparing(CrossReference::getFktableCat, nullSafe)        // nullable
+                .thenComparing(CrossReference::getFktableSchem, nullSafe)  // nullable
+                .thenComparing(CrossReference::getFktableName, comparator) // NOT nullable
+                .thenComparing(CrossReference::getKeySeq, Comparator.naturalOrder()); // NOT nullable
     }
 
     static Comparator<CrossReference> comparingInSpecifiedOrder(final Context context)

@@ -46,12 +46,11 @@ abstract class PortedKey
         Objects.requireNonNull(comparator, "comparator is null");
         final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .<T, String>comparing(PortedKey::getPktableCat, nullSafe)
-                .thenComparing(PortedKey::getPktableSchem, nullSafe)
-                .thenComparing(PortedKey::getPktableName, nullSafe)
-                .thenComparing(PortedKey::getPkName, nullSafe)
-                .thenComparing(PortedKey::getKeySeq,
-                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()));
+                .<T, String>comparing(PortedKey::getPktableCat, nullSafe)   // nullable
+                .thenComparing(PortedKey::getPktableSchem, nullSafe)        // nullable
+                .thenComparing(PortedKey::getPktableName, comparator)       // NOT nullable
+                .thenComparing(PortedKey::getPkName, nullSafe)              // nullable
+                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder()); // NOT nullable
     }
 
     static <T extends PortedKey> Comparator<T> comparingFktable(final Context context,
@@ -61,12 +60,11 @@ abstract class PortedKey
         Objects.requireNonNull(comparator, "comparator is null");
         final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .<T, String>comparing(PortedKey::getFktableCat, nullSafe)
-                .thenComparing(PortedKey::getFktableSchem, nullSafe)
-                .thenComparing(PortedKey::getFktableName, nullSafe)
-                .thenComparing(PortedKey::getFkName, nullSafe)
-                .thenComparing(PortedKey::getKeySeq,
-                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()));
+                .<T, String>comparing(PortedKey::getFktableCat, nullSafe)   // nullable
+                .thenComparing(PortedKey::getFktableSchem, nullSafe)        // nullable
+                .thenComparing(PortedKey::getFktableName, comparator)       // NOT nullable
+                .thenComparing(PortedKey::getFkName, nullSafe)              // nullable
+                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder()); // NOT nullable
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -47,8 +47,8 @@ public class Schema
         Objects.requireNonNull(comparator, "comparator is null");
         final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .comparing(Schema::getTableCatalog, nullSafe)
-                .thenComparing(Schema::getTableSchem, nullSafe);
+                .comparing(Schema::getTableCatalog, nullSafe)     // nullable
+                .thenComparing(Schema::getTableSchem, comparator); // NOT nullable
     }
 
     static Comparator<Schema> comparingInSpecifiedOrder(final Context context) throws SQLException {

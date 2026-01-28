@@ -204,9 +204,21 @@ static Comparator<Column> comparingInSpecifiedOrder(final Context context) throw
 
 **Important**:
 - Always require `Context` to determine null precedence from database metadata
-- Apply `ContextUtils.nullPrecedence()` only to fields marked `@_NullableBySpecification`
+- Apply `ContextUtils.nullPrecedence()` **ONLY** to fields marked `@_NullableBySpecification`
 - Use `String.CASE_INSENSITIVE_ORDER` as default for case-insensitive comparison
 - Do NOT create a basic comparator without Context (footgun - won't handle nulls correctly)
+
+**Quick Reference - Comparator Selection**:
+| Field Annotation | String Comparator | Integer Comparator |
+|------------------|-------------------|---------------------|
+| `@_NullableBySpecification` | `nullSafe` | `ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder())` |
+| NOT nullable | `comparator` (raw) | `Comparator.naturalOrder()` (raw) |
+
+**Common Nullable Fields** (always check `@_NullableBySpecification` in source):
+- `TABLE_CAT`, `TYPE_CAT`, `*_CAT` → typically nullable
+- `TABLE_SCHEM`, `TYPE_SCHEM`, `*_SCHEM` → typically nullable
+- `TABLE_NAME`, `TYPE_NAME`, `COLUMN_NAME` → usually NOT nullable
+- `ORDINAL_POSITION`, `KEY_SEQ` → usually NOT nullable
 
 ## Type Relationships
 

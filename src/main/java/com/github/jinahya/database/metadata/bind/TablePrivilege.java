@@ -69,10 +69,10 @@ public class TablePrivilege
         Objects.requireNonNull(comparator, "comparator is null");
         final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .comparing(TablePrivilege::getTableCat, nullSafe)
-                .thenComparing(TablePrivilege::getTableSchem, nullSafe)
-                .thenComparing(TablePrivilege::getTableName, nullSafe)
-                .thenComparing(TablePrivilege::getPrivilege, nullSafe);
+                .comparing(TablePrivilege::getTableCat, nullSafe)        // nullable
+                .thenComparing(TablePrivilege::getTableSchem, nullSafe)  // nullable
+                .thenComparing(TablePrivilege::getTableName, comparator) // NOT nullable
+                .thenComparing(TablePrivilege::getPrivilege, comparator); // NOT nullable
     }
 
     static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Context context)

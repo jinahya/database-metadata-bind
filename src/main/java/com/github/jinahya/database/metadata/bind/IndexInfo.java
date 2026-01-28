@@ -71,13 +71,10 @@ public class IndexInfo
         Objects.requireNonNull(comparator, "comparator is null");
         final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .comparing(IndexInfo::getNonUnique,
-                           ContextUtils.nullPrecedence(context, Comparator.<Boolean>naturalOrder()))
-                .thenComparing(IndexInfo::getType,
-                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()))
-                .thenComparing(IndexInfo::getIndexName, nullSafe)
-                .thenComparing(IndexInfo::getOrdinalPosition,
-                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()));
+                .comparing(IndexInfo::getNonUnique, Comparator.<Boolean>naturalOrder())  // NOT nullable
+                .thenComparing(IndexInfo::getType, Comparator.<Integer>naturalOrder())   // NOT nullable
+                .thenComparing(IndexInfo::getIndexName, nullSafe)                        // nullable
+                .thenComparing(IndexInfo::getOrdinalPosition, Comparator.naturalOrder()); // NOT nullable
     }
 
     static Comparator<IndexInfo> comparingInSpecifiedOrder(final Context context)

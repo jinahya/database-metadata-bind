@@ -71,10 +71,10 @@ public class FunctionColumn
         Objects.requireNonNull(comparator, "comparator is null");
         final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .comparing(FunctionColumn::getFunctionCat, nullSafe)
-                .thenComparing(FunctionColumn::getFunctionSchem, nullSafe)
-                .thenComparing(FunctionColumn::getFunctionName, nullSafe)
-                .thenComparing(FunctionColumn::getSpecificName, nullSafe);
+                .comparing(FunctionColumn::getFunctionCat, nullSafe)        // nullable
+                .thenComparing(FunctionColumn::getFunctionSchem, nullSafe)  // nullable
+                .thenComparing(FunctionColumn::getFunctionName, comparator) // NOT nullable
+                .thenComparing(FunctionColumn::getSpecificName, comparator); // NOT nullable
     }
 
     static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Context context)

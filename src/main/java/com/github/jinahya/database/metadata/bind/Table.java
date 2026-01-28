@@ -55,10 +55,10 @@ public class Table
         Objects.requireNonNull(comparator, "comparator is null");
         final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .comparing(Table::getTableType, nullSafe)
-                .thenComparing(Table::getTableCat, nullSafe)
-                .thenComparing(Table::getTableSchem, nullSafe)
-                .thenComparing(Table::getTableName, nullSafe);
+                .comparing(Table::getTableType, comparator)      // NOT nullable
+                .thenComparing(Table::getTableCat, nullSafe)     // nullable
+                .thenComparing(Table::getTableSchem, nullSafe)   // nullable
+                .thenComparing(Table::getTableName, comparator); // NOT nullable
     }
 
     static Comparator<Table> comparingInSpecifiedOrder(final Context context)

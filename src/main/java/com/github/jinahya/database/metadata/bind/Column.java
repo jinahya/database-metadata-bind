@@ -62,11 +62,10 @@ public class Column
         Objects.requireNonNull(comparator, "comparator is null");
         final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .comparing(Column::getTableCat, nullSafe)
-                .thenComparing(Column::getTableSchem, nullSafe)
-                .thenComparing(Column::getTableName, nullSafe)
-                .thenComparing(Column::getOrdinalPosition,
-                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()));
+                .comparing(Column::getTableCat, nullSafe)        // nullable
+                .thenComparing(Column::getTableSchem, nullSafe)  // nullable
+                .thenComparing(Column::getTableName, comparator) // NOT nullable
+                .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder()); // NOT nullable
     }
 
     static Comparator<Column> comparingInSpecifiedOrder(final Context context) throws SQLException {

@@ -43,8 +43,7 @@ public class ClientInfoProperty
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
-        return Comparator.comparing(ClientInfoProperty::getName, nullSafe);
+        return Comparator.comparing(ClientInfoProperty::getName, comparator); // NOT nullable
     }
 
     static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Context context)

@@ -67,11 +67,10 @@ public class Attribute
         Objects.requireNonNull(comparator, "comparator is null");
         final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .comparing(Attribute::getTypeCat, nullSafe)
-                .thenComparing(Attribute::getTypeSchem, nullSafe)
-                .thenComparing(Attribute::getTypeName, nullSafe)
-                .thenComparing(Attribute::getOrdinalPosition,
-                               ContextUtils.nullPrecedence(context, Comparator.<Integer>naturalOrder()));
+                .comparing(Attribute::getTypeCat, nullSafe)       // nullable
+                .thenComparing(Attribute::getTypeSchem, nullSafe) // nullable
+                .thenComparing(Attribute::getTypeName, comparator) // NOT nullable
+                .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder()); // NOT nullable
     }
 
     /**

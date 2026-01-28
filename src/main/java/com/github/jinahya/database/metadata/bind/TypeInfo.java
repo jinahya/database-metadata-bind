@@ -64,8 +64,7 @@ public class TypeInfo
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
-        return Comparator.comparing(TypeInfo::getDataType, nullSafe);
+        return Comparator.comparing(TypeInfo::getDataType, comparator); // NOT nullable
     }
 
     static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context)

@@ -45,8 +45,7 @@ public class Catalog
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
-        return Comparator.comparing(Catalog::getTableCat, nullSafe);
+        return Comparator.comparing(Catalog::getTableCat, comparator); // NOT nullable
     }
 
     static Comparator<Catalog> comparingInSpecifiedOrder(final Context context) throws SQLException {

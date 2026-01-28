@@ -44,10 +44,9 @@ public class ColumnPrivilege
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .comparing(ColumnPrivilege::getColumnName, nullSafe)
-                .thenComparing(ColumnPrivilege::getPrivilege, nullSafe);
+                .comparing(ColumnPrivilege::getColumnName, comparator)  // NOT nullable
+                .thenComparing(ColumnPrivilege::getPrivilege, comparator); // NOT nullable
     }
 
     static Comparator<ColumnPrivilege> comparingInSpecifiedOrder(final Context context)

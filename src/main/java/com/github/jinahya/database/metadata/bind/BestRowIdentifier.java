@@ -45,8 +45,7 @@ public class BestRowIdentifier
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
-        return Comparator.comparing(BestRowIdentifier::getScope, nullSafe);
+        return Comparator.comparing(BestRowIdentifier::getScope, comparator); // NOT nullable
     }
 
     static Comparator<BestRowIdentifier> comparingInSpecifiedOrder(final Context context)
