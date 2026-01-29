@@ -1,12 +1,26 @@
-# CLAUDE
+# CLAUDE.md
+
+Instructions for Claude Code when working on this project.
 
 ## Project Overview
 
 Type-safe Java bindings for `java.sql.DatabaseMetaData` ResultSet results.
 
-- **Core**: `Context` wraps `DatabaseMetaData`, returns `List<T extends MetadataType>` instead of `ResultSet`
+- **Core**: `Context` wraps `DatabaseMetaData`, returns `List<T>` instead of `ResultSet`
 - **Build**: Maven, Java 11 (source), Java 25 (tests)
 - **Package**: `com.github.jinahya.database.metadata.bind`
+- **Coverage**: All 26 JDBC `DatabaseMetaData` methods returning `ResultSet` are bound
+
+## Design Philosophy
+
+**Isolated bindings by design**. After trial-and-error with parent-child trees and relationship navigation, the current approach intentionally keeps binding classes independent:
+
+- No automatic parent/child loading
+- No implicit relationship traversal
+- User composes queries explicitly via `Context`
+- `@_ChildOf`/`@_ParentOf` document relationships without enforcing them
+
+This trades "clever" features for maintainability and predictable behavior.
 
 ## Annotations
 
@@ -14,21 +28,21 @@ Type-safe Java bindings for `java.sql.DatabaseMetaData` ResultSet results.
 
 | Annotation | Purpose |
 |------------|---------|
-| `@_ColumnLabel` | Specifies ResultSet column name (required for all binding fields) |
+| `@_ColumnLabel` | Maps field to ResultSet column (required) |
 | `@_NullableBySpecification` | Column may be null per JDBC spec |
-| `@_NotUsedBySpecification` | Column reserved but unused |
+| `@_NotUsedBySpecification` | Column reserved/unused in spec |
 
 ### Type Annotations
 
 | Annotation | Purpose |
 |------------|---------|
-| `@_ChildOf` | Declares parent class relationship (repeatable) |
-| `@_ParentOf` | Declares child class relationship (repeatable) |
+| `@_ChildOf` | Documents parent relationship (repeatable) |
+| `@_ParentOf` | Documents child relationship (repeatable) |
 
 ### Field Annotation Order
 
 ```java
-@org.jspecify.annotations.Nullable          // jspecify (if nullable)
+@Nullable                                   // jspecify (if applicable)
 @_NullableBySpecification                   // project (if nullable by spec)
 @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)       // required
 private String tableCat;
@@ -42,14 +56,16 @@ private String tableCat;
 4. Column value constants (`COLUMN_VALUE_XXX`)
 5. Static factory methods
 6. Constructors
-7. `java.lang.Object` overrides
+7. `java.lang.Object` overrides (`equals`, `hashCode`, `toString`)
 8. Bean validation methods
-9. Getter/setter pairs (grouped by field)
+9. Getter/setter pairs (grouped per field)
 10. Instance fields
 
-## Comparators
+## Critical Patterns
 
-**CRITICAL**: Always apply `nullSafe` to ALL catalog/schema fields. Some JDBC drivers return null for spec-defined non-null fields.
+### Comparators
+
+**Always apply `nullSafe` to catalog/schema fields**. JDBC drivers lie—they return null for spec-defined non-null fields.
 
 ```java
 static Comparator<Column> comparingInSpecifiedOrder(final Context context,
@@ -59,8 +75,8 @@ static Comparator<Column> comparingInSpecifiedOrder(final Context context,
     Objects.requireNonNull(comparator, "comparator is null");
     final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
     return Comparator
-            .comparing(Column::getTableCat, nullSafe)       // always nullSafe
-            .thenComparing(Column::getTableSchem, nullSafe) // always nullSafe
+            .comparing(Column::getTableCat, nullSafe)       // nullSafe: always
+            .thenComparing(Column::getTableSchem, nullSafe) // nullSafe: always
             .thenComparing(Column::getTableName, nullSafe)
             .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder());
 }
@@ -70,48 +86,61 @@ static Comparator<Column> comparingInSpecifiedOrder(final Context context) throw
 }
 ```
 
-**Rules**:
-- Require `Context` parameter (for null precedence)
-- Apply `nullSafe` to ALL catalog/schema fields (`*_CAT`, `*_SCHEM`)
-- Use `String.CASE_INSENSITIVE_ORDER` as default
+Rules:
+- Require `Context` parameter (determines null precedence per database)
+- `nullSafe` on ALL `*_CAT` and `*_SCHEM` fields
+- Default comparator: `String.CASE_INSENSITIVE_ORDER`
 
-## Accessors
+### Accessors
 
 - **Getters**: `public`
-- **Setters**: `protected` (NOT `public`)
-- Use wrapper types (`Integer`, `String`) not primitives
+- **Setters**: `protected` (not `public`)
+- **Types**: Wrapper types only (`Integer`, `String`), never primitives
 
-## Context Methods
+### Context Methods
 
-For each `DatabaseMetaData` method returning `ResultSet`:
+For each `DatabaseMetaData.getXxx()` returning `ResultSet`:
 
 ```java
+// Internal helpers
 void getXxxAndAcceptEach(..., Consumer<? super Xxx> consumer)
 <C extends Collection<? super Xxx>> C getXxxAndAddAll(..., C collection)
-public List<Xxx> getXxx(...)  // public API
+
+// Public API
+public List<Xxx> getXxx(...)
 ```
 
-## equals/hashCode/toString
+### equals/hashCode/toString
 
-- `equals`/`hashCode`: Based on identifying fields (typically catalog, schema, name)
-- `toString`: Include ONLY `@_ColumnLabel` fields in field definition order
+- `equals`/`hashCode`: Based on identifying fields (catalog, schema, name)
+- `toString`: Include ONLY `@_ColumnLabel` fields, in field definition order
 
 ## Testing
 
-- Unit tests: `*Test.java` extending `AbstractMetadataType_Test<T>`
-- Integration tests: `*IT.java` with TestContainers
-- In-memory: `Memory_*_Test.java` (Derby, H2, HSQL, SQLite)
+| Pattern | Purpose |
+|---------|---------|
+| `*Test.java` | Unit tests, extend `AbstractMetadataType_Test<T>` |
+| `*IT.java` | Integration tests with TestContainers |
+| `Memory_*_Test.java` | In-memory databases (Derby, H2, HSQL, SQLite) |
 
 ## New Binding Class Checklist
 
 1. Extend `AbstractMetadataType`
 2. Add `serialVersionUID`
-3. Add `@_ColumnLabel` to all fields
-4. Add `@_NullableBySpecification` + `@Nullable` where applicable
-5. Define `COLUMN_LABEL_XXX` constants
-6. Add `public` getters, `protected` setters
-7. Add comparator with nullSafe for catalog/schema fields
+3. Define `COLUMN_LABEL_XXX` constants
+4. Add `@_ColumnLabel` to all fields
+5. Add `@_NullableBySpecification` + `@Nullable` where spec allows null
+6. Implement `public` getters, `protected` setters
+7. Add comparator with `nullSafe` for catalog/schema fields
 8. Override `equals()`, `hashCode()`, `toString()`
-9. Add `@_ParentOf`/`@_ChildOf` if applicable
-10. Add Context methods
-11. Add unit test
+9. Add `@_ChildOf`/`@_ParentOf` if parent-child relationship exists
+10. Add Context methods (`getXxxAndAcceptEach`, `getXxxAndAddAll`, `getXxx`)
+11. Add unit test extending `AbstractMetadataType_Test<T>`
+
+## Anti-Patterns (Don't Do)
+
+- Don't add automatic parent/child navigation methods
+- Don't use primitive types for fields
+- Don't make setters `public`
+- Don't skip `nullSafe` on catalog/schema comparators
+- Don't add fields without `@_ColumnLabel`

@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -42,14 +41,16 @@ public class BestRowIdentifier
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<BestRowIdentifier> comparingInSpecifiedOrder(final Context context,
                                                                    final Comparator<? super Integer> comparator)
-            throws SQLException {
+//            throws SQLException
+    {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator.comparing(BestRowIdentifier::getScope, comparator); // NOT nullable
     }
 
     static Comparator<BestRowIdentifier> comparingInSpecifiedOrder(final Context context)
-            throws SQLException {
+//            throws SQLException
+    {
         Objects.requireNonNull(context, "context is null");
         return comparingInSpecifiedOrder(context, Comparator.naturalOrder());
     }
@@ -154,7 +155,8 @@ public class BestRowIdentifier
     public int hashCode() {
         return Objects.hash(super.hashCode(), columnName);
     }
-// ----------------------------------------------------------------------------------------------------------- scope
+
+    // ----------------------------------------------------------------------------------------------------------- scope
 
     /**
      * Returns the value of {@value #COLUMN_LABEL_SCOPE} column.
