@@ -33,26 +33,6 @@ import java.util.Objects;
 public class VersionColumn
         extends AbstractMetadataType {
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (VersionColumn) obj;
-        return Objects.equals(columnName, that.columnName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), columnName);
-    }
-
     private static final long serialVersionUID = 3587959398829593292L;
 
     // ----------------------------------------------------------------------------------------------------------- SCOPE
@@ -136,6 +116,26 @@ public class VersionColumn
                ",decimalDigits=" + decimalDigits +
                ",pseudoColumn=" + pseudoColumn +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (VersionColumn) obj;
+        return Objects.equals(columnName, that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), columnName);
     }
 
     // ----------------------------------------------------------------------------------------------------------- scope

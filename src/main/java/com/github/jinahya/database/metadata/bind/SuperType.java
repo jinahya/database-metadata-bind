@@ -35,29 +35,6 @@ import java.util.Objects;
 public class SuperType
         extends AbstractMetadataType {
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (SuperType) obj;
-        return Objects.equals(typeCat, that.typeCat) &&
-               Objects.equals(typeSchem, that.typeSchem) &&
-               Objects.equals(typeName, that.typeName) &&
-               Objects.equals(supertypeName, that.supertypeName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, supertypeName);
-    }
-
     private static final long serialVersionUID = 4603878785941565029L;
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
@@ -122,6 +99,29 @@ public class SuperType
                ",supertypeSchem=" + supertypeSchem +
                ",supertypeName=" + supertypeName +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (SuperType) obj;
+        return Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName) &&
+               Objects.equals(supertypeName, that.supertypeName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, supertypeName);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat

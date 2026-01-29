@@ -35,30 +35,6 @@ import java.util.Objects;
 public class TablePrivilege
         extends AbstractMetadataType {
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (TablePrivilege) obj;
-        return Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableSchem) &&
-               Objects.equals(tableName, that.tableName) &&
-               Objects.equals(grantee, that.grantee) &&
-               Objects.equals(privilege, that.privilege);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, grantee, privilege);
-    }
-
     private static final long serialVersionUID = -2142097373603478881L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
@@ -143,6 +119,29 @@ public class TablePrivilege
                '}';
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (TablePrivilege) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(grantee, that.grantee) &&
+               Objects.equals(privilege, that.privilege);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, grantee, privilege);
+    }
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**

@@ -36,30 +36,6 @@ import java.util.Objects;
 public class FunctionColumn
         extends AbstractMetadataType {
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (FunctionColumn) obj;
-        return Objects.equals(functionCat, that.functionCat) &&
-               Objects.equals(functionSchem, that.functionSchem) &&
-               Objects.equals(functionName, that.functionName) &&
-               Objects.equals(columnName, that.columnName) &&
-               Objects.equals(ordinalPosition, that.ordinalPosition);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), functionCat, functionSchem, functionName, columnName, ordinalPosition);
-    }
-
     private static final long serialVersionUID = -7445156446214062680L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
@@ -235,6 +211,30 @@ public class FunctionColumn
                ",isNullable=" + isNullable +
                ",specificName=" + specificName +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (FunctionColumn) obj;
+        return Objects.equals(functionCat, that.functionCat) &&
+               Objects.equals(functionSchem, that.functionSchem) &&
+               Objects.equals(functionName, that.functionName) &&
+               Objects.equals(columnName, that.columnName) &&
+               Objects.equals(ordinalPosition, that.ordinalPosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), functionCat, functionSchem, functionName, columnName, ordinalPosition);
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat

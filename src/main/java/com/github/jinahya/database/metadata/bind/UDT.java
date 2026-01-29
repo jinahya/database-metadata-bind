@@ -39,28 +39,6 @@ import java.util.Objects;
 public class UDT
         extends AbstractMetadataType {
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (UDT) obj;
-        return Objects.equals(typeCat, that.typeCat) &&
-               Objects.equals(typeSchem, that.typeSchem) &&
-               Objects.equals(typeName, that.typeName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName);
-    }
-
     private static final long serialVersionUID = 8665246093405057553L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
@@ -152,6 +130,28 @@ public class UDT
                ",remarks=" + remarks +
                ",baseType=" + baseType +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (UDT) obj;
+        return Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat

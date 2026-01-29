@@ -219,6 +219,26 @@ public class CrossReference
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
     @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "pktableCat=" + pktableCat +
+               ",pktableSchem=" + pktableSchem +
+               ",pktableName=" + pktableName +
+               ",pkcolumnName=" + pkcolumnName +
+               ",fktableCat=" + fktableCat +
+               ",fktableSchem=" + fktableSchem +
+               ",fktableName=" + fktableName +
+               ",fkcolumnName=" + fkcolumnName +
+               ",keySeq=" + keySeq +
+               ",updateRule=" + updateRule +
+               ",deleteRule=" + deleteRule +
+               ",fkName=" + fkName +
+               ",pkName=" + pkName +
+               ",deferrability=" + deferrability +
+               '}';
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
@@ -255,26 +275,6 @@ public class CrossReference
                 pkcolumnName,
                 keySeq
         );
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "pktableCat=" + pktableCat +
-               ",pktableSchem=" + pktableSchem +
-               ",pktableName=" + pktableName +
-               ",pkcolumnName=" + pkcolumnName +
-               ",fktableCat=" + fktableCat +
-               ",fktableSchem=" + fktableSchem +
-               ",fktableName=" + fktableName +
-               ",fkcolumnName=" + fkcolumnName +
-               ",keySeq=" + keySeq +
-               ",updateRule=" + updateRule +
-               ",deleteRule=" + deleteRule +
-               ",fkName=" + fkName +
-               ",pkName=" + pkName +
-               ",deferrability=" + deferrability +
-               '}';
     }
 
     // ----------------------------------------------------------------------------------------------------- pktableCat

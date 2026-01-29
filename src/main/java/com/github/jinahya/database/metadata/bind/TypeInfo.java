@@ -35,27 +35,6 @@ import java.util.Objects;
 public class TypeInfo
         extends AbstractMetadataType {
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (TypeInfo) obj;
-        return Objects.equals(typeName, that.typeName) &&
-               Objects.equals(dataType, that.dataType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), typeName, dataType);
-    }
-
     private static final long serialVersionUID = -3964147654019495313L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
@@ -232,6 +211,27 @@ public class TypeInfo
                ",sqlDatetimeSub=" + sqlDatetimeSub +
                ",numPrecRadix=" + numPrecRadix +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (TypeInfo) obj;
+        return Objects.equals(typeName, that.typeName) &&
+               Objects.equals(dataType, that.dataType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), typeName, dataType);
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName

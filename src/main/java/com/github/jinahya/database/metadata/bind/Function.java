@@ -37,29 +37,6 @@ import java.util.Objects;
 public class Function
         extends AbstractMetadataType {
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (Function) obj;
-        return Objects.equals(functionCat, that.functionCat) &&
-               Objects.equals(functionSchem, that.functionSchem) &&
-               Objects.equals(functionName, that.functionName) &&
-               Objects.equals(specificName, that.specificName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), functionCat, functionSchem, functionName, specificName);
-    }
-
     private static final long serialVersionUID = -3318947900237453301L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
@@ -176,6 +153,29 @@ public class Function
                ",functionType=" + functionType +
                ",specificName=" + specificName +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Function) obj;
+        return Objects.equals(functionCat, that.functionCat) &&
+               Objects.equals(functionSchem, that.functionSchem) &&
+               Objects.equals(functionName, that.functionName) &&
+               Objects.equals(specificName, that.specificName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), functionCat, functionSchem, functionName, specificName);
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat

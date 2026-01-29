@@ -36,29 +36,6 @@ import java.util.Objects;
 public class Procedure
         extends AbstractMetadataType {
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (Procedure) obj;
-        return Objects.equals(procedureCat, that.procedureCat) &&
-               Objects.equals(procedureSchem, that.procedureSchem) &&
-               Objects.equals(procedureName, that.procedureName) &&
-               Objects.equals(specificName, that.specificName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), procedureCat, procedureSchem, procedureName, specificName);
-    }
-
     private static final long serialVersionUID = -6262056388403934829L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
@@ -147,6 +124,29 @@ public class Procedure
                ",procedureType=" + procedureType +
                ",specificName=" + specificName +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Procedure) obj;
+        return Objects.equals(procedureCat, that.procedureCat) &&
+               Objects.equals(procedureSchem, that.procedureSchem) &&
+               Objects.equals(procedureName, that.procedureName) &&
+               Objects.equals(specificName, that.specificName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), procedureCat, procedureSchem, procedureName, specificName);
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat

@@ -461,7 +461,7 @@ public class Context {
         }
     }
 
-    <C extends Collection<ClientInfoProperty>> C getClientInfoPropertiesAndAddAll(final C collection)
+    <C extends Collection<? super ClientInfoProperty>> C getClientInfoPropertiesAndAddAll(final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getClientPropertiesAndAcceptEach(
@@ -1431,7 +1431,7 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    <T extends Collection<? super Schema>> T getSchemasAndAddAll(final T collection) throws SQLException {
+    <C extends Collection<? super Schema>> C getSchemasAndAddAll(final C collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getSchemasAndAcceptEach(
                 v -> {

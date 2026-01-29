@@ -48,18 +48,23 @@ This trades "clever" features for maintainability and predictable behavior.
 private String tableCat;
 ```
 
-## Class Structure (MANDATORY ORDER)
+## Class Structure (Preferred Order)
+
+Each section is preceded by a single-line hyphen comment with a 120-character margin. Section comments must be present even when no elements exist within that section.
+
+```java
+// -----------------------------------------------------------------------------------------------------------------
+```
 
 1. `serialVersionUID`
-2. Static comparators
-3. Column label constants (`COLUMN_LABEL_XXX`)
-4. Column value constants (`COLUMN_VALUE_XXX`)
-5. Static factory methods
-6. Constructors
-7. `java.lang.Object` overrides (`equals`, `hashCode`, `toString`)
-8. Bean validation methods
-9. Getter/setter pairs (grouped per field)
-10. Instance fields
+2. `// COMPARATORS` — Static comparator methods
+3. `// {COLUMN_NAME}` — Column label constants (`COLUMN_LABEL_XXX`) and column value constants (`COLUMN_VALUE_XXX`), grouped by column
+4. `// STATIC_FACTORY_METHODS`
+5. `// CONSTRUCTORS`
+6. `// java.lang.Object` — Overrides in order: `toString`, `equals`, `hashCode`
+7. `// Jakarta-Validation` — Bean validation methods
+8. `// {field_name}` — Getter/setter pairs, grouped per field
+9. `// ---` — Instance fields
 
 ## Critical Patterns
 
@@ -110,10 +115,12 @@ void getXxxAndAcceptEach(..., Consumer<? super Xxx> consumer)
 public List<Xxx> getXxx(...)
 ```
 
-### equals/hashCode/toString
+### toString/equals/hashCode
 
-- `equals`/`hashCode`: Based on identifying fields (catalog, schema, name)
+Methods must appear in this order: `toString`, `equals`, `hashCode`.
+
 - `toString`: Include ONLY `@_ColumnLabel` fields, in field definition order
+- `equals`/`hashCode`: Based on identifying fields (catalog, schema, name)
 
 ## Testing
 
@@ -132,7 +139,7 @@ public List<Xxx> getXxx(...)
 5. Add `@_NullableBySpecification` + `@Nullable` where spec allows null
 6. Implement `public` getters, `protected` setters
 7. Add comparator with `nullSafe` for catalog/schema fields
-8. Override `equals()`, `hashCode()`, `toString()`
+8. Override `toString()`, `equals()`, `hashCode()` (in this order)
 9. Add `@_ChildOf`/`@_ParentOf` if parent-child relationship exists
 10. Add Context methods (`getXxxAndAcceptEach`, `getXxxAndAddAll`, `getXxx`)
 11. Add unit test extending `AbstractMetadataType_Test<T>`

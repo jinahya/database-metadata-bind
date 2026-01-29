@@ -38,30 +38,6 @@ import java.util.Objects;
 public class ProcedureColumn
         extends AbstractMetadataType {
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (ProcedureColumn) obj;
-        return Objects.equals(procedureCat, that.procedureCat) &&
-               Objects.equals(procedureSchem, that.procedureSchem) &&
-               Objects.equals(procedureName, that.procedureName) &&
-               Objects.equals(columnName, that.columnName) &&
-               Objects.equals(ordinalPosition, that.ordinalPosition);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), procedureCat, procedureSchem, procedureName, columnName, ordinalPosition);
-    }
-
     private static final long serialVersionUID = 3894753719381358829L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
@@ -271,6 +247,30 @@ public class ProcedureColumn
                ",isNullable=" + isNullable +
                ",specificName=" + specificName +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (ProcedureColumn) obj;
+        return Objects.equals(procedureCat, that.procedureCat) &&
+               Objects.equals(procedureSchem, that.procedureSchem) &&
+               Objects.equals(procedureName, that.procedureName) &&
+               Objects.equals(columnName, that.columnName) &&
+               Objects.equals(ordinalPosition, that.ordinalPosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), procedureCat, procedureSchem, procedureName, columnName, ordinalPosition);
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat

@@ -34,29 +34,6 @@ import java.util.Objects;
 public class PrimaryKey
         extends AbstractMetadataType {
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (PrimaryKey) obj;
-        return Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableSchem) &&
-               Objects.equals(tableName, that.tableName) &&
-               Objects.equals(columnName, that.columnName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, columnName);
-    }
-
     private static final long serialVersionUID = 3159826510060898330L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
@@ -133,6 +110,29 @@ public class PrimaryKey
                ",keySeq=" + keySeq +
                ",pkName=" + pkName +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (PrimaryKey) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(columnName, that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, columnName);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

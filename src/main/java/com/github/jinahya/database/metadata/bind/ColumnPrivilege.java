@@ -69,7 +69,7 @@ public class ColumnPrivilege
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    // ------------------------------------------------------------------------------------------------------- TABLE_NAM
+    // ------------------------------------------------------------------------------------------------------ TABLE_NAME
 
     /**
      * A column label of {@value}.
@@ -129,6 +129,20 @@ public class ColumnPrivilege
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
     @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",columnName=" + columnName +
+               ",grantor=" + grantor +
+               ",grantee=" + grantee +
+               ",privilege=" + privilege +
+               ",isGrantable=" + isGrantable +
+               '}';
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
@@ -153,19 +167,7 @@ public class ColumnPrivilege
         return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, columnName, grantee, privilege);
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "tableCat=" + tableCat +
-               ",tableSchem=" + tableSchem +
-               ",tableName=" + tableName +
-               ",columnName=" + columnName +
-               ",grantor=" + grantor +
-               ",grantee=" + grantee +
-               ",privilege=" + privilege +
-               ",isGrantable=" + isGrantable +
-               '}';
-    }
+    // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**
      * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
