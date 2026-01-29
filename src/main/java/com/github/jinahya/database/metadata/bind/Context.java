@@ -434,7 +434,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getCatalogs()} method, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getCatalogs()} method, on the wrapped {@link #metadata}, and returns a list of
+     * bound values.
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
@@ -612,8 +613,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getColumns(String, String, String, String)} method, on the wrapped metadata, with
-     * given arguments, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getColumns(String, String, String, String)} method, on the wrapped
+     * {@link #metadata}, with given arguments, and returns a list of bound values.
      *
      * @param catalog           a value for {@code catalog} parameter.
      * @param schemaPattern     a value for {@code schemaPattern} parameter.
@@ -775,8 +776,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)} method
-     * with given arguments, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)} method,
+     * on the wrapped {@link #metadata}, with given arguments, and returns a list of bound values.
      *
      * @param catalog a value for the {@code catalog} parameter.
      * @param schema  a value for the {@code schema} parameter.
@@ -853,8 +854,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getFunctions(String, String, String)} method with given arguments, and returns a
-     * list of bound values.
+     * Invokes {@link DatabaseMetaData#getFunctions(String, String, String)} method, on the wrapped {@link #metadata},
+     * with given arguments, and returns a list of bound values.
      *
      * @param catalog             a value for the {@code catalog} parameter.
      * @param schemaPattern       a value for the {@code schemaPattern} parameter.
@@ -1067,7 +1068,8 @@ public class Context {
     /**
      * Invokes
      * {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean) getIndexInfo(catalog, schema,
-     * table, unique, approximate)} method with specified arguments, and returns a list of bound values.
+     * table, unique, approximate)} method, on the wrapped {@link #metadata}, with specified arguments, and returns a
+     * list of bound values.
      *
      * @param catalog     a value for the {@code catalog} parameter.
      * @param schema      a value for the {@code schema} parameter.
@@ -1137,7 +1139,7 @@ public class Context {
 
     /**
      * Invokes {@link DatabaseMetaData#getPrimaryKeys(String, String, String) getPrimaryKeys(catalog, schema, table)}
-     * method with given arguments, and returns a list of bound values.
+     * method, on the wrapped {@link #metadata}, with given arguments, and returns a list of bound values.
      *
      * @param catalog a value for the {@code catalog} parameter.
      * @param schema  a value for the {@code schema} parameter.
@@ -1205,8 +1207,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getProcedureColumns(String, String, String, String)} method with given arguments,
-     * and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getProcedureColumns(String, String, String, String)} method, on the wrapped
+     * {@link #metadata}, with given arguments, and returns a list of bound values.
      *
      * @param catalog              a value for {@code catalog} parameter.
      * @param schemaPattern        a value for {@code schemaPattern} parameter.
@@ -1282,8 +1284,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method with
-     * given arguments, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method, on
+     * the wrapped {@link #metadata}, with given arguments, and returns a list of bound values.
      *
      * @param catalog              a value for the {@code catalog} parameter.
      * @param schemaPattern        a value for the {@code schemaPattern} parameter.
@@ -1381,7 +1383,7 @@ public class Context {
     /**
      * Invokes
      * {@link DatabaseMetaData#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
-     * method with given arguments, and returns a list of bound values.
+     * method, on the wrapped {@link #metadata}, with given arguments, and returns a list of bound values.
      *
      * @param catalog           a value for the {@code catalog} parameter.
      * @param schemaPattern     a value for the {@code schemaPattern} parameter.
@@ -1443,7 +1445,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getSchemas()} method, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getSchemas()} method, on the wrapped {@link #metadata}, and returns a list of
+     * bound values.
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
@@ -1492,8 +1495,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getSchemas(String, String)} method with given arguments, and returns a list of
-     * bound values.
+     * Invokes {@link DatabaseMetaData#getSchemas(String, String)} method, on the wrapped {@link #metadata}, with given
+     * arguments, and returns a list of bound values.
      *
      * @param catalog       a value for {@code catalog} parameter.
      * @param schemaPattern a value for {@code schemaPattern} parameter.
@@ -1561,8 +1564,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getSuperTables(String, String, String)} method with given arguments and adds
-     * bounds values to the specified collection.
+     * Invokes {@link DatabaseMetaData#getSuperTables(String, String, String)} method, on the wrapped {@link #metadata},
+     * with given arguments, and returns a list of bound values.
      *
      * @param catalog          a value for {@code catalog} parameter.
      * @param schemaPattern    a value for {@code schemaPattern} paramter.
@@ -1638,8 +1641,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getSuperTypes(String, String, String)} method with given arguments, and returns a
-     * list of bound values.
+     * Invokes {@link DatabaseMetaData#getSuperTypes(String, String, String)} method, on the wrapped {@link #metadata},
+     * with given arguments, and returns a list of bound values.
      *
      * @param catalog         a value for {@code catalog} parameter.
      * @param schemaPattern   a value for {@code schemaPattern} parameter.
@@ -1718,8 +1721,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)} method
-     * with given arguments, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)} method,
+     * on the wrapped {@link #metadata}, with given arguments, and returns a list of bound values.
      *
      * @param catalog          a value for {@code catalog} parameter.
      * @param schemaPattern    a value for {@code schemaPattern} parameter.
@@ -1799,7 +1802,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getTableTypes()} method, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getTableTypes()} method, on the wrapped {@link #metadata}, and returns a list of
+     * bound values.
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
@@ -1966,7 +1970,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getTypeInfo()} method, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getTypeInfo()} method, on the wrapped {@link #metadata}, and returns a list of
+     * bound values.
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
