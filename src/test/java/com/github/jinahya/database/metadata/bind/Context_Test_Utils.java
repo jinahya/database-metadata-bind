@@ -30,7 +30,6 @@ import java.sql.Types;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static com.github.jinahya.database.metadata.bind._Assertions.assertType;
@@ -91,7 +90,7 @@ final class Context_Test_Utils {
         });
 
         // ---------------------------------------------------------------------------------------------------- catalogs
-        if (true) {
+        {
             final var catalogs = context.getCatalogs();
             if (catalogs.isEmpty()) {
                 catalogs.add(Catalog.of(null));
@@ -319,7 +318,6 @@ final class Context_Test_Utils {
                 .doesNotHaveDuplicates()
 //                .isSortedAccordingTo(Catalog.comparingInSpecifiedOrder(context))
                 .allSatisfy(c -> {
-//                    assertThat(c.getTableCat()).isNotNull();
                 })
         ;
         for (final var e : elements) {
@@ -660,7 +658,7 @@ final class Context_Test_Utils {
 
     private static void procedure(final Context context, final Procedure procedure) throws SQLException {
         MetadataType_Test_Utils.verify(procedure);
-        if (true) {
+        {
             final var procedureColumns = context.getProcedureColumns(procedure, "%");
             procedureColumns(context, procedureColumns);
         }
@@ -767,37 +765,14 @@ final class Context_Test_Utils {
 
     // ---------------------------------------------------------------------------------------------------------- tables
     static void tables(final Context context, final List<? extends Table> tables) throws SQLException {
-//        assertThat(tables)
-//                .isNotNull()
-//                .doesNotContainNull()
-//                .doesNotHaveDuplicates()
-//                .allSatisfy(t -> {
-//                });
-        if (!databaseProductName(context).equals(DatabaseProductNames.MARIA_DB) &&
-            !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
-            // https://jira.mariadb.org/browse/CONJ-1156
-//            assertThat(tables).isSortedAccordingTo(Table.comparingInSpecifiedOrder(context));
-        }
+        assertThat(tables)
+                .isNotNull()
+                .doesNotContainNull()
+                .doesNotHaveDuplicates()
+                .allSatisfy(t -> {
+                });
         for (final var table : tables) {
             table(context, table);
-        }
-        if (false) {
-            try (var executor = Executors.newFixedThreadPool(128, Thread.ofVirtual().factory())) {
-                for (final var foreignTable : tables) {
-                    for (final var parentTable : tables) {
-                        executor.submit(() -> {
-                            try (var connection = context.connectionSupplier.get()) {
-                                final var c = Context.newInstance(connection);
-                                final var crossReference = c.getCrossReference(parentTable, foreignTable);
-                                log.debug("crossReference.size: {}", crossReference.size());
-                                crossReference(context, crossReference);
-                            } catch (final SQLException sqle) {
-                                log.error("failed", sqle);
-                            }
-                        });
-                    }
-                }
-            }
         }
     }
 
