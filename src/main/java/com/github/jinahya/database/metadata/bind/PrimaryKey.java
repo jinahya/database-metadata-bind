@@ -59,7 +59,7 @@ public class PrimaryKey
 
     private static final long serialVersionUID = 3159826510060898330L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<PrimaryKey> comparing(final Comparator<? super String> comparator) {
         return Comparator.comparing(PrimaryKey::getColumnName, comparator);
     }
@@ -118,7 +118,7 @@ public class PrimaryKey
     /**
      * Creates a new instance.
      */
-     PrimaryKey() {
+    PrimaryKey() {
         super();
     }
 

@@ -38,7 +38,7 @@ abstract class PortedKey
 
     private static final long serialVersionUID = 6713872409315471232L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static <T extends PortedKey> Comparator<T> comparingPktable(final Context context,
                                                                 final Comparator<? super String> comparator)
             throws SQLException {

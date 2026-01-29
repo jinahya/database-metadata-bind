@@ -39,13 +39,14 @@ public class Catalog
 
     private static final long serialVersionUID = 6239185259128825953L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<Catalog> comparingInSpecifiedOrder(final Context context,
                                                          final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(Catalog::getTableCat, comparator); // NOT nullable
+        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        return Comparator.comparing(Catalog::getTableCat, nullSafe);
     }
 
     static Comparator<Catalog> comparingInSpecifiedOrder(final Context context) throws SQLException {
@@ -61,10 +62,16 @@ public class Catalog
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    /**
+     * Creates a new instance of the specified value of {@value #COLUMN_LABEL_TABLE_CAT} column value.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     * @return a new instance of {@code tableCat}.
+     */
     static Catalog of(final String tableCat) {
-        final Catalog instance = new Catalog();
-        instance.setTableCat(tableCat);
-        return instance;
+        return new Catalog()
+                .tableCat(tableCat);
     }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -76,7 +83,7 @@ public class Catalog
         super();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -104,6 +111,8 @@ public class Catalog
         return Objects.hash(super.hashCode(), tableCat);
     }
 
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**
@@ -122,6 +131,11 @@ public class Catalog
      */
     void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
+    }
+
+    Catalog tableCat(final String tableCat) {
+        setTableCat(tableCat);
+        return this;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

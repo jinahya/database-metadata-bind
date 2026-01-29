@@ -311,32 +311,32 @@ final class Context_Test_Utils {
     }
 
     // -------------------------------------------------------------------------------------------------------- catalogs
-    private static void catalogs(final Context context, final List<? extends Catalog> elements) throws SQLException {
-        assertThat(elements)
+    private static void catalogs(final Context context, final List<? extends Catalog> values) throws SQLException {
+        assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-//                .isSortedAccordingTo(Catalog.comparingInSpecifiedOrder(context))
-                .allSatisfy(c -> {
+                .isSortedAccordingTo(Catalog.comparingInSpecifiedOrder(context))
+                .allSatisfy(v -> {
                 })
         ;
-        for (final var e : elements) {
-            catalog(context, e);
+        for (final var value : values) {
+            catalog(context, value);
         }
     }
 
-    private static void catalog(final Context context, final Catalog catalog) throws SQLException {
-        MetadataType_Test_Utils.verify(catalog);
+    private static void catalog(final Context context, final Catalog value) throws SQLException {
+        MetadataType_Test_Utils.verify(value);
         // -------------------------------------------------------------------------------------------------- procedures
         try {
-            final var procedures = context.getProcedures(catalog, "%");
+            final var procedures = context.getProcedures(value, "%");
             procedures(context, procedures);
         } catch (final SQLException sqle) {
             // empty
         }
         // ----------------------------------------------------------------------------------------------------- schemas
         try {
-            final var schemas = context.getSchemas(catalog, "%");
+            final var schemas = context.getSchemas(value, "%");
             if (schemas.isEmpty()) {
                 schemas.add(Schema.of((String) null, null));
             }
@@ -346,25 +346,25 @@ final class Context_Test_Utils {
         }
         // ------------------------------------------------------------------------------------------------- superTables
         try {
-            final var superTables = context.getSuperTables(catalog.getTableCat(), "%", "%");
+            final var superTables = context.getSuperTables(value.getTableCat(), "%", "%");
             superTables(context, superTables);
         } catch (final SQLException sqle) {
             // empty
         }
         // -------------------------------------------------------------------------------------------------- superTypes
         try {
-            final var superTypes = context.getSuperTypes(catalog.getTableCat(), "%", "%");
+            final var superTypes = context.getSuperTypes(value.getTableCat(), "%", "%");
             superTypes(context, superTypes);
         } catch (final SQLException sqle) {
             // empty
         }
         // ------------------------------------------------------------------------------------------------------ tables
         try {
-            final var tables = context.getTables(catalog.getTableCat(), null, "%", (String[]) null);
+            final var tables = context.getTables(value.getTableCat(), null, "%", (String[]) null);
             if (!databaseProductName(context).equals(DatabaseProductNames.APACHE_DERBY) &&
                 !databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)) {
                 tables.forEach(t -> {
-                    assertType(t).isOf(catalog);
+                    assertType(t).isOf(value);
                 });
             }
             tables(context, tables);
@@ -373,10 +373,10 @@ final class Context_Test_Utils {
         }
         // --------------------------------------------------------------------------------------------- tablePrivileges
         try {
-            final var tablePrivileges = context.getTablePrivileges(catalog.getTableCat(), "%", "%");
+            final var tablePrivileges = context.getTablePrivileges(value.getTableCat(), "%", "%");
             if (!databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)) {
                 assertThat(tablePrivileges).allSatisfy(tp -> {
-                    assertThat(tp.getTableCat()).isEqualTo(catalog.getTableCat());
+                    assertThat(tp.getTableCat()).isEqualTo(value.getTableCat());
                 });
             }
             tablePrivileges(context, tablePrivileges);

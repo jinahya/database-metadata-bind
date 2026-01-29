@@ -63,7 +63,7 @@ public class UDT
 
     private static final long serialVersionUID = 8665246093405057553L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<UDT> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
         return Comparator
@@ -294,25 +294,23 @@ public class UDT
         this.baseType = baseType;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
-
     private String typeCat;
 
     @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
-
     private String typeSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
 
     private String typeName;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     @_ColumnLabel(COLUMN_LABEL_CLASS_NAME)
     private String className;
 

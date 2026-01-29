@@ -80,14 +80,14 @@ public class SuperTable
      */
     public static final String COLUMN_LABEL_SUPERTABLE_NAME = "SUPERTABLE_NAME";
 
-    // ------------------------------------------------------------------------------------------ STATIC FACTORY_METHODS
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
      */
-     SuperTable() {
+    SuperTable() {
         super();
     }
 

@@ -41,7 +41,7 @@ public class Attribute
 
     private static final long serialVersionUID = 1913681105410440186L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
      * Returns a comparator for comparing instances in the order specified by the JDBC specification.
@@ -240,7 +240,7 @@ public class Attribute
     /**
      * Creates a new instance.
      */
-     Attribute() {
+    Attribute() {
         super();
     }
 

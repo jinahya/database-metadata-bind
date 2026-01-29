@@ -64,7 +64,7 @@ public class ProcedureColumn
 
     private static final long serialVersionUID = 3894753719381358829L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<ProcedureColumn> comparing(final Comparator<? super String> comparator) {
         return Comparator
                 .comparing(ProcedureColumn::getProcedureCat, comparator)
@@ -241,7 +241,7 @@ public class ProcedureColumn
     /**
      * Creates a new instance.
      */
-     ProcedureColumn() {
+    ProcedureColumn() {
         super();
     }
 

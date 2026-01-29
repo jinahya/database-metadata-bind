@@ -200,9 +200,8 @@ class External_MySQL_IT {
                 log.info("schemaId: {}", schemaId);
                 final var tableList = entry.getValue();
                 log.info("tableList.size: {}", tableList.size());
-                try (final var stream = new FileOutputStream(
-                        String.valueOf(schemaId.getTableCatalog()) + '_' + String.valueOf(schemaId.getTableSchem()) +
-                        "_cross_references.json")) {
+                final var name = schemaId.getTableCatalog() + '_' + schemaId.getTableSchem() + "_cross_references.json";
+                try (final var stream = new FileOutputStream(name)) {
                     final var generator = factory.createGenerator(stream);
                     generator.writeStartArray();
                     for (final var t1 : tableList) {

@@ -62,8 +62,7 @@ public class FunctionColumn
 
     private static final long serialVersionUID = -7445156446214062680L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Context context,
                                                                 final Comparator<? super String> comparator)
             throws SQLException {
@@ -209,7 +208,7 @@ public class FunctionColumn
     /**
      * Creates a new instance.
      */
-     FunctionColumn() {
+    FunctionColumn() {
         super();
     }
 

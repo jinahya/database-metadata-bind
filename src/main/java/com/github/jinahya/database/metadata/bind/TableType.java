@@ -54,12 +54,12 @@ public class TableType
 
     private static final long serialVersionUID = -7630634982776331078L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<TableType> comparing(final Context context, final Comparator<? super String> comparator) {
         return Comparator.comparing(TableType::getTableType, comparator);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------ TABLE_TYPE
 
     /**
      * A column label of {@value}.
@@ -73,7 +73,7 @@ public class TableType
     /**
      * Creates a new instance.
      */
-     TableType() {
+    TableType() {
         super();
     }
 

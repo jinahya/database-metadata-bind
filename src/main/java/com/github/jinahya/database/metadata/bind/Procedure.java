@@ -61,7 +61,7 @@ public class Procedure
 
     private static final long serialVersionUID = -6262056388403934829L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<Procedure> comparing(final Comparator<? super String> comparator) {
         return Comparator.comparing(Procedure::getProcedureCat, comparator)
                 .thenComparing(Procedure::getProcedureSchem, comparator)
@@ -131,7 +131,7 @@ public class Procedure
     /**
      * Creates a new instance.
      */
-     Procedure() {
+    Procedure() {
         super();
     }
 

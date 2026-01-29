@@ -63,7 +63,7 @@ public class IndexInfo
 
     private static final long serialVersionUID = 924040226611181424L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<IndexInfo> comparingInSpecifiedOrder(final Context context,
                                                            final Comparator<? super String> comparator)
             throws SQLException {
@@ -200,7 +200,7 @@ public class IndexInfo
     /**
      * Creates a new instance.
      */
-     IndexInfo() {
+    IndexInfo() {
         super();
     }
 

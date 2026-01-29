@@ -39,7 +39,7 @@ public class BestRowIdentifier
 
     private static final long serialVersionUID = -1512051574198028399L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<BestRowIdentifier> comparingInSpecifiedOrder(final Context context,
                                                                    final Comparator<? super Integer> comparator)
             throws SQLException {
@@ -115,7 +115,7 @@ public class BestRowIdentifier
     /**
      * Creates a new instance.
      */
-     BestRowIdentifier() {
+    BestRowIdentifier() {
         super();
     }
 

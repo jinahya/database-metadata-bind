@@ -58,7 +58,7 @@ public class TypeInfo
 
     private static final long serialVersionUID = -3964147654019495313L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context,
                                                           final Comparator<? super Integer> comparator)
             throws SQLException {
@@ -204,7 +204,7 @@ public class TypeInfo
     /**
      * Creates a new instance.
      */
-     TypeInfo() {
+    TypeInfo() {
         super();
     }
 

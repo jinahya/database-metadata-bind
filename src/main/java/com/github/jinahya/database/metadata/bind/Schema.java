@@ -39,7 +39,7 @@ public class Schema
 
     private static final long serialVersionUID = 7457236468401244963L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<Schema> comparingInSpecifiedOrder(final Context context,
                                                         final Comparator<? super String> comparator)
             throws SQLException {
@@ -47,8 +47,8 @@ public class Schema
         Objects.requireNonNull(comparator, "comparator is null");
         final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
         return Comparator
-                .comparing(Schema::getTableCatalog, nullSafe)     // nullable
-                .thenComparing(Schema::getTableSchem, comparator); // NOT nullable
+                .comparing(Schema::getTableCatalog, nullSafe)
+                .thenComparing(Schema::getTableSchem, nullSafe);
     }
 
     static Comparator<Schema> comparingInSpecifiedOrder(final Context context) throws SQLException {
@@ -56,14 +56,14 @@ public class Schema
         return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- TABLE_CATALOG
 
     /**
      * A column label of {@value}.
@@ -129,6 +129,7 @@ public class Schema
     public int hashCode() {
         return Objects.hash(super.hashCode(), tableCatalog, tableSchem);
     }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**

@@ -37,7 +37,7 @@ public class ClientInfoProperty
 
     private static final long serialVersionUID = -2913230435651853254L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Context context,
                                                                     final Comparator<? super String> comparator)
             throws SQLException {
@@ -87,7 +87,7 @@ public class ClientInfoProperty
     /**
      * Creates a new instance.
      */
-     ClientInfoProperty() {
+    ClientInfoProperty() {
         super();
     }
 

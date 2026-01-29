@@ -38,7 +38,7 @@ public class ExportedKey
 
     private static final long serialVersionUID = -6561660015694928357L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<ExportedKey> comparingInSpecifiedOrder(final Context context,
                                                              final Comparator<? super String> comparator)
             throws SQLException {
@@ -60,7 +60,7 @@ public class ExportedKey
     /**
      * Creates a new instance.
      */
-     ExportedKey() {
+    ExportedKey() {
         super();
     }
 

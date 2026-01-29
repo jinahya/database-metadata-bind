@@ -38,7 +38,7 @@ public class CrossReference
 
     private static final long serialVersionUID = -5343386346721125961L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<CrossReference> comparingInSpecifiedOrder(final Context context,
                                                                 final Comparator<? super String> comparator)
             throws SQLException {
@@ -212,7 +212,7 @@ public class CrossReference
     /**
      * Creates a new instance.
      */
-     CrossReference() {
+    CrossReference() {
         super();
     }
 

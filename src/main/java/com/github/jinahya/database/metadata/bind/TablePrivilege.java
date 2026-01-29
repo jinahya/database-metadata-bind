@@ -61,7 +61,7 @@ public class TablePrivilege
 
     private static final long serialVersionUID = -2142097373603478881L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Context context,
                                                                 final Comparator<? super String> comparator)
             throws SQLException {
@@ -125,7 +125,7 @@ public class TablePrivilege
     /**
      * Creates a new instance.
      */
-     TablePrivilege() {
+    TablePrivilege() {
         super();
     }
 

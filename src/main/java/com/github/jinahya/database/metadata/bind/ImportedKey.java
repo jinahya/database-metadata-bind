@@ -38,7 +38,7 @@ public class ImportedKey
 
     private static final long serialVersionUID = -1900794151555506751L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<ImportedKey> comparingInSpecifiedOrder(final Context context,
                                                              final Comparator<? super String> comparator)
             throws SQLException {

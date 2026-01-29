@@ -60,7 +60,7 @@ public class PseudoColumn
 
     private static final long serialVersionUID = -5612575879670895510L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<PseudoColumn> comparing(final Comparator<? super String> comparator) {
         return Comparator
                 .comparing(PseudoColumn::getTableCat, comparator)
@@ -154,7 +154,7 @@ public class PseudoColumn
     @SuppressWarnings({
             "java:S2637" // "@NonNull" values should not be set to null
     })
-     PseudoColumn() {
+    PseudoColumn() {
         super();
     }
 
@@ -422,13 +422,11 @@ public class PseudoColumn
     @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-
     private String tableCat;
 
     @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)

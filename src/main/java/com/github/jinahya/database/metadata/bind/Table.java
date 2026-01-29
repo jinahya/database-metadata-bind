@@ -47,7 +47,7 @@ public class Table
 
     private static final long serialVersionUID = 6590036695540141125L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<Table> comparingInSpecifiedOrder(final Context context,
                                                        final Comparator<? super String> comparator)
             throws SQLException {
@@ -157,7 +157,7 @@ public class Table
     /**
      * Creates a new instance.
      */
-     Table() {
+    Table() {
         super();
     }
 
@@ -234,7 +234,7 @@ public class Table
         this.tableCat = tableCat;
     }
 
-    // ------------------------------------------------------------------------------------------------------- tableShem
+    // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
      * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
