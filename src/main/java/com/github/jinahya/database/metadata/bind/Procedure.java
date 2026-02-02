@@ -21,16 +21,18 @@ public class Procedure
     private static final long serialVersionUID = -6262056388403934829L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
-    static Comparator<Procedure> comparing(final Comparator<? super String> comparator) {
-        return Comparator.comparing(Procedure::getProcedureCat, comparator)
+    // They are ordered by PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME and SPECIFIC_NAME.
+    static Comparator<Procedure> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
+        return Comparator
+                .comparing(Procedure::getProcedureCat, comparator)
                 .thenComparing(Procedure::getProcedureSchem, comparator)
                 .thenComparing(Procedure::getProcedureName, comparator)
                 .thenComparing(Procedure::getSpecificName, comparator);
     }
 
-    static Comparator<Procedure> comparing(final Context context, final Comparator<? super String> comparator)
+    static Comparator<Procedure> comparingInSpecifiedOrder(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullOrdered(context, comparator));
+        return comparingInSpecifiedOrder(ContextUtils.nullOrdered(context, comparator));
     }
 
     // -------------------------------------------------------------------------------------------------- PROCEDURE_TYPE

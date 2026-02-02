@@ -27,6 +27,7 @@ import java.sql.JDBCType;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Types;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -604,8 +605,9 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .isSortedAccordingTo(IndexInfo.comparingInSpecifiedOrder(context))
-                .allSatisfy(i -> {
+                .isSortedAccordingTo(IndexInfo.comparingInSpecifiedOrder(
+                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                .allSatisfy(v -> {
                 });
         for (final var value : values) {
             indexInfo(context, value);
@@ -623,12 +625,14 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .allSatisfy(p -> {
+                .isSortedAccordingTo(Procedure.comparingInSpecifiedOrder(
+                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                .allSatisfy(v -> {
                 });
         if (!databaseProductName(context).equals(DatabaseProductNames.MARIA_DB) &&
             !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
             assertThat(values).isSortedAccordingTo(
-                    Procedure.comparing(context, String.CASE_INSENSITIVE_ORDER));
+                    Procedure.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER));
         }
         for (final var value : values) {
             procedure(context, value);
@@ -650,8 +654,9 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .isSortedAccordingTo(ProcedureColumn.comparing(context, String.CASE_INSENSITIVE_ORDER))
-                .allSatisfy(p -> {
+                .isSortedAccordingTo(ProcedureColumn.comparingInSpecifiedOrder(
+                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                .allSatisfy(v -> {
                 });
         for (final var value : values) {
             procedureColumn(context, value);
@@ -671,8 +676,9 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .isSortedAccordingTo(Schema.comparingInSpecifiedOrder(context))
-                .allSatisfy(s -> {
+                .isSortedAccordingTo(Schema.comparingInSpecifiedOrder(
+                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                .allSatisfy(v -> {
                 })
         ;
         for (final var value : values) {
@@ -726,7 +732,7 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .allSatisfy(s -> {
+                .allSatisfy(v -> {
                 });
         for (final var value : values) {
             superType(context, value);
@@ -747,7 +753,10 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .allSatisfy(t -> {
+                .isSortedAccordingTo(Table.comparingInSpecifiedOrder(
+//                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                        ContextUtils.nullOrdered(context, Comparator.naturalOrder())))
+                .allSatisfy(v -> {
                 });
         for (final var value : values) {
             table(context, value);

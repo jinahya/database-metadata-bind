@@ -50,6 +50,15 @@ public class Table
     private static final long serialVersionUID = 6590036695540141125L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    static Comparator<Table> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .comparing(Table::getTableType, comparator)
+                .thenComparing(Table::getTableCat, comparator)
+                .thenComparing(Table::getTableSchem, comparator)
+                .thenComparing(Table::getTableName, comparator);
+    }
+
     static Comparator<Table> comparingInSpecifiedOrder(final Context context,
                                                        final Comparator<? super String> comparator)
             throws SQLException {

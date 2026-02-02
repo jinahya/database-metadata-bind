@@ -22,6 +22,13 @@ public class Schema
     private static final long serialVersionUID = 7457236468401244963L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    static Comparator<Schema> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .comparing(Schema::getTableCatalog, comparator)
+                .thenComparing(Schema::getTableSchem, comparator);
+    }
+
     static Comparator<Schema> comparingInSpecifiedOrder(final Context context,
                                                         final Comparator<? super String> comparator)
             throws SQLException {

@@ -43,7 +43,8 @@ public class ProcedureColumn
     private static final long serialVersionUID = 3894753719381358829L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
-    static Comparator<ProcedureColumn> comparing(final Comparator<? super String> comparator) {
+    // They are ordered by PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME and SPECIFIC_NAME.
+    static Comparator<ProcedureColumn> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         return Comparator
                 .comparing(ProcedureColumn::getProcedureCat, comparator)
                 .thenComparing(ProcedureColumn::getProcedureSchem, comparator)
@@ -51,9 +52,9 @@ public class ProcedureColumn
                 .thenComparing(ProcedureColumn::getSpecificName, comparator);
     }
 
-    static Comparator<ProcedureColumn> comparing(final Context context, final Comparator<? super String> comparator)
+    static Comparator<ProcedureColumn> comparingInSpecifiedOrder(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullOrdered(context, comparator));
+        return comparingInSpecifiedOrder(ContextUtils.nullOrdered(context, comparator));
     }
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE

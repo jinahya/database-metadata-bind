@@ -22,6 +22,17 @@ public class IndexInfo
     private static final long serialVersionUID = 924040226611181424L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    // They are ordered by NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
+    static Comparator<IndexInfo> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .comparing(IndexInfo::getNonUnique, Comparator.naturalOrder())
+                .thenComparing(IndexInfo::getType, Comparator.naturalOrder())
+                .thenComparing(IndexInfo::getIndexName, comparator)
+                .thenComparing(IndexInfo::getOrdinalPosition, Comparator.naturalOrder());
+    }
+
+    // They are ordered by NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
     static Comparator<IndexInfo> comparingInSpecifiedOrder(final Context context,
                                                            final Comparator<? super String> comparator)
             throws SQLException {
