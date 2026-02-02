@@ -1,27 +1,8 @@
 package com.github.jinahya.database.metadata.bind;
 
-/*-
- * #%L
- * database-metadata-bind
- * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -30,26 +11,29 @@ import java.util.Objects;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTypeInfo()
+ * @see <a
+ * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html#getTypeInfo()">DatabaseMetaData#getTypeInfo</a>
  */
-
 public class TypeInfo
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
-    static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context,
-                                                          final Comparator<? super Integer> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(TypeInfo::getDataType, comparator); // NOT nullable
-    }
-
-    static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, Comparator.naturalOrder());
+//    static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context,
+//                                                          final Comparator<? super Integer> comparator)
+//            throws SQLException {
+//        Objects.requireNonNull(context, "context is null");
+//        Objects.requireNonNull(comparator, "comparator is null");
+//        return Comparator.comparing(TypeInfo::getDataType, comparator); // NOT nullable
+//    }
+//
+//    static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context) throws SQLException {
+//        Objects.requireNonNull(context, "context is null");
+//        return comparingInSpecifiedOrder(context, Comparator.naturalOrder());
+//    }
+    static Comparator<TypeInfo> comparingInSpecifiedOrder() {
+        return Comparator.comparing(TypeInfo::getDataType, Integer::compareTo);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -121,11 +105,11 @@ public class TypeInfo
      */
     public static final String COLUMN_LABEL_SEARCHABLE = "SEARCHABLE";
 
-    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_NONE = DatabaseMetaData.typePredNone; // 0
+    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_NONE = DatabaseMetaData.typePredNone;    // 0
 
-    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_CHAR = DatabaseMetaData.typePredChar; // 1
+    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_CHAR = DatabaseMetaData.typePredChar;    // 1
 
-    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_BASIC = DatabaseMetaData.typePredBasic; // 2
+    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_BASIC = DatabaseMetaData.typePredBasic;  // 2
 
     public static final int COLUMN_VALUE_SEARCHABLE_TYPE_SEARCHABLE = DatabaseMetaData.typeSearchable; // 3
 
@@ -281,6 +265,7 @@ public class TypeInfo
      *
      * @return the value of {@value #COLUMN_LABEL_PRECISION} column.
      */
+    @Nullable
     public Integer getPrecision() {
         return precision;
     }
@@ -301,6 +286,7 @@ public class TypeInfo
      *
      * @return the value of {@value #COLUMN_LABEL_LITERAL_PREFIX} column.
      */
+    @Nullable
     public String getLiteralPrefix() {
         return literalPrefix;
     }
@@ -321,6 +307,7 @@ public class TypeInfo
      *
      * @return the value of {@value #COLUMN_LABEL_LITERAL_SUFFIX} column.
      */
+    @Nullable
     public String getLiteralSuffix() {
         return literalSuffix;
     }
@@ -341,6 +328,7 @@ public class TypeInfo
      *
      * @return the value of {@value #COLUMN_LABEL_CREATE_PARAMS} column.
      */
+    @Nullable
     public String getCreateParams() {
         return createParams;
     }
@@ -421,6 +409,7 @@ public class TypeInfo
      *
      * @return the value of {@value #COLUMN_LABEL_UNSIGNED_ATTRIBUTE} column.
      */
+    @Nullable
     public Boolean getUnsignedAttribute() {
         return unsignedAttribute;
     }
@@ -481,6 +470,7 @@ public class TypeInfo
      *
      * @return the value of {@value #COLUMN_LABEL_LOCAL_TYPE_NAME} column.
      */
+    @Nullable
     public String getLocalTypeName() {
         return localTypeName;
     }
@@ -541,6 +531,7 @@ public class TypeInfo
      *
      * @return the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
      */
+    @Nullable
     public Integer getSqlDataType() {
         return sqlDataType;
     }
@@ -561,6 +552,7 @@ public class TypeInfo
      *
      * @return the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
      */
+    @Nullable
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
@@ -602,22 +594,24 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
-    @org.jspecify.annotations.Nullable
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
     private String literalPrefix;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
     private String literalSuffix;
 
-    @org.jspecify.annotations.Nullable
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
     private String createParams;
@@ -631,7 +625,7 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
     private Integer searchable;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_UNSIGNED_ATTRIBUTE)
     private Boolean unsignedAttribute;
@@ -642,7 +636,7 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_AUTO_INCREMENT)
     private Boolean autoIncrement;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LOCAL_TYPE_NAME)
     private String localTypeName;
@@ -653,12 +647,12 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_MAXIMUM_SCALE)
     private Integer maximumScale;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;

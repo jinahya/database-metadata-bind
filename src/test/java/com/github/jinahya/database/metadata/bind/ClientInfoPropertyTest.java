@@ -29,6 +29,7 @@ class ClientInfoPropertyTest
         super(ClientInfoProperty.class);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     void equals__() {
         super.equals__();

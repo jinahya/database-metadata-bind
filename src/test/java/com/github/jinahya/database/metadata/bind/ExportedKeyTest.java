@@ -29,6 +29,7 @@ package com.github.jinahya.database.metadata.bind;
 class ExportedKeyTest
         extends PortedKeyTest<ExportedKey> {
 
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
     ExportedKeyTest() {
         super(ExportedKey.class);
     }

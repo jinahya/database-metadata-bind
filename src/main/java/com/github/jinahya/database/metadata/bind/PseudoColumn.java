@@ -1,24 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
-/*-
- * #%L
- * database-metadata-bind
- * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -185,6 +167,7 @@ public class PseudoColumn
      *
      * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
+    @Nullable
     public String getTableCat() {
         return tableCat;
     }
@@ -205,6 +188,7 @@ public class PseudoColumn
      *
      * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
+    @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
@@ -285,6 +269,7 @@ public class PseudoColumn
      *
      * @return the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
      */
+    @Nullable
     public Integer getColumnSize() {
         return columnSize;
     }
@@ -305,6 +290,7 @@ public class PseudoColumn
      *
      * @return the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
      */
+    @Nullable
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
@@ -365,6 +351,7 @@ public class PseudoColumn
      *
      * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
      */
+    @Nullable
     public String getRemarks() {
         return remarks;
     }
@@ -419,12 +406,12 @@ public class PseudoColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -439,12 +426,12 @@ public class PseudoColumn
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
@@ -455,7 +442,7 @@ public class PseudoColumn
     @_ColumnLabel(COLUMN_LABEL_USAGE)
     private String columnUsage;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;

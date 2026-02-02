@@ -31,6 +31,7 @@ import java.lang.annotation.Target;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
+@_Nullable
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE})

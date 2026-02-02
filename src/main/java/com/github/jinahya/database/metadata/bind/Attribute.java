@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -347,6 +349,7 @@ public class Attribute
      * @see #setTypeCat(String)
      */
 
+    @Nullable
     public String getTypeCat() {
         return typeCat;
     }
@@ -369,6 +372,7 @@ public class Attribute
      * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
 
+    @Nullable
     public String getTypeSchem() {
         return typeSchem;
     }
@@ -489,6 +493,7 @@ public class Attribute
      *
      * @return the value of {@code DECIMAL_DIGITS} column.
      */
+    @Nullable
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
@@ -549,6 +554,7 @@ public class Attribute
      *
      * @return the value of {@code REMARKS} column.
      */
+    @Nullable
     public String getRemarks() {
         return remarks;
     }
@@ -569,6 +575,7 @@ public class Attribute
      *
      * @return the value of {@code ATTR_DEF} column.
      */
+    @Nullable
     public String getAttrDef() {
         return attrDef;
     }
@@ -589,6 +596,7 @@ public class Attribute
      *
      * @return the value of {@code SQL_DATA_TYPE} column.
      */
+    @Nullable
     public Integer getSqlDataType() {
         return sqlDataType;
     }
@@ -609,6 +617,7 @@ public class Attribute
      *
      * @return the value of {@code SQL_DATETIME_SUB} column.
      */
+    @Nullable
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
@@ -689,6 +698,7 @@ public class Attribute
      *
      * @return the value of {@code SCOPE_CATALOG} column.
      */
+    @Nullable
     public String getScopeCatalog() {
         return scopeCatalog;
     }
@@ -709,6 +719,7 @@ public class Attribute
      *
      * @return the value of {@code SCOPE_SCHEMA} column.
      */
+    @Nullable
     public String getScopeSchema() {
         return scopeSchema;
     }
@@ -729,6 +740,7 @@ public class Attribute
      *
      * @return the value of {@code SCOPE_TABLE} column.
      */
+    @Nullable
     public String getScopeTable() {
         return scopeTable;
     }
@@ -749,6 +761,7 @@ public class Attribute
      *
      * @return the value of {@code SOURCE_DATA_TYPE} column.
      */
+    @Nullable
     public Integer getSourceDataType() {
         return sourceDataType;
     }
@@ -763,12 +776,12 @@ public class Attribute
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
@@ -789,7 +802,7 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_ATTR_SIZE)
     private Integer attrSize;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
@@ -800,22 +813,22 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_ATTR_DEF)
     private String attrDef;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
@@ -829,22 +842,22 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_CATALOG)
     private String scopeCatalog;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_SCHEMA)
     private String scopeSchema;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_TABLE)
     private String scopeTable;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SOURCE_DATA_TYPE)
     private Integer sourceDataType;

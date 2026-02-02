@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -280,6 +282,7 @@ public class ProcedureColumn
      *
      * @return the value of {@code PROCEDURE_CAT} column.
      */
+    @Nullable
     public String getProcedureCat() {
         return procedureCat;
     }
@@ -300,6 +303,7 @@ public class ProcedureColumn
      *
      * @return the value of {@code PROCEDURE_SCHEM} column.
      */
+    @Nullable
     public String getProcedureSchem() {
         return procedureSchem;
     }
@@ -420,6 +424,7 @@ public class ProcedureColumn
      *
      * @return the value of {@code PRECISION} column.
      */
+    @Nullable
     public Integer getPrecision() {
         return precision;
     }
@@ -460,6 +465,7 @@ public class ProcedureColumn
      *
      * @return the value of {@code SCALE} column.
      */
+    @Nullable
     public Integer getScale() {
         return scale;
     }
@@ -520,6 +526,7 @@ public class ProcedureColumn
      *
      * @return the value of {@code REMARKS} column.
      */
+    @Nullable
     public String getRemarks() {
         return remarks;
     }
@@ -540,6 +547,7 @@ public class ProcedureColumn
      *
      * @return the value of {@code COLUMN_DEF} column.
      */
+    @Nullable
     public String getColumnDef() {
         return columnDef;
     }
@@ -560,6 +568,7 @@ public class ProcedureColumn
      *
      * @return the value of {@code SQL_DATA_TYPE} column.
      */
+    @Nullable
     public Integer getSqlDataType() {
         return sqlDataType;
     }
@@ -580,6 +589,7 @@ public class ProcedureColumn
      *
      * @return the value of {@code SQL_DATETIME_SUB} column.
      */
+    @Nullable
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
@@ -600,6 +610,7 @@ public class ProcedureColumn
      *
      * @return the value of {@code CHAR_OCTET_LENGTH} column.
      */
+    @Nullable
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
@@ -674,12 +685,12 @@ public class ProcedureColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_CAT)
     private String procedureCat;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_SCHEM)
     private String procedureSchem;
@@ -700,7 +711,7 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
@@ -708,7 +719,7 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_LENGTH)
     private Integer length;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCALE)
     private Integer scale;
@@ -719,27 +730,27 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_DEF)
     private String columnDef;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_ReservedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_ReservedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;

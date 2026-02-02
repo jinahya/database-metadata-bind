@@ -1,24 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
-/*-
- * #%L
- * database-metadata-bind
- * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -244,6 +226,7 @@ public class FunctionColumn
      *
      * @return the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
      */
+    @Nullable
     public String getFunctionCat() {
         return functionCat;
     }
@@ -264,6 +247,7 @@ public class FunctionColumn
      *
      * @return the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
      */
+    @Nullable
     public String getFunctionSchem() {
         return functionSchem;
     }
@@ -384,6 +368,7 @@ public class FunctionColumn
      *
      * @return the value of {@code PRECISION} column.
      */
+    @Nullable
     public Integer getPrecision() {
         return precision;
     }
@@ -424,6 +409,7 @@ public class FunctionColumn
      *
      * @return the value of {@code SCALE} column.
      */
+    @Nullable
     public Integer getScale() {
         return scale;
     }
@@ -504,6 +490,7 @@ public class FunctionColumn
      *
      * @return the value of {@code CHAR_OCTET_LENGTH} column.
      */
+    @Nullable
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
@@ -579,12 +566,12 @@ public class FunctionColumn
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
@@ -605,7 +592,7 @@ public class FunctionColumn
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
@@ -613,7 +600,7 @@ public class FunctionColumn
     @_ColumnLabel(COLUMN_LABEL_LENGTH)
     private Integer length;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCALE)
     private Integer scale;
@@ -627,7 +614,7 @@ public class FunctionColumn
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;

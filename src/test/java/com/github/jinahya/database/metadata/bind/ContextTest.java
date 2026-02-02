@@ -40,8 +40,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ContextTest {
 
     /**
-     * Verifies that all {@link DatabaseMetaData} methods returning {@link ResultSet} have corresponding
-     * {@code public} methods in {@link Context} with identical signatures that return {@link List}.
+     * Verifies that all {@link DatabaseMetaData} methods returning {@link ResultSet} have corresponding {@code public}
+     * methods in {@link Context} with identical signatures that return {@link List}.
      *
      * @throws ReflectiveOperationException if a reflective operation fails.
      */

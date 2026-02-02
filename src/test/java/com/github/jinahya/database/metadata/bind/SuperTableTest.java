@@ -29,6 +29,7 @@ class SuperTableTest
         super(SuperTable.class);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     void equals__() {
         super.equals__();

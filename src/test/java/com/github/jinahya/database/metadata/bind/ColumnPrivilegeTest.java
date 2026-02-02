@@ -29,6 +29,7 @@ class ColumnPrivilegeTest
         super(ColumnPrivilege.class);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     void equals__() {
         super.equals__();

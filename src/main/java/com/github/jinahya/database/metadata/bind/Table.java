@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
@@ -220,7 +222,7 @@ public class Table
      *
      * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-
+    @Nullable
     public String getTableCat() {
         return tableCat;
     }
@@ -241,7 +243,7 @@ public class Table
      *
      * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-
+    @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
@@ -302,6 +304,7 @@ public class Table
      *
      * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
      */
+    @Nullable
     public String getRemarks() {
         return remarks;
     }
@@ -322,6 +325,7 @@ public class Table
      *
      * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
      */
+    @Nullable
     public String getTypeCat() {
         return typeCat;
     }
@@ -342,6 +346,7 @@ public class Table
      *
      * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
+    @Nullable
     public String getTypeSchem() {
         return typeSchem;
     }
@@ -362,6 +367,7 @@ public class Table
      *
      * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
+    @Nullable
     public String getTypeName() {
         return typeName;
     }
@@ -382,6 +388,7 @@ public class Table
      *
      * @return the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
      */
+    @Nullable
     public String getSelfReferencingColName() {
         return selfReferencingColName;
     }
@@ -402,6 +409,7 @@ public class Table
      *
      * @return the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
      */
+    @Nullable
     public String getRefGeneration() {
         return refGeneration;
     }
@@ -417,12 +425,12 @@ public class Table
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -436,36 +444,36 @@ public class Table
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SELF_REFERENCING_COL_NAME)
     private String selfReferencingColName;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REF_GENERATION)
     private String refGeneration;

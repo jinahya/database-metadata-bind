@@ -776,8 +776,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)} method,
-     * on the wrapped {@link #metadata}, with given arguments, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)} method, on
+     * the wrapped {@link #metadata}, with given arguments, and returns a list of bound values.
      *
      * @param catalog a value for the {@code catalog} parameter.
      * @param schema  a value for the {@code schema} parameter.

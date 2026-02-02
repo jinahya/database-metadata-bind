@@ -1,27 +1,10 @@
 package com.github.jinahya.database.metadata.bind;
 
-/*-
- * #%L
- * database-metadata-bind
- * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -31,6 +14,9 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getBestRowIdentifier(String, String, String, int, boolean)
  * @see PseudoColumn
+ * @see <a
+ * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html#getBestRowIdentifier(java.lang.String,java.lang.String,java.lang.String,int,boolean)">DatabaseMetaData#getBestRowIdentifier(catalog,
+ * schema, table, scope, nullable)</a>
  */
 @_ChildOf(Table.class)
 public class BestRowIdentifier
@@ -39,21 +25,25 @@ public class BestRowIdentifier
     private static final long serialVersionUID = -1512051574198028399L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
-    static Comparator<BestRowIdentifier> comparingInSpecifiedOrder(final Context context,
-                                                                   final Comparator<? super Integer> comparator)
-//            throws SQLException
-    {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(BestRowIdentifier::getScope, comparator); // NOT nullable
+
+    /**
+     * .
+     * <bloackquote>
+     * They are ordered by <code>SCOPE</code>.
+     * </bloackquote>
+     *
+     * @return .
+     */
+    static Comparator<BestRowIdentifier> comparingInSpecifiedOrder() {
+        return Comparator.comparing(BestRowIdentifier::getScope);
     }
 
-    static Comparator<BestRowIdentifier> comparingInSpecifiedOrder(final Context context)
-//            throws SQLException
-    {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, Comparator.naturalOrder());
-    }
+//    static Comparator<BestRowIdentifier> comparingInSpecifiedOrder(final Context context)
+////            throws SQLException
+//    {
+//        Objects.requireNonNull(context, "context is null");
+//        return comparingInSpecifiedOrder(context, Comparator.naturalOrder());
+//    }
 
     // ----------------------------------------------------------------------------------------------------------- SCOPE
 
@@ -61,6 +51,18 @@ public class BestRowIdentifier
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SCOPE = "SCOPE";
+
+    public static final int COLUMN_VALUE_SCOPE_BEST_ROW_TEMPORARY = DatabaseMetaData.bestRowTemporary;     // 0
+
+    public static final int COLUMN_VALUE_SCOPE_BEST_ROW_TRANSACTION = DatabaseMetaData.bestRowTransaction; // 1
+
+    public static final int COLUMN_VALUE_SCOPE_BEST_ROW_SESSION = DatabaseMetaData.bestRowSession;         // 2
+
+    static final List<Integer> COLUMN_VALUES_SCOPE = List.of(
+            COLUMN_VALUE_SCOPE_BEST_ROW_TEMPORARY,
+            COLUMN_VALUE_SCOPE_BEST_ROW_TRANSACTION,
+            COLUMN_VALUE_SCOPE_BEST_ROW_SESSION
+    );
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
 
@@ -243,6 +245,7 @@ public class BestRowIdentifier
      *
      * @return the value of {@code COLUMN_SIZE} column.
      */
+    @Nullable
     public Integer getColumnSize() {
         return columnSize;
     }
@@ -263,6 +266,7 @@ public class BestRowIdentifier
      *
      * @return the value of {@code BUFFER_LENGTH} column.
      */
+    @Nullable
     public Integer getBufferLength() {
         return bufferLength;
     }
@@ -283,6 +287,7 @@ public class BestRowIdentifier
      *
      * @return the value of {@code DECIMAL_DIGITS} column.
      */
+    @Nullable
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
@@ -330,17 +335,17 @@ public class BestRowIdentifier
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_BUFFER_LENGTH)
     private Integer bufferLength;
 
-    @org.jspecify.annotations.Nullable
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
