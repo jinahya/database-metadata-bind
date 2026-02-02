@@ -212,14 +212,9 @@ public class Context {
             final String label = i.next();
             final Object value = results.getObject(label);
             logger.log(System.Logger.Level.WARNING,
-                       () -> String.format(
-                               "unknown result; type: %s, label: %s, value: %s", type.getSimpleName(),
-                               label,
-                               value
-                       )
-            );
+                       "unknown result; type: {0}, label: {1}, value: {2}", type.getSimpleName(), label, value);
             if (instance instanceof AbstractMetadataType) {
-                ((AbstractMetadataType) instance).putUnmappedColumn(label, value);
+                ((AbstractMetadataType) instance).putUnkownColumn(label, value);
             }
         }
         assert resultLabels.isEmpty() : "remaining result labels: " + resultLabels;

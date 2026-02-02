@@ -46,7 +46,7 @@ abstract class AbstractMetadataType
     @Override
     public String toString() {
         return super.toString() + '{' +
-               "unmappedColumns=" + unmappedColumns +
+               "unmappedColumns=" + unknownColumns +
                '}';
     }
 
@@ -66,10 +66,16 @@ abstract class AbstractMetadataType
         return Objects.hash(getClass());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    private final transient Map<String, Object> unmappedColumns = new HashMap<>();
-
-    Object putUnmappedColumn(final String columnName, final Object value) {
-        return unmappedColumns.put(columnName, value);
+    // ------------------------------------------------------------------------------------------------- unmappedColumns
+    @Override
+    public Map<String, Object> getUnknownColumns() {
+        return unknownColumns;
     }
+
+    Object putUnkownColumn(final String label, final Object value) {
+        return unknownColumns.put(label, value);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    private final transient Map<String, Object> unknownColumns = new HashMap<>();
 }
