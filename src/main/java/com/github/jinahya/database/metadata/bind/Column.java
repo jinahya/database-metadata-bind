@@ -91,10 +91,19 @@ public class Column
      */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_NULLABLE} column
+     */
     public static final int COLUMN_VALUE_NULLABLE_COLUMN_NO_NULLS = DatabaseMetaData.columnNoNulls;
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_NULLABLE} column
+     */
     public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE = DatabaseMetaData.columnNullable;
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_NULLABLE} column
+     */
     public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE_UNKNOWN = DatabaseMetaData.columnNullableUnknown;
 
     static final List<Integer> COLUMN_VALUES_NULLABLE = List.of(
@@ -110,10 +119,19 @@ public class Column
      */
     public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     */
     public static final String COLUMN_VALUE_IS_AUTOINCREMENT_YES = "YES";
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     */
     public static final String COLUMN_VALUE_IS_AUTOINCREMENT_NO = "NO";
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     */
     public static final String COLUMN_VALUE_IS_AUTOINCREMENT_UNKNOWN = "";
 
     static final List<String> COLUMN_VALUES_IS_AUTOINCREMENT = List.of(
@@ -129,10 +147,19 @@ public class Column
      */
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     */
     public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_YES = "YES";
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     */
     public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_NO = "NO";
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     */
     public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_UNKNOWN = "";
 
     static final List<String> COLUMN_VALUES_IS_GENERATEDCOLUMN = List.of(
@@ -232,10 +259,19 @@ public class Column
      */
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     */
     public static final String COLUMN_VALUE_IS_NULLABLE_YES = "YES";
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     */
     public static final String COLUMN_VALUE_IS_NULLABLE_NO = "NO";
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     */
     public static final String COLUMN_VALUE_IS_NULLABLE_UNKNOWN = "";
 
     static final List<String> COLUMN_VALUES_IS_NULLABLE = List.of(
@@ -396,7 +432,7 @@ public class Column
         return true;
     }
 
-//    @AssertTrue
+    //    @AssertTrue
     // null if DATA_TYPE isn't DISTINCT or user-generated REF
     // Note: This validation uses Types.REF without distinguishing user-generated vs system-generated REF.
     //       This is slightly more permissive than the spec, but JDBC doesn't provide an easy way to distinguish them.

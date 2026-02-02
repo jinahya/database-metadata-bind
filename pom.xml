@@ -268,11 +268,13 @@
               <additionalOption>-Xdoclint:${doclint}</additionalOption>
             </additionalOptions>
             <links>
-              <link>https://javadoc.io/doc/jakarta.annotation/jakarta.annotation-api/latest</link>
+<!--              <link>https://javadoc.io/doc/jakarta.annotation/jakarta.annotation-api/latest</link>-->
+              <link>https://javadoc.io/doc/jakarta.validation/jakarta.validation-api/latest</link>
+              <link>https://jspecify.dev/docs/api</link>
             </links>
             <release>${maven.compiler.testRelease}</release>
             <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
-            <sourcepath>${project.build.directory}/generated-sources-noduplicate/delombok</sourcepath>
+<!--            <sourcepath>${project.build.directory}/generated-sources-noduplicate/delombok</sourcepath>-->
             <!--            <sourcepath>target/generated-sources-noduplicate/delombok</sourcepath>-->
             <tags>
               <tag>
