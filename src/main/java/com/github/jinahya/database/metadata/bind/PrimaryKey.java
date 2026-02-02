@@ -25,7 +25,7 @@ public class PrimaryKey
 
     static Comparator<PrimaryKey> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        return comparing(ContextUtils.nullOrdered(context, comparator));
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

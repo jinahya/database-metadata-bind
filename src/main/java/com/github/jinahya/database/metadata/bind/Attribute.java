@@ -44,6 +44,14 @@ public class Attribute
     private static final long serialVersionUID = 1913681105410440186L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    static Comparator<Attribute> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .comparing(Attribute::getTypeCat, comparator)
+                .thenComparing(Attribute::getTypeSchem, comparator)
+                .thenComparing(Attribute::getTypeName, comparator)
+                .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder()); // NOT nullable
+    }
 
     /**
      * Returns a comparator for comparing instances in the order specified by the JDBC specification.
@@ -52,7 +60,7 @@ public class Attribute
      * {@link #COLUMN_LABEL_TYPE_NAME TYPE_NAME} and {@link #COLUMN_LABEL_ORDINAL_POSITION ORDINAL_POSITION}.
      * </p>
      * <p>
-     * This method uses {@link ContextUtils#nullPrecedence(Context, Comparator)} to handle the null precedence of the
+     * This method uses {@link ContextUtils#nullOrdered(Context, Comparator)} to handle the null precedence of the
      * specified {@code context} for nullable columns ({@code TYPE_CAT} and {@code TYPE_SCHEM}).
      * </p>
      *
@@ -67,7 +75,7 @@ public class Attribute
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
         return Comparator
                 .comparing(Attribute::getTypeCat, nullSafe)       // nullable
                 .thenComparing(Attribute::getTypeSchem, nullSafe) // nullable

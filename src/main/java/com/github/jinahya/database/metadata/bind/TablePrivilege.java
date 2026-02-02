@@ -25,7 +25,7 @@ public class TablePrivilege
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
         return Comparator
                 .comparing(TablePrivilege::getTableCat, nullSafe)        // nullable
                 .thenComparing(TablePrivilege::getTableSchem, nullSafe)  // nullable

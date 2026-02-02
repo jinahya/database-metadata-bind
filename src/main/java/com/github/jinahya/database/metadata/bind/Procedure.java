@@ -30,7 +30,7 @@ public class Procedure
 
     static Comparator<Procedure> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        return comparing(ContextUtils.nullOrdered(context, comparator));
     }
 
     // -------------------------------------------------------------------------------------------------- PROCEDURE_TYPE

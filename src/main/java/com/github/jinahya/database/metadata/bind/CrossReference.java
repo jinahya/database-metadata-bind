@@ -26,7 +26,7 @@ public class CrossReference
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
         return Comparator
                 .comparing(CrossReference::getFktableCat, nullSafe)        // nullable
                 .thenComparing(CrossReference::getFktableSchem, nullSafe)  // nullable

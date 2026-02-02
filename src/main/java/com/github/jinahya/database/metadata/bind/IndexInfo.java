@@ -27,7 +27,7 @@ public class IndexInfo
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
         return Comparator
                 .comparing(IndexInfo::getNonUnique, Comparator.<Boolean>naturalOrder())  // NOT nullable
                 .thenComparing(IndexInfo::getType, Comparator.<Integer>naturalOrder())   // NOT nullable

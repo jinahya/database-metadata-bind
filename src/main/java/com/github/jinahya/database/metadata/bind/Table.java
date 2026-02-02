@@ -55,7 +55,7 @@ public class Table
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
         return Comparator
                 .comparing(Table::getTableType, comparator)      // NOT nullable
                 .thenComparing(Table::getTableCat, nullSafe)     // nullable

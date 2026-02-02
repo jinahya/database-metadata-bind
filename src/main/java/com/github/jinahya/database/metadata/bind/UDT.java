@@ -27,10 +27,10 @@ public class UDT
     static Comparator<UDT> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
         return Comparator
-                .comparing(UDT::getDataType, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()))
-                .thenComparing(UDT::getTypeCat, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(UDT::getTypeSchem, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(UDT::getTypeName, ContextUtils.nullPrecedence(context, comparator));
+                .comparing(UDT::getDataType, ContextUtils.nullOrdered(context, Comparator.naturalOrder()))
+                .thenComparing(UDT::getTypeCat, ContextUtils.nullOrdered(context, comparator))
+                .thenComparing(UDT::getTypeSchem, ContextUtils.nullOrdered(context, comparator))
+                .thenComparing(UDT::getTypeName, ContextUtils.nullOrdered(context, comparator));
     }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT

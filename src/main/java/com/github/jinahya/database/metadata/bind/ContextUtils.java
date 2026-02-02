@@ -137,7 +137,7 @@ final class ContextUtils {
         );
     }
 
-    static <T> Comparator<T> nullPrecedence(final Context context, final Comparator<? super T> comparator)
+    public static <T> Comparator<T> nullOrdered(final Context context, final Comparator<? super T> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");

@@ -26,7 +26,7 @@ abstract class PortedKey
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
         return Comparator
                 .<T, String>comparing(PortedKey::getPktableCat, nullSafe)   // nullable
                 .thenComparing(PortedKey::getPktableSchem, nullSafe)        // nullable
@@ -40,7 +40,7 @@ abstract class PortedKey
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
         return Comparator
                 .<T, String>comparing(PortedKey::getFktableCat, nullSafe)   // nullable
                 .thenComparing(PortedKey::getFktableSchem, nullSafe)        // nullable
