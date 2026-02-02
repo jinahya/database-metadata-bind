@@ -50,23 +50,29 @@ abstract class MetadataType_Test<T extends MetadataType> {
         this.typeClass = Objects.requireNonNull(typeClass, "typeClass is null");
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void _Valid_NewInstance() {
+    void _Valid_NewTypeInstance() {
         final var instance = newTypeInstance();
         __Validation_Test_Utils.requireValid(instance);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @DisplayName("toString()!blank")
     @Test
-    void toString_NotBlank_() {
-        // ------------------------------------------------------------------------------------------------------- given
-        final var instance = newTypeInstance();
-        // -------------------------------------------------------------------------------------------------------- when
-        final var string = instance.toString();
-        // -------------------------------------------------------------------------------------------------------- then
-        assertThat(string).isNotBlank();
+    void _verify_NewTypeInstance() {
+        MetadataType_Test_Utils.verify(newTypeInstance());
     }
+
+//    // -----------------------------------------------------------------------------------------------------------------
+//    @DisplayName("toString()!blank")
+//    @Test
+//    void toString_NotBlank_() {
+//        // ------------------------------------------------------------------------------------------------------- given
+//        final var instance = newTypeInstance();
+//        // -------------------------------------------------------------------------------------------------------- when
+//        final var string = instance.toString();
+//        // -------------------------------------------------------------------------------------------------------- then
+//        assertThat(string).isNotBlank();
+//    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @DisplayName("equals/hashCode")
@@ -99,7 +105,7 @@ abstract class MetadataType_Test<T extends MetadataType> {
                 assertThat(field.getAnnotatedType().getAnnotation(Nullable.class))
                         .as("@Nullable annotation on field %s.%s", typeClass.getSimpleName(), field.getName())
                         .isNotNull();
-                final var getter = MetadataType_Test_Utils.getter(field);
+                final var getter = MetadataType_Test_Utils.getterMethod(field);
                 assertThat(getter)
                         .as("getter for %s.%s", typeClass.getSimpleName(), field.getName())
                         .isNotNull();
@@ -188,12 +194,12 @@ abstract class MetadataType_Test<T extends MetadataType> {
         }
     }
 
-    @DisplayName("setXxx(getXxx())")
-    @Test
-    void accessors() {
-        final var instance = newTypeInstance();
-        MetadataType_Test_Utils.verifyAccessors(typeClass, instance);
-    }
+//    @DisplayName("setXxx(getXxx())")
+//    @Test
+//    void accessors() {
+//        final var instance = newTypeInstance();
+//        MetadataType_Test_Utils.verifyAccessors(typeClass, instance);
+//    }
 
     // ------------------------------------------------------------------------------------------------------- typeClass
     T newTypeInstance() {

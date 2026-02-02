@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.support.ReflectionSupport;
 
 import java.beans.BeanInfo;
@@ -29,6 +30,7 @@ import java.beans.Introspector;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
@@ -42,7 +44,8 @@ final class MetadataType_Test_Utils {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
-    static Method getter(final Class<?> clazz, final String name, final Class<?> type) {
+    @Nullable
+    static Method getterMethod(final Class<?> clazz, final String name, final Class<?> type) {
         Objects.requireNonNull(clazz, "clazz is null");
         Objects.requireNonNull(name, "name is null");
         Objects.requireNonNull(type, "type is null");
@@ -51,10 +54,28 @@ final class MetadataType_Test_Utils {
         return ReflectionSupport.findMethod(clazz, "get" + capitalized).orElse(null);
     }
 
-    static Method getter(final Field field) {
+    @Nullable
+    static Method getterMethod(final Field field) {
         Objects.requireNonNull(field, "field is null");
         assert !field.getType().isPrimitive() : "field type should not be primitive: " + field;
-        return getter(field.getDeclaringClass(), field.getName(), field.getType());
+        return getterMethod(field.getDeclaringClass(), field.getName(), field.getType());
+    }
+
+    @Nullable
+    static Method setterMethod(final Class<?> clazz, final String name, final Class<?> type) {
+        Objects.requireNonNull(clazz, "clazz is null");
+        Objects.requireNonNull(name, "name is null");
+        Objects.requireNonNull(type, "type is null");
+        assert !type.isPrimitive() : "type should not be primitive: " + type;
+        final var capitalized = capitalize(name);
+        return ReflectionSupport.findMethod(clazz, "set" + capitalized, type).orElse(null);
+    }
+
+    @Nullable
+    static Method setterMethod(final Field field) {
+        Objects.requireNonNull(field, "field is null");
+        assert !field.getType().isPrimitive() : "field type should not be primitive: " + field;
+        return setterMethod(field.getDeclaringClass(), field.getName(), field.getType());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -68,28 +89,20 @@ final class MetadataType_Test_Utils {
             throw new RuntimeException("failed to get beanInfo from " + cls, ie);
         }
         for (final var descriptor : info.getPropertyDescriptors()) {
-            final var propertyName = descriptor.getName();
-            final var propertyType = descriptor.getPropertyType();
+            final var name = descriptor.getName();
+            final var type = descriptor.getPropertyType();
             // read value via getter
-            final Object value;
-            final var reader = descriptor.getReadMethod();
-            if (reader != null) {
-                value = ReflectionSupport.invokeMethod(reader, obj);
-            } else {
-                final var getterMethod = ReflectionSupport.findMethod(cls, "get" + capitalize(propertyName));
-                if (getterMethod.isEmpty()) {
-                    continue;
-                }
-                value = ReflectionSupport.invokeMethod(getterMethod.get(), obj);
+            final var getter =
+                    Optional.ofNullable(descriptor.getReadMethod())
+                            .orElseGet(() -> getterMethod(cls, name, type));
+            if (getter == null) {
+                continue;
             }
+            final var value = ReflectionSupport.invokeMethod(getter, obj);
             // write value via setter
-            final var writer = descriptor.getWriteMethod();
-            if (writer != null) {
-                ReflectionSupport.invokeMethod(writer, obj, value);
-            } else {
-                ReflectionSupport.findMethod(cls, "set" + capitalize(propertyName), propertyType)
-                        .ifPresent(m -> ReflectionSupport.invokeMethod(m, obj, value));
-            }
+            Optional.ofNullable(descriptor.getWriteMethod())
+                    .or(() -> Optional.ofNullable(setterMethod(cls, name, type)))
+                    .ifPresent(m -> ReflectionSupport.invokeMethod(m, obj, value));
         }
     }
 
@@ -104,8 +117,11 @@ final class MetadataType_Test_Utils {
         assertThatCode(obj::toString).doesNotThrowAnyException();
         // hashCode()
         assertThatCode(obj::hashCode).doesNotThrowAnyException();
+        // accessors
+        verifyAccessorsHelper(obj.getClass(), obj);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     private MetadataType_Test_Utils() {
         throw new AssertionError("instantiation is not allowed");
     }
