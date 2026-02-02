@@ -377,7 +377,7 @@ public class Table
      *
      * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
-    void setTypeName(String typeName) {
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 

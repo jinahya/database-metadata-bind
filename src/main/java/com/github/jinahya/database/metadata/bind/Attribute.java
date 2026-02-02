@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Positive;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
@@ -348,6 +350,57 @@ public class Attribute
         return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, attrName);
     }
 
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+    @AssertTrue
+    // Correct: null if DATA_TYPE isn't REF
+    private boolean isScopeCatalogNullWhenDataTypeIsNotRef() {
+        if (dataType == null) {
+            return true;
+        }
+        if (dataType != java.sql.Types.REF) {
+            return scopeCatalog == null;
+        }
+        return true;
+    }
+
+    @AssertTrue
+    // Correct: null if DATA_TYPE isn't REF
+    private boolean isScopeSchemaNullWhenDataTypeIsNotRef() {
+        if (dataType == null) {
+            return true;
+        }
+        if (dataType != java.sql.Types.REF) {
+            return scopeSchema == null;
+        }
+        return true;
+    }
+
+    @AssertTrue
+    // Correct: null if DATA_TYPE isn't REF
+    private boolean isScopeTableNullWhenDataTypeIsNotRef() {
+        if (dataType == null) {
+            return true;
+        }
+        if (dataType != java.sql.Types.REF) {
+            return scopeTable == null;
+        }
+        return true;
+    }
+
+//    @AssertTrue
+    // null if DATA_TYPE isn't DISTINCT or user-generated REF
+    // Note: This validation uses Types.REF without distinguishing user-generated vs system-generated REF.
+    //       This is slightly more permissive than the spec, but JDBC doesn't provide an easy way to distinguish them.
+    private boolean isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef() {
+        if (dataType == null) {
+            return true;
+        }
+        if (dataType != java.sql.Types.DISTINCT && dataType != java.sql.Types.REF) {
+            return sourceDataType == null;
+        }
+        return true;
+    }
+
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**
@@ -430,7 +483,7 @@ public class Attribute
      *
      * @param attrName the value of {@value #COLUMN_LABEL_ATTR_NAME} column.
      */
-    void setAttrName(String attrName) {
+    void setAttrName(final String attrName) {
         this.attrName = attrName;
     }
 
@@ -450,7 +503,7 @@ public class Attribute
      *
      * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      */
-    void setDataType(Integer dataType) {
+    void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
@@ -470,7 +523,7 @@ public class Attribute
      *
      * @param attrTypeName the value of {@code ATTR_TYPE_NAME} column.
      */
-    void setAttrTypeName(String attrTypeName) {
+    void setAttrTypeName(final String attrTypeName) {
         this.attrTypeName = attrTypeName;
     }
 
@@ -490,7 +543,7 @@ public class Attribute
      *
      * @param attrSize the value of {@code ATTR_SIZE} column.
      */
-    void setAttrSize(Integer attrSize) {
+    void setAttrSize(final Integer attrSize) {
         this.attrSize = attrSize;
     }
 
@@ -511,7 +564,7 @@ public class Attribute
      *
      * @param decimalDigits the value of {@code DECIMAL_DIGITS} column.
      */
-    void setDecimalDigits(Integer decimalDigits) {
+    void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
@@ -531,7 +584,7 @@ public class Attribute
      *
      * @param numPrecRadix the value of {@code NUM_PREC_RADIX} column.
      */
-    void setNumPrecRadix(Integer numPrecRadix) {
+    void setNumPrecRadix(final Integer numPrecRadix) {
         this.numPrecRadix = numPrecRadix;
     }
 
@@ -551,7 +604,7 @@ public class Attribute
      *
      * @param nullable the value of {@value #COLUMN_LABEL_NULLABLE} column.
      */
-    void setNullable(Integer nullable) {
+    void setNullable(final Integer nullable) {
         this.nullable = nullable;
     }
 
@@ -572,7 +625,7 @@ public class Attribute
      *
      * @param remarks the value of {@code REMARKS} column.
      */
-    void setRemarks(String remarks) {
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -593,7 +646,7 @@ public class Attribute
      *
      * @param attrDef the value of {@code ATTR_DEF} column.
      */
-    void setAttrDef(String attrDef) {
+    void setAttrDef(final String attrDef) {
         this.attrDef = attrDef;
     }
 
@@ -614,7 +667,7 @@ public class Attribute
      *
      * @param sqlDataType the value of {@code SQL_DATA_TYPE} column.
      */
-    void setSqlDataType(Integer sqlDataType) {
+    void setSqlDataType(final Integer sqlDataType) {
         this.sqlDataType = sqlDataType;
     }
 
@@ -635,7 +688,7 @@ public class Attribute
      *
      * @param sqlDatetimeSub the value of {@code SQL_DATETIME_SUB} column.
      */
-    void setSqlDatetimeSub(Integer sqlDatetimeSub) {
+    void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
@@ -655,7 +708,7 @@ public class Attribute
      *
      * @param charOctetLength the value of {@code CHAR_OCTET_LENGTH} column.
      */
-    void setCharOctetLength(Integer charOctetLength) {
+    void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
@@ -675,7 +728,7 @@ public class Attribute
      *
      * @param ordinalPosition the value of {@code ORDINAL_POSITION} column.
      */
-    void setOrdinalPosition(Integer ordinalPosition) {
+    void setOrdinalPosition(final Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
     }
 
@@ -844,6 +897,7 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
+    @Positive
     @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 

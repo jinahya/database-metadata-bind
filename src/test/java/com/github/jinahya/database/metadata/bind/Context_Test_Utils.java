@@ -98,8 +98,8 @@ final class Context_Test_Utils {
         }
         // -------------------------------------------------------------------------------------------- clientProperties
         try {
-            final var clientInfoProperties = context.getClientInfoProperties();
-            clientInfoProperties(context, clientInfoProperties);
+            final var values = context.getClientInfoProperties();
+            clientInfoProperties(context, values);
         } catch (final SQLException sqle) {
             // empty
         }
@@ -258,7 +258,8 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .isSortedAccordingTo(Attribute.comparingInSpecifiedOrder(context))
+                .isSortedAccordingTo(Attribute.comparingInSpecifiedOrder(
+                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(a -> {
                 });
         for (final var attribute : attributes) {
@@ -391,7 +392,8 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .isSortedAccordingTo(ClientInfoProperty.comparingInSpecifiedOrder(context))
+                .isSortedAccordingTo(ClientInfoProperty.comparingInSpecifiedOrder(
+                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(c -> {
                 });
 //        if (!databaseProductName(context).equals(DatabaseProductNames.MARIA_DB)) {

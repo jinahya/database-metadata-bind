@@ -1,10 +1,11 @@
 package com.github.jinahya.database.metadata.bind;
 
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Positive;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -359,34 +360,54 @@ public class Column
         return COLUMN_VALUES_NULLABLE.contains(nullable);
     }
 
-    private boolean isScopeCatalogValid() {
-        if (scopeCatalog != null) {
+    @AssertTrue
+    // Correct: null if DATA_TYPE isn't REF
+    private boolean isScopeCatalogNullWhenDataTypeIsNotRef() {
+        if (dataType == null) {
             return true;
         }
-        return dataType == null || !Objects.equals(dataType, Types.REF);
+        if (dataType != java.sql.Types.REF) {
+            return scopeCatalog == null;
+        }
+        return true;
     }
 
-    private boolean isScopeSchemaValid() {
-        if (scopeSchema != null) {
+    @AssertTrue
+    // Correct: null if DATA_TYPE isn't REF
+    private boolean isScopeSchemaNullWhenDataTypeIsNotRef() {
+        if (dataType == null) {
             return true;
         }
-        return dataType == null || !Objects.equals(dataType, Types.REF);
+        if (dataType != java.sql.Types.REF) {
+            return scopeSchema == null;
+        }
+        return true;
     }
 
-    private boolean isScopeTableValid() {
-        if (scopeTable != null) {
+    @AssertTrue
+    // Correct: null if DATA_TYPE isn't REF
+    private boolean isScopeTableNullWhenDataTypeIsNotRef() {
+        if (dataType == null) {
             return true;
         }
-        return dataType == null || !Objects.equals(dataType, Types.REF);
+        if (dataType != java.sql.Types.REF) {
+            return scopeTable == null;
+        }
+        return true;
     }
 
-    private boolean isSourceDataTypeValid() {
-        if (sourceDataType != null) {
+//    @AssertTrue
+    // null if DATA_TYPE isn't DISTINCT or user-generated REF
+    // Note: This validation uses Types.REF without distinguishing user-generated vs system-generated REF.
+    //       This is slightly more permissive than the spec, but JDBC doesn't provide an easy way to distinguish them.
+    private boolean isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef() {
+        if (dataType == null) {
             return true;
         }
-        return dataType == null ||
-               (!Objects.equals(dataType, Types.DISTINCT) ||
-                Objects.equals(dataType, Types.REF));
+        if (dataType != java.sql.Types.DISTINCT && dataType != java.sql.Types.REF) {
+            return sourceDataType == null;
+        }
+        return true;
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -957,7 +978,7 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
-    // starting at 1
+    @Positive
     @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 

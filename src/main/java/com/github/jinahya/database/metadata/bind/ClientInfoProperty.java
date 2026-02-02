@@ -38,6 +38,11 @@ public class ClientInfoProperty
     private static final long serialVersionUID = -2913230435651853254L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator.comparing(ClientInfoProperty::getName, comparator); // NOT nullable
+    }
+
     static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Context context,
                                                                     final Comparator<? super String> comparator)
             throws SQLException {

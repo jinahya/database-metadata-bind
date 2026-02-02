@@ -121,7 +121,7 @@
       <artifactId>logback-classic</artifactId>
       <!-- https://central.sonatype.com/artifact/ch.qos.logback/logback-classic/versions -->
       <!-- https://central.sonatype.com/artifact/ch.qos.logback/logback-parent/versions -->
-      <version>1.5.25</version>
+      <version>1.5.27</version>
       <!-- slf4j.version: 2.0.17 -->
       <scope>test</scope>
     </dependency>
@@ -160,15 +160,15 @@
     <!--      <artifactId>jakarta.annotation-api</artifactId>-->
     <!--      <scope>provided</scope>-->
     <!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>jakarta.validation</groupId>-->
-<!--      <artifactId>jakarta.validation-api</artifactId>-->
-<!--      <scope>provided</scope>-->
-<!--    </dependency>-->
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier-nodep</artifactId>
-      <version>4.0</version>
+      <version>4.3.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -318,6 +318,9 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>versions-maven-plugin</artifactId>
           <version>2.21.0</version>
+          <configuration>
+            <processDependencyManagement>false</processDependencyManagement>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -336,7 +339,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.14.1</version>
+        <version>3.15.0</version>
         <configuration>
           <annotationProcessorPaths>
             <path>
@@ -380,7 +383,7 @@
             <id>enforce-dependency-convergence</id>
             <configuration>
               <rules>
-                <dependencyConvergence />
+                <dependencyConvergence/>
               </rules>
             </configuration>
             <goals>
