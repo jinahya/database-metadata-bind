@@ -20,10 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
 
 import java.util.Objects;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,9 +37,14 @@ final class __Validation_Test_Utils {
         Runtime.getRuntime().addShutdownHook(new Thread(VALIDATOR_FACTORY::close));
     }
 
+    static <T> Set<ConstraintViolation<T>> validate(final T object) {
+        Objects.requireNonNull(object, "object is null");
+        return VALIDATOR_FACTORY.getValidator().validate(object);
+    }
+
     static void requireValid(final Object object) {
         Objects.requireNonNull(object, "object is null");
-        final var violations = VALIDATOR_FACTORY.getValidator().validate(object);
+        final var violations = validate(object);
         assertThat(violations)
                 .as("violations of %s: %s", object, violations)
                 .isEmpty();
