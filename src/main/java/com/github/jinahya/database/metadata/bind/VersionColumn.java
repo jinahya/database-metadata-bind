@@ -3,6 +3,7 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -30,13 +31,6 @@ public class VersionColumn
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
-
-    // --------------------------------------------------------------------------------------------------- PSEUDO_COLUMN
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
     // ------------------------------------------------------------------------------------------------------- DATA_TYPE
 
@@ -72,6 +66,28 @@ public class VersionColumn
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DECIMAL_DIGITS = "DECIMAL_DIGITS";
+
+    // -------------------------------------------------------------------------------------------------- PSEUDO_COLUMN
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
+
+    public static final int COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_UNKNOWN =
+            DatabaseMetaData.versionColumnUnknown;   // 0
+
+    public static final int COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_NOT_PSEUDO =
+            DatabaseMetaData.versionColumnNotPseudo; // 1
+
+    public static final int COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_PSEUDO =
+            DatabaseMetaData.versionColumnPseudo;    // 2
+
+    static final List<Integer> COLUMN_VALUES_PSEUDO_COLUMN = List.of(
+            COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_UNKNOWN,    // 0
+            COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_NOT_PSEUDO, // 1
+            COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_PSEUDO      // 2
+    );
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 

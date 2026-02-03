@@ -6,6 +6,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -17,7 +18,7 @@ import java.util.Objects;
 @_ChildOf(Catalog.class)
 @_ChildOf(Schema.class)
 @_ParentOf(Attribute.class)
-@_ParentOf(UDT.class)
+//@_ParentOf(UDT.class)
 public class UDT
         extends AbstractMetadataType {
 
@@ -70,9 +71,15 @@ public class UDT
 
     public static final int COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT = Types.JAVA_OBJECT; // 2000
 
-    public static final int COLUMN_VALUES_DATA_TYPE_DISTINCT = Types.DISTINCT; // 2001
+    public static final int COLUMN_VALUES_DATA_TYPE_DISTINCT = Types.DISTINCT;       // 2001
 
-    public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT; // 2002
+    public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT;           // 2002
+
+    static final List<Integer> COLUMN_VALUES_DATA_TYPE = List.of(
+            COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT,
+            COLUMN_VALUES_DATA_TYPE_DISTINCT,
+            COLUMN_VALUES_DATA_TYPE_STRUCT
+    );
 
     // --------------------------------------------------------------------------------------------------------- REMARKS
 
@@ -279,8 +286,7 @@ public class UDT
         this.baseType = baseType;
     }
 
-    // ----------------------------------------------------------------------------------------------------- COMPARATORS
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
@@ -292,10 +298,9 @@ public class UDT
     private String typeSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
-
     private String typeName;
 
-    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_CLASS_NAME)
     private String className;
 
@@ -305,6 +310,7 @@ public class UDT
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
+    // null if DATA_TYPE is not DISTINCT or not STRUCT with REFERENCE_GENERATION = USER_DEFINED
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_BASE_TYPE)
