@@ -800,7 +800,12 @@ final class Context_Test_Utils {
         }
         // ----------------------------------------------------------------------------------------------------- columns
         try {
-            final var values = context.getColumns(value);
+            final var values = context.getColumns(
+                    value.getTableCat(),
+                    value.getTableSchem(),
+                    value.getTableName(),
+                    "%"
+            );
             columns(context, values);
         } catch (final SQLException sqle) {
             log.error("failed to getColumns({})", value, sqle);

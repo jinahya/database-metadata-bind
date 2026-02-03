@@ -448,8 +448,8 @@ public class Context {
     }
 
     // --------------------------------------------------------------------------------------------- getColumnPrivileges
-    void getColumnPrivilegesAndAcceptEach(final String catalog, final String schema, final String table,
-                                          final String columnNamePattern,
+    void getColumnPrivilegesAndAcceptEach(@Nullable final String catalog, @Nullable final String schema,
+                                          final String table, final String columnNamePattern,
                                           final Consumer<? super ColumnPrivilege> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
@@ -460,7 +460,7 @@ public class Context {
     }
 
     <C extends Collection<? super ColumnPrivilege>>
-    C getColumnPrivilegesAndAddAll(final String catalog, final String schema, final String table,
+    C getColumnPrivilegesAndAddAll(@Nullable final String catalog, @Nullable final String schema, final String table,
                                    final String columnNamePattern, final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
@@ -493,31 +493,6 @@ public class Context {
             throws SQLException {
         return getColumnPrivilegesAndAddAll(catalog, schema, table, columnNamePattern, new ArrayList<>());
     }
-
-//    List<ColumnPrivilege> getColumnPrivileges(final Table table, final String columnNamePattern)
-//            throws SQLException {
-//        Objects.requireNonNull(table, "table is null");
-//        return getColumnPrivileges(
-//                table.getTableCat(),
-//                table.getTableSchem(),
-//                table.getTableName(),
-//                columnNamePattern
-//        );
-//    }
-//
-//    List<ColumnPrivilege> getColumnPrivileges(final Table table) throws SQLException {
-//        return getColumnPrivileges(table, "%");
-//    }
-//
-//    List<ColumnPrivilege> getColumnPrivileges(final Column column) throws SQLException {
-//        Objects.requireNonNull(column, "column is null");
-//        return getColumnPrivileges(
-//                column.getTableCat(),
-//                column.getTableSchem(),
-//                column.getTableName(),
-//                column.getColumnName()
-//        );
-//    }
 
     // ------------------------------------------------------------------------------------------------------ getColumns
 
@@ -556,7 +531,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getColumnsAndAcceptEach(String, String, String, String, Consumer)
      */
-    <C extends Collection<? super Column>> C getColumnsAndAddAll(final String catalog, final String schemaPattern,
+    <C extends Collection<? super Column>> C getColumnsAndAddAll(@Nullable final String catalog,
+                                                                 @Nullable final String schemaPattern,
                                                                  final String tableNamePattern,
                                                                  final String columnNamePattern, final C collection)
             throws SQLException {
@@ -566,10 +542,7 @@ public class Context {
                 schemaPattern,
                 tableNamePattern,
                 columnNamePattern,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate column: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -589,27 +562,6 @@ public class Context {
                                    final String tableNamePattern, final String columnNamePattern)
             throws SQLException {
         return getColumnsAndAddAll(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
-    }
-
-    /**
-     * Invokes {@link #getColumns(String, String, String, String)} method with specified table's
-     * {@link Table#getTableCat() tableCat}, {@link Table#getTableSchem() tableSchem},
-     * {@link Table#getTableName() tableName}, and specified column name pattern, and returns a list of bound values.
-     *
-     * @param table             the table.
-     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getColumns(String, String, String, String)
-     */
-    List<Column> getColumns(final Table table, final String columnNamePattern) throws SQLException {
-        Objects.requireNonNull(table, "table is null");
-        return getColumns(table.getTableCat(), table.getTableSchem(), table.getTableName(), columnNamePattern);
-    }
-
-    List<Column> getColumns(final Table table) throws SQLException {
-        Objects.requireNonNull(table, "table is null");
-        return getColumns(table.getTableCat(), table.getTableSchem(), table.getTableName(), "%");
     }
 
     // ----------------------------------------------------------------------------------------------- getCrossReference
