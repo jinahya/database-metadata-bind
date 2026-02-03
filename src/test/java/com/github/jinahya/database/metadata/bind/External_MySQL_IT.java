@@ -86,6 +86,49 @@ class External_MySQL_IT {
     }
 
     @Test
+    void indices() throws Exception {
+        final var clazz = Class.forName("com.mysql.cj.jdbc.Driver");
+        log.debug("loaded: {}", clazz);
+        final String url = System.getProperty("url");
+        final String user = System.getProperty("user");
+        final String password = System.getProperty("password");
+        log.info("connecting to {}", url);
+        try (var connection = DriverManager.getConnection(url, user, password)) {
+            log.info("connected: {}", connection);
+            final var context = Context.newInstance(connection);
+            for (var table : context.getTables((String) null, null, "%", null)) {
+                final var mapper = new ObjectMapper();
+                mapper.enable(SerializationFeature.INDENT_OUTPUT);
+                final var name =
+                        table.getEffectiveTableCat().orElse("") + '_' +
+                        table.getEffectiveTableSchem().orElse("") + '_' +
+                        table.getTableName() + "_indices.json";
+                try (var writer = Files.newBufferedWriter(Paths.get(name), StandardCharsets.UTF_8)) {
+                    try (var jsonWriter = mapper.writerWithDefaultPrettyPrinter().writeValuesAsArray(writer)) {
+                        context.getIndexInfoAndAcceptEach(
+                                table.getEffectiveTableCat().orElse(null),
+                                table.getEffectiveTableSchem().orElse(null),
+                                table.getTableName(),
+                                true,
+                                true,
+                                v -> {
+                                    log.debug("index: {}", v);
+                                    v.getUnknownColumns().clear();
+                                    try {
+                                        jsonWriter.write(v);
+                                    } catch (final IOException ioe) {
+                                        throw new RuntimeException(ioe);
+                                    }
+                                }
+                        );
+                        jsonWriter.flush();
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
     void importedKeys() throws Exception {
         final var clazz = Class.forName("com.mysql.cj.jdbc.Driver");
         log.debug("loaded: {}", clazz);

@@ -1030,8 +1030,9 @@ public class Context {
     }
 
     // ------------------------------------------------------- getIndexInfo(catalog, schema, table, unique, approximate)
-    void getIndexInfoAndAcceptEach(final String catalog, final String schema, final String table, final boolean unique,
-                                   final boolean approximate, final Consumer<? super IndexInfo> consumer)
+    void getIndexInfoAndAcceptEach(@Nullable final String catalog, @Nullable final String schema, final String table,
+                                   final boolean unique, final boolean approximate,
+                                   final Consumer<? super IndexInfo> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (var results = metadata.getIndexInfo(catalog, schema, table, unique, approximate)) {
@@ -1827,8 +1828,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTables(String, String, String, String[])
      */
-    void getTablesAndAcceptEach(final String catalog, final String schemaPattern,
-                                final String tableNamePattern, final String[] types,
+    void getTablesAndAcceptEach(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                final String tableNamePattern, @Nullable final String[] types,
                                 final Consumer<? super Table> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
@@ -1857,8 +1858,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     <C extends Collection<? super Table>>
-    C getTablesAndAddAll(final String catalog, final String schemaPattern,
-                         final String tableNamePattern, final String[] types,
+    C getTablesAndAddAll(@Nullable final String catalog, @Nullable final String schemaPattern,
+                         final String tableNamePattern, @Nullable final String[] types,
                          final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
@@ -1887,8 +1888,8 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<Table> getTables(final String catalog, final String schemaPattern,
-                                 final String tableNamePattern, final String[] types)
+    public List<Table> getTables(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                 final String tableNamePattern, @Nullable final String[] types)
             throws SQLException {
         return getTablesAndAddAll(
                 catalog,
@@ -1923,10 +1924,9 @@ public class Context {
         );
     }
 
-    List<Table> getTables(final Schema schema, final String tableNamePattern,
-                          final String[] types)
+    List<Table> getTables(@Nullable final Schema schema, final String tableNamePattern,
+                          @Nullable final String[] types)
             throws SQLException {
-        Objects.requireNonNull(schema, "schema is null");
         return getTables(
                 schema.getTableCatalog(),
                 schema.getTableSchem(),

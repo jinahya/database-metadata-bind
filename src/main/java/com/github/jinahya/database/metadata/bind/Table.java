@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 /**
@@ -258,6 +259,10 @@ public class Table
         this.tableCat = tableCat;
     }
 
+    public Optional<String> getEffectiveTableCat() {
+        return Optional.ofNullable(getTableCat()).map(String::trim).filter(v -> !v.isEmpty());
+    }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -277,6 +282,10 @@ public class Table
      */
     void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
+    }
+
+    public Optional<String> getEffectiveTableSchem() {
+        return Optional.ofNullable(getTableSchem()).map(String::trim).filter(v -> !v.isEmpty());
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
