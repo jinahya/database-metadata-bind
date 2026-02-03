@@ -259,7 +259,7 @@ public class Table
         this.tableCat = tableCat;
     }
 
-    public Optional<String> getEffectiveTableCat() {
+    public Optional<String> effectiveTableCat() {
         return Optional.ofNullable(getTableCat()).map(String::trim).filter(v -> !v.isEmpty());
     }
 
@@ -284,7 +284,7 @@ public class Table
         this.tableSchem = tableSchem;
     }
 
-    public Optional<String> getEffectiveTableSchem() {
+    public Optional<String> effectiveTableSchem() {
         return Optional.ofNullable(getTableSchem()).map(String::trim).filter(v -> !v.isEmpty());
     }
 

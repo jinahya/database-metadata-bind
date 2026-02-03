@@ -1,5 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
+import jakarta.validation.constraints.AssertTrue;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
@@ -245,93 +246,70 @@ public class IndexInfo
     }
 
     // ---------------------------------------------------------------------------------------------- Jakarta_Validation
-
-    /**
-     * .
-     * <blockquote>
-     * NON_UNIQUE boolean => Can index values be non-unique. false when TYPE is tableIndexStatistic
-     * </blockquote>
-     *
-     * @return .
-     */
-    private boolean isNonUniqueValid() {
-        if (nonUnique == null || nonUnique) {
+    @AssertTrue(message = "NON_UNIQUE is false when TYPE is tableIndexStatistic(0)")
+    private boolean isNonUniqueFalseWhenTypeIsTableIndexStatic() {
+        if (type == null) {
             return true;
         }
-        return type == null || !Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC);
+        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
+            return nonUnique == null || !nonUnique;
+        }
+        return true;
     }
 
-    /**
-     * .
-     * <blockquote>
-     * INDEX_QUALIFIER String => index catalog (may be null); null when TYPE is tableIndexStatistic
-     * </blockquote>
-     *
-     * @return .
-     */
-    private boolean isIndexQualifierValid() {
-        return !Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) || indexQualifier == null;
-    }
-
-    /**
-     * .
-     * <blockquote>
-     * INDEX_NAME String => index name (may be null); null when TYPE is tableIndexStatistic
-     * </blockquote>
-     *
-     * @return .
-     */
-    private boolean isIndexNameValid() {
-        if (indexName != null) {
+    @AssertTrue(message = "INDEX_QUALIFIER is null when TYPE is tableIndexStatistic(0)")
+    private boolean isIndexQualifierNullWhenTypeIsTableIndexStatic() {
+        if (type == null) {
             return true;
         }
-        return type == null || Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC);
+        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
+            return indexQualifier == null;
+        }
+        return true;
     }
 
-    private boolean isTypeValid() {
-        return type == null || COLUMN_VALUES_TYPE.contains(type);
-    }
-
-    /**
-     * .
-     * <blockquote>
-     * ORDINAL_POSITION short => column sequence number within index; zero when TYPE is tableIndexStatistic
-     * </blockquote>
-     *
-     * @return .
-     */
-    private boolean isOrdinalPosition() {
-        if (ordinalPosition == null || ordinalPosition != 0) {
+    @AssertTrue(message = "INDEX_NAME is null when TYPE is tableIndexStatistic(0)")
+    private boolean isIndexNameNullWhenTypeIsTableIndexStatic() {
+        if (type == null) {
             return true;
         }
-        return type == null || Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC);
+        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
+            return indexName == null;
+        }
+        return true;
     }
 
-    /**
-     * .
-     * <blockquote>
-     * COLUMN_NAME String => column name; null when TYPE is tableIndexStatistic
-     * </blockquote>
-     *
-     * @return .
-     */
-    private boolean isColumnNameValid() {
-        if (columnName != null) {
+    @AssertTrue(message = "ORDINAL_POSITION is zero when TYPE is tableIndexStatistic(0)")
+    private boolean isOrdinalPositionZeroWhenTypeIsTableIndexStatic() {
+        if (type == null) {
             return true;
         }
-        return type == null || Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC);
+        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
+            return ordinalPosition == null || ordinalPosition == 0;
+        }
+        return true;
     }
 
-    /**
-     * <blockquote>
-     * SC_OR_DESC String => column sort sequence, "A" => ascending, "D" => descending, may be null if sort sequence is
-     * not supported; null when TYPE is tableIndexStatistic
-     * </blockquote>
-     *
-     * @return .
-     */
-    private boolean isAscOrDescValid() {
-        return !Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) || ascOrDesc == null;
+    @AssertTrue(message = "COLUMN_NAME is null when TYPE is tableIndexStatistic(0)")
+    private boolean isColumnNameNullWhenTypeIsTableIndexStatic() {
+        if (type == null) {
+            return true;
+        }
+        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
+            return columnName == null;
+        }
+        return true;
+    }
+
+    @AssertTrue(message = "ASC_OR_DESC is null when TYPE is tableIndexStatistic(0)")
+    private boolean isAscOrDescNullWhenTypeIsTableIndexStatic() {
+        if (type == null) {
+            return true;
+        }
+        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
+            return ascOrDesc == null;
+        }
+        return true;
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -654,7 +632,6 @@ public class IndexInfo
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)

@@ -89,6 +89,16 @@ public class TablePrivilege
      */
     public static final String COLUMN_LABEL_IS_GRANTABLE = "IS_GRANTABLE";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     */
+    public static final String COLUMN_VALUE_IS_GRANTABLE_YES = MetadataTypeConstants.YES;
+
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     */
+    public static final String COLUMN_VALUE_IS_GRANTABLE_NO = MetadataTypeConstants.NO;
+
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS

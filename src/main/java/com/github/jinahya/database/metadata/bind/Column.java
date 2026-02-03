@@ -122,17 +122,17 @@ public class Column
     /**
      * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
      */
-    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_YES = "YES";
+    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_YES = MetadataTypeConstants.YES;
 
     /**
      * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
      */
-    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_NO = "NO";
+    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_NO = MetadataTypeConstants.NO;
 
     /**
      * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
      */
-    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_UNKNOWN = "";
+    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_UNKNOWN = MetadataTypeConstants.EMPTY;
 
     static final List<String> COLUMN_VALUES_IS_AUTOINCREMENT = List.of(
             COLUMN_VALUE_IS_AUTOINCREMENT_YES,
@@ -150,17 +150,17 @@ public class Column
     /**
      * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
      */
-    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_YES = "YES";
+    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_YES = MetadataTypeConstants.YES;
 
     /**
      * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
      */
-    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_NO = "NO";
+    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_NO = MetadataTypeConstants.NO;
 
     /**
      * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
      */
-    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_UNKNOWN = "";
+    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_UNKNOWN = MetadataTypeConstants.EMPTY;
 
     static final List<String> COLUMN_VALUES_IS_GENERATEDCOLUMN = List.of(
             COLUMN_VALUE_IS_GENERATEDCOLUMN_YES,
@@ -262,17 +262,17 @@ public class Column
     /**
      * A value of {@value} for the {@value #COLUMN_LABEL_IS_NULLABLE} column.
      */
-    public static final String COLUMN_VALUE_IS_NULLABLE_YES = "YES";
+    public static final String COLUMN_VALUE_IS_NULLABLE_YES = MetadataTypeConstants.YES;
 
     /**
      * A value of {@value} for the {@value #COLUMN_LABEL_IS_NULLABLE} column.
      */
-    public static final String COLUMN_VALUE_IS_NULLABLE_NO = "NO";
+    public static final String COLUMN_VALUE_IS_NULLABLE_NO = MetadataTypeConstants.NO;
 
     /**
      * A value of {@value} for the {@value #COLUMN_LABEL_IS_NULLABLE} column.
      */
-    public static final String COLUMN_VALUE_IS_NULLABLE_UNKNOWN = "";
+    public static final String COLUMN_VALUE_IS_NULLABLE_UNKNOWN = MetadataTypeConstants.EMPTY;
 
     static final List<String> COLUMN_VALUES_IS_NULLABLE = List.of(
             COLUMN_VALUE_IS_NULLABLE_YES,
