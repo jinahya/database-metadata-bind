@@ -35,15 +35,8 @@ public class BestRowIdentifier
      * @return .
      */
     static Comparator<BestRowIdentifier> comparingInSpecifiedOrder() {
-        return Comparator.comparing(BestRowIdentifier::getScope);
+        return Comparator.comparing(BestRowIdentifier::getScope, Comparator.naturalOrder());
     }
-
-//    static Comparator<BestRowIdentifier> comparingInSpecifiedOrder(final Context context)
-////            throws SQLException
-//    {
-//        Objects.requireNonNull(context, "context is null");
-//        return comparingInSpecifiedOrder(context, Comparator.naturalOrder());
-//    }
 
     // ----------------------------------------------------------------------------------------------------------- SCOPE
 

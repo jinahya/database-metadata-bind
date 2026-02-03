@@ -30,6 +30,7 @@ import java.sql.Types;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -290,9 +291,8 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-//                .isSortedAccordingTo(BestRowIdentifier.comparingInSpecifiedOrder(context))
                 .isSortedAccordingTo(BestRowIdentifier.comparingInSpecifiedOrder())
-                .allSatisfy(b -> {
+                .allSatisfy(v -> {
                 });
         for (final var value : values) {
             bestRowIdentifier(context, value);
@@ -756,7 +756,7 @@ final class Context_Test_Utils {
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
                 .isSortedAccordingTo(Table.comparingInSpecifiedOrder(
-//                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                        s -> Optional.ofNullable(s).map(String::toLowerCase).orElse(null),
                         ContextUtils.nullOrdered(context, Comparator.naturalOrder())))
                 .allSatisfy(v -> {
                 });

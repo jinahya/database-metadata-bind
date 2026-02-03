@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -566,8 +568,9 @@ public class Context {
      * @param consumer          the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
      */
-    void getColumnsAndAcceptEach(final String catalog, final String schemaPattern, final String tableNamePattern,
-                                 final String columnNamePattern, final Consumer<? super Column> consumer)
+    void getColumnsAndAcceptEach(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                 final String tableNamePattern, final String columnNamePattern,
+                                 final Consumer<? super Column> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (var results = metadata.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
@@ -962,7 +965,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getImportedKeys(String, String, String)
      */
-    void getImportedKeysAndAcceptEach(final String catalog, final String schema, final String table,
+    void getImportedKeysAndAcceptEach(@Nullable final String catalog, @Nullable final String schema, final String table,
                                       final Consumer<? super ImportedKey> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");

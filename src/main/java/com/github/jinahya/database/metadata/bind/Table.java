@@ -26,7 +26,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -51,6 +51,17 @@ public class Table
     private static final long serialVersionUID = 6590036695540141125L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    static Comparator<Table> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                       final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<Table, String>comparing(v -> operator.apply(v.getTableType()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
+                .thenComparing(Table::getTableName, comparator);
+    }
+
     static Comparator<Table> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
@@ -172,11 +183,11 @@ public class Table
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
     static Table of(final String tableCat, final String tableSchem, final String tableName) {
-        final var table = new Table();
-        table.setTableCat(tableCat);
-        table.setTableSchem(tableSchem);
-        table.setTableName(tableName);
-        return table;
+        final var instance = new Table();
+        instance.setTableCat(tableCat);
+        instance.setTableSchem(tableSchem);
+        instance.setTableName(tableName);
+        return instance;
     }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -205,20 +216,6 @@ public class Table
                '}';
     }
 
-    public String getTableCatEffective() {
-        return Optional.ofNullable(getTableCat())
-                .map(String::strip)
-                .map(String::toUpperCase)
-                .orElse("");
-    }
-
-    public String getTableSchemEffective() {
-        return Optional.ofNullable(getTableSchem())
-                .map(String::strip)
-                .map(String::toUpperCase)
-                .orElse("");
-    }
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -231,14 +228,14 @@ public class Table
             return false;
         }
         final var that = (Table) obj;
-        return Objects.equals(getTableCatEffective(), that.getTableCatEffective()) &&
-               Objects.equals(getTableSchemEffective(), that.getTableSchemEffective()) &&
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
                Objects.equals(tableName, that.tableName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getTableCatEffective(), getTableSchemEffective(), tableName);
+        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName);
     }
     // -------------------------------------------------------------------------------------------------------- tableCat
 
@@ -468,14 +465,12 @@ public class Table
     private String tableType;
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
