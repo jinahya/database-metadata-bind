@@ -18,8 +18,6 @@ Type-safe Java bindings for `java.sql.DatabaseMetaData` ResultSet results.
 - No automatic parent/child loading
 - No implicit relationship traversal
 - User composes queries explicitly via `Context`
-- `@_ChildOf`/`@_ParentOf` document relationships without enforcing them
-
 This trades "clever" features for maintainability and predictable behavior.
 
 ## Annotations
@@ -31,13 +29,6 @@ This trades "clever" features for maintainability and predictable behavior.
 | `@_ColumnLabel` | Maps field to ResultSet column (required) |
 | `@_NullableBySpecification` | Column may be null per JDBC spec |
 | `@_NotUsedBySpecification` | Column reserved/unused in spec |
-
-### Type Annotations
-
-| Annotation | Purpose |
-|------------|---------|
-| `@_ChildOf` | Documents parent relationship (repeatable) |
-| `@_ParentOf` | Documents child relationship (repeatable) |
 
 ### Field Annotation Order
 
@@ -153,9 +144,8 @@ Methods must appear in this order: `toString`, `equals`, `hashCode`.
 6. Implement `public` getters, `protected` setters
 7. Add comparator with `nullSafe` for catalog/schema fields
 8. Override `toString()`, `equals()`, `hashCode()` (in this order)
-9. Add `@_ChildOf`/`@_ParentOf` if parent-child relationship exists
-10. Add Context methods (`getXxxAndAcceptEach`, `getXxxAndAddAll`, `getXxx`)
-11. Add unit test extending `AbstractMetadataType_Test<T>`
+9. Add Context methods (`getXxxAndAcceptEach`, `getXxxAndAddAll`, `getXxx`)
+10. Add unit test extending `AbstractMetadataType_Test<T>`
 
 ## Anti-Patterns (Don't Do)
 

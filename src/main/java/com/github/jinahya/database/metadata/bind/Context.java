@@ -304,7 +304,7 @@ public class Context {
         return Objects.requireNonNull(collection, "collection is null");
     }
 
-    // ------------------------------------- getAttributes(catalog, schemaPatter, typeNamePattern, attributeNamePattern)
+    // --------------------------------------------------------------------------------------------------- getAttributes
     void getAttributesAndAcceptEach(final String catalog, final String schemaPattern, final String typeNamePattern,
                                     final String attributeNamePattern, final Consumer<? super Attribute> consumer)
             throws SQLException {
@@ -343,8 +343,8 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<Attribute> getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
-                                         final String attributeNamePattern)
+    public List<Attribute> getAttributes(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                         final String typeNamePattern, final String attributeNamePattern)
             throws SQLException {
         return getAttributesAndAddAll(catalog, schemaPattern, typeNamePattern, attributeNamePattern, new ArrayList<>());
     }
@@ -400,8 +400,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
      */
-    public List<BestRowIdentifier> getBestRowIdentifier(final String catalog, final String schema, final String table,
-                                                        final int scope, final boolean nullable)
+    public List<BestRowIdentifier> getBestRowIdentifier(@Nullable final String catalog, @Nullable final String schema,
+                                                        final String table, final int scope, final boolean nullable)
             throws SQLException {
         return getBestRowIdentifierAndAddAll(catalog, schema, table, scope, nullable, new ArrayList<>());
     }
@@ -451,7 +451,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getClientInfoProperties()
      */
-    void getClientPropertiesAndAcceptEach(final Consumer<? super ClientInfoProperty> consumer) throws SQLException {
+    void getClientInfoPropertiesAndAcceptEach(final Consumer<? super ClientInfoProperty> consumer) throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (var results = metadata.getClientInfoProperties()) {
             assert results != null;
@@ -462,7 +462,7 @@ public class Context {
     <C extends Collection<? super ClientInfoProperty>> C getClientInfoPropertiesAndAddAll(final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        getClientPropertiesAndAcceptEach(
+        getClientInfoPropertiesAndAcceptEach(
                 v -> {
                     final var changed = collection.add(v);
                     assert changed : "duplicate client info property: " + v;
@@ -483,7 +483,7 @@ public class Context {
         return getClientInfoPropertiesAndAddAll(new ArrayList<>());
     }
 
-    // -------------------------------------------------- getColumnPrivileges(catalog, schema, table, columnNamePattern)
+    // --------------------------------------------------------------------------------------------- getColumnPrivileges
     void getColumnPrivilegesAndAcceptEach(final String catalog, final String schema, final String table,
                                           final String columnNamePattern,
                                           final Consumer<? super ColumnPrivilege> consumer)
@@ -524,8 +524,8 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<ColumnPrivilege> getColumnPrivileges(final String catalog, final String schema, final String table,
-                                                     final String columnNamePattern)
+    public List<ColumnPrivilege> getColumnPrivileges(@Nullable final String catalog, @Nullable final String schema,
+                                                     final String table, final String columnNamePattern)
             throws SQLException {
         return getColumnPrivilegesAndAddAll(catalog, schema, table, columnNamePattern, new ArrayList<>());
     }
@@ -555,7 +555,7 @@ public class Context {
         );
     }
 
-    // ----------------------------------------- getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)
+    // ------------------------------------------------------------------------------------------------------ getColumns
 
     /**
      * Invokes {@link DatabaseMetaData#getColumns(String, String, String, String)} method, on the wrapped metadata, with
@@ -621,8 +621,8 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<Column> getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
-                                   final String columnNamePattern)
+    public List<Column> getColumns(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                   final String tableNamePattern, final String columnNamePattern)
             throws SQLException {
         return getColumnsAndAddAll(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
     }
@@ -648,7 +648,7 @@ public class Context {
         return getColumns(table.getTableCat(), table.getTableSchem(), table.getTableName(), "%");
     }
 
-    // -------- getCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable)
+    // ----------------------------------------------------------------------------------------------- getCrossReference
 
     /**
      * Invokes
@@ -680,9 +680,9 @@ public class Context {
     }
 
     <C extends Collection<? super CrossReference>> C
-    getCrossReferencesAndAddAll(final String parentCatalog, final String parentSchema, final String parentTable,
-                                final String foreignCatalog, final String foreignSchema, final String foreignTable,
-                                final C collection)
+    getCrossReferenceAndAddAll(final String parentCatalog, final String parentSchema, final String parentTable,
+                               final String foreignCatalog, final String foreignSchema, final String foreignTable,
+                               final C collection)
             throws SQLException {
         requireNonNullConnection(collection);
         getCrossReferenceAndAcceptEach(
@@ -715,13 +715,14 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<CrossReference> getCrossReference(final String parentCatalog, final String parentSchema,
-                                                  final String parentTable, final String foreignCatalog,
-                                                  final String foreignSchema, final String foreignTable)
+    public List<CrossReference> getCrossReference(@Nullable final String parentCatalog,
+                                                  @Nullable final String parentSchema, final String parentTable,
+                                                  @Nullable final String foreignCatalog,
+                                                  @Nullable final String foreignSchema, final String foreignTable)
             throws SQLException {
-        return getCrossReferencesAndAddAll(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema,
-                                           foreignTable,
-                                           new ArrayList<>());
+        return getCrossReferenceAndAddAll(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema,
+                                          foreignTable,
+                                          new ArrayList<>());
     }
 
     List<CrossReference> getCrossReference(final Table parentTable, final Table foreighTable)
@@ -734,7 +735,7 @@ public class Context {
         );
     }
 
-    // ------------------------------------------------------------------------- getExportedKeys(catalog, schema, table)
+    // ------------------------------------------------------------------------------------------------- getExportedKeys
 
     /**
      * Invokes {@link DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)} method
@@ -783,7 +784,8 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<ExportedKey> getExportedKeys(final String catalog, final String schema, final String table)
+    public List<ExportedKey> getExportedKeys(@Nullable final String catalog, @Nullable final String schema,
+                                             final String table)
             throws SQLException {
         return getExportedKeysAndAddAll(
                 catalog,
@@ -862,8 +864,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getFunctions(String, String, String)
      */
-    public List<Function> getFunctions(final String catalog, final String schemaPattern,
-                                       final String functionNamePattern)
+    public List<Function> getFunctions(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                       @Nullable final String functionNamePattern)
             throws SQLException {
         return getFunctionsAndAddAll(
                 catalog, schemaPattern, functionNamePattern,
@@ -915,7 +917,7 @@ public class Context {
      * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
      * @see #getFunctionColumns(String, String, String, String)
      */
-    public List<FunctionColumn> getFunctionColumns(final String catalog, final String schemaPattern,
+    public List<FunctionColumn> getFunctionColumns(@Nullable final String catalog, @Nullable final String schemaPattern,
                                                    final String functionNamePattern, final String columnNamePattern)
             throws SQLException {
         return getFunctionColumnsAndAddAll(
@@ -1002,7 +1004,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getImportedKeys(String, String, String)
      */
-    public List<ImportedKey> getImportedKeys(final String catalog, final String schema, final String table)
+    public List<ImportedKey> getImportedKeys(@Nullable final String catalog, @Nullable final String schema,
+                                             final String table)
             throws SQLException {
         return getImportedKeysAndAddAll(
                 catalog,
@@ -1029,7 +1032,7 @@ public class Context {
         );
     }
 
-    // ------------------------------------------------------- getIndexInfo(catalog, schema, table, unique, approximate)
+    // ---------------------------------------------------------------------------------------------------- getIndexInfo
     void getIndexInfoAndAcceptEach(@Nullable final String catalog, @Nullable final String schema, final String table,
                                    final boolean unique, final boolean approximate,
                                    final Consumer<? super IndexInfo> consumer)
@@ -1079,8 +1082,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
      */
-    public List<IndexInfo> getIndexInfo(final String catalog, final String schema, final String table,
-                                        final boolean unique, final boolean approximate)
+    public List<IndexInfo> getIndexInfo(@Nullable final String catalog, @Nullable final String schema,
+                                        final String table, final boolean unique, final boolean approximate)
             throws SQLException {
         return getIndexInfoAndAddAll(
                 catalog, schema, table, unique, approximate,
@@ -1146,7 +1149,8 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<PrimaryKey> getPrimaryKeys(final String catalog, final String schema, final String table)
+    public List<PrimaryKey> getPrimaryKeys(@Nullable final String catalog, @Nullable final String schema,
+                                           final String table)
             throws SQLException {
         return getPrimaryKeysAndAddAll(
                 catalog, schema, table,
@@ -1216,8 +1220,10 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<ProcedureColumn> getProcedureColumns(final String catalog, final String schemaPattern,
-                                                     final String procedureNamePattern, final String columnNamePattern)
+    public List<ProcedureColumn> getProcedureColumns(@Nullable final String catalog,
+                                                     @Nullable final String schemaPattern,
+                                                     final String procedureNamePattern,
+                                                     final String columnNamePattern)
             throws SQLException {
         return getProcedureColumnsAndAddAll(
                 catalog, schemaPattern, procedureNamePattern, columnNamePattern,
@@ -1242,7 +1248,7 @@ public class Context {
         );
     }
 
-    // ----------------------------------------------------- getProcedures(catalog, schemaPattern, procedureNamePattern)
+    // --------------------------------------------------------------------------------------------------- getProcedures
 
     /**
      * Invokes {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method with
@@ -1293,7 +1299,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getProcedures(String, String, String)
      */
-    public List<Procedure> getProcedures(final String catalog, final String schemaPattern,
+    public List<Procedure> getProcedures(@Nullable final String catalog, @Nullable final String schemaPattern,
                                          final String procedureNamePattern)
             throws SQLException {
         return getProceduresAndAddAll(
@@ -1333,7 +1339,7 @@ public class Context {
         );
     }
 
-    // ------------------------------- getPseudoColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern)
+    // ------------------------------------------------------------------------------------------------ getPseudoColumns
 
     /**
      * Invokes
@@ -1392,7 +1398,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
      */
-    public List<PseudoColumn> getPseudoColumns(final String catalog, final String schemaPattern,
+    public List<PseudoColumn> getPseudoColumns(@Nullable final String catalog, @Nullable final String schemaPattern,
                                                final String tableNamePattern, final String columnNamePattern)
             throws SQLException {
         return getPseudoColumnsAndAddAll(
@@ -1409,7 +1415,7 @@ public class Context {
         );
     }
 
-    // ---------------------------------------------------------------------------------------------------- getSchemas()
+    // ------------------------------------------------------------------------------------------------------ getSchemas
 
     /**
      * Invokes {@link DatabaseMetaData#getSchemas()} method, and accepts each bound value to specified consumer.
@@ -1456,7 +1462,7 @@ public class Context {
         );
     }
 
-    // ------------------------------------------------------------------------------ getSchemas(catalog, schemaPattern)
+    // ------------------------------------------------------------------------------------------------------ getSchemas
 
     /**
      * Invokes {@link DatabaseMetaData#getSchemas(String, String)} method with given arguments, and accepts each bound
@@ -1502,7 +1508,8 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<Schema> getSchemas(final String catalog, final String schemaPattern) throws SQLException {
+    public List<Schema> getSchemas(@Nullable final String catalog, @Nullable final String schemaPattern)
+            throws SQLException {
         return getSchemasAndAddAll(catalog, schemaPattern, new ArrayList<>());
     }
 
@@ -1522,7 +1529,7 @@ public class Context {
         );
     }
 
-    // -------------------------------------------------------- getSuperTables(catalog, schemaPattern, tableNamePattern)
+    // -------------------------------------------------------------------------------------------------- getSuperTables
 
     /**
      * Invokes {@link DatabaseMetaData#getSuperTables(String, String, String)} method with given arguments, and accepts
@@ -1572,7 +1579,7 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<SuperTable> getSuperTables(final String catalog, final String schemaPattern,
+    public List<SuperTable> getSuperTables(@Nullable final String catalog, final String schemaPattern,
                                            final String tableNamePattern)
             throws SQLException {
         return getSuperTablesAndAddAll(
@@ -1599,7 +1606,7 @@ public class Context {
         );
     }
 
-    // ----------------------------------------------------------- getSuperType(catalog, schemaPattern, typeNamePattern)
+    // ---------------------------------------------------------------------------------------------------- getSuperType
 
     /**
      * Invokes {@link DatabaseMetaData#getSuperTypes(String, String, String)} method with given arguments, and accepts
@@ -1649,7 +1656,7 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<SuperType> getSuperTypes(final String catalog, final String schemaPattern,
+    public List<SuperType> getSuperTypes(@Nullable final String catalog, final String schemaPattern,
                                          final String typeNamePattern)
             throws SQLException {
         return getSuperTypesAndAddAll(
@@ -1679,7 +1686,7 @@ public class Context {
         );
     }
 
-    // ---------------------------------------------------- getTablePrivileges(catalog, schemaPattern, tableNamePattern)
+    // ---------------------------------------------------------------------------------------------- getTablePrivileges
 
     /**
      * Invokes {@link DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)} method
@@ -1730,7 +1737,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTablePrivileges(String, String, String)
      */
-    public List<TablePrivilege> getTablePrivileges(final String catalog, final String schemaPattern,
+    public List<TablePrivilege> getTablePrivileges(@Nullable final String catalog, @Nullable final String schemaPattern,
                                                    final String tableNamePattern)
             throws SQLException {
         return getTablePrivilegesAndAddAll(
@@ -1768,7 +1775,7 @@ public class Context {
         );
     }
 
-    // ------------------------------------------------------------------------------------------------- getTableTypes()
+    // --------------------------------------------------------------------------------------------------- getTableTypes
 
     /**
      * Invokes {@link DatabaseMetaData#getTableTypes()} method, and accepts each bound value to specified consumer.
@@ -1813,7 +1820,7 @@ public class Context {
         );
     }
 
-    // ------------------------------------------------------ getTables(catalog, schemaPattern, tableNamePattern, types)
+    // ------------------------------------------------------------------------------------------------------- getTables
 
     /**
      * Invokes
@@ -1935,7 +1942,7 @@ public class Context {
         );
     }
 
-    // --------------------------------------------------------------------------------------------------- getTypeInfo()
+    // ----------------------------------------------------------------------------------------------------- getTypeInfo
 
     /**
      * Invokes {@link DatabaseMetaData#getTypeInfo()} method, and accepts each bound value to specified consumer.
@@ -1980,7 +1987,7 @@ public class Context {
         );
     }
 
-    // --------------------------------------------------------- getUDTs(catalog, schemaPattern, typeNamePattern, types)
+    // --------------------------------------------------------------------------------------------------------- getUDTs
 
     /**
      * Invokes {@link DatabaseMetaData#getUDTs(java.lang.String, java.lang.String, java.lang.String, int[])} method with
@@ -2033,8 +2040,8 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<UDT> getUDTs(final String catalog, final String schemaPattern, final String typeNamePattern,
-                             final int[] types)
+    public List<UDT> getUDTs(@Nullable final String catalog, @Nullable final String schemaPattern,
+                             final String typeNamePattern, @Nullable final int[] types)
             throws SQLException {
         return getUDTsAndAddAll(
                 catalog,
@@ -2068,7 +2075,7 @@ public class Context {
         );
     }
 
-    // ----------------------------------------------------------------------- getVersionColumns(catalog, schema, table)
+    // ----------------------------------------------------------------------------------------------- getVersionColumns
 
     /**
      * Invokes {@link DatabaseMetaData#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)} method
@@ -2120,7 +2127,8 @@ public class Context {
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#getVersionColumns(String, String, String)
      */
-    public List<VersionColumn> getVersionColumns(final String catalog, final String schema, final String table)
+    public List<VersionColumn> getVersionColumns(@Nullable final String catalog, @Nullable final String schema,
+                                                 final String table)
             throws SQLException {
         return getVersionColumnsAndAddAll(
                 catalog,

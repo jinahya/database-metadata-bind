@@ -662,6 +662,5 @@ public class CrossReference
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_DEFERRABILITY)
-    //noinspection NotNullFieldNotInitialized
     private Integer deferrability;
 }
