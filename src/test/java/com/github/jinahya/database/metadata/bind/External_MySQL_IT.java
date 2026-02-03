@@ -39,7 +39,7 @@ import java.util.Map;
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
-//@Disabled
+@org.junit.jupiter.api.Disabled
 @EnabledIfSystemProperty(named = External_MySQL_IT.PROPERTY_NAME_URL, matches = ".+")
 @EnabledIfSystemProperty(named = External_MySQL_IT.PROPERTY_NAME_USER, matches = ".+")
 @EnabledIfSystemProperty(named = External_MySQL_IT.PROPERTY_NAME_PASSWORD, matches = ".+")
