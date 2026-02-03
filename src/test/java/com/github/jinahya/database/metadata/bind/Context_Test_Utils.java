@@ -30,6 +30,7 @@ import java.sql.Types;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import static com.github.jinahya.database.metadata.bind._Assertions.assertType;
@@ -260,8 +261,9 @@ final class Context_Test_Utils {
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
                 .isSortedAccordingTo(Attribute.comparingInSpecifiedOrder(
+                        UnaryOperator.identity(),
                         ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
-                .allSatisfy(a -> {
+                .allSatisfy(v -> {
                 });
         for (final var attribute : attributes) {
             attribute(context, attribute);

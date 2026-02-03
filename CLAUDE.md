@@ -50,21 +50,34 @@ private String tableCat;
 
 ## Class Structure (Preferred Order)
 
-Each section is preceded by a single-line hyphen comment with a 120-character margin. Section comments must be present even when no elements exist within that section.
+Each section is preceded by a single-line hyphen comment ending with the section name, exactly 120 characters total (including 4-space indent). The format is:
 
 ```java
-// -----------------------------------------------------------------------------------------------------------------
+    // ---- SECTION_NAME
 ```
 
+Where `----` is filled with hyphens so the total line length equals 120 characters.
+
+**Examples:**
+```java
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    // ------------------------------------------------------------------------------------------------------- TABLE_CAT
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -----------------------------------------------------------------------------------------------------------------
+```
+
+The last example (all hyphens, no name) is used only for the instance fields section at the end of the class.
+
 1. `serialVersionUID`
-2. `// COMPARATORS` — Static comparator methods
-3. `// {COLUMN_NAME}` — Column label constants (`COLUMN_LABEL_XXX`) and column value constants (`COLUMN_VALUE_XXX`), grouped by column
-4. `// STATIC_FACTORY_METHODS`
-5. `// CONSTRUCTORS`
-6. `// java.lang.Object` — Overrides in order: `toString`, `equals`, `hashCode`
-7. `// Jakarta-Validation` — Bean validation methods
-8. `// {field_name}` — Getter/setter pairs, grouped per field
-9. `// ---` — Instance fields
+2. `// ----- COMPARATORS` — Static comparator methods
+3. `// ----- {COLUMN_NAME}` — Column label constants (`COLUMN_LABEL_XXX`) and column value constants (`COLUMN_VALUE_XXX`), grouped by column (e.g., `// ----- TABLE_CAT`)
+4. `// ----- STATIC_FACTORY_METHODS`
+5. `// ----- CONSTRUCTORS`
+6. `// ----- java.lang.Object` — Overrides in order: `toString`, `equals`, `hashCode`
+7. `// ----- Jakarta-Validation` — Bean validation methods
+8. `// ----- {fieldName}` — Getter/setter pairs, grouped per field (e.g., `// ----- tableCat`)
+9. `// -----` — Instance fields (no name, just hyphens)
 
 ## Critical Patterns
 

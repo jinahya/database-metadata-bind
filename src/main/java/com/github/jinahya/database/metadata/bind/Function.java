@@ -105,7 +105,7 @@ public class Function
     public static final int COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RETURNS_TABLE =  // 2
             DatabaseMetaData.functionReturnsTable;
 
-    static final List<Integer> FUNCTION_TYPE_VALUES = List.of(
+    static final List<Integer> COLUMN_VALUES_FUNCTION_TYPE = List.of(
             COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RESULT_UNKNOWN,
             COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_NO_TABLE,
             COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RETURNS_TABLE

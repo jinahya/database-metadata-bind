@@ -5,6 +5,7 @@ import org.jspecify.annotations.Nullable;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -49,110 +50,133 @@ abstract class PortedKey
                 .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder()); // NOT nullable
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- PKTABLE_CAT
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_PKTABLE_CAT = "PKTABLE_CAT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- PKTABLE_SCHEM
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_PKTABLE_SCHEM = "PKTABLE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------- PKTABLE_NAME
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_PKTABLE_NAME = "PKTABLE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- PKCOLUMN_NAME
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_PKCOLUMN_NAME = "PKCOLUMN_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- FKTABLE_CAT
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_FKTABLE_CAT = "FKTABLE_CAT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- FKTABLE_SCHEM
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_FKTABLE_SCHEM = "FKTABLE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------- FKTABLE_NAME
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_FKTABLE_NAME = "FKTABLE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- FKCOLUMN_NAME
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_FKCOLUMN_NAME = "FKCOLUMN_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- KEY_SEQ
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_KEY_SEQ = "KEY_SEQ";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- UPDATE_RULE
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- DELETE_RULE
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_DELETE_RULE = "DELETE_RULE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- FK_NAME
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_FK_NAME = "FK_NAME";
 
+    // --------------------------------------------------------------------------------------------------------- PK_NAME
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_PK_NAME = "PK_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- DEFERRABILITY
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_DEFERRABILITY = "DEFERRABILITY";
 
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#importedKeyInitiallyDeferred}({@value DatabaseMetaData#importedKeyInitiallyDeferred}) for
+     * the {@value #COLUMN_NAME_DEFERRABILITY} column.
+     */
     public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_DEFERRED =
             DatabaseMetaData.importedKeyInitiallyDeferred;
 
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#importedKeyInitiallyImmediate}({@value DatabaseMetaData#importedKeyInitiallyImmediate})
+     * for the {@value #COLUMN_NAME_DEFERRABILITY} column.
+     */
     public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_IMMEDIATE =
             DatabaseMetaData.importedKeyInitiallyImmediate;
 
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#importedKeyNotDeferrable}({@value DatabaseMetaData#importedKeyNotDeferrable}) for the
+     * {@value #COLUMN_NAME_DEFERRABILITY} column.
+     */
     public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_NOT_DEFERRABLE =
             DatabaseMetaData.importedKeyNotDeferrable;
+
+    static final List<Integer> COLUMN_VALUES_DEFERRABILITY = List.of(
+            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_DEFERRED,  // 5
+            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_IMMEDIATE, // 6
+            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_NOT_DEFERRABLE       // 7
+    );
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 

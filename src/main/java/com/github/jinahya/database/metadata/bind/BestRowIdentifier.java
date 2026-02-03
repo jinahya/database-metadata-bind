@@ -52,16 +52,31 @@ public class BestRowIdentifier
      */
     public static final String COLUMN_LABEL_SCOPE = "SCOPE";
 
+    /**
+     * A column value of {@link DatabaseMetaData#bestRowTemporary}({@value DatabaseMetaData#bestRowTemporary}) for the
+     * {@value #COLUMN_LABEL_SCOPE} column.
+     */
     public static final int COLUMN_VALUE_SCOPE_BEST_ROW_TEMPORARY = DatabaseMetaData.bestRowTemporary;     // 0
 
+    /**
+     * A column value of {@link DatabaseMetaData#bestRowTransaction}({@value DatabaseMetaData#bestRowTransaction}) for
+     * the {@value #COLUMN_LABEL_SCOPE} column.
+     */
     public static final int COLUMN_VALUE_SCOPE_BEST_ROW_TRANSACTION = DatabaseMetaData.bestRowTransaction; // 1
 
+    /**
+     * A column value of {@link DatabaseMetaData#bestRowSession}({@value DatabaseMetaData#bestRowSession}) for the
+     * {@value #COLUMN_LABEL_SCOPE} column.
+     */
     public static final int COLUMN_VALUE_SCOPE_BEST_ROW_SESSION = DatabaseMetaData.bestRowSession;         // 2
 
+    /**
+     * A list of values for the {@value #COLUMN_LABEL_SCOPE} column.
+     */
     static final List<Integer> COLUMN_VALUES_SCOPE = List.of(
-            COLUMN_VALUE_SCOPE_BEST_ROW_TEMPORARY,
-            COLUMN_VALUE_SCOPE_BEST_ROW_TRANSACTION,
-            COLUMN_VALUE_SCOPE_BEST_ROW_SESSION
+            COLUMN_VALUE_SCOPE_BEST_ROW_TEMPORARY,   // 0
+            COLUMN_VALUE_SCOPE_BEST_ROW_TRANSACTION, // 1
+            COLUMN_VALUE_SCOPE_BEST_ROW_SESSION      // 2
     );
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
@@ -85,28 +100,28 @@ public class BestRowIdentifier
      */
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COLUMN_SIZE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_SIZE = "COLUMN_SIZE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- BUFFER_LENGTH
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_BUFFER_LENGTH = "BUFFER_LENGTH";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- DECIMAL_DIGITS
 
     /**
      * A column label of {@value}.

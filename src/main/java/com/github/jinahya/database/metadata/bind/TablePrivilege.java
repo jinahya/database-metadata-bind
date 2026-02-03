@@ -5,6 +5,7 @@ import org.jspecify.annotations.Nullable;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -20,6 +21,18 @@ public class TablePrivilege
     private static final long serialVersionUID = -2142097373603478881L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    static Comparator<TablePrivilege> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                                final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<TablePrivilege, String>comparing(v -> operator.apply(v.getTableCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableName()), comparator)
+                .thenComparing(TablePrivilege::getPrivilege, comparator);
+    }
+
     static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Context context,
                                                                 final Comparator<? super String> comparator)
             throws SQLException {

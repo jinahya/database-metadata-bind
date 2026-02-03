@@ -5,6 +5,7 @@ import org.jspecify.annotations.Nullable;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -86,16 +87,27 @@ public class ColumnPrivilege
      */
     public static final String COLUMN_LABEL_PRIVILEGE = "PRIVILEGE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- IS_GRANTABLE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_IS_GRANTABLE = "IS_GRANTABLE";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     */
     public static final String COLUMN_VALUE_IS_GRANTABLE_YES = MetadataTypeConstants.YES;
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     */
     public static final String COLUMN_VALUE_IS_GRANTABLE_NO = MetadataTypeConstants.NO;
+
+    static final List<String> COLUMN_VALUES_IS_GRANTABLE = List.of(
+            COLUMN_VALUE_IS_GRANTABLE_YES,
+            COLUMN_VALUE_IS_GRANTABLE_NO
+    );
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 

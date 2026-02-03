@@ -17,22 +17,28 @@ public class SuperTable
 
     private static final long serialVersionUID = 3579710773784268831L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
+    // ------------------------------------------------------------------------------------------------------ TABLE_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
+
+    // ------------------------------------------------------------------------------------------------- SUPERTABLE_NAME
 
     /**
      * A column label of {@value}.

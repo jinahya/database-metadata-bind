@@ -101,15 +101,31 @@ public class IndexInfo
      */
     public static final String COLUMN_LABEL_TYPE = "TYPE";
 
+    /**
+     * A column value of {@link DatabaseMetaData#tableIndexStatistic}({@value DatabaseMetaData#tableIndexStatistic}) for
+     * the {@value #COLUMN_LABEL_TYPE} column.
+     */
     public static final int COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC = DatabaseMetaData.tableIndexStatistic; // 0
 
+    /**
+     * A column value of {@link DatabaseMetaData#tableIndexClustered}({@value DatabaseMetaData#tableIndexClustered}) for
+     * the {@value #COLUMN_LABEL_TYPE} column.
+     */
     public static final int COLUMN_VALUE_TYPE_TABLE_INDEX_CLUSTERED = DatabaseMetaData.tableIndexClustered; // 1
 
+    /**
+     * A column value of {@link DatabaseMetaData#tableIndexHashed}({@value DatabaseMetaData#tableIndexHashed}) for the
+     * {@value #COLUMN_LABEL_TYPE} column.
+     */
     public static final int COLUMN_VALUE_TYPE_TABLE_INDEX_HASHED = DatabaseMetaData.tableIndexHashed;       // 2
 
+    /**
+     * A column value of {@link DatabaseMetaData#tableIndexOther}({@value DatabaseMetaData#tableIndexOther}) for the
+     * {@value #COLUMN_LABEL_TYPE} column.
+     */
     public static final int COLUMN_VALUE_TYPE_TABLE_INDEX_OTHER = DatabaseMetaData.tableIndexOther;         // 3
 
-    static final List<Integer> TYPE_VALUES = List.of(
+    static final List<Integer> COLUMN_VALUES_TYPE = List.of(
             COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC,
             COLUMN_VALUE_TYPE_TABLE_INDEX_CLUSTERED,
             COLUMN_VALUE_TYPE_TABLE_INDEX_HASHED,
@@ -137,9 +153,20 @@ public class IndexInfo
      */
     public static final String COLUMN_LABEL_ASC_OR_DESC = "ASC_OR_DESC";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_ASC_OR_DESC} column indicating ascending order.
+     */
     public static final String COLUMN_VALUE_ASC_OR_DESC_A = "A";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_ASC_OR_DESC} column indicating descending order.
+     */
     public static final String COLUMN_VALUE_ASC_OR_DESC_D = "D";
+
+    static final List<String> COLUMN_VALUES_ASC_OR_DESC = List.of(
+            COLUMN_VALUE_ASC_OR_DESC_A,
+            COLUMN_VALUE_ASC_OR_DESC_D
+    );
 
     // ----------------------------------------------------------------------------------------------------- CARDINALITY
 
@@ -262,7 +289,7 @@ public class IndexInfo
     }
 
     private boolean isTypeValid() {
-        return type == null || TYPE_VALUES.contains(type);
+        return type == null || COLUMN_VALUES_TYPE.contains(type);
     }
 
     /**

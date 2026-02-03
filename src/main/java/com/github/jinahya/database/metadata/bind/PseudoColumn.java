@@ -5,6 +5,7 @@ import org.jspecify.annotations.Nullable;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -33,57 +34,77 @@ public class PseudoColumn
         return comparing(ContextUtils.nullOrdered(context, comparator));
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
+
+    // ------------------------------------------------------------------------------------------------------ TABLE_NAME
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
+    // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
+
+    // ------------------------------------------------------------------------------------------------------- DATA_TYPE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
+    // ----------------------------------------------------------------------------------------------------- COLUMN_SIZE
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_SIZE = "COLUMN_SIZE";
+
+    // -------------------------------------------------------------------------------------------------- DECIMAL_DIGITS
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DECIMAL_DIGITS = "DECIMAL_DIGITS";
 
+    // -------------------------------------------------------------------------------------------------- NUM_PREC_RADIX
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NUM_PREC_RADIX = "NUM_PREC_RADIX";
+
+    // ---------------------------------------------------------------------------------------------------- COLUMN_USAGE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_USAGE = "COLUMN_USAGE";
 
+    // --------------------------------------------------------------------------------------------------------- REMARKS
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_REMARKS = "REMARKS";
+
+    // ----------------------------------------------------------------------------------------------- CHAR_OCTET_LENGTH
 
     /**
      * A column label of {@value}.
@@ -97,11 +118,26 @@ public class PseudoColumn
      */
     public static final String COLUMN_LABEL_COLUMN_IS_NULLABLE = "IS_NULLABLE";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     */
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_YES = MetadataTypeConstants.YES;
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     */
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_NO = MetadataTypeConstants.NO;
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     */
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY = MetadataTypeConstants.EMPTY;
+
+    static final List<String> COLUMN_VALUES_IS_NULLABLE = List.of(
+            COLUMN_VALUE_COLUMN_IS_NULLABLE_YES,
+            COLUMN_VALUE_COLUMN_IS_NULLABLE_NO,
+            COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY
+    );
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 

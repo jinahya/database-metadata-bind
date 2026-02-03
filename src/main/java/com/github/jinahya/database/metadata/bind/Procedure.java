@@ -5,6 +5,7 @@ import org.jspecify.annotations.Nullable;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -42,13 +43,31 @@ public class Procedure
      */
     public static final String COLUMN_LABEL_PROCEDURE_TYPE = "PROCEDURE_TYPE";
 
+    /**
+     * A column value of {@link DatabaseMetaData#procedureResultUnknown}({@value DatabaseMetaData#procedureResultUnknown})
+     * for the {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     */
     public static final int COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_RESULT_UNKNOWN =
             DatabaseMetaData.procedureResultUnknown;
 
+    /**
+     * A column value of {@link DatabaseMetaData#procedureNoResult}({@value DatabaseMetaData#procedureNoResult}) for the
+     * {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     */
     public static final int COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_NO_RESULT = DatabaseMetaData.procedureNoResult;
 
+    /**
+     * A column value of {@link DatabaseMetaData#procedureReturnsResult}({@value DatabaseMetaData#procedureReturnsResult})
+     * for the {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     */
     public static final int COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_RETURNS_RESULT =
             DatabaseMetaData.procedureReturnsResult;
+
+    static final List<Integer> COLUMN_VALUES_PROCEDURE_TYPE = List.of(
+            COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_RESULT_UNKNOWN, // 0
+            COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_NO_RESULT,      // 1
+            COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_RETURNS_RESULT  // 2
+    );
 
     // --------------------------------------------------------------------------------------------------- SPECIFIC_NAME
 
@@ -57,28 +76,28 @@ public class Procedure
      */
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- PROCEDURE_CAT
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PROCEDURE_CAT = "PROCEDURE_CAT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------- PROCEDURE_SCHEM
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- PROCEDURE_NAME
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PROCEDURE_NAME = "PROCEDURE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- REMARKS
 
     /**
      * A column label of {@value}.

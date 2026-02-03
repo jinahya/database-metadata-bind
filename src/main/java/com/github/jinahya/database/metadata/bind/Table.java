@@ -24,6 +24,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -148,11 +149,26 @@ public class Table
      */
     public static final String COLUMN_LABEL_REF_GENERATION = "REF_GENERATION";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
     public static final String COLUMN_VALUE_REF_GENERATION_SYSTEM = "SYSTEM";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
     public static final String COLUMN_VALUE_REF_GENERATION_USER = "USER";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
     public static final String COLUMN_VALUE_REF_GENERATION_DERIVED = "DERIVED";
+
+    static final List<String> COLUMN_VALUES_REF_GENERATION = List.of(
+            COLUMN_VALUE_REF_GENERATION_SYSTEM,
+            COLUMN_VALUE_REF_GENERATION_USER,
+            COLUMN_VALUE_REF_GENERATION_DERIVED
+    );
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
     static Table of(final String tableCat, final String tableSchem, final String tableName) {

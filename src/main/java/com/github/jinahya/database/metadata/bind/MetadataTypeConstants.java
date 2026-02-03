@@ -37,6 +37,7 @@ final class MetadataTypeConstants {
 
     static final String PATTERN_REGEXP_YES_NO_OR_EMPTY = "^$|" + PATTERN_REGEXP_YES_OR_NO;
 
+    // -----------------------------------------------------------------------------------------------------------------
     private MetadataTypeConstants() {
         throw new AssertionError("instantiation is not allowed");
     }

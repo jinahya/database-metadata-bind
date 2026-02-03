@@ -25,10 +25,9 @@ import jakarta.validation.constraints.Positive;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -46,59 +45,28 @@ public class Attribute
     private static final long serialVersionUID = 1913681105410440186L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
-    static Comparator<Attribute> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .comparing(Attribute::getTypeCat, comparator)
-                .thenComparing(Attribute::getTypeSchem, comparator)
-                .thenComparing(Attribute::getTypeName, comparator)
-                .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder()); // NOT nullable
-    }
 
     /**
-     * Returns a comparator for comparing instances in the order specified by the JDBC specification.
-     * <p>
-     * They are ordered by {@link #COLUMN_LABEL_TYPE_CAT TYPE_CAT}, {@link #COLUMN_LABEL_TYPE_SCHEM TYPE_SCHEM},
-     * {@link #COLUMN_LABEL_TYPE_NAME TYPE_NAME} and {@link #COLUMN_LABEL_ORDINAL_POSITION ORDINAL_POSITION}.
-     * </p>
-     * <p>
-     * This method uses {@link ContextUtils#nullOrdered(Context, Comparator)} to handle the null precedence of the
-     * specified {@code context} for nullable columns ({@code TYPE_CAT} and {@code TYPE_SCHEM}).
-     * </p>
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>TYPE_CAT</code>, <code>TYPE_SCHEM</code>, <code>TYPE_NAME</code> and
+     * <code>ORDINAL_POSITION</code>.
+     * </blockquote>
      *
-     * @param context    the context; must be not {@code null}.
-     * @param comparator a comparator for comparing string values; must be not {@code null}.
-     * @return a comparator for comparing instances in the specified order.
-     * @throws SQLException if a database error occurs.
-     * @see #comparingInSpecifiedOrder(Context)
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing attributes.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
      */
-    static Comparator<Attribute> comparingInSpecifiedOrder(final Context context,
-                                                           final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
+    static Comparator<Attribute> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                           final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
         return Comparator
-                .comparing(Attribute::getTypeCat, nullSafe)       // nullable
-                .thenComparing(Attribute::getTypeSchem, nullSafe) // nullable
-                .thenComparing(Attribute::getTypeName, comparator) // NOT nullable
-                .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder()); // NOT nullable
-    }
-
-    /**
-     * Returns a comparator for comparing instances in the order specified by the JDBC specification.
-     * <p>
-     * This method uses {@link String#CASE_INSENSITIVE_ORDER} for comparing string values.
-     * </p>
-     *
-     * @param context the context; must be not {@code null}.
-     * @return a comparator for comparing instances in the specified order.
-     * @throws SQLException if a database error occurs.
-     * @see #comparingInSpecifiedOrder(Context, Comparator)
-     */
-    static Comparator<Attribute> comparingInSpecifiedOrder(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
+                .<Attribute, String>comparing(v -> operator.apply(v.getTypeCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getTypeSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getTypeName()), comparator)
+                .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder());
     }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
@@ -142,105 +110,105 @@ public class Attribute
      */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- IS_NULLABLE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- ATTR_TYPE_NAME
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_ATTR_TYPE_NAME = "ATTR_TYPE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- ATTR_SIZE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_ATTR_SIZE = "ATTR_SIZE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- DECIMAL_DIGITS
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DECIMAL_DIGITS = "DECIMAL_DIGITS";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- NUM_PREC_RADIX
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NUM_PREC_RADIX = "NUM_PREC_RADIX";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- REMARKS
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_REMARKS = "REMARKS";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- ATTR_DEF
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_ATTR_DEF = "ATTR_DEF";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- SQL_DATA_TYPE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SQL_DATA_TYPE = "SQL_DATA_TYPE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------ SQL_DATETIME_SUB
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------- CHAR_OCTET_LENGTH
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------ ORDINAL_POSITION
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_ORDINAL_POSITION = "ORDINAL_POSITION";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- SCOPE_CATALOG
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SCOPE_CATALOG = "SCOPE_CATALOG";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------- SCOPE_SCHEMA
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SCOPE_SCHEMA = "SCOPE_SCHEMA";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- SCOPE_TABLE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SCOPE_TABLE = "SCOPE_TABLE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------ SOURCE_DATA_TYPE
 
     /**
      * A column label of {@value}.
@@ -284,48 +252,6 @@ public class Attribute
                ",sourceDataType=" + sourceDataType +
                '}';
     }
-
-    private String getTypeCatEffective() {
-        return Optional.ofNullable(getTypeCat())
-                .map(String::strip)
-                .filter(v -> !v.isBlank())
-                .map(String::toUpperCase)
-                .orElse(null);
-    }
-
-    private String getTypeSchemEffective() {
-        return Optional.ofNullable(getTypeSchem())
-                .map(String::strip)
-                .filter(v -> !v.isBlank())
-                .map(String::toUpperCase)
-                .orElse(null);
-    }
-
-//    @Override
-//    public boolean equals(final Object obj) {
-//        if (obj == null || getClass() != obj.getClass()) {
-//            return false;
-//        }
-//        if (!super.equals(obj)) {
-//            return false;
-//        }
-//        final var that = (Attribute) obj;
-//        return Objects.equals(getTypeCatEffective(), that.getTypeCatEffective())
-//               && Objects.equals(getTypeSchemEffective(), that.getTypeSchemEffective())
-//               && Objects.equals(typeName, that.typeName)
-//               && Objects.equals(attrName, that.attrName);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(
-//                super.hashCode(),
-//                getTypeCatEffective(),
-//                getTypeSchemEffective(),
-//                typeName,
-//                attrName
-//        );
-//    }
 
     @Override
     public boolean equals(final Object obj) {
@@ -387,7 +313,7 @@ public class Attribute
         return true;
     }
 
-//    @AssertTrue
+    //    @AssertTrue
     // null if DATA_TYPE isn't DISTINCT or user-generated REF
     // Note: This validation uses Types.REF without distinguishing user-generated vs system-generated REF.
     //       This is slightly more permissive than the spec, but JDBC doesn't provide an easy way to distinguish them.

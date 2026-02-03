@@ -19,8 +19,6 @@ public class SuperType
 
     private static final long serialVersionUID = 4603878785941565029L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
 
     /**
@@ -170,7 +168,7 @@ public class SuperType
         this.typeName = typeName;
     }
 
-    // ----------------------------------------------------------------------------------------------------- supertypeCat
+    // ---------------------------------------------------------------------------------------------------- supertypeCat
 
     /**
      * Returns the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
@@ -191,7 +189,7 @@ public class SuperType
         this.supertypeCat = supertypeCat;
     }
 
-    // --------------------------------------------------------------------------------------------------- supertypeSchem
+    // -------------------------------------------------------------------------------------------------- supertypeSchem
 
     /**
      * Returns the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
@@ -212,7 +210,7 @@ public class SuperType
         this.supertypeSchem = supertypeSchem;
     }
 
-    // ---------------------------------------------------------------------------------------------------- supertypeName
+    // --------------------------------------------------------------------------------------------------- supertypeName
 
     /**
      * Returns the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.

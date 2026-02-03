@@ -20,10 +20,17 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * An abstract class for implementing {@link MetadataType}.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
 abstract class AbstractMetadataType
         implements MetadataType {
 
@@ -66,12 +73,13 @@ abstract class AbstractMetadataType
         return Objects.hash(getClass());
     }
 
-    // ------------------------------------------------------------------------------------------------- unmappedColumns
+    // -------------------------------------------------------------------------------------------------- unknownColumns
     @Override
     public Map<String, Object> getUnknownColumns() {
         return unknownColumns;
     }
 
+    @Nullable
     Object putUnkownColumn(final String label, final Object value) {
         return unknownColumns.put(label, value);
     }

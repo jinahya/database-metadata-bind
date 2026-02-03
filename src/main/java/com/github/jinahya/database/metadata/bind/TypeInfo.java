@@ -4,6 +4,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -36,124 +37,181 @@ public class TypeInfo
         return Comparator.comparing(TypeInfo::getDataType, Integer::compareTo);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- DATA_TYPE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- PRECISION
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PRECISION = "PRECISION";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- LITERAL_PREFIX
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_LITERAL_PREFIX = "LITERAL_PREFIX";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- LITERAL_SUFFIX
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_LITERAL_SUFFIX = "LITERAL_SUFFIX";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- CREATE_PARAMS
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_CREATE_PARAMS = "CREATE_PARAMS";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- NULLABLE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
+    /**
+     * A column value of {@link DatabaseMetaData#typeNoNulls}({@value DatabaseMetaData#typeNoNulls}) for the
+     * {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public static final int COLUMN_VALUE_NULLABLE_TYPE_NO_NULLS = DatabaseMetaData.typeNoNulls; // 0
 
+    /**
+     * A column value of {@link DatabaseMetaData#typeNullable}({@value DatabaseMetaData#typeNullable}) for the
+     * {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public static final int COLUMN_VALUE_NULLABLE_TYPE_NULLABLE = DatabaseMetaData.typeNullable; // 1
 
+    /**
+     * A column value of {@link DatabaseMetaData#typeNullableUnknown}({@value DatabaseMetaData#typeNullableUnknown}) for
+     * the {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public static final int COLUMN_VALUE_NULLABLE_TYPE_NULLABLE_UNKNOWN = DatabaseMetaData.typeNullableUnknown; // 2
 
-    // -----------------------------------------------------------------------------------------------------------------
+    static final List<Integer> COLUMN_VALUES_NULLABLE = List.of(
+            COLUMN_VALUE_NULLABLE_TYPE_NO_NULLS,        // 0
+            COLUMN_VALUE_NULLABLE_TYPE_NULLABLE,        // 1
+            COLUMN_VALUE_NULLABLE_TYPE_NULLABLE_UNKNOWN // 2
+    );
+
+    // -------------------------------------------------------------------------------------------------- CASE_SENSITIVE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_CASE_SENSITIVE = "CASE_SENSITIVE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------ SEARCHABLE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SEARCHABLE = "SEARCHABLE";
 
+    /**
+     * A column value of {@link DatabaseMetaData#typePredNone}({@value DatabaseMetaData#typePredNone}) for the
+     * {@value #COLUMN_LABEL_SEARCHABLE} column.
+     */
     public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_NONE = DatabaseMetaData.typePredNone;    // 0
 
+    /**
+     * A column value of {@link DatabaseMetaData#typePredChar}({@value DatabaseMetaData#typePredChar}) for the
+     * {@value #COLUMN_LABEL_SEARCHABLE} column.
+     */
     public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_CHAR = DatabaseMetaData.typePredChar;    // 1
 
+    /**
+     * A column value of {@link DatabaseMetaData#typePredBasic}({@value DatabaseMetaData#typePredBasic}) for the
+     * {@value #COLUMN_LABEL_SEARCHABLE} column.
+     */
     public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_BASIC = DatabaseMetaData.typePredBasic;  // 2
 
+    /**
+     * A column value of {@link DatabaseMetaData#typeSearchable}({@value DatabaseMetaData#typeSearchable}) for the
+     * {@value #COLUMN_LABEL_SEARCHABLE} column.
+     */
     public static final int COLUMN_VALUE_SEARCHABLE_TYPE_SEARCHABLE = DatabaseMetaData.typeSearchable; // 3
 
-    // -----------------------------------------------------------------------------------------------------------------
+    static final List<Integer> COLUMN_VALUES_SEARCHABLE = List.of(
+            COLUMN_VALUE_SEARCHABLE_TYPE_PREC_NONE,
+            COLUMN_VALUE_SEARCHABLE_TYPE_PREC_CHAR,
+            COLUMN_VALUE_SEARCHABLE_TYPE_PREC_BASIC,
+            COLUMN_VALUE_SEARCHABLE_TYPE_SEARCHABLE
+    );
+
+    // ---------------------------------------------------------------------------------------------- UNSIGNED_ATTRIBUTE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_UNSIGNED_ATTRIBUTE = "UNSIGNED_ATTRIBUTE";
 
+    // ------------------------------------------------------------------------------------------------ FIXED_PREC_SCALE
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FIXED_PREC_SCALE = "FIXED_PREC_SCALE";
+
+    // -------------------------------------------------------------------------------------------------- AUTO_INCREMENT
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_AUTO_INCREMENT = "AUTO_INCREMENT";
 
+    // ------------------------------------------------------------------------------------------------- LOCAL_TYPE_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_LOCAL_TYPE_NAME = "LOCAL_TYPE_NAME";
+
+    // --------------------------------------------------------------------------------------------------- MINIMUM_SCALE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_MINIMUM_SCALE = "MINIMUM_SCALE";
 
+    // --------------------------------------------------------------------------------------------------- MAXIMUM_SCALE
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_MAXIMUM_SCALE = "MAXIMUM_SCALE";
+
+    // --------------------------------------------------------------------------------------------------- SQL_DATA_TYPE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SQL_DATA_TYPE = "SQL_DATA_TYPE";
 
+    // ------------------------------------------------------------------------------------------------ SQL_DATETIME_SUB
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
+
+    // -------------------------------------------------------------------------------------------------- NUM_PREC_RADIX
 
     /**
      * A column label of {@value}.

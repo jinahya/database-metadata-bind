@@ -40,6 +40,8 @@ public class CrossReference
         return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
+    // ----------------------------------------------------------------------------------------------------- PKTABLE_CAT
+
     /**
      * A column label of {@value}.
      */
@@ -108,17 +110,37 @@ public class CrossReference
      */
     public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
 
+    /**
+     * A column value of {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}) for
+     * the {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     */
     public static final int COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_NO_ACTION = DatabaseMetaData.importedKeyNoAction;
 
+    /**
+     * A column value of {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}) for
+     * the {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     */
     public static final int COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_CASCADE = DatabaseMetaData.importedKeyCascade;
 
+    /**
+     * A column value of {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}) for
+     * the {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     */
     public static final int COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_SET_NULL = DatabaseMetaData.importedKeySetNull;
 
+    /**
+     * A column value of {@link DatabaseMetaData#importedKeySetDefault}({@value DatabaseMetaData#importedKeySetDefault})
+     * for the {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     */
     public static final int COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_SET_DEFAULT = DatabaseMetaData.importedKeySetDefault;
 
+    /**
+     * A column value of {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}) for
+     * the {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     */
     public static final int COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_RESTRICT = DatabaseMetaData.importedKeyRestrict;
 
-    static final List<Integer> COLUMN_VALUES_UPDATE_RULES = List.of(
+    static final List<Integer> COLUMN_VALUES_UPDATE_RULE = List.of(
             COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_CASCADE,    // 0
             COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_RESTRICT,   // 1
             COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_SET_NULL,   // 2
@@ -133,17 +155,37 @@ public class CrossReference
      */
     public static final String COLUMN_LABEL_DELETE_RULE = "DELETE_RULE";
 
+    /**
+     * A column value of {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}) for
+     * the {@value #COLUMN_LABEL_DELETE_RULE} column.
+     */
     public static final int COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_NO_ACTION = DatabaseMetaData.importedKeyNoAction;
 
+    /**
+     * A column value of {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}) for
+     * the {@value #COLUMN_LABEL_DELETE_RULE} column.
+     */
     public static final int COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_CASCADE = DatabaseMetaData.importedKeyCascade;
 
+    /**
+     * A column value of {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}) for
+     * the {@value #COLUMN_LABEL_DELETE_RULE} column.
+     */
     public static final int COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_SET_NULL = DatabaseMetaData.importedKeySetNull;
 
+    /**
+     * A column value of {@link DatabaseMetaData#importedKeySetDefault}({@value DatabaseMetaData#importedKeySetDefault})
+     * for the {@value #COLUMN_LABEL_DELETE_RULE} column.
+     */
     public static final int COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_SET_DEFAULT = DatabaseMetaData.importedKeySetDefault;
 
+    /**
+     * A column value of {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}) for
+     * the {@value #COLUMN_LABEL_DELETE_RULE} column.
+     */
     public static final int COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_RESTRICT = DatabaseMetaData.importedKeyRestrict;
 
-    static final List<Integer> COLUMN_VALUES_DELETE_RULES = List.of(
+    static final List<Integer> COLUMN_VALUES_DELETE_RULE = List.of(
             COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_CASCADE,    // 0
             COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_RESTRICT,   // 1
             COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_SET_NULL,   // 2
@@ -172,19 +214,34 @@ public class CrossReference
      */
     public static final String COLUMN_LABEL_DEFERRABILITY = "DEFERRABILITY";
 
-    public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_CASCADE =
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#importedKeyInitiallyDeferred}({@value DatabaseMetaData#importedKeyInitiallyDeferred}) for
+     * the {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     */
+    public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_DEFERRED =
             DatabaseMetaData.importedKeyInitiallyDeferred;
 
-    public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_RESTRICT =
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#importedKeyInitiallyImmediate}({@value DatabaseMetaData#importedKeyInitiallyImmediate})
+     * for the {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     */
+    public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_IMMEDIATE =
             DatabaseMetaData.importedKeyInitiallyImmediate;
 
-    public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_SET_NULL =
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#importedKeyNotDeferrable}({@value DatabaseMetaData#importedKeyNotDeferrable}) for the
+     * {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     */
+    public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_NOT_DEFERRABLE =
             DatabaseMetaData.importedKeyNotDeferrable;
 
     static final List<Integer> COLUMN_VALUES_DEFERRABILITY = List.of(
-            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_CASCADE,  // 5
-            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_RESTRICT, // 6
-            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_SET_NULL  // 7
+            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_DEFERRED,  // 5
+            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_IMMEDIATE, // 6
+            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_NOT_DEFERRABLE       // 7
     );
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
