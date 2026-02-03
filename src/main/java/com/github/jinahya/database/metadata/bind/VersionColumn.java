@@ -67,13 +67,17 @@ public class VersionColumn
      */
     public static final String COLUMN_LABEL_DECIMAL_DIGITS = "DECIMAL_DIGITS";
 
-    // -------------------------------------------------------------------------------------------------- PSEUDO_COLUMN
+    // --------------------------------------------------------------------------------------------------- PSEUDO_COLUMN
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
+    /**
+     * A column value of {@link DatabaseMetaData#versionColumnUnknown}({@value}) for the
+     * {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     */
     public static final int COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_UNKNOWN =
             DatabaseMetaData.versionColumnUnknown;   // 0
 
