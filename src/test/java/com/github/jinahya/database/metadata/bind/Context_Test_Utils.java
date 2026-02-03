@@ -469,7 +469,12 @@ final class Context_Test_Utils {
 
         // -------------------------------------------------------------------------------------------- columnPrivileges
         try {
-            final var columnPrivileges = context.getColumnPrivileges(value);
+            final var columnPrivileges = context.getColumnPrivileges(
+                    value.getTableCat(),
+                    value.getScopeSchema(),
+                    value.getTableName(),
+                    value.getColumnName()
+            );
             columnPrivileges(context, columnPrivileges);
         } catch (final SQLException sqle) {
             // empty
@@ -771,16 +776,22 @@ final class Context_Test_Utils {
         assertThat(value.getRefGeneration()).satisfiesAnyOf(
                 rg -> assertThat(rg).isNull(),
                 rg -> assertThat(rg).isIn(
-                        Table.COLUMN_VALUE_REF_GENERATION_DERIVED,
-                        Table.COLUMN_VALUE_REF_GENERATION_SYSTEM,
-                        Table.COLUMN_VALUE_REF_GENERATION_USER
+                        value.COLUMN_VALUE_REF_GENERATION_DERIVED,
+                        value.COLUMN_VALUE_REF_GENERATION_SYSTEM,
+                        value.COLUMN_VALUE_REF_GENERATION_USER
                 )
         );
         // ------------------------------------------------------------------------------------------- bestRowIdentifier
         for (final int scope : BestRowIdentifier.COLUMN_VALUES_SCOPE) {
             for (final boolean nullable : new boolean[] {true, false}) {
                 try {
-                    final var values = context.getBestRowIdentifier(value, scope, nullable);
+                    final var values = context.getBestRowIdentifier(
+                            value.getTableCat(),
+                            value.getTableSchem(),
+                            value.getTableName(),
+                            scope,
+                            nullable
+                    );
                     bestRowIdentifier(context, values);
                 } catch (final SQLException sqle) {
                     log.error("failed to getBestRowIdentifier({}, {}, {})", value, scope, nullable, sqle);
@@ -796,7 +807,12 @@ final class Context_Test_Utils {
         }
         // -------------------------------------------------------------------------------------------- columnPrivileges
         try {
-            final var values = context.getColumnPrivileges(value);
+            final var values = context.getColumnPrivileges(
+                    value.getTableCat(),
+                    value.getTableSchem(),
+                    value.getTableName(),
+                    "%"
+            );
             columnPrivileges(context, values);
         } catch (final SQLException sqle) {
             log.error("failed to getColumnPrivileges({})", value, sqle);
@@ -1045,7 +1061,7 @@ final class Context_Test_Utils {
 //        });
         // -------------------------------------------------------------------------------------------------- attributes
         try {
-            final var attributes = context.getAttributes(value, "%");
+            final var attributes = context.getAttributes(value.getTypeCat(), value.getTypeSchem(), "%", "%");
             attributes(context, attributes);
         } catch (final SQLException sqle) {
             // empty

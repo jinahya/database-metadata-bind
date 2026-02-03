@@ -265,68 +265,35 @@ public class Context {
         }
     }
 
-//    /**
-//     * Binds all records as given type and adds them to specified collection.
-//     *
-//     * @param results    the records to bind.
-//     * @param type       the type of instances.
-//     * @param collection the collection to which bound instances are added
-//     * @param <T>        binding type parameter
-//     * @param <C>        the type of {@code collection}
-//     * @return given {@code collection}.
-//     * @throws SQLException if a database error occurs.
-//     */
-//    @SuppressWarnings({
-//            "java:S112", // new RuntimeException
-//            "java:S1874", // isAccessible
-//            "java:S3011" // setAccessible
-//    })
-//    private <T extends MetadataType, C extends Collection<? super T>> C bind(
-//            final ResultSet results, final Class<T> type, final C collection)
-//            throws SQLException {
-//        while (results.next()) {
-//            final T value;
-//            try {
-//                final Constructor<T> constructor = type.getDeclaredConstructor();
-//                if (!constructor.isAccessible()) {
-//                    constructor.setAccessible(true);
-//                }
-//                value = constructor.newInstance();
-//            } catch (final ReflectiveOperationException roe) {
-//                throw new RuntimeException("failed to instantiate " + type, roe);
-//            }
-//            collection.add(bind(results, type, value));
-//        }
-//        return collection;
-//    }
-
     private <C extends Collection<? super T>, T extends MetadataType> C requireNonNullConnection(final C collection) {
         return Objects.requireNonNull(collection, "collection is null");
     }
 
     // --------------------------------------------------------------------------------------------------- getAttributes
-    void getAttributesAndAcceptEach(final String catalog, final String schemaPattern, final String typeNamePattern,
-                                    final String attributeNamePattern, final Consumer<? super Attribute> consumer)
+    void getAttributesAndAcceptEach(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                    final String typeNamePattern, final String attributeNamePattern,
+                                    final Consumer<? super Attribute> consumer)
             throws SQLException {
         try (var results = metadata.getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern)) {
             assert results != null;
-            acceptBound(results, Attribute.class, consumer);
+            acceptBound(
+                    results,
+                    Attribute.class,
+                    consumer
+            );
         }
     }
 
     <C extends Collection<? super Attribute>>
-    C getAttributesAndAddAll(final String catalog, final String schemaPattern, final String typeNamePattern,
-                             final String attributeNamePattern, final C collection)
+    C getAttributesAndAddAll(@Nullable final String catalog, @Nullable final String schemaPattern,
+                             final String typeNamePattern, final String attributeNamePattern, final C collection)
             throws SQLException {
         getAttributesAndAcceptEach(
                 catalog,
                 schemaPattern,
                 typeNamePattern,
                 attributeNamePattern,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate attribute: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -346,31 +313,33 @@ public class Context {
     public List<Attribute> getAttributes(@Nullable final String catalog, @Nullable final String schemaPattern,
                                          final String typeNamePattern, final String attributeNamePattern)
             throws SQLException {
-        return getAttributesAndAddAll(catalog, schemaPattern, typeNamePattern, attributeNamePattern, new ArrayList<>());
-    }
-
-    List<Attribute> getAttributes(final UDT udt, final String attributeNamePattern) throws SQLException {
-        return getAttributes(udt.getTypeCat(), udt.getTypeSchem(), udt.getTypeName(), attributeNamePattern);
-    }
-
-    List<Attribute> getAttributes(final UDT udt) throws SQLException {
-        return getAttributes(udt, "%");
+        return getAttributesAndAddAll(
+                catalog,
+                schemaPattern,
+                typeNamePattern,
+                attributeNamePattern,
+                new ArrayList<>()
+        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    void getBestRowIdentifierAndAcceptEach(final String catalog, final String schema, final String table,
-                                           final int scope,
-                                           final boolean nullable, final Consumer<? super BestRowIdentifier> consumer)
+    void getBestRowIdentifierAndAcceptEach(@Nullable final String catalog, @Nullable final String schema,
+                                           final String table, final int scope, final boolean nullable,
+                                           final Consumer<? super BestRowIdentifier> consumer)
             throws SQLException {
         try (var results = metadata.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
             assert results != null;
-            acceptBound(results, BestRowIdentifier.class, consumer);
+            acceptBound(
+                    results,
+                    BestRowIdentifier.class,
+                    consumer
+            );
         }
     }
 
     <C extends Collection<? super BestRowIdentifier>>
-    C getBestRowIdentifierAndAddAll(final String catalog, final String schema, final String table, final int scope,
-                                    final boolean nullable, final C collection)
+    C getBestRowIdentifierAndAddAll(@Nullable final String catalog, @Nullable final String schema, final String table,
+                                    final int scope, final boolean nullable, final C collection)
             throws SQLException {
         getBestRowIdentifierAndAcceptEach(
                 catalog,
@@ -378,10 +347,7 @@ public class Context {
                 table,
                 scope,
                 nullable,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate best row identifier: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -403,16 +369,17 @@ public class Context {
     public List<BestRowIdentifier> getBestRowIdentifier(@Nullable final String catalog, @Nullable final String schema,
                                                         final String table, final int scope, final boolean nullable)
             throws SQLException {
-        return getBestRowIdentifierAndAddAll(catalog, schema, table, scope, nullable, new ArrayList<>());
+        return getBestRowIdentifierAndAddAll(
+                catalog,
+                schema,
+                table,
+                scope,
+                nullable,
+                new ArrayList<>()
+        );
     }
 
-    List<BestRowIdentifier> getBestRowIdentifier(final Table table, final int scope, final boolean nullable)
-            throws SQLException {
-        Objects.requireNonNull(table, "table is null");
-        return getBestRowIdentifier(table.getTableCat(), table.getTableSchem(), table.getTableName(), scope, nullable);
-    }
-
-    // --------------------------------------------------------------------------------------------------- getCatalogs()
+    // ----------------------------------------------------------------------------------------------------- getCatalogs
     void getCatalogsAndAcceptEach(final Consumer<? super Catalog> consumer) throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (var results = metadata.getCatalogs()) {
@@ -441,7 +408,7 @@ public class Context {
         return getCatalogsAndAddAll(new ArrayList<>());
     }
 
-    // --------------------------------------------------------------------------------------- getClientInfoProperties()
+    // ----------------------------------------------------------------------------------------- getClientInfoProperties
 
     /**
      * Invokes {@link DatabaseMetaData#getClientInfoProperties()} method, and accepts each bound value to specified
@@ -463,10 +430,7 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getClientInfoPropertiesAndAcceptEach(
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate client info property: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -530,30 +494,30 @@ public class Context {
         return getColumnPrivilegesAndAddAll(catalog, schema, table, columnNamePattern, new ArrayList<>());
     }
 
-    List<ColumnPrivilege> getColumnPrivileges(final Table table, final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(table, "table is null");
-        return getColumnPrivileges(
-                table.getTableCat(),
-                table.getTableSchem(),
-                table.getTableName(),
-                columnNamePattern
-        );
-    }
-
-    List<ColumnPrivilege> getColumnPrivileges(final Table table) throws SQLException {
-        return getColumnPrivileges(table, "%");
-    }
-
-    List<ColumnPrivilege> getColumnPrivileges(final Column column) throws SQLException {
-        Objects.requireNonNull(column, "column is null");
-        return getColumnPrivileges(
-                column.getTableCat(),
-                column.getTableSchem(),
-                column.getTableName(),
-                column.getColumnName()
-        );
-    }
+//    List<ColumnPrivilege> getColumnPrivileges(final Table table, final String columnNamePattern)
+//            throws SQLException {
+//        Objects.requireNonNull(table, "table is null");
+//        return getColumnPrivileges(
+//                table.getTableCat(),
+//                table.getTableSchem(),
+//                table.getTableName(),
+//                columnNamePattern
+//        );
+//    }
+//
+//    List<ColumnPrivilege> getColumnPrivileges(final Table table) throws SQLException {
+//        return getColumnPrivileges(table, "%");
+//    }
+//
+//    List<ColumnPrivilege> getColumnPrivileges(final Column column) throws SQLException {
+//        Objects.requireNonNull(column, "column is null");
+//        return getColumnPrivileges(
+//                column.getTableCat(),
+//                column.getTableSchem(),
+//                column.getTableName(),
+//                column.getColumnName()
+//        );
+//    }
 
     // ------------------------------------------------------------------------------------------------------ getColumns
 

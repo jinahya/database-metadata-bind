@@ -211,7 +211,12 @@ abstract class Memory_$_Test {
             final var tables = context.getTables((String) null, null, "%", null);
             json(metaData, "tables", tables);
             for (var table : tables) {
-                final var columnPrivileges = context.getColumnPrivileges(table, "%");
+                final var columnPrivileges = context.getColumnPrivileges(
+                        table.getTableCat(),
+                        table.getTableSchem(),
+                        table.getTableName(),
+                        "%"
+                );
                 log.debug("{}: {}", table, columnPrivileges);
             }
         }
