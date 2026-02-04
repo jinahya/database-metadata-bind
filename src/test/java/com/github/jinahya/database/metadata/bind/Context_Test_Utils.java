@@ -298,21 +298,28 @@ final class Context_Test_Utils {
     private static void catalog(final Context context, final Catalog value) throws SQLException {
         MetadataType_Test_Utils.verify(value);
         // -------------------------------------------------------------------------------------------------- procedures
-        try {
-            final var procedures = context.getProceduresOf(value, "%");
-            procedures(context, procedures);
-        } catch (final SQLException sqle) {
-            // empty
+        {
+            final var schemaPattern = "%";
+            final var procedureNamePattern = "%";
+            try {
+                final var procedures = context.getProceduresOf(value, schemaPattern, procedureNamePattern);
+                procedures(context, procedures);
+            } catch (final SQLException sqle) {
+                log.error("failed to getProceduresOf({}, {}, {})", value, schemaPattern, procedureNamePattern, sqle);
+            }
         }
         // ----------------------------------------------------------------------------------------------------- schemas
-        try {
-            final var schemas = context.getSchemas(value, "%");
-            if (schemas.isEmpty()) {
-                schemas.add(Schema.of((String) null, null));
+        {
+            final var schemaPattern = "%";
+            try {
+                final var schemas = context.getSchemasOf(value, schemaPattern);
+                if (schemas.isEmpty()) {
+                    schemas.add(Schema.of(null, null));
+                }
+                schemas(context, schemas);
+            } catch (final SQLException sqle) {
+                log.error("failed to getSchemasOf({}, {})", value, schemaPattern, sqle);
             }
-            schemas(context, schemas);
-        } catch (final SQLException sqle) {
-            // empty
         }
         // ------------------------------------------------------------------------------------------------- superTables
         try {

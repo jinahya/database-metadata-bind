@@ -4,7 +4,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 /**
@@ -69,15 +68,6 @@ public class Schema
         instance.setTableCatalog(tableCatalog);
         instance.setTableSchem(tableSchem);
         return instance;
-    }
-
-    static Schema of(final Catalog tableCatalog, final String tableSchem) {
-        return of(
-                Optional.ofNullable(tableCatalog)
-                        .map(Catalog::getTableCat)
-                        .orElse(null),
-                tableSchem
-        );
     }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
