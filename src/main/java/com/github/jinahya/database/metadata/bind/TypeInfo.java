@@ -21,18 +21,6 @@ public class TypeInfo
     private static final long serialVersionUID = -3964147654019495313L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
-//    static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context,
-//                                                          final Comparator<? super Integer> comparator)
-//            throws SQLException {
-//        Objects.requireNonNull(context, "context is null");
-//        Objects.requireNonNull(comparator, "comparator is null");
-//        return Comparator.comparing(TypeInfo::getDataType, comparator); // NOT nullable
-//    }
-//
-//    static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context) throws SQLException {
-//        Objects.requireNonNull(context, "context is null");
-//        return comparingInSpecifiedOrder(context, Comparator.naturalOrder());
-//    }
     static Comparator<TypeInfo> comparingInSpecifiedOrder() {
         return Comparator.comparing(TypeInfo::getDataType, Integer::compareTo);
     }

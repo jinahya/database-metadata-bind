@@ -74,7 +74,32 @@ The last example (all hyphens, no name) is used only for the instance fields sec
 
 ### Comparators
 
-**Always apply `nullSafe` to catalog/schema fields**. JDBC drivers lie—they return null for spec-defined non-null fields.
+Two patterns exist. **New code should prefer the new pattern.**
+
+#### New Pattern (Preferred)
+
+Caller controls both null handling and case sensitivity via parameters:
+
+```java
+static Comparator<Attribute> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                       final Comparator<? super String> comparator) {
+    Objects.requireNonNull(operator, "operator is null");
+    Objects.requireNonNull(comparator, "comparator is null");
+    return Comparator
+            .<Attribute, String>comparing(v -> operator.apply(v.getTypeCat()), comparator)
+            .thenComparing(v -> operator.apply(v.getTypeSchem()), comparator)
+            .thenComparing(v -> operator.apply(v.getTypeName()), comparator)
+            .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder());
+}
+```
+
+Rules:
+- `operator`: transforms strings (e.g., `String::toLowerCase` for case-insensitivity)
+- `comparator`: must be null-safe (caller wraps with `Comparator.nullsFirst/Last` or uses `ContextUtils.nullOrdered`)
+- No `SQLException` thrown
+- Package-private visibility
+
+#### Legacy Pattern (Context-based)
 
 ```java
 static Comparator<Column> comparingInSpecifiedOrder(final Context context,
@@ -82,28 +107,23 @@ static Comparator<Column> comparingInSpecifiedOrder(final Context context,
         throws SQLException {
     Objects.requireNonNull(context, "context is null");
     Objects.requireNonNull(comparator, "comparator is null");
-    final var nullSafe = ContextUtils.nullPrecedence(context, comparator);
+    final var nullSafe = ContextUtils.nullOrdered(context, comparator);
     return Comparator
-            .comparing(Column::getTableCat, nullSafe)       // nullSafe: always
-            .thenComparing(Column::getTableSchem, nullSafe) // nullSafe: always
-            .thenComparing(Column::getTableName, nullSafe)
-            .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder());
-}
-
-static Comparator<Column> comparingInSpecifiedOrder(final Context context) throws SQLException {
-    return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
+            .comparing(Column::getTableCat, nullSafe)        // nullable
+            .thenComparing(Column::getTableSchem, nullSafe)  // nullable
+            .thenComparing(Column::getTableName, comparator) // NOT nullable
+            .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder()); // NOT nullable
 }
 ```
 
 Rules:
-- Require `Context` parameter (determines null precedence per database)
+- Do not remove existing legacy methods
 - `nullSafe` on ALL `*_CAT` and `*_SCHEM` fields
-- Default comparator: `String.CASE_INSENSITIVE_ORDER`
 
 ### Accessors
 
 - **Getters**: `public`
-- **Setters**: `protected` (not `public`)
+- **Setters**: package-private (no modifier, not `public` or `protected`)
 - **Types**: Wrapper types only (`Integer`, `String`), never primitives
 
 ### Context Methods
@@ -141,8 +161,8 @@ Methods must appear in this order: `toString`, `equals`, `hashCode`.
 3. Define `COLUMN_LABEL_XXX` constants
 4. Add `@_ColumnLabel` to all fields
 5. Add `@_NullableBySpecification` + `@Nullable` where spec allows null
-6. Implement `public` getters, `protected` setters
-7. Add comparator with `nullSafe` for catalog/schema fields
+6. Implement `public` getters, package-private setters
+7. Add comparator using new pattern (`UnaryOperator`, `Comparator`); keep legacy pattern if exists
 8. Override `toString()`, `equals()`, `hashCode()` (in this order)
 9. Add Context methods (`getXxxAndAcceptEach`, `getXxxAndAddAll`, `getXxx`)
 10. Add unit test extending `AbstractMetadataType_Test<T>`

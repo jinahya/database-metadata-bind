@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -21,6 +22,30 @@ public class CrossReference
     private static final long serialVersionUID = -5343386346721125961L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>FKTABLE_CAT</code>, <code>FKTABLE_SCHEM</code>, <code>FKTABLE_NAME</code>, and
+     * <code>KEY_SEQ</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<CrossReference> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                                final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<CrossReference, String>comparing(v -> operator.apply(v.getFktableCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getFktableSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getFktableName()), comparator)
+                .thenComparing(CrossReference::getKeySeq, Comparator.naturalOrder());
+    }
+
     static Comparator<CrossReference> comparingInSpecifiedOrder(final Context context,
                                                                 final Comparator<? super String> comparator)
             throws SQLException {

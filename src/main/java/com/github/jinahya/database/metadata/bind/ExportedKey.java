@@ -24,9 +24,10 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
- * An class for binding results of the {@link DatabaseMetaData#getExportedKeys(String, String, String)} method.
+ * A class for binding results of the {@link DatabaseMetaData#getExportedKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getExportedKeys(String, String, String)
@@ -38,6 +39,24 @@ public class ExportedKey
     private static final long serialVersionUID = -6561660015694928357L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>FKTABLE_CAT</code>, <code>FKTABLE_SCHEM</code>, <code>FKTABLE_NAME</code>, and
+     * <code>KEY_SEQ</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see PortedKey#comparingFk(UnaryOperator, Comparator)
+     */
+    static Comparator<ExportedKey> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                             final Comparator<? super String> comparator) {
+        return PortedKey.comparingFk(operator, comparator);
+    }
+
     static Comparator<ExportedKey> comparingInSpecifiedOrder(final Context context,
                                                              final Comparator<? super String> comparator)
             throws SQLException {

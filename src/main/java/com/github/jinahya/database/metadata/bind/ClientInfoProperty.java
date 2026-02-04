@@ -24,6 +24,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getClientInfoProperties()} method.
@@ -37,6 +38,13 @@ public class ClientInfoProperty
     private static final long serialVersionUID = -2913230435651853254L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                                    final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator.comparing(v -> operator.apply(v.getName()), comparator);
+    }
+
     static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator.comparing(ClientInfoProperty::getName, comparator); // NOT nullable

@@ -216,7 +216,7 @@ public class Context {
             logger.log(System.Logger.Level.WARNING,
                        "unknown result; type: {0}, label: {1}, value: {2}", type.getSimpleName(), label, value);
             if (instance instanceof AbstractMetadataType) {
-                ((AbstractMetadataType) instance).putUnkownColumn(label, value);
+                ((AbstractMetadataType) instance).putUnknownColumn(label, value);
             }
         }
         assert resultLabels.isEmpty() : "remaining result labels: " + resultLabels;
@@ -639,16 +639,6 @@ public class Context {
         return getCrossReferenceAndAddAll(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema,
                                           foreignTable,
                                           new ArrayList<>());
-    }
-
-    List<CrossReference> getCrossReference(final Table parentTable, final Table foreighTable)
-            throws SQLException {
-        Objects.requireNonNull(parentTable, "parentTable is null");
-        Objects.requireNonNull(foreighTable, "foreignTable is null");
-        return getCrossReference(
-                parentTable.getTableCat(), parentTable.getTableSchem(), parentTable.getTableName(),
-                foreighTable.getTableCat(), foreighTable.getTableSchem(), foreighTable.getTableName()
-        );
     }
 
     // ------------------------------------------------------------------------------------------------- getExportedKeys

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
@@ -21,6 +22,30 @@ public class PseudoColumn
     private static final long serialVersionUID = -5612575879670895510L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, <code>TABLE_NAME</code> and
+     * <code>COLUMN_NAME</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<PseudoColumn> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                              final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<PseudoColumn, String>comparing(v -> operator.apply(v.getTableCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableName()), comparator)
+                .thenComparing(v -> operator.apply(v.getColumnName()), comparator);
+    }
+
     static Comparator<PseudoColumn> comparing(final Comparator<? super String> comparator) {
         return Comparator
                 .comparing(PseudoColumn::getTableCat, comparator)

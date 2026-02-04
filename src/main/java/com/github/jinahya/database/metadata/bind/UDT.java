@@ -8,6 +8,7 @@ import java.sql.Types;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
@@ -25,6 +26,30 @@ public class UDT
     private static final long serialVersionUID = 8665246093405057553L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>DATA_TYPE</code>, <code>TYPE_CAT</code>, <code>TYPE_SCHEM</code> and
+     * <code>TYPE_NAME</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<UDT> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                     final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .comparing(UDT::getDataType, Comparator.naturalOrder())
+                .thenComparing(v -> operator.apply(v.getTypeCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getTypeSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getTypeName()), comparator);
+    }
+
     static Comparator<UDT> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
         return Comparator

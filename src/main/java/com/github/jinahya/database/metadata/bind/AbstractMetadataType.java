@@ -53,7 +53,7 @@ abstract class AbstractMetadataType
     @Override
     public String toString() {
         return super.toString() + '{' +
-               "unmappedColumns=" + unknownColumns +
+               "unknownColumns=" + unknownColumns +
                '}';
     }
 
@@ -80,7 +80,7 @@ abstract class AbstractMetadataType
     }
 
     @Nullable
-    Object putUnkownColumn(final String label, final Object value) {
+    Object putUnknownColumn(final String label, final Object value) {
         return unknownColumns.put(label, value);
     }
 

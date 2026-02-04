@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * An abstract class for binding results of the
@@ -22,6 +23,30 @@ abstract class PortedKey
     private static final long serialVersionUID = 6713872409315471232L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    static <T extends PortedKey> Comparator<T> comparingPk(final UnaryOperator<String> operator,
+                                                           final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<T, String>comparing(v -> operator.apply(v.getPktableCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getPktableSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getPktableName()), comparator)
+                .thenComparing(v -> operator.apply(v.getPkName()), comparator)
+                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
+    }
+
+    static <T extends PortedKey> Comparator<T> comparingFk(final UnaryOperator<String> operator,
+                                                           final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<T, String>comparing(v -> operator.apply(v.getFktableCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getFktableSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getFktableName()), comparator)
+                .thenComparing(v -> operator.apply(v.getFkName()), comparator)
+                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
+    }
+
     static <T extends PortedKey> Comparator<T> comparingPktable(final Context context,
                                                                 final Comparator<? super String> comparator)
             throws SQLException {
@@ -55,103 +80,103 @@ abstract class PortedKey
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_PKTABLE_CAT = "PKTABLE_CAT";
+    public static final String COLUMN_LABEL_PKTABLE_CAT = "PKTABLE_CAT";
 
     // --------------------------------------------------------------------------------------------------- PKTABLE_SCHEM
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_PKTABLE_SCHEM = "PKTABLE_SCHEM";
+    public static final String COLUMN_LABEL_PKTABLE_SCHEM = "PKTABLE_SCHEM";
 
     // ---------------------------------------------------------------------------------------------------- PKTABLE_NAME
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_PKTABLE_NAME = "PKTABLE_NAME";
+    public static final String COLUMN_LABEL_PKTABLE_NAME = "PKTABLE_NAME";
 
     // --------------------------------------------------------------------------------------------------- PKCOLUMN_NAME
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_PKCOLUMN_NAME = "PKCOLUMN_NAME";
+    public static final String COLUMN_LABEL_PKCOLUMN_NAME = "PKCOLUMN_NAME";
 
     // ----------------------------------------------------------------------------------------------------- FKTABLE_CAT
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_FKTABLE_CAT = "FKTABLE_CAT";
+    public static final String COLUMN_LABEL_FKTABLE_CAT = "FKTABLE_CAT";
 
     // --------------------------------------------------------------------------------------------------- FKTABLE_SCHEM
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_FKTABLE_SCHEM = "FKTABLE_SCHEM";
+    public static final String COLUMN_LABEL_FKTABLE_SCHEM = "FKTABLE_SCHEM";
 
     // ---------------------------------------------------------------------------------------------------- FKTABLE_NAME
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_FKTABLE_NAME = "FKTABLE_NAME";
+    public static final String COLUMN_LABEL_FKTABLE_NAME = "FKTABLE_NAME";
 
     // --------------------------------------------------------------------------------------------------- FKCOLUMN_NAME
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_FKCOLUMN_NAME = "FKCOLUMN_NAME";
+    public static final String COLUMN_LABEL_FKCOLUMN_NAME = "FKCOLUMN_NAME";
 
     // --------------------------------------------------------------------------------------------------------- KEY_SEQ
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_KEY_SEQ = "KEY_SEQ";
+    public static final String COLUMN_LABEL_KEY_SEQ = "KEY_SEQ";
 
     // ----------------------------------------------------------------------------------------------------- UPDATE_RULE
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
+    public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
 
     // ----------------------------------------------------------------------------------------------------- DELETE_RULE
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_DELETE_RULE = "DELETE_RULE";
+    public static final String COLUMN_LABEL_DELETE_RULE = "DELETE_RULE";
 
     // --------------------------------------------------------------------------------------------------------- FK_NAME
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_FK_NAME = "FK_NAME";
+    public static final String COLUMN_LABEL_FK_NAME = "FK_NAME";
 
     // --------------------------------------------------------------------------------------------------------- PK_NAME
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_PK_NAME = "PK_NAME";
+    public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
 
     // --------------------------------------------------------------------------------------------------- DEFERRABILITY
 
     /**
      * The column label of {@value}.
      */
-    public static final String COLUMN_NAME_DEFERRABILITY = "DEFERRABILITY";
+    public static final String COLUMN_LABEL_DEFERRABILITY = "DEFERRABILITY";
 
     /**
      * A column value of
      * {@link DatabaseMetaData#importedKeyInitiallyDeferred}({@value DatabaseMetaData#importedKeyInitiallyDeferred}) for
-     * the {@value #COLUMN_NAME_DEFERRABILITY} column.
+     * the {@value #COLUMN_LABEL_DEFERRABILITY} column.
      */
     public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_DEFERRED =
             DatabaseMetaData.importedKeyInitiallyDeferred;
@@ -159,7 +184,7 @@ abstract class PortedKey
     /**
      * A column value of
      * {@link DatabaseMetaData#importedKeyInitiallyImmediate}({@value DatabaseMetaData#importedKeyInitiallyImmediate})
-     * for the {@value #COLUMN_NAME_DEFERRABILITY} column.
+     * for the {@value #COLUMN_LABEL_DEFERRABILITY} column.
      */
     public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_IMMEDIATE =
             DatabaseMetaData.importedKeyInitiallyImmediate;
@@ -167,7 +192,7 @@ abstract class PortedKey
     /**
      * A column value of
      * {@link DatabaseMetaData#importedKeyNotDeferrable}({@value DatabaseMetaData#importedKeyNotDeferrable}) for the
-     * {@value #COLUMN_NAME_DEFERRABILITY} column.
+     * {@value #COLUMN_LABEL_DEFERRABILITY} column.
      */
     public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_NOT_DEFERRABLE =
             DatabaseMetaData.importedKeyNotDeferrable;
@@ -210,18 +235,18 @@ abstract class PortedKey
     // ----------------------------------------------------------------------------------------------------- pktableCat
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_PKTABLE_CAT} column.
+     * Returns the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
      *
-     * @return the value of {@value #COLUMN_NAME_PKTABLE_CAT} column.
+     * @return the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
      */
     public String getPktableCat() {
         return pktableCat;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_PKTABLE_CAT} column.
+     * Sets the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
      *
-     * @param pktableCat the value of {@value #COLUMN_NAME_PKTABLE_CAT} column.
+     * @param pktableCat the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
      */
     void setPktableCat(final String pktableCat) {
         this.pktableCat = pktableCat;
@@ -230,18 +255,18 @@ abstract class PortedKey
     // --------------------------------------------------------------------------------------------------- pktableSchem
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_PKTABLE_SCHEM} column.
+     * Returns the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
      *
-     * @return the value of {@value #COLUMN_NAME_PKTABLE_SCHEM} column.
+     * @return the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
      */
     public String getPktableSchem() {
         return pktableSchem;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_PKTABLE_SCHEM} column.
+     * Sets the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
      *
-     * @param pktableSchem the value of {@value #COLUMN_NAME_PKTABLE_SCHEM} column.
+     * @param pktableSchem the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
      */
     void setPktableSchem(final String pktableSchem) {
         this.pktableSchem = pktableSchem;
@@ -250,18 +275,18 @@ abstract class PortedKey
     // ---------------------------------------------------------------------------------------------------- pktableName
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_PKTABLE_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
      *
-     * @return the value of {@value #COLUMN_NAME_PKTABLE_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
      */
     public String getPktableName() {
         return pktableName;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_PKTABLE_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
      *
-     * @param pktableName the value of {@value #COLUMN_NAME_PKTABLE_NAME} column.
+     * @param pktableName the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
      */
     void setPktableName(final String pktableName) {
         this.pktableName = pktableName;
@@ -270,18 +295,18 @@ abstract class PortedKey
     // --------------------------------------------------------------------------------------------------- pkcolumnName
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_PKCOLUMN_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
      *
-     * @return the value of {@value #COLUMN_NAME_PKCOLUMN_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
      */
     public String getPkcolumnName() {
         return pkcolumnName;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_PKCOLUMN_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
      *
-     * @param pkcolumnName the value of {@value #COLUMN_NAME_PKCOLUMN_NAME} column.
+     * @param pkcolumnName the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
      */
     void setPkcolumnName(final String pkcolumnName) {
         this.pkcolumnName = pkcolumnName;
@@ -290,18 +315,18 @@ abstract class PortedKey
     // ----------------------------------------------------------------------------------------------------- fktableCat
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_FKTABLE_CAT} column.
+     * Returns the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
      *
-     * @return the value of {@value #COLUMN_NAME_FKTABLE_CAT} column.
+     * @return the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
      */
     public String getFktableCat() {
         return fktableCat;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_FKTABLE_CAT} column.
+     * Sets the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
      *
-     * @param fktableCat the value of {@value #COLUMN_NAME_FKTABLE_CAT} column.
+     * @param fktableCat the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
      */
     void setFktableCat(final String fktableCat) {
         this.fktableCat = fktableCat;
@@ -310,18 +335,18 @@ abstract class PortedKey
     // --------------------------------------------------------------------------------------------------- fktableSchem
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_FKTABLE_SCHEM} column.
+     * Returns the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
      *
-     * @return the value of {@value #COLUMN_NAME_FKTABLE_SCHEM} column.
+     * @return the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
      */
     public String getFktableSchem() {
         return fktableSchem;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_FKTABLE_SCHEM} column.
+     * Sets the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
      *
-     * @param fktableSchem the value of {@value #COLUMN_NAME_FKTABLE_SCHEM} column.
+     * @param fktableSchem the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
      */
     void setFktableSchem(final String fktableSchem) {
         this.fktableSchem = fktableSchem;
@@ -330,18 +355,18 @@ abstract class PortedKey
     // ---------------------------------------------------------------------------------------------------- fktableName
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_FKTABLE_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
      *
-     * @return the value of {@value #COLUMN_NAME_FKTABLE_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
      */
     public String getFktableName() {
         return fktableName;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_FKTABLE_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
      *
-     * @param fktableName the value of {@value #COLUMN_NAME_FKTABLE_NAME} column.
+     * @param fktableName the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
      */
     void setFktableName(final String fktableName) {
         this.fktableName = fktableName;
@@ -350,18 +375,18 @@ abstract class PortedKey
     // --------------------------------------------------------------------------------------------------- fkcolumnName
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_FKCOLUMN_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
      *
-     * @return the value of {@value #COLUMN_NAME_FKCOLUMN_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
      */
     public String getFkcolumnName() {
         return fkcolumnName;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_FKCOLUMN_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
      *
-     * @param fkcolumnName the value of {@value #COLUMN_NAME_FKCOLUMN_NAME} column.
+     * @param fkcolumnName the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
      */
     void setFkcolumnName(final String fkcolumnName) {
         this.fkcolumnName = fkcolumnName;
@@ -370,18 +395,18 @@ abstract class PortedKey
     // ---------------------------------------------------------------------------------------------------------- keySeq
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_KEY_SEQ} column.
+     * Returns the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
      *
-     * @return the value of {@value #COLUMN_NAME_KEY_SEQ} column.
+     * @return the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
      */
     public Integer getKeySeq() {
         return keySeq;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_KEY_SEQ} column.
+     * Sets the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
      *
-     * @param keySeq the value of {@value #COLUMN_NAME_KEY_SEQ} column.
+     * @param keySeq the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
      */
     void setKeySeq(final Integer keySeq) {
         this.keySeq = keySeq;
@@ -390,18 +415,18 @@ abstract class PortedKey
     // ------------------------------------------------------------------------------------------------------ updateRule
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_UPDATE_RULE} column.
+     * Returns the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
      *
-     * @return the value of {@value #COLUMN_NAME_UPDATE_RULE} column.
+     * @return the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
      */
     public Integer getUpdateRule() {
         return updateRule;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_UPDATE_RULE} column.
+     * Sets the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
      *
-     * @param updateRule the value of {@value #COLUMN_NAME_UPDATE_RULE} column.
+     * @param updateRule the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
      */
     void setUpdateRule(final Integer updateRule) {
         this.updateRule = updateRule;
@@ -410,18 +435,18 @@ abstract class PortedKey
     // ------------------------------------------------------------------------------------------------------ deleteRule
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_DELETE_RULE} column.
+     * Returns the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
      *
-     * @return the value of {@value #COLUMN_NAME_DELETE_RULE} column.
+     * @return the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
      */
     public Integer getDeleteRule() {
         return deleteRule;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_DELETE_RULE} column.
+     * Sets the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
      *
-     * @param deleteRule the value of {@value #COLUMN_NAME_DELETE_RULE} column.
+     * @param deleteRule the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
      */
     void setDeleteRule(final Integer deleteRule) {
         this.deleteRule = deleteRule;
@@ -430,9 +455,9 @@ abstract class PortedKey
     // ---------------------------------------------------------------------------------------------------------- fkName
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_FK_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_FK_NAME} column.
      *
-     * @return the value of {@value #COLUMN_NAME_FK_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_FK_NAME} column.
      */
     @Nullable
     public String getFkName() {
@@ -440,9 +465,9 @@ abstract class PortedKey
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_FK_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_FK_NAME} column.
      *
-     * @param fkName the value of {@value #COLUMN_NAME_FK_NAME} column.
+     * @param fkName the value of {@value #COLUMN_LABEL_FK_NAME} column.
      */
     void setFkName(final String fkName) {
         this.fkName = fkName;
@@ -451,9 +476,9 @@ abstract class PortedKey
     // ---------------------------------------------------------------------------------------------------------- pkName
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_PK_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_PK_NAME} column.
      *
-     * @return the value of {@value #COLUMN_NAME_PK_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_PK_NAME} column.
      */
     @Nullable
     public String getPkName() {
@@ -461,9 +486,9 @@ abstract class PortedKey
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_PK_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_PK_NAME} column.
      *
-     * @param pkName the value of {@value #COLUMN_NAME_PK_NAME} column.
+     * @param pkName the value of {@value #COLUMN_LABEL_PK_NAME} column.
      */
     void setPkName(final String pkName) {
         this.pkName = pkName;
@@ -472,18 +497,18 @@ abstract class PortedKey
     // --------------------------------------------------------------------------------------------------- deferrability
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_DEFERRABILITY} column.
+     * Returns the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
      *
-     * @return the value of {@value #COLUMN_NAME_DEFERRABILITY} column.
+     * @return the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
      */
     public Integer getDeferrability() {
         return deferrability;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_DEFERRABILITY} column.
+     * Sets the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
      *
-     * @param deferrability the value of {@value #COLUMN_NAME_DEFERRABILITY} column.
+     * @param deferrability the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
      */
     void setDeferrability(final Integer deferrability) {
         this.deferrability = deferrability;
@@ -492,60 +517,60 @@ abstract class PortedKey
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
+    @_ColumnLabel(COLUMN_LABEL_PKTABLE_CAT)
     String pktableCat;
 
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
+    @_ColumnLabel(COLUMN_LABEL_PKTABLE_SCHEM)
     String pktableSchem;
 
-    @_ColumnLabel(COLUMN_NAME_PKTABLE_NAME)
+    @_ColumnLabel(COLUMN_LABEL_PKTABLE_NAME)
     String pktableName;
 
-    @_ColumnLabel(COLUMN_NAME_PKCOLUMN_NAME)
+    @_ColumnLabel(COLUMN_LABEL_PKCOLUMN_NAME)
     String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
+    @_ColumnLabel(COLUMN_LABEL_FKTABLE_CAT)
     String fktableCat;
 
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
+    @_ColumnLabel(COLUMN_LABEL_FKTABLE_SCHEM)
     String fktableSchem;
 
-    @_ColumnLabel(COLUMN_NAME_FKTABLE_NAME)
+    @_ColumnLabel(COLUMN_LABEL_FKTABLE_NAME)
     String fktableName;
 
-    @_ColumnLabel(COLUMN_NAME_FKCOLUMN_NAME)
+    @_ColumnLabel(COLUMN_LABEL_FKCOLUMN_NAME)
     String fkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel(COLUMN_NAME_KEY_SEQ)
+    @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     Integer keySeq;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel(COLUMN_NAME_UPDATE_RULE)
+    @_ColumnLabel(COLUMN_LABEL_UPDATE_RULE)
     private Integer updateRule;
 
-    @_ColumnLabel(COLUMN_NAME_DELETE_RULE)
+    @_ColumnLabel(COLUMN_LABEL_DELETE_RULE)
     private Integer deleteRule;
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel(COLUMN_NAME_FK_NAME)
+    @_ColumnLabel(COLUMN_LABEL_FK_NAME)
     private String fkName;
 
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel(COLUMN_NAME_PK_NAME)
+    @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel(COLUMN_NAME_DEFERRABILITY)
+    @_ColumnLabel(COLUMN_LABEL_DEFERRABILITY)
     private Integer deferrability;
 }

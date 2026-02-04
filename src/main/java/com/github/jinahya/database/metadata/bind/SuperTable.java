@@ -2,7 +2,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -16,6 +18,31 @@ public class SuperTable
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3579710773784268831L;
+
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, <code>TABLE_NAME</code>, and
+     * <code>SUPERTABLE_NAME</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<SuperTable> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                            final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<SuperTable, String>comparing(v -> operator.apply(v.getTableCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableName()), comparator)
+                .thenComparing(v -> operator.apply(v.getSupertableName()), comparator);
+    }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 
@@ -174,7 +201,6 @@ public class SuperTable
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
@@ -190,15 +216,5 @@ public class SuperTable
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_SUPERTABLE_NAME)
-
     private String supertableName;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    private transient Catalog tableCatalog_;
-
-    private transient Schema tableSchema_;
-
-    private transient Catalog supertableCatalog_;
-
-    private transient Schema supertableSchema_;
 }

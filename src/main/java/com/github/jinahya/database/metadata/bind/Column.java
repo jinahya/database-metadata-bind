@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
@@ -24,6 +25,29 @@ public class Column
     private static final long serialVersionUID = -409653682729081530L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, <code>TABLE_NAME</code>, and
+     * <code>ORDINAL_POSITION</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see DatabaseMetaData#getColumns(String, String, String, String)
+     */
+    static Comparator<Column> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                        final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<Column, String>comparing(v -> operator.apply(v.getTableCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableName()), comparator)
+                .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder());
+    }
 
     /**
      * .
@@ -388,7 +412,7 @@ public class Column
         );
     }
 
-    // ------------------------------------------------------------------------------------------------- Bean-Validation
+    // ------------------------------------------------------------------------------------------------ Jakarta-Validation
     private boolean isNullableValid() {
         if (nullable == null) {
             return true;
@@ -589,7 +613,7 @@ public class Column
         this.columnSize = columnSize;
     }
 
-    // --------------------------------------------------------------------------------------------------- bufferLength
+    // ---------------------------------------------------------------------------------------------------- bufferLength
 
     /**
      * Returns the value of {@code BUFFER_LENGTH} column.
@@ -631,7 +655,7 @@ public class Column
         this.decimalDigits = decimalDigits;
     }
 
-    // ------------------------------------------------------------------------------------------------------ numPrecRadix
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
 
     /**
      * Returns the value of {@code NUM_PREC_RADIX} column.

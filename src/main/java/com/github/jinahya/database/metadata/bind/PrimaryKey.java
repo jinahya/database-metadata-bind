@@ -6,6 +6,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
@@ -19,6 +20,25 @@ public class PrimaryKey
     private static final long serialVersionUID = 3159826510060898330L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>COLUMN_NAME</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<PrimaryKey> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                            final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator.comparing(v -> operator.apply(v.getColumnName()), comparator);
+    }
+
     static Comparator<PrimaryKey> comparing(final Comparator<? super String> comparator) {
         return Comparator.comparing(PrimaryKey::getColumnName, comparator);
     }

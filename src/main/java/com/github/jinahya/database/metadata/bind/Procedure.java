@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -22,6 +23,30 @@ public class Procedure
     private static final long serialVersionUID = -6262056388403934829L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>PROCEDURE_CAT</code>, <code>PROCEDURE_SCHEM</code>, <code>PROCEDURE_NAME</code> and
+     * <code>SPECIFIC_NAME</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<Procedure> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                           final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<Procedure, String>comparing(v -> operator.apply(v.getProcedureCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getProcedureSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getProcedureName()), comparator)
+                .thenComparing(v -> operator.apply(v.getSpecificName()), comparator);
+    }
+
     // They are ordered by PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME and SPECIFIC_NAME.
     static Comparator<Procedure> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         return Comparator
@@ -31,7 +56,8 @@ public class Procedure
                 .thenComparing(Procedure::getSpecificName, comparator);
     }
 
-    static Comparator<Procedure> comparingInSpecifiedOrder(final Context context, final Comparator<? super String> comparator)
+    static Comparator<Procedure> comparingInSpecifiedOrder(final Context context,
+                                                           final Comparator<? super String> comparator)
             throws SQLException {
         return comparingInSpecifiedOrder(ContextUtils.nullOrdered(context, comparator));
     }
@@ -44,8 +70,9 @@ public class Procedure
     public static final String COLUMN_LABEL_PROCEDURE_TYPE = "PROCEDURE_TYPE";
 
     /**
-     * A column value of {@link DatabaseMetaData#procedureResultUnknown}({@value DatabaseMetaData#procedureResultUnknown})
-     * for the {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     * A column value of
+     * {@link DatabaseMetaData#procedureResultUnknown}({@value DatabaseMetaData#procedureResultUnknown}) for the
+     * {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
      */
     public static final int COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_RESULT_UNKNOWN =
             DatabaseMetaData.procedureResultUnknown;
@@ -57,8 +84,9 @@ public class Procedure
     public static final int COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_NO_RESULT = DatabaseMetaData.procedureNoResult;
 
     /**
-     * A column value of {@link DatabaseMetaData#procedureReturnsResult}({@value DatabaseMetaData#procedureReturnsResult})
-     * for the {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     * A column value of
+     * {@link DatabaseMetaData#procedureReturnsResult}({@value DatabaseMetaData#procedureReturnsResult}) for the
+     * {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
      */
     public static final int COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_RETURNS_RESULT =
             DatabaseMetaData.procedureReturnsResult;

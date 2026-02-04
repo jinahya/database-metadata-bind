@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getTableTypes()}.
@@ -35,6 +36,25 @@ public class TableType
     private static final long serialVersionUID = -7630634982776331078L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>TABLE_TYPE</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<TableType> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                           final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator.comparing(v -> operator.apply(v.getTableType()), comparator);
+    }
+
     static Comparator<TableType> comparing(final Context context, final Comparator<? super String> comparator) {
         return Comparator.comparing(TableType::getTableType, comparator);
     }
@@ -85,6 +105,7 @@ public class TableType
     public int hashCode() {
         return Objects.hash(super.hashCode(), tableType);
     }
+
     // ------------------------------------------------------------------------------------------------------- tableType
 
     /**

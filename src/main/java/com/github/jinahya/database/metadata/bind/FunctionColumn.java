@@ -6,6 +6,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)}
@@ -21,6 +22,30 @@ public class FunctionColumn
     private static final long serialVersionUID = -7445156446214062680L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>FUNCTION_CAT</code>, <code>FUNCTION_SCHEM</code>, <code>FUNCTION_NAME</code>, and
+     * <code>SPECIFIC_NAME</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<FunctionColumn> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                                final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<FunctionColumn, String>comparing(v -> operator.apply(v.getFunctionCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getFunctionSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getFunctionName()), comparator)
+                .thenComparing(v -> operator.apply(v.getSpecificName()), comparator);
+    }
+
     static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Context context,
                                                                 final Comparator<? super String> comparator)
             throws SQLException {

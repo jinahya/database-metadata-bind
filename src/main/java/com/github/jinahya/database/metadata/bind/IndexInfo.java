@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
@@ -23,6 +24,30 @@ public class IndexInfo
     private static final long serialVersionUID = 924040226611181424L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>NON_UNIQUE</code>, <code>TYPE</code>, <code>INDEX_NAME</code>, and
+     * <code>ORDINAL_POSITION</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<IndexInfo> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                           final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .comparing(IndexInfo::getNonUnique, Comparator.naturalOrder())
+                .thenComparing(IndexInfo::getType, Comparator.naturalOrder())
+                .thenComparing(v -> operator.apply(v.getIndexName()), comparator)
+                .thenComparing(IndexInfo::getOrdinalPosition, Comparator.naturalOrder());
+    }
+
     // They are ordered by NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
     static Comparator<IndexInfo> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
@@ -245,7 +270,7 @@ public class IndexInfo
         return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, indexName, ordinalPosition);
     }
 
-    // ---------------------------------------------------------------------------------------------- Jakarta_Validation
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
     @AssertTrue(message = "NON_UNIQUE is false when TYPE is tableIndexStatistic(0)")
     private boolean isNonUniqueFalseWhenTypeIsTableIndexStatic() {
         if (type == null) {

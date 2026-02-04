@@ -22,8 +22,7 @@ public class TablePrivilege
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
     static Comparator<TablePrivilege> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
-                                                                final Comparator<? super String> comparator)
-            throws SQLException {
+                                                                final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator

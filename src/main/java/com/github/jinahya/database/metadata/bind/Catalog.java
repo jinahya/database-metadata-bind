@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getCatalogs()} method.
@@ -31,15 +32,34 @@ import java.util.function.Consumer;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getCatalogsAndAcceptEach(Consumer)
  */
-
 @_ParentOf(Schema.class)
 @_ParentOf(Table.class)
+@_ChildOfNone
 public class Catalog
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * The results are ordered by catalog name.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<Catalog> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                         final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator.comparing(v -> operator.apply(v.getTableCat()), comparator);
+    }
+
     static Comparator<Catalog> comparingInSpecifiedOrder(final Context context,
                                                          final Comparator<? super String> comparator)
             throws SQLException {

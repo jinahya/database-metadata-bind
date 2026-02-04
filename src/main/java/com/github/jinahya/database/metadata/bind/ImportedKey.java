@@ -24,6 +24,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getImportedKeys(String, String, String)} method.
@@ -39,6 +40,24 @@ public class ImportedKey
     private static final long serialVersionUID = -1900794151555506751L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>PKTABLE_CAT</code>, <code>PKTABLE_SCHEM</code>, <code>PKTABLE_NAME</code>, and
+     * <code>KEY_SEQ</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see PortedKey#comparingPk(UnaryOperator, Comparator)
+     */
+    static Comparator<ImportedKey> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                             final Comparator<? super String> comparator) {
+        return PortedKey.comparingPk(operator, comparator);
+    }
+
     static Comparator<ImportedKey> comparingInSpecifiedOrder(final Context context,
                                                              final Comparator<? super String> comparator)
             throws SQLException {

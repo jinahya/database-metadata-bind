@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
@@ -14,14 +15,37 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSchemas(String, String)
  */
-@_ChildOf(Catalog.class)
 @_ParentOf(Table.class)
+@_ChildOf(Catalog.class)
+@_ChildOfNone
 public class Schema
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    // The results are ordered by TABLE_CATALOG and TABLE_SCHEM.
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * The results are ordered by <code>TABLE_CATALOG</code> and <code>TABLE_SCHEM</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<Schema> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                        final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<Schema, String>comparing(v -> operator.apply(v.getTableCatalog()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator);
+    }
+
     static Comparator<Schema> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
