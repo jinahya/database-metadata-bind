@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -70,31 +69,6 @@ abstract class Memory_$_Test {
             } catch (final SQLException sqle) {
                 throw new RuntimeException(sqle);
             }
-        });
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Test
-    void acceptProperties__() {
-        applyContext(c -> {
-            try {
-                c.acceptProperties((p, r) -> {
-                    log.debug("{}: {}", p, r);
-                });
-            } catch (final IntrospectionException ie) {
-                throw new RuntimeException(ie);
-            }
-            return null;
-        });
-    }
-
-    @Test
-    void acceptValues__() {
-        applyContext(c -> {
-            c.acceptValues((m, r) -> {
-                log.debug("{}: {}", m.getName(), r);
-            });
-            return null;
         });
     }
 

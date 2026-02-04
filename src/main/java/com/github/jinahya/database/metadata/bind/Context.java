@@ -22,15 +22,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -43,9 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiConsumer;
+import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -57,32 +50,7 @@ public class Context {
 
     private static final System.Logger logger = System.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    private static final Predicate<Method> READER_PREDICATE = m -> {
-        if (m.getDeclaringClass() != DatabaseMetaData.class) {
-            return false;
-        }
-        final int modifiers = m.getModifiers();
-        if (Modifier.isStatic(modifiers)) {
-            return false;
-        }
-        if (!Modifier.isPublic(modifiers)) {
-            return false;
-        }
-        if (m.getParameterTypes().length > 0) {
-            return false;
-        }
-        final Class<?> returnType = m.getReturnType();
-        if (returnType == void.class) {
-            return false;
-        }
-        if (Collection.class.isAssignableFrom(returnType)) {
-            return false;
-        }
-        if (ResultSet.class.isAssignableFrom(returnType)) {
-            return false;
-        }
-        return true;
-    };
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     /**
      * Creates a new instance from the specified connection.
@@ -109,89 +77,6 @@ public class Context {
         super();
         this.metadata = Objects.requireNonNull(metadata, "metadata is null");
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Accepts names and results of {@link PropertyDescriptor#getReadMethod() readable properties}, of the wrapped
-     * {@link #metadata}, to specified consumer.
-     *
-     * @param consumer the consumer to be accepted with each property's name and value.
-     * @see #acceptValues(BiConsumer)
-     */
-    public void acceptProperties(final BiConsumer<? super String, Object> consumer) throws IntrospectionException {
-        Objects.requireNonNull(consumer, "consumer is null");
-        final BeanInfo info = Introspector.getBeanInfo(DatabaseMetaData.class);
-        for (final PropertyDescriptor descriptor : info.getPropertyDescriptors()) {
-            final Method reader = descriptor.getReadMethod();
-            if (reader == null) {
-                continue;
-            }
-            if (!READER_PREDICATE.test(reader)) {
-                continue;
-            }
-            try {
-                final Object result = reader.invoke(metadata);
-                consumer.accept(descriptor.getName(), result);
-            } catch (final ReflectiveOperationException roe) {
-                logger.log(
-                        System.Logger.Level.ERROR,
-                        () -> String.format("failed to invoke %s with %s", reader, metadata),
-                        roe
-                );
-            }
-        }
-    }
-
-    /**
-     * Accepts <em>simple</em> methods and their results, of the wrapped {@code metadata}, to specified consumer.
-     *
-     * @param consumer the consumer to be accepted with each method and its result.
-     * @see #acceptProperties(BiConsumer)
-     */
-    public void acceptValues(final BiConsumer<? super Method, Object> consumer) {
-        Objects.requireNonNull(consumer, "consumer is null");
-        for (final Method method : DatabaseMetaData.class.getMethods()) {
-            if (!READER_PREDICATE.test(method)) {
-                continue;
-            }
-            try {
-                final Object result = method.invoke(metadata);
-                consumer.accept(method, result);
-            } catch (final ReflectiveOperationException roe) {
-                logger.log(
-                        System.Logger.Level.ERROR,
-                        () -> String.format("failed to invoke %s with %s", method, metadata),
-                        roe
-                );
-            }
-        }
-    }
-
-//    // -----------------------------------------------------------------------------------------------------------------
-//    private final Map<Class<?>, Field> unmappedFields = new ConcurrentHashMap<>();
-//
-//    private void unmappedField(final Class<?> type, final Field field, final _ColumnLabel label) {
-//        final var previous = unmappedFields.putIfAbsent(type, field);
-//        if (previous != null) {
-//            logger.log(
-//                    System.Logger.Level.WARNING,
-//                    () -> String.format("unmapped field; type: %s, field: %s, label: %s", type.getSimpleName(),
-//                                        field.getName(), label.value())
-//            );
-//        }
-//    }
-//
-//    // -----------------------------------------------------------------------------------------------------------------
-//    private final Map<Class<?>, String> unknownColumns = new ConcurrentHashMap<>();
-//
-//    private void unknownColumn(final Class<?> type, final String label) {
-//        final var previous = unknownColumns.putIfAbsent(type, label);
-//        if (previous != null) {
-//            logger.log(System.Logger.Level.TRACE,
-//                       "unknown column; type: {0}, label: {1}", type.getSimpleName(), label);
-//        }
-//    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -339,7 +224,7 @@ public class Context {
         );
     }
 
-    List<Attribute> getAttributes(final UDT udt, final String attributeNamePattern) throws SQLException {
+    List<Attribute> getAttributesOf(final UDT udt, final String attributeNamePattern) throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
         return getAttributes(
                 udt.getTypeCat(),
@@ -406,7 +291,7 @@ public class Context {
         );
     }
 
-    List<BestRowIdentifier> getBestRowIdentifier(final Table table, final int scope, final boolean nullable)
+    List<BestRowIdentifier> getBestRowIdentifierOf(final Table table, final int scope, final boolean nullable)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getBestRowIdentifier(
@@ -429,10 +314,9 @@ public class Context {
 
     <C extends Collection<? super Catalog>> C getCatalogsAndAddAll(final C collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        getCatalogsAndAcceptEach(v -> {
-            final var changed = collection.add(v);
-            assert changed : "duplicate catalog: " + v;
-        });
+        getCatalogsAndAcceptEach(
+                collection::add
+        );
         return collection;
     }
 
@@ -508,10 +392,7 @@ public class Context {
                 schema,
                 table,
                 columnNamePattern,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate column privilege: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -647,10 +528,7 @@ public class Context {
                 foreignCatalog,
                 foreignSchema,
                 foreignTable,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate cross reference: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -711,10 +589,7 @@ public class Context {
                 catalog,
                 schema,
                 table,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate exported key: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -749,7 +624,7 @@ public class Context {
      * @see #getExportedKeys(String, String, String)
      */
 
-    List<ExportedKey> getExportedKeys(final Table table) throws SQLException {
+    List<ExportedKey> getExportedKeysOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getExportedKeys(
                 table.getTableCat(),
@@ -790,10 +665,7 @@ public class Context {
                 catalog,
                 schemaPattern,
                 functionNamePattern,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate function: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -818,23 +690,21 @@ public class Context {
         );
     }
 
-    List<Function> getFunctionsOf(final Catalog catalog, @Nullable final String schemaPattern,
+    List<Function> getFunctionsOf(@Nullable final Catalog catalog, @Nullable final String schemaPattern,
                                   @Nullable final String functionNamePattern)
             throws SQLException {
-        Objects.requireNonNull(catalog, "catalog is null");
         return getFunctions(
-                catalog.getTableCat(),
+                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
                 schemaPattern,
                 functionNamePattern
         );
     }
 
-    List<Function> getFunctionsOf(final Schema schema, @Nullable final String functionNamePattern)
+    List<Function> getFunctionsOf(@Nullable final Schema schema, @Nullable final String functionNamePattern)
             throws SQLException {
-        Objects.requireNonNull(schema, "schema is null");
         return getFunctions(
-                schema.getTableCatalog(),
-                schema.getTableSchem(),
+                Optional.ofNullable(schema).map(Schema::getTableCatalog).orElse(null),
+                Optional.ofNullable(schema).map(Schema::getTableSchem).orElse(null),
                 functionNamePattern
         );
     }
@@ -862,10 +732,7 @@ public class Context {
                 schemaPattern,
                 functionNamePattern,
                 columnNamePattern,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate function column: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -901,7 +768,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getFunctionColumns(String, String, String, String)
      */
-    List<FunctionColumn> getFunctionColumns(final Function function, final String columnNamePattern)
+    List<FunctionColumn> getFunctionColumnsOf(final Function function, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(function, "function is null");
         return getFunctionColumns(
@@ -943,10 +810,7 @@ public class Context {
                 catalog,
                 schema,
                 table,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate imported key: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -981,7 +845,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getImportedKeys(String, String, String)
      */
-    List<ImportedKey> getImportedKeys(final Table table) throws SQLException {
+    List<ImportedKey> getImportedKeysOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getImportedKeys(
                 table.getTableCat(),
@@ -1017,10 +881,7 @@ public class Context {
                 table,
                 unique,
                 approximate,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate index info: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1049,7 +910,7 @@ public class Context {
         );
     }
 
-    List<IndexInfo> getIndexInfo(final Table table, final boolean unique, final boolean approximate)
+    List<IndexInfo> getIndexInfoOf(final Table table, final boolean unique, final boolean approximate)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getIndexInfo(
@@ -1074,7 +935,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
      */
-    void getPrimaryKeysAndAcceptEach(final String catalog, final String schema, final String table,
+    void getPrimaryKeysAndAcceptEach(@Nullable final String catalog, @Nullable final String schema, final String table,
                                      final Consumer<? super PrimaryKey> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
@@ -1085,17 +946,15 @@ public class Context {
     }
 
     <C extends Collection<? super PrimaryKey>>
-    C getPrimaryKeysAndAddAll(final String catalog, final String schema, final String table, final C collection)
+    C getPrimaryKeysAndAddAll(@Nullable final String catalog, @Nullable final String schema, final String table,
+                              final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getPrimaryKeysAndAcceptEach(
                 catalog,
                 schema,
                 table,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate primary key: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1121,7 +980,7 @@ public class Context {
         );
     }
 
-    List<PrimaryKey> getPrimaryKeys(final Table table) throws SQLException {
+    List<PrimaryKey> getPrimaryKeysOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPrimaryKeys(
                 table.getTableCat(),
@@ -1144,7 +1003,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getProcedureColumns(String, String, String, String)
      */
-    void getProcedureColumnsAndAcceptEach(final String catalog, final String schemaPattern,
+    void getProcedureColumnsAndAcceptEach(@Nullable final String catalog, @Nullable final String schemaPattern,
                                           final String procedureNamePattern, final String columnNamePattern,
                                           final Consumer<? super ProcedureColumn> consumer)
             throws SQLException {
@@ -1157,8 +1016,9 @@ public class Context {
     }
 
     <C extends Collection<? super ProcedureColumn>>
-    C getProcedureColumnsAndAddAll(final String catalog, final String schemaPattern, final String procedureNamePattern,
-                                   final String columnNamePattern, final C collection)
+    C getProcedureColumnsAndAddAll(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                   final String procedureNamePattern, final String columnNamePattern,
+                                   final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getProcedureColumnsAndAcceptEach(
@@ -1166,10 +1026,7 @@ public class Context {
                 schemaPattern,
                 procedureNamePattern,
                 columnNamePattern,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate procedure column: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1196,20 +1053,12 @@ public class Context {
         );
     }
 
-    List<ProcedureColumn> getProcedureColumns(final Procedure procedure, final String columnNamePattern)
+    List<ProcedureColumn> getProcedureColumnsOf(final Procedure procedure, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(procedure, "procedure is null");
         return getProcedureColumns(
                 procedure.getProcedureCat(), procedure.getProcedureSchem(), procedure.getProcedureName(),
                 columnNamePattern
-        );
-    }
-
-    List<ProcedureColumn> getProcedureColumns(final Procedure procedure) throws SQLException {
-        Objects.requireNonNull(procedure, "procedure is null");
-        return getProcedureColumns(
-                procedure,
-                "%"
         );
     }
 
@@ -1226,8 +1075,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getProcedures(String, String, String)
      */
-    void getProceduresAndAcceptEach(final String catalog, final String schemaPattern, final String procedureNamePattern,
-                                    final Consumer<? super Procedure> consumer)
+    void getProceduresAndAcceptEach(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                    final String procedureNamePattern, final Consumer<? super Procedure> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (var results = metadata.getProcedures(catalog, schemaPattern, procedureNamePattern)) {
@@ -1237,18 +1086,15 @@ public class Context {
     }
 
     <C extends Collection<? super Procedure>>
-    C getProceduresAndAddAll(final String catalog, final String schemaPattern, final String procedureNamePattern,
-                             final C collection)
+    C getProceduresAndAddAll(@Nullable final String catalog, @Nullable final String schemaPattern,
+                             final String procedureNamePattern, final C collection)
             throws SQLException {
         requireNonNullConnection(collection);
         getProceduresAndAcceptEach(
                 catalog,
                 schemaPattern,
                 procedureNamePattern,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate procedure: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1268,39 +1114,29 @@ public class Context {
                                          final String procedureNamePattern)
             throws SQLException {
         return getProceduresAndAddAll(
-                catalog, schemaPattern, procedureNamePattern,
+                catalog,
+                schemaPattern,
+                procedureNamePattern,
                 new ArrayList<>()
         );
     }
 
-    List<Procedure> getProcedures(final Catalog catalog, final String procedureNamePattern) throws SQLException {
-        Objects.requireNonNull(catalog, "catalog is null");
+    List<Procedure> getProceduresOf(@Nullable final Catalog catalog, @Nullable final String schemaPattern,
+                                    final String procedureNamePattern)
+            throws SQLException {
         return getProcedures(
-                catalog.getTableCat(),
-                null,
+                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
+                schemaPattern,
                 procedureNamePattern
         );
     }
 
-    List<Procedure> getProcedures(final Catalog catalog) throws SQLException {
-        Objects.requireNonNull(catalog, "catalog is null");
+    List<Procedure> getProceduresOf(@Nullable final Schema schema, final String procedureNamePattern)
+            throws SQLException {
         return getProcedures(
-                catalog,
-                "%"
-        );
-    }
-
-    List<Procedure> getProcedures(final Schema schema, final String procedureNamePattern) throws SQLException {
-        Objects.requireNonNull(schema, "schema is null");
-        return getProcedures(
-                schema.getTableCatalog(), schema.getTableSchem(), procedureNamePattern
-        );
-    }
-
-    List<Procedure> getProcedures(final Schema schema) throws SQLException {
-        return getProcedures(
-                schema,
-                "%"
+                Optional.ofNullable(schema).map(Schema::getTableCatalog).orElse(null),
+                Optional.ofNullable(schema).map(Schema::getTableSchem).orElse(null),
+                procedureNamePattern
         );
     }
 
@@ -1319,8 +1155,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
      */
-    void getPseudoColumnsAndAcceptEach(final String catalog, final String schemaPattern, final String tableNamePattern,
-                                       final String columnNamePattern, final Consumer<? super PseudoColumn> consumer)
+    void getPseudoColumnsAndAcceptEach(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                       final String tableNamePattern, final String columnNamePattern,
+                                       final Consumer<? super PseudoColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (var results = metadata.getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
@@ -1333,8 +1170,8 @@ public class Context {
     }
 
     <C extends Collection<? super PseudoColumn>>
-    C getPseudoColumnsAndAddAll(final String catalog, final String schemaPattern, final String tableNamePattern,
-                                final String columnNamePattern, final C collection)
+    C getPseudoColumnsAndAddAll(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                final String tableNamePattern, final String columnNamePattern, final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getPseudoColumnsAndAcceptEach(
@@ -1342,10 +1179,7 @@ public class Context {
                 schemaPattern,
                 tableNamePattern,
                 columnNamePattern,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate pseudo column: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1372,7 +1206,7 @@ public class Context {
         );
     }
 
-    List<PseudoColumn> getPseudoColumns(final Table table, final String columnNamePattern) throws SQLException {
+    List<PseudoColumn> getPseudoColumnsOf(final Table table, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPseudoColumns(
                 table.getTableCat(), table.getTableSchem(), table.getTableName(),
@@ -1406,10 +1240,7 @@ public class Context {
     <C extends Collection<? super Schema>> C getSchemasAndAddAll(final C collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getSchemasAndAcceptEach(
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate schema: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1439,7 +1270,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSchemas(String, String)
      */
-    void getSchemasAndAcceptEach(final String catalog, final String schemaPattern,
+    void getSchemasAndAcceptEach(@Nullable final String catalog, @Nullable final String schemaPattern,
                                  final Consumer<? super Schema> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
@@ -1450,16 +1281,13 @@ public class Context {
     }
 
     <C extends Collection<? super Schema>>
-    C getSchemasAndAddAll(final String catalog, final String schemaPattern, final C collection)
+    C getSchemasAndAddAll(@Nullable final String catalog, @Nullable final String schemaPattern, final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getSchemasAndAcceptEach(
                 catalog,
                 schemaPattern,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate schema: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1478,19 +1306,10 @@ public class Context {
         return getSchemasAndAddAll(catalog, schemaPattern, new ArrayList<>());
     }
 
-    List<Schema> getSchemas(final Catalog catalog, final String schemaPattern) throws SQLException {
-        Objects.requireNonNull(catalog, "catalog is null");
+    List<Schema> getSchemasOf(@Nullable final Catalog catalog, final String schemaPattern) throws SQLException {
         return getSchemas(
-                catalog.getTableCat(),
+                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
                 schemaPattern
-        );
-    }
-
-    List<Schema> getSchemas(final Catalog catalog) throws SQLException {
-        Objects.requireNonNull(catalog, "catalog is null");
-        return getSchemas(
-                catalog,
-                "%"
         );
     }
 
@@ -1507,8 +1326,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSuperTables(String, String, String)
      */
-    void getSuperTablesAndAcceptEach(final String catalog, final String schemaPattern, final String tableNamePattern,
-                                     final Consumer<? super SuperTable> consumer)
+    void getSuperTablesAndAcceptEach(@Nullable final String catalog, final String schemaPattern,
+                                     final String tableNamePattern, final Consumer<? super SuperTable> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (var results = metadata.getSuperTables(catalog, schemaPattern, tableNamePattern)) {
@@ -1518,7 +1337,7 @@ public class Context {
     }
 
     <C extends Collection<? super SuperTable>>
-    C getSuperTablesAndAddAll(final String catalog, final String schemaPattern, final String tableNamePattern,
+    C getSuperTablesAndAddAll(@Nullable final String catalog, final String schemaPattern, final String tableNamePattern,
                               final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
@@ -1526,10 +1345,7 @@ public class Context {
                 catalog,
                 schemaPattern,
                 tableNamePattern,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate super table: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1553,7 +1369,17 @@ public class Context {
         );
     }
 
-    List<SuperTable> getSuperTables(final Schema schema, final String tableNamePattern) throws SQLException {
+    List<SuperTable> getSuperTablesOf(@Nullable final Catalog catalog, final String schemaPattern,
+                                      final String tableNamePattern)
+            throws SQLException {
+        return getSuperTables(
+                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
+                schemaPattern,
+                tableNamePattern
+        );
+    }
+
+    List<SuperTable> getSuperTablesOf(final Schema schema, final String tableNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTables(
                 schema.getTableCatalog(),
@@ -1562,7 +1388,7 @@ public class Context {
         );
     }
 
-    List<SuperTable> getSuperTables(final Table table) throws SQLException {
+    List<SuperTable> getSuperTablesOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getSuperTables(
                 table.getTableCat(),
@@ -1603,10 +1429,7 @@ public class Context {
                 catalog,
                 schemaPattern,
                 typeNamePattern,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate super type: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1632,17 +1455,17 @@ public class Context {
         );
     }
 
-    List<SuperType> getSuperTypes(final Catalog catalog, final String schemaPattern, final String typeNamePattern)
+    List<SuperType> getSuperTypesOf(@Nullable final Catalog catalog, final String schemaPattern,
+                                    final String typeNamePattern)
             throws SQLException {
-        Objects.requireNonNull(catalog, "catalog is null");
         return getSuperTypes(
-                catalog.getTableCat(),
+                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
                 schemaPattern,
                 typeNamePattern
         );
     }
 
-    List<SuperType> getSuperTypes(final Schema schema, final String typeNamePattern)
+    List<SuperType> getSuperTypesOf(final Schema schema, final String typeNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTypes(
@@ -1652,7 +1475,7 @@ public class Context {
         );
     }
 
-    List<SuperType> getSuperTypes(final UDT udt) throws SQLException {
+    List<SuperType> getSuperTypesOf(final UDT udt) throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
         return getSuperTypes(
                 udt.getTypeCat(),
@@ -1673,7 +1496,7 @@ public class Context {
      * @param consumer         the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
      */
-    void getTablePrivilegesAndAcceptEach(final String catalog, final String schemaPattern,
+    void getTablePrivilegesAndAcceptEach(@Nullable final String catalog, @Nullable final String schemaPattern,
                                          final String tableNamePattern,
                                          final Consumer<? super TablePrivilege> consumer)
             throws SQLException {
@@ -1685,7 +1508,8 @@ public class Context {
     }
 
     <C extends Collection<? super TablePrivilege>>
-    C getTablePrivilegesAndAddAll(final String catalog, final String schemaPattern, final String tableNamePattern,
+    C getTablePrivilegesAndAddAll(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                  final String tableNamePattern,
                                   final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
@@ -1693,10 +1517,7 @@ public class Context {
                 catalog,
                 schemaPattern,
                 tableNamePattern,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate table privilege: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1723,25 +1544,26 @@ public class Context {
         );
     }
 
-    List<TablePrivilege> getTablePrivileges(final Catalog catalog, final String tableNamePattern) throws SQLException {
-        Objects.requireNonNull(catalog, "catalog is null");
+    List<TablePrivilege> getTablePrivilegesOf(@Nullable final Catalog catalog, @Nullable final String schemaPattern,
+                                              final String tableNamePattern)
+            throws SQLException {
         return getTablePrivileges(
-                catalog.getTableCat(),
-                null,
+                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
+                schemaPattern,
                 tableNamePattern
         );
     }
 
-    List<TablePrivilege> getTablePrivileges(final Schema schema, final String tableNamePattern) throws SQLException {
-        Objects.requireNonNull(schema, "schema is null");
+    List<TablePrivilege> getTablePrivilegesOf(@Nullable final Schema schema, final String tableNamePattern)
+            throws SQLException {
         return getTablePrivileges(
-                schema.getTableCatalog(),
-                schema.getTableSchem(),
+                Optional.ofNullable(schema).map(Schema::getTableCatalog).orElse(null),
+                Optional.ofNullable(schema).map(Schema::getTableSchem).orElse(null),
                 tableNamePattern
         );
     }
 
-    List<TablePrivilege> getTablePrivileges(final Table table) throws SQLException {
+    List<TablePrivilege> getTablePrivilegesOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getTablePrivileges(
                 table.getTableCat(),
@@ -1774,10 +1596,7 @@ public class Context {
     <C extends Collection<? super TableType>> C getTableTypesAndAddAll(final C collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getTableTypesAndAcceptEach(
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate table type: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1850,10 +1669,7 @@ public class Context {
                 schemaPattern,
                 tableNamePattern,
                 types,
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate table: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1894,12 +1710,11 @@ public class Context {
      * @see Catalog#getTableCat()
      * @see #getTables(String, String, String, String[])
      */
-    List<Table> getTablesOf(final Catalog catalog, final String schemaPattern,
-                            final String tableNamePattern, final String[] types)
+    List<Table> getTablesOf(@Nullable final Catalog catalog, final String schemaPattern,
+                            final String tableNamePattern, @Nullable final String[] types)
             throws SQLException {
-        Objects.requireNonNull(catalog, "catalog is null");
         return getTables(
-                catalog.getTableCat(),
+                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
                 schemaPattern,
                 tableNamePattern,
                 types
@@ -1910,8 +1725,8 @@ public class Context {
                             @Nullable final String[] types)
             throws SQLException {
         return getTables(
-                schema.getTableCatalog(),
-                schema.getTableSchem(),
+                Optional.ofNullable(schema).map(Schema::getTableCatalog).orElse(null),
+                Optional.ofNullable(schema).map(Schema::getTableSchem).orElse(null),
                 tableNamePattern,
                 types
         );
@@ -1941,10 +1756,7 @@ public class Context {
     <C extends Collection<? super TypeInfo>> C getTypeInfoAndAddAll(final C collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getTypeInfoAndAcceptEach(
-                v -> {
-                    final var changed = collection.add(v);
-                    assert changed : "duplicate type info: " + v;
-                }
+                collection::add
         );
         return collection;
     }
@@ -1975,8 +1787,9 @@ public class Context {
      * @param consumer        the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
      */
-    void getUDTsAndAcceptEach(final String catalog, final String schemaPattern, final String typeNamePattern,
-                              final int[] types, final Consumer<? super UDT> consumer)
+    void getUDTsAndAcceptEach(@Nullable final String catalog, @Nullable final String schemaPattern,
+                              final String typeNamePattern, @Nullable final int[] types,
+                              final Consumer<? super UDT> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (var results = metadata.getUDTs(catalog, schemaPattern, typeNamePattern, types)) {
@@ -1990,8 +1803,8 @@ public class Context {
     }
 
     <C extends Collection<? super UDT>>
-    C getUDTsAndAddAll(final String catalog, final String schemaPattern, final String typeNamePattern,
-                       final int[] types, final C collection)
+    C getUDTsAndAddAll(@Nullable final String catalog, @Nullable final String schemaPattern,
+                       final String typeNamePattern, @Nullable final int[] types, final C collection)
             throws SQLException {
         requireNonNullConnection(collection);
         getUDTsAndAcceptEach(
@@ -2027,24 +1840,22 @@ public class Context {
         );
     }
 
-    List<UDT> getUDTs(final Catalog catalog, final String schemaPattern, final String typeNamePattern,
-                      final int[] types)
+    List<UDT> getUDTsOf(@Nullable final Catalog catalog, @Nullable final String schemaPattern,
+                        final String typeNamePattern, @Nullable final int[] types)
             throws SQLException {
-        Objects.requireNonNull(catalog, "catalog is null");
         return getUDTs(
-                catalog.getTableCat(),
+                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
                 schemaPattern,
                 typeNamePattern,
                 types
         );
     }
 
-    List<UDT> getUDTs(final Schema schema, final String typeNamePattern, final int[] types)
+    List<UDT> getUDTsOf(@Nullable final Schema schema, final String typeNamePattern, @Nullable final int[] types)
             throws SQLException {
-        Objects.requireNonNull(schema, "schema is null");
         return getUDTs(
-                schema.getTableCatalog(),
-                schema.getTableSchem(),
+                Optional.ofNullable(schema).map(Schema::getTableCatalog).orElse(null),
+                Optional.ofNullable(schema).map(Schema::getTableSchem).orElse(null),
                 typeNamePattern,
                 types
         );
@@ -2053,8 +1864,8 @@ public class Context {
     // ----------------------------------------------------------------------------------------------- getVersionColumns
 
     /**
-     * Invokes {@link DatabaseMetaData#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)} method
-     * with given arguments, and accepts each bound value to specified consumer.
+     * Invokes {@link DatabaseMetaData#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)} method,
+     * with given arguments, on the wrapped metadata, and accepts each bound value to specified consumer.
      *
      * @param catalog  a value for {@code catalog} parameter.
      * @param schema   a value for {@code schema} parameter.
@@ -2063,8 +1874,8 @@ public class Context {
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#getVersionColumns(String, String, String)
      */
-    void getVersionColumnsAndAcceptEach(final String catalog, final String schema, final String table,
-                                        final Consumer<? super VersionColumn> consumer)
+    void getVersionColumnsAndAcceptEach(@Nullable final String catalog, @Nullable final String schema,
+                                        final String table, final Consumer<? super VersionColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (var results = metadata.getVersionColumns(catalog, schema, table)) {
@@ -2074,17 +1885,15 @@ public class Context {
     }
 
     <C extends Collection<? super VersionColumn>>
-    C getVersionColumnsAndAddAll(final String catalog, final String schema, final String table, final C collection)
+    C getVersionColumnsAndAddAll(@Nullable final String catalog, @Nullable final String schema, final String table,
+                                 final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getVersionColumnsAndAcceptEach(
                 catalog,
                 schema,
                 table,
-                v -> {
-                    assert !collection.contains(v);
-                    collection.add(v);
-                }
+                collection::add
         );
         return collection;
     }
@@ -2122,7 +1931,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getVersionColumns(String, String, String)
      */
-    List<VersionColumn> getVersionColumns(final Table table) throws SQLException {
+    List<VersionColumn> getVersionColumnsOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getVersionColumns(
                 table.getTableCat(),

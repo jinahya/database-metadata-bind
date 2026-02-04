@@ -22,10 +22,8 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.InvocationHandler;
 import java.sql.JDBCType;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Types;
 import java.util.List;
 import java.util.Objects;
@@ -47,35 +45,6 @@ final class Context_Test_Utils {
 
     private static String databaseProductName(final Context context) throws SQLException {
         return context.metadata.getDatabaseProductName();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static void info(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        context.acceptValues((m, v) -> {
-            log.debug("{}: {}", m.getName(), v);
-        });
-        return;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    private static InvocationHandler proxy(final InvocationHandler handler) {
-        return (p, m, args) -> {
-            try {
-                return handler.invoke(p, m, args);
-            } catch (final Throwable t) {
-                final var cause = t.getCause();
-                if (cause != null) {
-                    if (cause instanceof SQLFeatureNotSupportedException) {
-                        log.info("not supported; {}; {}", m.getName(), cause.getMessage());
-                    } else {
-                        log.error("failed to invoke {}.{}({})", p, m.getName(), args, cause);
-                    }
-                    throw cause;
-                }
-                throw t;
-            }
-        };
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -330,7 +299,7 @@ final class Context_Test_Utils {
         MetadataType_Test_Utils.verify(value);
         // -------------------------------------------------------------------------------------------------- procedures
         try {
-            final var procedures = context.getProcedures(value, "%");
+            final var procedures = context.getProceduresOf(value, "%");
             procedures(context, procedures);
         } catch (final SQLException sqle) {
             // empty
@@ -566,7 +535,7 @@ final class Context_Test_Utils {
     private static void function(final Context context, final Function value) throws SQLException {
         MetadataType_Test_Utils.verify(value);
         try {
-            final var functionColumns = context.getFunctionColumns(value, "%");
+            final var functionColumns = context.getFunctionColumnsOf(value, "%");
             functionColumns(context, functionColumns);
         } catch (final SQLException sqle) {
             log.error("failed to get functions for {}", value, sqle);
@@ -666,7 +635,7 @@ final class Context_Test_Utils {
     private static void procedure(final Context context, final Procedure value) throws SQLException {
         MetadataType_Test_Utils.verify(value);
         {
-            final var procedureColumns = context.getProcedureColumns(value, "%");
+            final var procedureColumns = context.getProcedureColumnsOf(value, "%");
             procedureColumns(context, procedureColumns);
         }
     }
@@ -716,21 +685,21 @@ final class Context_Test_Utils {
         MetadataType_Test_Utils.verify(value);
         // -------------------------------------------------------------------------------------------------- procedures
         try {
-            final var procedures = context.getProcedures(value);
+            final var procedures = context.getProceduresOf(value, "%");
             procedures(context, procedures);
         } catch (final SQLException sqle) {
             // empty
         }
         // ------------------------------------------------------------------------------------------------- superTables
         try {
-            final var superTables = context.getSuperTables(value, "%");
+            final var superTables = context.getSuperTablesOf(value, "%");
             superTables(context, superTables);
         } catch (final SQLException sqle) {
             // empty
         }
         // -------------------------------------------------------------------------------------------------- superTypes
         try {
-            final var superTypes = context.getSuperTypes(value, "%");
+            final var superTypes = context.getSuperTypesOf(value, "%");
             superTypes(context, superTypes);
         } catch (final SQLException sqle) {
             // empty
@@ -744,7 +713,7 @@ final class Context_Test_Utils {
         }
         // --------------------------------------------------------------------------------------------- tablePrivileges
         try {
-            final var tablePrivileges = context.getTablePrivileges(value, "%");
+            final var tablePrivileges = context.getTablePrivilegesOf(value, "%");
             tablePrivileges(context, tablePrivileges);
         } catch (final SQLException sqle) {
             // empty
@@ -834,14 +803,14 @@ final class Context_Test_Utils {
         }
         // ------------------------------------------------------------------------------------------------ exportedKeys
         try {
-            final var values = context.getExportedKeys(value);
+            final var values = context.getExportedKeysOf(value);
             exportedKeys(context, values);
         } catch (final SQLException sqle) {
             log.error("failed to getExportedKeys({})", value, sqle);
         }
         // ------------------------------------------------------------------------------------------------ importedKeys
         try {
-            final var values = context.getImportedKeys(value);
+            final var values = context.getImportedKeysOf(value);
             importedKeys(context, values);
         } catch (final SQLException sqle) {
             log.error("failed to getImportedKey({})", value, sqle);
@@ -850,7 +819,7 @@ final class Context_Test_Utils {
         for (final boolean unique : new boolean[] {true, false}) {
             for (final boolean approximate : new boolean[] {true, false}) {
                 try {
-                    final var values = context.getIndexInfo(value, unique, approximate);
+                    final var values = context.getIndexInfoOf(value, unique, approximate);
                     indexInfo(context, values);
                 } catch (final SQLException sqle) {
                     log.error("failed to getIndexInfo({}, {}, {})", value, unique, approximate, sqle);
@@ -859,7 +828,7 @@ final class Context_Test_Utils {
         }
         // ------------------------------------------------------------------------------------------------- primaryKeys
         try {
-            final var values = context.getPrimaryKeys(value);
+            final var values = context.getPrimaryKeysOf(value);
             primaryKeys(context, values);
         } catch (final SQLException sqle) {
             log.error("failed to getPrimaryKeys({})", value, sqle);
@@ -868,7 +837,7 @@ final class Context_Test_Utils {
         {
             final var columnNamePattern = "%";
             try {
-                final var values = context.getPseudoColumns(value, columnNamePattern);
+                final var values = context.getPseudoColumnsOf(value, columnNamePattern);
                 pseudoColumns(context, values);
             } catch (final SQLException sqle) {
                 log.error("failed to getPseudoColumns({}, {})", value, columnNamePattern, sqle);
@@ -876,14 +845,14 @@ final class Context_Test_Utils {
         }
         // ------------------------------------------------------------------------------------------------- superTables
         try {
-            final var values = context.getSuperTables(value);
+            final var values = context.getSuperTablesOf(value);
             superTables(context, values);
         } catch (final SQLException sqle) {
             log.error("failed to getSuperTables({})", value, sqle);
         }
         // --------------------------------------------------------------------------------------------- tablePrivileges
         try {
-            final var values = context.getTablePrivileges(value);
+            final var values = context.getTablePrivilegesOf(value);
             assertThat(values).allSatisfy(tp -> {
                 assertThat(tp.getTableCat()).isEqualTo(value.getTableCat());
                 assertThat(tp.getTableSchem()).isEqualTo(value.getTableSchem());
@@ -895,7 +864,7 @@ final class Context_Test_Utils {
         }
         // ---------------------------------------------------------------------------------------------- versionColumns
         try {
-            final var values = context.getVersionColumns(value);
+            final var values = context.getVersionColumnsOf(value);
             versionColumns(context, values);
         } catch (final SQLException sqle) {
             log.debug("failed to getVersionColumns({})", value, sqle);
@@ -1095,7 +1064,7 @@ final class Context_Test_Utils {
         }
         // -------------------------------------------------------------------------------------------------- superTypes
         try {
-            final var superTypes = context.getSuperTypes(value);
+            final var superTypes = context.getSuperTypesOf(value);
             assertThat(superTypes).allSatisfy(st -> {
                 assertType(st).isOf(value);
             });

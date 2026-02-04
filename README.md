@@ -19,21 +19,68 @@ See [Maven Central](https://central.sonatype.com/artifact/io.github.jinahya/data
 </dependency>
 ```
 
-## Usage
+## Usages
 
-All methods, defined in the `DatabaseMetaData`, which each returns a `ResultSet`, are prepared.
+All 26 methods in `DatabaseMetaData` that return `ResultSet` are bound to type-safe Java classes.
+
+### Basic Usage
 
 ```java
-class C {
-    void m() {
-        try (var connection = connect()) {
-            var metadata = connection.getDatabaseMetaData();
-            var context = Context.newInstance(metadata);
-            var catalogs = context.getCatalogs();
-            var tables = context.getTables(null, null, "%", null);
-        }
-    }
+try (var connection = dataSource.getConnection()) {
+    var context = Context.newInstance(connection.getMetaData());
+
+    // Get all catalogs
+    List<Catalog> catalogs = context.getCatalogs();
+
+    // Get all tables (null = don't filter)
+    List<Table> tables = context.getTables(null, null, "%", null);
+
+    // Get columns for a specific table
+    List<Column> columns = context.getColumns("my_catalog", "my_schema", "my_table", "%");
 }
+```
+
+### Working with Results
+
+```java
+// Tables have typed accessors
+for (Table table : tables) {
+    String catalog = table.getTableCat();    // may be null
+    String schema = table.getTableSchem();   // may be null
+    String name = table.getTableName();
+    String type = table.getTableType();      // "TABLE", "VIEW", etc.
+}
+
+// Get primary keys for a table
+List<PrimaryKey> pks = context.getPrimaryKeys(
+    table.getTableCat(),
+    table.getTableSchem(),
+    table.getTableName()
+);
+
+// Get foreign keys pointing to this table
+List<ExportedKey> exportedKeys = context.getExportedKeys(
+    table.getTableCat(),
+    table.getTableSchem(),
+    table.getTableName()
+);
+```
+
+### Catalog/Schema Null Handling
+
+JDBC uses `null` to mean "not applicable" in results and "don't filter" in parameters. This aligns naturally:
+
+```java
+// Get a table (catalog/schema may be null depending on database)
+Table table = tables.get(0);
+
+// Pass values directly — null means "don't filter by this"
+List<Column> columns = context.getColumns(
+    table.getTableCat(),     // null → don't filter by catalog
+    table.getTableSchem(),   // null → don't filter by schema
+    table.getTableName(),
+    "%"
+);
 ```
 
 ## How to contribute?

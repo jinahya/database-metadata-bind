@@ -141,7 +141,36 @@ void getXxxAndAcceptEach(..., Consumer<? super Xxx> consumer)
 
 // Public API
 public List<Xxx> getXxx(...)
+
+// Convenience methods (package-private)
+List<Xxx> getXxxOf(ParentType parent, ...)
 ```
+
+#### Convenience Method Nullability Rule
+
+**The question:** "Can this query be made meaningfully WITHOUT this parent object?"
+
+- **YES** → Parent is `@Nullable`, use `Optional.ofNullable(obj).map(...).orElse(null)`
+- **NO** → Parent is required, use `Objects.requireNonNull(obj, "obj is null")` + direct field access
+
+**Parent types and their behavior:**
+
+| Parent Type | Typical Usage | Nullability |
+|-------------|---------------|-------------|
+| `Table`, `UDT`, `Function`, `Procedure` | Concrete parent for child data | Always required (`requireNonNull`) |
+| `Catalog` | Optional filter (provides `catalog`) | Usually `@Nullable` (catalog is typically optional) |
+| `Schema` | Depends on base method | `@Nullable` if both catalog AND schemaPattern are optional |
+
+**Example - Schema nullability depends on base method:**
+
+| Base Method | Schema Provides | Schema Nullable? |
+|-------------|-----------------|------------------|
+| `getProcedures(@Nullable catalog, @Nullable schemaPattern, ...)` | both nullable | ✓ `@Nullable` |
+| `getSuperTables(@Nullable catalog, schemaPattern, ...)` | catalog + **schemaPattern** | ✗ `requireNonNull` |
+
+**Semantic meaning:**
+- `getProceduresOf(@Nullable Schema)` → "Get procedures, optionally scoped to this schema"
+- `getSuperTablesOf(Schema)` → "Get super tables FOR this schema" (schema is the required scope)
 
 ### toString/equals/hashCode
 
@@ -192,4 +221,4 @@ context.getColumns(table.getTableCat(),    // null → null
 - `null` in result = "not applicable / DB doesn't use catalogs"
 - `null` in parameter = "don't filter by catalog"
 
-These align well. See `CLAUDE_CATALOGS_AND_SCHEMAS.md` for details.
+These semantics align well — a table from a catalog-less database returns `null`, which when passed to a child query means "don't filter by catalog."
