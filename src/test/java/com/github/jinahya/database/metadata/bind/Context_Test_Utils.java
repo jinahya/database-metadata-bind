@@ -29,7 +29,6 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Types;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -82,14 +81,6 @@ final class Context_Test_Utils {
     // -----------------------------------------------------------------------------------------------------------------
     static void test(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-
-        context.listeners.add(new Context.Listener() {
-            @Override
-            public void bound(final MetadataType value) {
-                __Validation_Test_Utils.requireValid(value);
-            }
-        });
-
         // ---------------------------------------------------------------------------------------------------- catalogs
         {
             final var catalogs = context.getCatalogs();

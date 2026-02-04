@@ -43,11 +43,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -213,19 +211,9 @@ public class Context {
         final var fieldLabels = new HashMap<>(getLabeledFields(type));
         for (final var i = fieldLabels.entrySet().iterator(); i.hasNext(); ) {
             final var entry = i.next();
-
             final var field = entry.getKey();
             final _ColumnLabel fieldLabel = entry.getValue();
-
-            if (false && field.isAnnotationPresent(_NotUsedBySpecification.class) ||
-                field.isAnnotationPresent(_ReservedBySpecification.class)) {
-                resultLabels.remove(fieldLabel.value());
-                i.remove();
-                continue;
-            }
-
             if (!resultLabels.remove(fieldLabel.value())) {
-//                unmappedField(type, field, fieldLabel);
                 logger.log(
                         System.Logger.Level.WARNING,
                         () -> String.format("unmapped field; label: %s; field: %s", fieldLabel, field)
@@ -233,21 +221,16 @@ public class Context {
                 i.remove();
                 continue;
             }
-
             try {
                 ContextUtils.setFieldValue(field, instance, results, fieldLabel.value());
             } catch (final ReflectiveOperationException roe) {
-//                final var message = String.format("failed to set %1$s", field);
-//                logger.log(System.Logger.Level.ERROR, message, roe);
                 throw new RuntimeException("failed to set " + field, roe);
             }
             i.remove();
         }
-
         for (final var i = resultLabels.iterator(); i.hasNext(); i.remove()) {
             final String label = i.next();
             final Object value = results.getObject(label);
-//            unknownColumn(type, label);
             logger.log(System.Logger.Level.TRACE,
                        "unknown column; type: {0}, label: {1}, value: {2}", type.getSimpleName(), label, value);
             if (instance instanceof AbstractMetadataType) {
@@ -256,7 +239,6 @@ public class Context {
         }
         assert resultLabels.isEmpty() : "remaining result labels: " + resultLabels;
         assert fieldLabels.isEmpty() : "remaining field labels: " + fieldLabels;
-        listeners.forEach(l -> l.bound(instance));
         return instance;
     }
 
@@ -2246,14 +2228,4 @@ public class Context {
                 .filter(v -> !v.isBlank())
                 .collect(Collectors.toList());
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    Supplier<Connection> connectionSupplier;
-
-    interface Listener {
-
-        void bound(MetadataType value);
-    }
-
-    final List<Listener> listeners = new ArrayList<>();
 }

@@ -35,6 +35,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 // https://java.testcontainers.org/modules/databases/jdbc/
+
 @Testcontainers
 @Slf4j
 abstract class TestContainers_$_IT {
@@ -99,18 +100,13 @@ abstract class TestContainers_$_IT {
         });
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void test() throws SQLException {
-        applyContext(c -> {
-            c.connectionSupplier = () -> {
-                try {
-                    return connect();
-                } catch (final SQLException sqle) {
-                    throw new RuntimeException("failed to connect", sqle);
-                }
-            };
+    void test() {
+        applyConnection(c -> {
             try {
-                Context_Test_Utils.test(c);
+                final var context = Context.newInstance(c);
+                Context_Test_Utils.test(context);
             } catch (final SQLException sqle) {
                 if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
                     log.warn("not supported", sqlfnse);
