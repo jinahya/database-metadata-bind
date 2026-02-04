@@ -22,11 +22,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 /**
@@ -37,15 +35,19 @@ import java.util.function.UnaryOperator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTables(String, String, String, String[])
  */
-
-@_ChildOf(Catalog.class)
-@_ChildOf(Schema.class)
-@_ParentOf(Column.class)
-@_ParentOf(BestRowIdentifier.class)
-@_ParentOf(ColumnPrivilege.class)
-@_ParentOf(IndexInfo.class)
-@_ParentOf(PseudoColumn.class)
 @_ParentOf(VersionColumn.class)
+@_ParentOf(PseudoColumn.class)
+@_ParentOf(TablePrivilege.class)
+@_ParentOf(PrimaryKey.class)
+@_ParentOf(IndexInfo.class)
+@_ParentOf(ImportedKey.class)
+@_ParentOf(ExportedKey.class)
+@_ParentOf(CrossReference.class)
+@_ParentOf(Column.class)
+@_ParentOf(ColumnPrivilege.class)
+@_ParentOf(BestRowIdentifier.class)
+@_ChildOf(Schema.class)
+@_ChildOf(Catalog.class)
 public class Table
         extends AbstractMetadataType {
 
@@ -61,34 +63,6 @@ public class Table
                 .thenComparing(v -> operator.apply(v.getTableCat()), comparator)
                 .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
                 .thenComparing(Table::getTableName, comparator);
-    }
-
-    static Comparator<Table> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .comparing(Table::getTableType, comparator)
-                .thenComparing(Table::getTableCat, comparator)
-                .thenComparing(Table::getTableSchem, comparator)
-                .thenComparing(Table::getTableName, comparator);
-    }
-
-    static Comparator<Table> comparingInSpecifiedOrder(final Context context,
-                                                       final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-        return Comparator
-                .comparing(Table::getTableType, comparator)      // NOT nullable
-                .thenComparing(Table::getTableCat, nullSafe)     // nullable
-                .thenComparing(Table::getTableSchem, nullSafe)   // nullable
-                .thenComparing(Table::getTableName, comparator); // NOT nullable
-    }
-
-    static Comparator<Table> comparingInSpecifiedOrder(final Context context)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -259,10 +233,6 @@ public class Table
         this.tableCat = tableCat;
     }
 
-    Optional<String> effectiveTableCat() {
-        return Optional.ofNullable(getTableCat()).map(String::trim).filter(v -> !v.isEmpty());
-    }
-
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -282,10 +252,6 @@ public class Table
      */
     void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
-    }
-
-    Optional<String> effectiveTableSchem() {
-        return Optional.ofNullable(getTableSchem()).map(String::trim).filter(v -> !v.isEmpty());
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName

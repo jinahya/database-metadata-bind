@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -32,8 +31,12 @@ import java.util.function.UnaryOperator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getCatalogsAndAcceptEach(Consumer)
  */
-@_ParentOf(Schema.class)
+@_ParentOf(TablePrivilege.class)
 @_ParentOf(Table.class)
+@_ParentOf(SuperType.class)
+@_ParentOf(SuperTable.class)
+@_ParentOf(Schema.class)
+@_ParentOf(Procedure.class)
 @_ChildOfNone
 public class Catalog
         extends AbstractMetadataType {
@@ -58,20 +61,6 @@ public class Catalog
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator.comparing(v -> operator.apply(v.getTableCat()), comparator);
-    }
-
-    static Comparator<Catalog> comparingInSpecifiedOrder(final Context context,
-                                                         final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-        return Comparator.comparing(Catalog::getTableCat, nullSafe);
-    }
-
-    static Comparator<Catalog> comparingInSpecifiedOrder(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

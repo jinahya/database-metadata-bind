@@ -100,14 +100,14 @@ class External_MySQL_IT {
                 final var mapper = new ObjectMapper();
                 mapper.enable(SerializationFeature.INDENT_OUTPUT);
                 final var name =
-                        table.effectiveTableCat().orElse("") + '_' +
-                        table.effectiveTableSchem().orElse("") + '_' +
+                        table.getTableCat() + '_' +
+                        table.getTableSchem() + '_' +
                         table.getTableName() + "_indices.json";
                 try (var writer = Files.newBufferedWriter(Paths.get(name), StandardCharsets.UTF_8)) {
                     try (var jsonWriter = mapper.writerWithDefaultPrettyPrinter().writeValuesAsArray(writer)) {
                         context.getIndexInfoAndAcceptEach(
-                                table.effectiveTableCat().orElse(null),
-                                table.effectiveTableSchem().orElse(null),
+                                table.getTableCat(),
+                                table.getTableSchem(),
                                 table.getTableName(),
                                 true,
                                 true,

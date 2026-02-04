@@ -3,7 +3,6 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
@@ -14,6 +13,7 @@ import java.util.function.UnaryOperator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getPrimaryKeys(String, String, String)
  */
+@_ChildOf(Table.class)
 public class PrimaryKey
         extends AbstractMetadataType {
 
@@ -37,15 +37,6 @@ public class PrimaryKey
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator.comparing(v -> operator.apply(v.getColumnName()), comparator);
-    }
-
-    static Comparator<PrimaryKey> comparing(final Comparator<? super String> comparator) {
-        return Comparator.comparing(PrimaryKey::getColumnName, comparator);
-    }
-
-    static Comparator<PrimaryKey> comparing(final Context context, final Comparator<? super String> comparator)
-            throws SQLException {
-        return comparing(ContextUtils.nullOrdered(context, comparator));
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

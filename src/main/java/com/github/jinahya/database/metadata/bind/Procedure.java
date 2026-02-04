@@ -3,7 +3,6 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +16,9 @@ import java.util.function.UnaryOperator;
  * @see Context#getFunctionColumns(String, String, String, String)
  * @see ProcedureColumn
  */
+@_ParentOf(ProcedureColumn.class)
+@_ChildOf(Schema.class)
+@_ChildOf(Catalog.class)
 public class Procedure
         extends AbstractMetadataType {
 
@@ -45,21 +47,6 @@ public class Procedure
                 .thenComparing(v -> operator.apply(v.getProcedureSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getProcedureName()), comparator)
                 .thenComparing(v -> operator.apply(v.getSpecificName()), comparator);
-    }
-
-    // They are ordered by PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME and SPECIFIC_NAME.
-    static Comparator<Procedure> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return Comparator
-                .comparing(Procedure::getProcedureCat, comparator)
-                .thenComparing(Procedure::getProcedureSchem, comparator)
-                .thenComparing(Procedure::getProcedureName, comparator)
-                .thenComparing(Procedure::getSpecificName, comparator);
-    }
-
-    static Comparator<Procedure> comparingInSpecifiedOrder(final Context context,
-                                                           final Comparator<? super String> comparator)
-            throws SQLException {
-        return comparingInSpecifiedOrder(ContextUtils.nullOrdered(context, comparator));
     }
 
     // -------------------------------------------------------------------------------------------------- PROCEDURE_TYPE

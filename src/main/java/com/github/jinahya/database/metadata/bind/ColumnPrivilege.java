@@ -3,7 +3,6 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -42,22 +41,6 @@ public class ColumnPrivilege
         return Comparator
                 .<ColumnPrivilege, String>comparing(v -> operator.apply(v.getColumnName()), comparator)
                 .thenComparing(v -> operator.apply(v.getPrivilege()), comparator);
-    }
-
-    static Comparator<ColumnPrivilege> comparingInSpecifiedOrder(final Context context,
-                                                                 final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .comparing(ColumnPrivilege::getColumnName, comparator)  // NOT nullable
-                .thenComparing(ColumnPrivilege::getPrivilege, comparator); // NOT nullable
-    }
-
-    static Comparator<ColumnPrivilege> comparingInSpecifiedOrder(final Context context)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

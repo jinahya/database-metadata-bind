@@ -28,16 +28,20 @@ This trades "clever" features for maintainability and predictable behavior.
 |------------|---------|
 | `@_ColumnLabel` | Maps field to ResultSet column (required) |
 | `@_NullableBySpecification` | Column may be null per JDBC spec |
-| `@_NotUsedBySpecification` | Column reserved/unused in spec |
+| `@_ReservedBySpecification` | Column reserved for future use per JDBC spec |
+| `@_NotUsedBySpecification` | Column unused in spec |
 
 ### Field Annotation Order
 
 ```java
 @Nullable                                   // jspecify (if applicable)
-@_NullableBySpecification                   // project (if nullable by spec)
-@_ColumnLabel(COLUMN_LABEL_TABLE_CAT)       // required
+@_NullableBySpecification                   // OR @_ReservedBySpecification (mutually exclusive)
+@_ColumnLabel(COLUMN_LABEL_TABLE_CAT)       // required (always last)
 private String tableCat;
 ```
+
+- `@_NullableBySpecification`: Column is nullable per JDBC spec (has meaning, but optional)
+- `@_ReservedBySpecification`: Column is reserved for future use (not populated)
 
 ## Class Structure (Preferred Order)
 
@@ -171,6 +175,21 @@ Methods must appear in this order: `toString`, `equals`, `hashCode`.
 
 - Don't add automatic parent/child navigation methods
 - Don't use primitive types for fields
-- Don't make setters `public`
-- Don't skip `nullSafe` on catalog/schema comparators
+- Don't make setters `public` or `protected`
 - Don't add fields without `@_ColumnLabel`
+
+## Catalog/Schema Null Handling
+
+When querying child objects, pass raw values directly (`null` → `null`):
+
+```java
+context.getColumns(table.getTableCat(),    // null → null
+                   table.getTableSchem(),  // null → null
+                   table.getTableName(),
+                   "%");
+```
+
+- `null` in result = "not applicable / DB doesn't use catalogs"
+- `null` in parameter = "don't filter by catalog"
+
+These align well. See `CLAUDE_CATALOGS_AND_SCHEMAS.md` for details.

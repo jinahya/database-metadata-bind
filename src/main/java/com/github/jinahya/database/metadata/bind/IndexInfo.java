@@ -4,7 +4,6 @@ import jakarta.validation.constraints.AssertTrue;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +17,7 @@ import java.util.function.UnaryOperator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getIndexInfo(String, String, String, boolean, boolean)
  */
+@_ChildOf(Table.class)
 public class IndexInfo
         extends AbstractMetadataType {
 
@@ -46,36 +46,6 @@ public class IndexInfo
                 .thenComparing(IndexInfo::getType, Comparator.naturalOrder())
                 .thenComparing(v -> operator.apply(v.getIndexName()), comparator)
                 .thenComparing(IndexInfo::getOrdinalPosition, Comparator.naturalOrder());
-    }
-
-    // They are ordered by NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
-    static Comparator<IndexInfo> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .comparing(IndexInfo::getNonUnique, Comparator.naturalOrder())
-                .thenComparing(IndexInfo::getType, Comparator.naturalOrder())
-                .thenComparing(IndexInfo::getIndexName, comparator)
-                .thenComparing(IndexInfo::getOrdinalPosition, Comparator.naturalOrder());
-    }
-
-    // They are ordered by NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
-    static Comparator<IndexInfo> comparingInSpecifiedOrder(final Context context,
-                                                           final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-        return Comparator
-                .comparing(IndexInfo::getNonUnique, Comparator.<Boolean>naturalOrder())  // NOT nullable
-                .thenComparing(IndexInfo::getType, Comparator.<Integer>naturalOrder())   // NOT nullable
-                .thenComparing(IndexInfo::getIndexName, nullSafe)                        // nullable
-                .thenComparing(IndexInfo::getOrdinalPosition, Comparator.naturalOrder()); // NOT nullable
-    }
-
-    static Comparator<IndexInfo> comparingInSpecifiedOrder(final Context context)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

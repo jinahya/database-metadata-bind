@@ -13,7 +13,8 @@ import java.util.function.UnaryOperator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTables(String, String, String)
  */
-
+@_ChildOf(Schema.class)
+@_ChildOf(Catalog.class)
 public class SuperTable
         extends AbstractMetadataType {
 

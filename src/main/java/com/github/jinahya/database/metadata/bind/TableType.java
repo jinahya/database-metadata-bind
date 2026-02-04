@@ -30,6 +30,7 @@ import java.util.function.UnaryOperator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTableTypes()
  */
+@_ChildOfNone
 public class TableType
         extends AbstractMetadataType {
 
@@ -53,10 +54,6 @@ public class TableType
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator.comparing(v -> operator.apply(v.getTableType()), comparator);
-    }
-
-    static Comparator<TableType> comparing(final Context context, final Comparator<? super String> comparator) {
-        return Comparator.comparing(TableType::getTableType, comparator);
     }
 
     // ------------------------------------------------------------------------------------------------------ TABLE_TYPE

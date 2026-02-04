@@ -163,7 +163,7 @@ abstract class Memory_$_Test {
             final var metaData = connection.getMetaData();
             final var context = new Context(metaData);
             try {
-                final var functions = context.getFunctions(null, null, "%");
+                final var functions = context.getFunctions((String) null, null, "%");
                 json(metaData, "functions", functions);
             } catch (final SQLFeatureNotSupportedException sqlfnse) {
                 log.warn("not supported", sqlfnse);

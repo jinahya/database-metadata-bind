@@ -15,7 +15,7 @@ import java.util.function.UnaryOperator;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-
+@_ChildOf(Table.class)
 public class CrossReference
         extends AbstractMetadataType {
 
@@ -44,25 +44,6 @@ public class CrossReference
                 .thenComparing(v -> operator.apply(v.getFktableSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getFktableName()), comparator)
                 .thenComparing(CrossReference::getKeySeq, Comparator.naturalOrder());
-    }
-
-    static Comparator<CrossReference> comparingInSpecifiedOrder(final Context context,
-                                                                final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-        return Comparator
-                .comparing(CrossReference::getFktableCat, nullSafe)        // nullable
-                .thenComparing(CrossReference::getFktableSchem, nullSafe)  // nullable
-                .thenComparing(CrossReference::getFktableName, comparator) // NOT nullable
-                .thenComparing(CrossReference::getKeySeq, Comparator.naturalOrder()); // NOT nullable
-    }
-
-    static Comparator<CrossReference> comparingInSpecifiedOrder(final Context context)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ----------------------------------------------------------------------------------------------------- PKTABLE_CAT

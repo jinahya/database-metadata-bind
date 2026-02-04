@@ -3,7 +3,6 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +13,6 @@ import java.util.function.UnaryOperator;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-
 @_ChildOf(Table.class)
 public class PseudoColumn
         extends AbstractMetadataType {
@@ -44,19 +42,6 @@ public class PseudoColumn
                 .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getTableName()), comparator)
                 .thenComparing(v -> operator.apply(v.getColumnName()), comparator);
-    }
-
-    static Comparator<PseudoColumn> comparing(final Comparator<? super String> comparator) {
-        return Comparator
-                .comparing(PseudoColumn::getTableCat, comparator)
-                .thenComparing(PseudoColumn::getTableSchem, comparator)
-                .thenComparing(PseudoColumn::getTableName, comparator)
-                .thenComparing(PseudoColumn::getColumnName, comparator);
-    }
-
-    static Comparator<PseudoColumn> comparing(final Context context, final Comparator<? super String> comparator)
-            throws SQLException {
-        return comparing(ContextUtils.nullOrdered(context, comparator));
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

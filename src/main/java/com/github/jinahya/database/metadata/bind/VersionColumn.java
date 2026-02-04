@@ -1,5 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
+import jakarta.validation.constraints.AssertTrue;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
@@ -11,6 +12,9 @@ import java.util.Objects;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getVersionColumns(String, String, String)
+ * @see <a
+ * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html#getVersionColumns(java.lang.String,java.lang.String,java.lang.String)">DatabaseMetaData#getVresionColumns(catalog,
+ * schema, table)</a>
  */
 @_ChildOf(Table.class)
 public class VersionColumn
@@ -36,6 +40,8 @@ public class VersionColumn
 
     /**
      * A column label of {@value}.
+     *
+     * @see java.sql.Types
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
@@ -75,15 +81,24 @@ public class VersionColumn
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
     /**
-     * A column value of {@link DatabaseMetaData#versionColumnUnknown}({@value}) for the
-     * {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     * A column value of {@link DatabaseMetaData#versionColumnUnknown}({@value DatabaseMetaData#versionColumnUnknown})
+     * for the {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
      */
     public static final int COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_UNKNOWN =
             DatabaseMetaData.versionColumnUnknown;   // 0
 
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#versionColumnNotPseudo}({@value DatabaseMetaData#versionColumnNotPseudo}) for the
+     * {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     */
     public static final int COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_NOT_PSEUDO =
             DatabaseMetaData.versionColumnNotPseudo; // 1
 
+    /**
+     * A column value of {@link DatabaseMetaData#versionColumnPseudo}({@value DatabaseMetaData#versionColumnPseudo}) for
+     * the {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     */
     public static final int COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_PSEUDO =
             DatabaseMetaData.versionColumnPseudo;    // 2
 
@@ -105,7 +120,6 @@ public class VersionColumn
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
-
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -138,6 +152,15 @@ public class VersionColumn
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), columnName);
+    }
+
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+    @AssertTrue
+    private boolean isPseudoColumnValid() {
+        if (pseudoColumn == null) {
+            return true;
+        }
+        return COLUMN_VALUES_PSEUDO_COLUMN.contains(pseudoColumn);
     }
 
     // ----------------------------------------------------------------------------------------------------------- scope
@@ -187,6 +210,7 @@ public class VersionColumn
      * Returns the value of {@code DATA_TYPE} column.
      *
      * @return the value of {@code DATA_TYPE} column.
+     * @see java.sql.Types
      */
     public Integer getDataType() {
         return dataType;

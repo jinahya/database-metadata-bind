@@ -3,7 +3,6 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
@@ -44,25 +43,6 @@ public class FunctionColumn
                 .thenComparing(v -> operator.apply(v.getFunctionSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getFunctionName()), comparator)
                 .thenComparing(v -> operator.apply(v.getSpecificName()), comparator);
-    }
-
-    static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Context context,
-                                                                final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-        return Comparator
-                .comparing(FunctionColumn::getFunctionCat, nullSafe)        // nullable
-                .thenComparing(FunctionColumn::getFunctionSchem, nullSafe)  // nullable
-                .thenComparing(FunctionColumn::getFunctionName, comparator) // NOT nullable
-                .thenComparing(FunctionColumn::getSpecificName, comparator); // NOT nullable
-    }
-
-    static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Context context)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ---------------------------------------------------------------------------------------------------- FUNCTION_CAT

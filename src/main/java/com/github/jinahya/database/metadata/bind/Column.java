@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Positive;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -47,37 +46,6 @@ public class Column
                 .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getTableName()), comparator)
                 .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder());
-    }
-
-    /**
-     * .
-     * <blockquote>
-     * They are ordered by <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, <code>TABLE_NAME</code>, and
-     * <code>ORDINAL_POSITION</code>.
-     * </blockquote>
-     *
-     * @param context    .
-     * @param comparator .
-     * @return .
-     * @throws SQLException .
-     * @see DatabaseMetaData#getColumns(String, String, String, String)
-     */
-    static Comparator<Column> comparingInSpecifiedOrder(final Context context,
-                                                        final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-        return Comparator
-                .comparing(Column::getTableCat, nullSafe)        // nullable
-                .thenComparing(Column::getTableSchem, nullSafe)  // nullable
-                .thenComparing(Column::getTableName, comparator) // NOT nullable
-                .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder()); // NOT nullable
-    }
-
-    static Comparator<Column> comparingInSpecifiedOrder(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

@@ -16,10 +16,10 @@ import java.util.function.UnaryOperator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getUDTs(String, String, String, int[])
  */
-@_ChildOf(Catalog.class)
 @_ChildOf(Schema.class)
+@_ChildOf(Catalog.class)
+@_ParentOf(SuperType.class)
 @_ParentOf(Attribute.class)
-//@_ParentOf(UDT.class)
 public class UDT
         extends AbstractMetadataType {
 

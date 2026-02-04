@@ -3,7 +3,6 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -16,6 +15,7 @@ import java.util.function.UnaryOperator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctions(String, String, String)
  */
+@_ParentOf(FunctionColumn.class)
 @_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
 public class Function
@@ -46,23 +46,6 @@ public class Function
                 .thenComparing(v -> operator.apply(v.getFunctionSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getFunctionName()), comparator)
                 .thenComparing(v -> operator.apply(v.getSpecificName()), comparator);
-    }
-
-    static Comparator<Function> comparingInSpecifiedOrder(final Context context,
-                                                          final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-        return Comparator
-                .comparing(Function::getFunctionCat, nullSafe)
-                .thenComparing(Function::getFunctionSchem, nullSafe)
-                .thenComparing(Function::getFunctionName, comparator)
-                .thenComparing(Function::getSpecificName, comparator);
-    }
-
-    static Comparator<Function> comparingInSpecifiedOrder(final Context context) throws SQLException {
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ---------------------------------------------------------------------------------------------------- FUNCTION_CAT

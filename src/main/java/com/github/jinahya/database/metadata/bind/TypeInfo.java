@@ -15,6 +15,7 @@ import java.util.Objects;
  * @see <a
  * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html#getTypeInfo()">DatabaseMetaData#getTypeInfo</a>
  */
+@_ChildOfNone
 public class TypeInfo
         extends AbstractMetadataType {
 

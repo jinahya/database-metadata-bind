@@ -12,12 +12,13 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTypes(String, String, String)
  */
-
 @_ChildOf(UDT.class)
 public class SuperType
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
+
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
 

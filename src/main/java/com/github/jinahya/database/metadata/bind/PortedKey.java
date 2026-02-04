@@ -47,33 +47,33 @@ abstract class PortedKey
                 .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
     }
 
-    static <T extends PortedKey> Comparator<T> comparingPktable(final Context context,
-                                                                final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-        return Comparator
-                .<T, String>comparing(PortedKey::getPktableCat, nullSafe)   // nullable
-                .thenComparing(PortedKey::getPktableSchem, nullSafe)        // nullable
-                .thenComparing(PortedKey::getPktableName, comparator)       // NOT nullable
-                .thenComparing(PortedKey::getPkName, nullSafe)              // nullable
-                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder()); // NOT nullable
-    }
-
-    static <T extends PortedKey> Comparator<T> comparingFktable(final Context context,
-                                                                final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-        return Comparator
-                .<T, String>comparing(PortedKey::getFktableCat, nullSafe)   // nullable
-                .thenComparing(PortedKey::getFktableSchem, nullSafe)        // nullable
-                .thenComparing(PortedKey::getFktableName, comparator)       // NOT nullable
-                .thenComparing(PortedKey::getFkName, nullSafe)              // nullable
-                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder()); // NOT nullable
-    }
+//    static <T extends PortedKey> Comparator<T> comparingPktable(final Context context,
+//                                                                final Comparator<? super String> comparator)
+//            throws SQLException {
+//        Objects.requireNonNull(context, "context is null");
+//        Objects.requireNonNull(comparator, "comparator is null");
+//        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
+//        return Comparator
+//                .<T, String>comparing(PortedKey::getPktableCat, nullSafe)   // nullable
+//                .thenComparing(PortedKey::getPktableSchem, nullSafe)        // nullable
+//                .thenComparing(PortedKey::getPktableName, comparator)       // NOT nullable
+//                .thenComparing(PortedKey::getPkName, nullSafe)              // nullable
+//                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder()); // NOT nullable
+//    }
+//
+//    static <T extends PortedKey> Comparator<T> comparingFktable(final Context context,
+//                                                                final Comparator<? super String> comparator)
+//            throws SQLException {
+//        Objects.requireNonNull(context, "context is null");
+//        Objects.requireNonNull(comparator, "comparator is null");
+//        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
+//        return Comparator
+//                .<T, String>comparing(PortedKey::getFktableCat, nullSafe)   // nullable
+//                .thenComparing(PortedKey::getFktableSchem, nullSafe)        // nullable
+//                .thenComparing(PortedKey::getFktableName, comparator)       // NOT nullable
+//                .thenComparing(PortedKey::getFkName, nullSafe)              // nullable
+//                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder()); // NOT nullable
+//    }
 
     // ----------------------------------------------------------------------------------------------------- PKTABLE_CAT
 

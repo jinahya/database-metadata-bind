@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
@@ -43,25 +42,6 @@ public class ClientInfoProperty
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator.comparing(v -> operator.apply(v.getName()), comparator);
-    }
-
-    static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(ClientInfoProperty::getName, comparator); // NOT nullable
-    }
-
-    static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Context context,
-                                                                    final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(ClientInfoProperty::getName, comparator); // NOT nullable
-    }
-
-    static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Context context)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ------------------------------------------------------------------------------------------------------------ NAME

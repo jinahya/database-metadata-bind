@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
@@ -33,6 +32,7 @@ import java.util.function.UnaryOperator;
  * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
+@_ChildOf(Table.class)
 public class ExportedKey
         extends PortedKey {
 
@@ -55,20 +55,6 @@ public class ExportedKey
     static Comparator<ExportedKey> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                              final Comparator<? super String> comparator) {
         return PortedKey.comparingFk(operator, comparator);
-    }
-
-    static Comparator<ExportedKey> comparingInSpecifiedOrder(final Context context,
-                                                             final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        return PortedKey.comparingFktable(context, comparator);
-    }
-
-    static Comparator<ExportedKey> comparingInSpecifiedOrder(final Context context)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS

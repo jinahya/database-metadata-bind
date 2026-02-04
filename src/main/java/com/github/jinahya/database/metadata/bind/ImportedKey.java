@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
@@ -33,7 +32,7 @@ import java.util.function.UnaryOperator;
  * @see Context#getImportedKeys(String, String, String)
  * @see ExportedKey
  */
-
+@_ChildOf(Table.class)
 public class ImportedKey
         extends PortedKey {
 
@@ -58,21 +57,7 @@ public class ImportedKey
         return PortedKey.comparingPk(operator, comparator);
     }
 
-    static Comparator<ImportedKey> comparingInSpecifiedOrder(final Context context,
-                                                             final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        return PortedKey.comparingPktable(context, comparator);
-    }
-
-    static Comparator<ImportedKey> comparingInSpecifiedOrder(final Context context)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -81,7 +66,7 @@ public class ImportedKey
         super();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {

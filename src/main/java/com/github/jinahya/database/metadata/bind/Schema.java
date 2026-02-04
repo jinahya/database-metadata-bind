@@ -2,7 +2,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,7 +14,11 @@ import java.util.function.UnaryOperator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSchemas(String, String)
  */
+@_ParentOf(TablePrivilege.class)
 @_ParentOf(Table.class)
+@_ParentOf(SuperType.class)
+@_ParentOf(SuperTable.class)
+@_ParentOf(Procedure.class)
 @_ChildOf(Catalog.class)
 @_ChildOfNone
 public class Schema
@@ -44,29 +47,6 @@ public class Schema
         return Comparator
                 .<Schema, String>comparing(v -> operator.apply(v.getTableCatalog()), comparator)
                 .thenComparing(v -> operator.apply(v.getTableSchem()), comparator);
-    }
-
-    static Comparator<Schema> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .comparing(Schema::getTableCatalog, comparator)
-                .thenComparing(Schema::getTableSchem, comparator);
-    }
-
-    static Comparator<Schema> comparingInSpecifiedOrder(final Context context,
-                                                        final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-        return Comparator
-                .comparing(Schema::getTableCatalog, nullSafe)
-                .thenComparing(Schema::getTableSchem, nullSafe);
-    }
-
-    static Comparator<Schema> comparingInSpecifiedOrder(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
     }
 
     // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM

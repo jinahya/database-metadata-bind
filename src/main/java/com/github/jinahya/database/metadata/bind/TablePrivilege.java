@@ -2,7 +2,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
@@ -14,6 +13,8 @@ import java.util.function.UnaryOperator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTablePrivileges(String, String, String)
  */
+@_ChildOf(Table.class)
+@_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
 public class TablePrivilege
         extends AbstractMetadataType {
@@ -21,6 +22,7 @@ public class TablePrivilege
     private static final long serialVersionUID = -2142097373603478881L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    // They are ordered by TABLE_CAT, TABLE_SCHEM, TABLE_NAME, and PRIVILEGE.
     static Comparator<TablePrivilege> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                                 final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
@@ -29,26 +31,7 @@ public class TablePrivilege
                 .<TablePrivilege, String>comparing(v -> operator.apply(v.getTableCat()), comparator)
                 .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getTableName()), comparator)
-                .thenComparing(TablePrivilege::getPrivilege, comparator);
-    }
-
-    static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Context context,
-                                                                final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-        return Comparator
-                .comparing(TablePrivilege::getTableCat, nullSafe)        // nullable
-                .thenComparing(TablePrivilege::getTableSchem, nullSafe)  // nullable
-                .thenComparing(TablePrivilege::getTableName, comparator) // NOT nullable
-                .thenComparing(TablePrivilege::getPrivilege, comparator); // NOT nullable
-    }
-
-    static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Context context)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER);
+                .thenComparing(v -> operator.apply(v.getPrivilege()), comparator);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

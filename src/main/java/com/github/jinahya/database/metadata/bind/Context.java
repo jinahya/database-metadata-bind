@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -169,6 +170,31 @@ public class Context {
         }
     }
 
+//    // -----------------------------------------------------------------------------------------------------------------
+//    private final Map<Class<?>, Field> unmappedFields = new ConcurrentHashMap<>();
+//
+//    private void unmappedField(final Class<?> type, final Field field, final _ColumnLabel label) {
+//        final var previous = unmappedFields.putIfAbsent(type, field);
+//        if (previous != null) {
+//            logger.log(
+//                    System.Logger.Level.WARNING,
+//                    () -> String.format("unmapped field; type: %s, field: %s, label: %s", type.getSimpleName(),
+//                                        field.getName(), label.value())
+//            );
+//        }
+//    }
+//
+//    // -----------------------------------------------------------------------------------------------------------------
+//    private final Map<Class<?>, String> unknownColumns = new ConcurrentHashMap<>();
+//
+//    private void unknownColumn(final Class<?> type, final String label) {
+//        final var previous = unknownColumns.putIfAbsent(type, label);
+//        if (previous != null) {
+//            logger.log(System.Logger.Level.TRACE,
+//                       "unknown column; type: {0}, label: {1}", type.getSimpleName(), label);
+//        }
+//    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
@@ -187,15 +213,19 @@ public class Context {
         final var fieldLabels = new HashMap<>(getLabeledFields(type));
         for (final var i = fieldLabels.entrySet().iterator(); i.hasNext(); ) {
             final var entry = i.next();
+
             final var field = entry.getKey();
             final _ColumnLabel fieldLabel = entry.getValue();
+
             if (false && field.isAnnotationPresent(_NotUsedBySpecification.class) ||
                 field.isAnnotationPresent(_ReservedBySpecification.class)) {
                 resultLabels.remove(fieldLabel.value());
                 i.remove();
                 continue;
             }
+
             if (!resultLabels.remove(fieldLabel.value())) {
+//                unmappedField(type, field, fieldLabel);
                 logger.log(
                         System.Logger.Level.WARNING,
                         () -> String.format("unmapped field; label: %s; field: %s", fieldLabel, field)
@@ -203,18 +233,23 @@ public class Context {
                 i.remove();
                 continue;
             }
+
             try {
                 ContextUtils.setFieldValue(field, instance, results, fieldLabel.value());
             } catch (final ReflectiveOperationException roe) {
-                logger.log(System.Logger.Level.ERROR, () -> String.format("failed to set %1$s", field), roe);
+//                final var message = String.format("failed to set %1$s", field);
+//                logger.log(System.Logger.Level.ERROR, message, roe);
+                throw new RuntimeException("failed to set " + field, roe);
             }
             i.remove();
         }
+
         for (final var i = resultLabels.iterator(); i.hasNext(); i.remove()) {
             final String label = i.next();
             final Object value = results.getObject(label);
-            logger.log(System.Logger.Level.WARNING,
-                       "unknown result; type: {0}, label: {1}, value: {2}", type.getSimpleName(), label, value);
+//            unknownColumn(type, label);
+            logger.log(System.Logger.Level.TRACE,
+                       "unknown column; type: {0}, label: {1}, value: {2}", type.getSimpleName(), label, value);
             if (instance instanceof AbstractMetadataType) {
                 ((AbstractMetadataType) instance).putUnknownColumn(label, value);
             }
@@ -322,6 +357,16 @@ public class Context {
         );
     }
 
+    List<Attribute> getAttributes(final UDT udt, final String attributeNamePattern) throws SQLException {
+        Objects.requireNonNull(udt, "udt is null");
+        return getAttributes(
+                udt.getTypeCat(),
+                udt.getTypeSchem(),
+                udt.getTypeName(),
+                attributeNamePattern
+        );
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     void getBestRowIdentifierAndAcceptEach(@Nullable final String catalog, @Nullable final String schema,
                                            final String table, final int scope, final boolean nullable,
@@ -376,6 +421,18 @@ public class Context {
                 scope,
                 nullable,
                 new ArrayList<>()
+        );
+    }
+
+    List<BestRowIdentifier> getBestRowIdentifier(final Table table, final int scope, final boolean nullable)
+            throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        return getBestRowIdentifier(
+                table.getTableCat(),
+                table.getTableSchem(),
+                table.getTableName(),
+                scope,
+                nullable
         );
     }
 
@@ -779,6 +836,27 @@ public class Context {
         );
     }
 
+    List<Function> getFunctionsOf(final Catalog catalog, @Nullable final String schemaPattern,
+                                  @Nullable final String functionNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(catalog, "catalog is null");
+        return getFunctions(
+                catalog.getTableCat(),
+                schemaPattern,
+                functionNamePattern
+        );
+    }
+
+    List<Function> getFunctionsOf(final Schema schema, @Nullable final String functionNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(schema, "schema is null");
+        return getFunctions(
+                schema.getTableCatalog(),
+                schema.getTableSchem(),
+                functionNamePattern
+        );
+    }
+
     // ------------------------------ getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern)
     void getFunctionColumnsAndAcceptEach(final String catalog, final String schemaPattern,
                                          final String functionNamePattern, final String columnNamePattern,
@@ -833,8 +911,7 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)} method with specified
-     * arguments, and returns a list of bound values.
+     * Retrieves function columns of the specified function.
      *
      * @param function          the function whose columns are retrieved.
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
@@ -846,21 +923,14 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(function, "function is null");
         return getFunctionColumns(
-                function.getFunctionCat(), function.getFunctionSchem(), function.getFunctionName(),
+                function.getFunctionCat(),
+                function.getFunctionSchem(),
+                function.getFunctionName(),
                 columnNamePattern
         );
     }
 
-    List<FunctionColumn> getFunctionColumns(final Function function)
-            throws SQLException {
-        Objects.requireNonNull(function, "function is null");
-        return getFunctionColumns(
-                function.getFunctionCat(), function.getFunctionSchem(), function.getFunctionName(),
-                "%"
-        );
-    }
-
-    // ------------------------------------------------------------------------- getImportedKeys(catalog, schema, table)
+    // ------------------------------------------------------------------------------------------------- getImportedKeys
 
     /**
      * Invokes {@link DatabaseMetaData#getImportedKeys(String, String, String)} method with given arguments, and accepts
@@ -1001,12 +1071,15 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getIndexInfo(
-                table.getTableCat(), table.getTableSchem(), table.getTableName(),
-                unique, approximate
+                table.getTableCat(),
+                table.getTableSchem(),
+                table.getTableName(),
+                unique,
+                approximate
         );
     }
 
-    // -------------------------------------------------------------------------- getPrimaryKeys(catalog, schema, table)
+    // -------------------------------------------------------------------------------------------------- getPrimaryKeys
 
     /**
      * Invokes {@link DatabaseMetaData#getPrimaryKeys(String, String, String) getPrimaryKeys(catalog, schema, table)}
@@ -1059,7 +1132,9 @@ public class Context {
                                            final String table)
             throws SQLException {
         return getPrimaryKeysAndAddAll(
-                catalog, schema, table,
+                catalog,
+                schema,
+                table,
                 new ArrayList<>()
         );
     }
@@ -1067,7 +1142,9 @@ public class Context {
     List<PrimaryKey> getPrimaryKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPrimaryKeys(
-                table.getTableCat(), table.getTableSchem(), table.getTableName()
+                table.getTableCat(),
+                table.getTableSchem(),
+                table.getTableName()
         );
     }
 
@@ -1573,6 +1650,16 @@ public class Context {
         );
     }
 
+    List<SuperType> getSuperTypes(final Catalog catalog, final String schemaPattern, final String typeNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(catalog, "catalog is null");
+        return getSuperTypes(
+                catalog.getTableCat(),
+                schemaPattern,
+                typeNamePattern
+        );
+    }
+
     List<SuperType> getSuperTypes(final Schema schema, final String typeNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
@@ -1825,8 +1912,8 @@ public class Context {
      * @see Catalog#getTableCat()
      * @see #getTables(String, String, String, String[])
      */
-    List<Table> getTables(final Catalog catalog, final String schemaPattern,
-                          final String tableNamePattern, final String[] types)
+    List<Table> getTablesOf(final Catalog catalog, final String schemaPattern,
+                            final String tableNamePattern, final String[] types)
             throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
         return getTables(
@@ -1837,8 +1924,8 @@ public class Context {
         );
     }
 
-    List<Table> getTables(@Nullable final Schema schema, final String tableNamePattern,
-                          @Nullable final String[] types)
+    List<Table> getTablesOf(@Nullable final Schema schema, final String tableNamePattern,
+                            @Nullable final String[] types)
             throws SQLException {
         return getTables(
                 schema.getTableCatalog(),
@@ -2045,16 +2132,14 @@ public class Context {
     }
 
     /**
-     * Invokes {@link #getVersionColumns(String, String, String)} method with specified table's
-     * {@link Table#getTableCat() tableCat}, {@link Table#getTableSchem() tableSchem}, and
-     * {@link Table#getTableName() tableName}, and returns the result.
+     * Retrieves a description of the specified table's columns that are automatically updated when any value in a row
+     * is updated.
      *
-     * @param table the table.
+     * @param table the table whose version columns are retrieved.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      * @see #getVersionColumns(String, String, String)
      */
-
     List<VersionColumn> getVersionColumns(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getVersionColumns(
