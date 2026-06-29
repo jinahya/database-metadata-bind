@@ -135,6 +135,9 @@ public final class ContextUtils {
                 () -> String.format("failed to set; label: %s, value: %s (%s), field: %s",
                                     label, value, value.getClass().getName(), field)
         );
+        if (true) {
+            throw new RuntimeException("failed to set " + value + " for " + field);
+        }
     }
 
     public static <T> Comparator<T> nullOrdered(final Context context, final Comparator<? super T> comparator)

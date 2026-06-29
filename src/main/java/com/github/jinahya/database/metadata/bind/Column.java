@@ -364,7 +364,7 @@ public class Column
         }
         final var that = (Column) obj;
         return Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableName) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
                Objects.equals(tableName, that.tableName) &&
                Objects.equals(columnName, that.columnName);
     }

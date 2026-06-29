@@ -50,9 +50,10 @@
     <version.com.oracle.ojdbc>23.3.0.23.09</version.com.oracle.ojdbc>
     <version.com.google.errorprone>2.45.0</version.com.google.errorprone>
     <version.com.uber.nullaway>0.12.15</version.com.uber.nullaway>
-    <version.lombok>1.18.42</version.lombok>
+    <version.lombok>1.18.46</version.lombok>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
-    <version.maven-surefire>3.5.4</version.maven-surefire>
+    <!-- https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-surefire-plugin/versions -->
+    <version.maven-surefire>3.5.6</version.maven-surefire>
     <!-- https://central.sonatype.com/artifact/com.mysql/mysql-connector-j/versions -->
     <!--    <version.mysql-connector-j>8.3.0</version.mysql-connector-j>-->
     <version.mysql-connector-j>9.5.0</version.mysql-connector-j>
@@ -63,8 +64,6 @@
     <!--    <version.org.apache.derby>10.16.1.1</version.org.apache.derby>-->
     <version.org.apache.derby>10.17.1.0</version.org.apache.derby>
     <version.org.hibernate.validator>8.0.1.Final</version.org.hibernate.validator>
-    <version.org.junit.jupiter>5.13.0</version.org.junit.jupiter>
-    <version.org.mockito>5.21.0</version.org.mockito>
   </properties>
 
   <dependencyManagement>
@@ -73,7 +72,7 @@
         <groupId>com.fasterxml.jackson</groupId>
         <artifactId>jackson-bom</artifactId>
         <!-- https://central.sonatype.com/artifact/com.fasterxml.jackson/jackson-bom/versions -->
-        <version>2.21.0</version>
+        <version>2.22.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -102,14 +101,15 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>6.0.2</version>
+        <!-- https://central.sonatype.com/artifact/org.junit/junit-bom/versions -->
+        <version>6.1.1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-bom</artifactId>
-        <version>5.21.0</version>
+        <version>5.23.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -121,7 +121,7 @@
       <artifactId>logback-classic</artifactId>
       <!-- https://central.sonatype.com/artifact/ch.qos.logback/logback-classic/versions -->
       <!-- https://central.sonatype.com/artifact/ch.qos.logback/logback-parent/versions -->
-      <version>1.5.27</version>
+      <version>1.5.37</version>
       <!-- slf4j.version: 2.0.17 -->
       <scope>test</scope>
     </dependency>
@@ -139,7 +139,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>33.5.0-jre</version>
+      <version>33.6.0-jre</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -152,7 +152,7 @@
     <dependency>
       <groupId>io.vavr</groupId>
       <artifactId>vavr</artifactId>
-      <version>1.0.0-alpha-4</version>
+      <version>1.0.1</version>
       <scope>test</scope>
     </dependency>
     <!--    <dependency>-->
@@ -168,7 +168,7 @@
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier-nodep</artifactId>
-      <version>4.3.1</version>
+      <version>4.5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -251,7 +251,7 @@
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
       <!--      <version>3.49.1.0</version>-->
-      <version>3.51.1.0</version>
+      <version>3.53.2.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -333,7 +333,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.14</version>
+          <version>0.8.15</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -379,7 +379,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.6.2</version>
+        <version>3.6.3</version>
         <executions>
           <execution>
             <id>enforce-dependency-convergence</id>
