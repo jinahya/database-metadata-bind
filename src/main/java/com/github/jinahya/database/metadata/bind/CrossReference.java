@@ -303,7 +303,8 @@ public class CrossReference
                Objects.equals(pktableSchem, that.pktableSchem) &&
                Objects.equals(pktableName, that.pktableName) &&
                Objects.equals(pkcolumnName, that.pkcolumnName) &&
-               Objects.equals(keySeq, that.keySeq);
+               Objects.equals(keySeq, that.keySeq) &&
+               Objects.equals(fkName, that.fkName);
     }
 
     @Override
@@ -318,7 +319,8 @@ public class CrossReference
                 pktableSchem,
                 pktableName,
                 pkcolumnName,
-                keySeq
+                keySeq,
+                fkName
         );
     }
 

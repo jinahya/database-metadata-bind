@@ -37,7 +37,8 @@ class FunctionColumnTest
     @Override
     SingleTypeEqualsVerifierApi<FunctionColumn> equalsVerifier() {
         return super.equalsVerifier()
-                .withOnlyTheseFields("functionCat", "functionSchem", "functionName", "columnName", "ordinalPosition");
+                .withOnlyTheseFields("functionCat", "functionSchem", "functionName", "columnName", "ordinalPosition",
+                                     "specificName");
     }
 
     @Override

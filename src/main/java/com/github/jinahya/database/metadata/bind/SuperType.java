@@ -99,12 +99,14 @@ public class SuperType
         return Objects.equals(typeCat, that.typeCat) &&
                Objects.equals(typeSchem, that.typeSchem) &&
                Objects.equals(typeName, that.typeName) &&
+               Objects.equals(supertypeCat, that.supertypeCat) &&
+               Objects.equals(supertypeSchem, that.supertypeSchem) &&
                Objects.equals(supertypeName, that.supertypeName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, supertypeName);
+        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, supertypeCat, supertypeSchem, supertypeName);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat

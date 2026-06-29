@@ -45,7 +45,7 @@ abstract class PortedKeyTest<T extends PortedKey>
                 .withOnlyTheseFields(
                         "pktableCat", "pktableSchem", "pktableName", "pkcolumnName",
                         "fktableCat", "fktableSchem", "fktableName", "fkcolumnName",
-                        "keySeq"
+                        "keySeq", "fkName"
                 );
     }
 }

@@ -311,12 +311,21 @@ public class ProcedureColumn
                Objects.equals(procedureSchem, that.procedureSchem) &&
                Objects.equals(procedureName, that.procedureName) &&
                Objects.equals(columnName, that.columnName) &&
-               Objects.equals(ordinalPosition, that.ordinalPosition);
+               Objects.equals(ordinalPosition, that.ordinalPosition) &&
+               Objects.equals(specificName, that.specificName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), procedureCat, procedureSchem, procedureName, columnName, ordinalPosition);
+        return Objects.hash(
+                super.hashCode(),
+                procedureCat,
+                procedureSchem,
+                procedureName,
+                columnName,
+                ordinalPosition,
+                specificName
+        );
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat

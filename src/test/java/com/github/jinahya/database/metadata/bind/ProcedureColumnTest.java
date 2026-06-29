@@ -40,7 +40,7 @@ class ProcedureColumnTest
     SingleTypeEqualsVerifierApi<ProcedureColumn> equalsVerifier() {
         return super.equalsVerifier()
                 .withOnlyTheseFields("procedureCat", "procedureSchem", "procedureName", "columnName",
-                                     "ordinalPosition");
+                                     "ordinalPosition", "specificName");
     }
 
     // -----------------------------------------------------------------------------------------------------------------

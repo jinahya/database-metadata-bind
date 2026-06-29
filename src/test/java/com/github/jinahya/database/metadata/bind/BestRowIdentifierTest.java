@@ -46,6 +46,6 @@ class BestRowIdentifierTest
     @Override
     SingleTypeEqualsVerifierApi<BestRowIdentifier> equalsVerifier() {
         return super.equalsVerifier()
-                .withOnlyTheseFields("columnName");
+                .withOnlyTheseFields("scope", "columnName");
     }
 }

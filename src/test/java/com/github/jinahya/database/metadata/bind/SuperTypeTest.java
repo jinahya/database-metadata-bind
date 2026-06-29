@@ -38,6 +38,7 @@ class SuperTypeTest
     @Override
     SingleTypeEqualsVerifierApi<SuperType> equalsVerifier() {
         return super.equalsVerifier()
-                .withOnlyTheseFields("typeCat", "typeSchem", "typeName", "supertypeName");
+                .withOnlyTheseFields("typeCat", "typeSchem", "typeName", "supertypeCat", "supertypeSchem",
+                                     "supertypeName");
     }
 }

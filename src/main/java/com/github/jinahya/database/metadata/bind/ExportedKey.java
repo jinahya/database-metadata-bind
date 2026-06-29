@@ -106,7 +106,8 @@ public class ExportedKey
                Objects.equals(pktableSchem, that.pktableSchem) &&
                Objects.equals(pktableName, that.pktableName) &&
                Objects.equals(pkcolumnName, that.pkcolumnName) &&
-               Objects.equals(keySeq, that.keySeq);
+               Objects.equals(keySeq, that.keySeq) &&
+               Objects.equals(getFkName(), that.getFkName());
     }
 
     @Override
@@ -120,7 +121,8 @@ public class ExportedKey
                 pktableSchem,
                 pktableName,
                 pkcolumnName,
-                keySeq
+                keySeq,
+                getFkName()
         );
     }
 }

@@ -216,12 +216,21 @@ public class FunctionColumn
                Objects.equals(functionSchem, that.functionSchem) &&
                Objects.equals(functionName, that.functionName) &&
                Objects.equals(columnName, that.columnName) &&
-               Objects.equals(ordinalPosition, that.ordinalPosition);
+               Objects.equals(ordinalPosition, that.ordinalPosition) &&
+               Objects.equals(specificName, that.specificName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), functionCat, functionSchem, functionName, columnName, ordinalPosition);
+        return Objects.hash(
+                super.hashCode(),
+                functionCat,
+                functionSchem,
+                functionName,
+                columnName,
+                ordinalPosition,
+                specificName
+        );
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat

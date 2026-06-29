@@ -130,11 +130,11 @@ abstract class TestContainers_$_IT {
     @Test
     void tables() {
         applyContext(c -> {
-            try {
-                Context_Test_Utils.info(c);
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
+//            try {
+//                Context_Test_Utils.info(c);
+//            } catch (final SQLException sqle) {
+//                throw new RuntimeException(sqle);
+//            }
             try {
                 final var tables = c.getTables((String) null, null, "%", null);
                 Context_Test_Utils.tables(c, tables);

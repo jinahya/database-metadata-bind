@@ -158,12 +158,13 @@ public class BestRowIdentifier
             return false;
         }
         final var that = (BestRowIdentifier) obj;
-        return Objects.equals(columnName, that.columnName);
+        return Objects.equals(scope, that.scope) &&
+               Objects.equals(columnName, that.columnName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), columnName);
+        return Objects.hash(super.hashCode(), scope, columnName);
     }
 
     // ----------------------------------------------------------------------------------------------------------- scope

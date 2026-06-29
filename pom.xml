@@ -580,7 +580,7 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers-bom</artifactId>
             <!-- https://central.sonatype.com/artifact/org.testcontainers/testcontainers-bom/versions -->
-            <version>2.0.3</version>
+            <version>2.0.5</version>
             <type>pom</type>
             <scope>import</scope>
           </dependency>
@@ -595,8 +595,10 @@
         <dependency><!-- https://search.maven.org/search?q=a:mssql-jdbc -->
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
+          <!-- https://central.sonatype.com/artifact/com.microsoft.sqlserver/mssql-jdbc/versions -->
           <!--          <version>11.2.3.jre17</version>-->
-          <version>12.6.1.jre11</version>
+<!--          <version>12.6.1.jre11</version>-->
+          <version>13.4.0.jre11</version>
           <scope>test</scope>
         </dependency>
         <dependency>

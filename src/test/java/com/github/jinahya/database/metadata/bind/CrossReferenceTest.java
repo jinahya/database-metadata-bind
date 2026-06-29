@@ -42,7 +42,7 @@ class CrossReferenceTest
                 .withOnlyTheseFields(
                         "fktableCat", "fktableSchem", "fktableName", "fkcolumnName",
                         "pktableCat", "pktableSchem", "pktableName", "pkcolumnName",
-                        "keySeq"
+                        "keySeq", "fkName"
                 );
     }
 }

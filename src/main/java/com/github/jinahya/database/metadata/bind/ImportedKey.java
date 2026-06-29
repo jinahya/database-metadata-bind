@@ -84,7 +84,8 @@ public class ImportedKey
                Objects.equals(fktableSchem, that.fktableSchem) &&
                Objects.equals(fktableName, that.fktableName) &&
                Objects.equals(fkcolumnName, that.fkcolumnName) &&
-               Objects.equals(keySeq, that.keySeq);
+               Objects.equals(keySeq, that.keySeq) &&
+               Objects.equals(getFkName(), that.getFkName());
     }
 
     @Override
@@ -98,7 +99,8 @@ public class ImportedKey
                 fktableSchem,
                 fktableName,
                 fkcolumnName,
-                keySeq
+                keySeq,
+                getFkName()
         );
     }
 }
