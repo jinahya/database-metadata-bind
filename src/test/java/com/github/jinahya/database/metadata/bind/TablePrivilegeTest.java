@@ -20,23 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
-
 class TablePrivilegeTest
         extends AbstractMetadataType_Test<TablePrivilege> {
 
     TablePrivilegeTest() {
         super(TablePrivilege.class);
-    }
-
-    @Override
-    void equals__() {
-        super.equals__();
-    }
-
-    @Override
-    SingleTypeEqualsVerifierApi<TablePrivilege> equalsVerifier() {
-        return super.equalsVerifier()
-                .withOnlyTheseFields("tableCat", "tableSchem", "tableName", "grantee", "privilege");
     }
 }

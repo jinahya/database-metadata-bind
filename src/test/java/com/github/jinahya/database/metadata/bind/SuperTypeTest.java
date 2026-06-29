@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
-
 class SuperTypeTest
         extends AbstractMetadataType_Test<SuperType> {
 
@@ -30,15 +28,4 @@ class SuperTypeTest
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    void equals__() {
-        super.equals__();
-    }
-
-    @Override
-    SingleTypeEqualsVerifierApi<SuperType> equalsVerifier() {
-        return super.equalsVerifier()
-                .withOnlyTheseFields("typeCat", "typeSchem", "typeName", "supertypeCat", "supertypeSchem",
-                                     "supertypeName");
-    }
 }

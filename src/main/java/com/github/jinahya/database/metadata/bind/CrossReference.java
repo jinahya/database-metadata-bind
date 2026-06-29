@@ -1,9 +1,28 @@
 package com.github.jinahya.database.metadata.bind;
 
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -43,7 +62,7 @@ public class CrossReference
                 .<CrossReference, String>comparing(v -> operator.apply(v.getFktableCat()), comparator)
                 .thenComparing(v -> operator.apply(v.getFktableSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getFktableName()), comparator)
-                .thenComparing(CrossReference::getKeySeq, Comparator.naturalOrder());
+                .thenComparing(CrossReference::getKeySeq, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     // ----------------------------------------------------------------------------------------------------- PKTABLE_CAT
@@ -281,47 +300,6 @@ public class CrossReference
                ",pkName=" + pkName +
                ",deferrability=" + deferrability +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (CrossReference) obj;
-        return Objects.equals(fktableCat, that.fktableCat) &&
-               Objects.equals(fktableSchem, that.fktableSchem) &&
-               Objects.equals(fktableName, that.fktableName) &&
-               Objects.equals(fkcolumnName, that.fkcolumnName) &&
-               Objects.equals(pktableCat, that.pktableCat) &&
-               Objects.equals(pktableSchem, that.pktableSchem) &&
-               Objects.equals(pktableName, that.pktableName) &&
-               Objects.equals(pkcolumnName, that.pkcolumnName) &&
-               Objects.equals(keySeq, that.keySeq) &&
-               Objects.equals(fkName, that.fkName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                super.hashCode(),
-                fktableCat,
-                fktableSchem,
-                fktableName,
-                fkcolumnName,
-                pktableCat,
-                pktableSchem,
-                pktableName,
-                pkcolumnName,
-                keySeq,
-                fkName
-        );
     }
 
     // ----------------------------------------------------------------------------------------------------- pktableCat

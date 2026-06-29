@@ -1,9 +1,28 @@
 package com.github.jinahya.database.metadata.bind;
 
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -31,8 +50,7 @@ abstract class PortedKey
                 .<T, String>comparing(v -> operator.apply(v.getPktableCat()), comparator)
                 .thenComparing(v -> operator.apply(v.getPktableSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getPktableName()), comparator)
-                .thenComparing(v -> operator.apply(v.getPkName()), comparator)
-                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
+                .thenComparing(PortedKey::getKeySeq, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     static <T extends PortedKey> Comparator<T> comparingFk(final UnaryOperator<String> operator,
@@ -43,37 +61,8 @@ abstract class PortedKey
                 .<T, String>comparing(v -> operator.apply(v.getFktableCat()), comparator)
                 .thenComparing(v -> operator.apply(v.getFktableSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getFktableName()), comparator)
-                .thenComparing(v -> operator.apply(v.getFkName()), comparator)
-                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
+                .thenComparing(PortedKey::getKeySeq, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
-
-//    static <T extends PortedKey> Comparator<T> comparingPktable(final Context context,
-//                                                                final Comparator<? super String> comparator)
-//            throws SQLException {
-//        Objects.requireNonNull(context, "context is null");
-//        Objects.requireNonNull(comparator, "comparator is null");
-//        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-//        return Comparator
-//                .<T, String>comparing(PortedKey::getPktableCat, nullSafe)   // nullable
-//                .thenComparing(PortedKey::getPktableSchem, nullSafe)        // nullable
-//                .thenComparing(PortedKey::getPktableName, comparator)       // NOT nullable
-//                .thenComparing(PortedKey::getPkName, nullSafe)              // nullable
-//                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder()); // NOT nullable
-//    }
-//
-//    static <T extends PortedKey> Comparator<T> comparingFktable(final Context context,
-//                                                                final Comparator<? super String> comparator)
-//            throws SQLException {
-//        Objects.requireNonNull(context, "context is null");
-//        Objects.requireNonNull(comparator, "comparator is null");
-//        final var nullSafe = ContextUtils.nullOrdered(context, comparator);
-//        return Comparator
-//                .<T, String>comparing(PortedKey::getFktableCat, nullSafe)   // nullable
-//                .thenComparing(PortedKey::getFktableSchem, nullSafe)        // nullable
-//                .thenComparing(PortedKey::getFktableName, comparator)       // NOT nullable
-//                .thenComparing(PortedKey::getFkName, nullSafe)              // nullable
-//                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder()); // NOT nullable
-//    }
 
     // ----------------------------------------------------------------------------------------------------- PKTABLE_CAT
 

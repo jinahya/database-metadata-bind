@@ -21,8 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
 import org.apache.commons.text.CaseUtils;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DisplayName;
@@ -62,7 +60,7 @@ abstract class MetadataType_Test<T extends MetadataType> {
         MetadataType_Test_Utils.verify(newTypeInstance());
     }
 
-//    // -----------------------------------------------------------------------------------------------------------------
+    //    // -----------------------------------------------------------------------------------------------------------------
 //    @DisplayName("toString()!blank")
 //    @Test
 //    void toString_NotBlank_() {
@@ -73,22 +71,6 @@ abstract class MetadataType_Test<T extends MetadataType> {
 //        // -------------------------------------------------------------------------------------------------------- then
 //        assertThat(string).isNotBlank();
 //    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @DisplayName("equals/hashCode")
-    @Test
-    void equals__() {
-        equalsVerifier().verify();
-    }
-
-    SingleTypeEqualsVerifierApi<T> equalsVerifier() {
-        return EqualsVerifier
-                .simple()
-                .forClass(typeClass)
-                .withIgnoredFields("unmappedColumns")
-                ;
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     @Nested
     class FieldTest {

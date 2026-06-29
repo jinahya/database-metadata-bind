@@ -100,26 +100,6 @@ public class Catalog
                '}';
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (Catalog) obj;
-        return Objects.equals(tableCat, that.tableCat);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableCat);
-    }
-
     // ---------------------------------------------------------------------------------------------- Jakarta-Validation
 
     // -------------------------------------------------------------------------------------------------------- tableCat

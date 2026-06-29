@@ -1,5 +1,25 @@
 package com.github.jinahya.database.metadata.bind;
 
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
@@ -142,29 +162,6 @@ public class Procedure
                ",procedureType=" + procedureType +
                ",specificName=" + specificName +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (Procedure) obj;
-        return Objects.equals(procedureCat, that.procedureCat) &&
-               Objects.equals(procedureSchem, that.procedureSchem) &&
-               Objects.equals(procedureName, that.procedureName) &&
-               Objects.equals(specificName, that.specificName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), procedureCat, procedureSchem, procedureName, specificName);
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat

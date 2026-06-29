@@ -66,7 +66,7 @@ public class Attribute
                 .<Attribute, String>comparing(v -> operator.apply(v.getTypeCat()), comparator)
                 .thenComparing(v -> operator.apply(v.getTypeSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getTypeName()), comparator)
-                .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder());
+                .thenComparing(Attribute::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
@@ -251,29 +251,6 @@ public class Attribute
                ",scopeTable=" + scopeTable +
                ",sourceDataType=" + sourceDataType +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (Attribute) obj;
-        return Objects.equals(typeCat, that.typeCat) &&
-               Objects.equals(typeSchem, that.typeSchem) &&
-               Objects.equals(typeName, that.typeName) &&
-               Objects.equals(attrName, that.attrName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, attrName);
     }
 
     // ---------------------------------------------------------------------------------------------- Jakarta-Validation

@@ -1,5 +1,25 @@
 package com.github.jinahya.database.metadata.bind;
 
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Positive;
 import org.jspecify.annotations.Nullable;
@@ -45,7 +65,7 @@ public class Column
                 .<Column, String>comparing(v -> operator.apply(v.getTableCat()), comparator)
                 .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getTableName()), comparator)
-                .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder());
+                .thenComparing(Column::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -349,35 +369,6 @@ public class Column
                ",isAutoincrement=" + isAutoincrement +
                ",isGeneratedcolumn=" + isGeneratedcolumn +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (Column) obj;
-        return Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableSchem) &&
-               Objects.equals(tableName, that.tableName) &&
-               Objects.equals(columnName, that.columnName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                super.hashCode(),
-                tableCat,
-                tableSchem,
-                tableName,
-                columnName
-        );
     }
 
     // ------------------------------------------------------------------------------------------------ Jakarta-Validation

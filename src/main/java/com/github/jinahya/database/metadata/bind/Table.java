@@ -54,6 +54,19 @@ public class Table
     private static final long serialVersionUID = 6590036695540141125L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>TABLE_TYPE</code>, <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, and
+     * <code>TABLE_NAME</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
     static Comparator<Table> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                        final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
@@ -189,28 +202,6 @@ public class Table
                ",selfReferencingColName=" + selfReferencingColName +
                ",refGeneration=" + refGeneration +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (Table) obj;
-        return Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableSchem) &&
-               Objects.equals(tableName, that.tableName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName);
     }
     // -------------------------------------------------------------------------------------------------------- tableCat
 

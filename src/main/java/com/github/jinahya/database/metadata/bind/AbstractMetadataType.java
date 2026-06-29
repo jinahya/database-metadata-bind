@@ -24,7 +24,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * An abstract class for implementing {@link MetadataType}.
@@ -55,22 +54,6 @@ abstract class AbstractMetadataType
         return super.toString() + '{' +
                "unknownColumns=" + unknownColumns +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getClass());
     }
 
     // -------------------------------------------------------------------------------------------------- unknownColumns

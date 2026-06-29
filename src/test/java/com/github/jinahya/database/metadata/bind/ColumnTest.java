@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
-
 class ColumnTest
         extends AbstractMetadataType_Test<Column> {
 
@@ -30,16 +28,6 @@ class ColumnTest
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    void equals__() {
-        super.equals__();
-    }
-
-    @Override
-    SingleTypeEqualsVerifierApi<Column> equalsVerifier() {
-        return super.equalsVerifier()
-                .withOnlyTheseFields("tableCat", "tableSchem", "tableName", "columnName");
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override

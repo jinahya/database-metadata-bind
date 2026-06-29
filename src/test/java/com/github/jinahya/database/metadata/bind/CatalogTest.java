@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
-
 class CatalogTest
         extends AbstractMetadataType_Test<Catalog> {
 
@@ -30,14 +28,4 @@ class CatalogTest
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    void equals__() {
-        super.equals__();
-    }
-
-    @Override
-    SingleTypeEqualsVerifierApi<Catalog> equalsVerifier() {
-        return super.equalsVerifier()
-                .withOnlyTheseFields("tableCat");
-    }
 }

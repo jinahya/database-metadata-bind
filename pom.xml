@@ -226,6 +226,7 @@
     <dependency>
       <groupId>org.jspecify</groupId>
       <artifactId>jspecify</artifactId>
+      <!-- https://central.sonatype.com/artifact/org.jspecify/jspecify/versions -->
       <version>1.0.0</version>
       <!-- https://jspecify.dev/docs/using/ -->
       <!-- they're saying: Avoid using provided or optional scope. -->

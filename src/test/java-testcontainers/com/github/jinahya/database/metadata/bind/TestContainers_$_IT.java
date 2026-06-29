@@ -111,6 +111,23 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
+    void comparingInSpecifiedOrder() {
+        applyConnection(c -> {
+            try (var statement = c.createStatement()) {
+                Context_ComparingInSpecifiedOrder_Test_Utils.preparePortedKeyTables(statement);
+                Context_ComparingInSpecifiedOrder_Test_Utils.assertPortedKeysInSpecifiedOrder(Context.newInstance(c));
+            } catch (final SQLException sqle) {
+                if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
+                    log.error("not supported", sqlfnse);
+                    return null;
+                }
+                throw new RuntimeException(sqle);
+            }
+            return null;
+        });
+    }
+
+    @Test
     void schemas() {
         applyContext(c -> {
             try {

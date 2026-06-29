@@ -1,5 +1,25 @@
 package com.github.jinahya.database.metadata.bind;
 
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
@@ -25,8 +45,8 @@ public class FunctionColumn
     /**
      * Returns a comparator comparing values in the specified order.
      * <blockquote>
-     * They are ordered by <code>FUNCTION_CAT</code>, <code>FUNCTION_SCHEM</code>, <code>FUNCTION_NAME</code>, and
-     * <code>SPECIFIC_NAME</code>.
+     * They are ordered by <code>FUNCTION_CAT</code>, <code>FUNCTION_SCHEM</code>, <code>FUNCTION_NAME</code>,
+     * <code>SPECIFIC_NAME</code>, and <code>ORDINAL_POSITION</code>.
      * </blockquote>
      *
      * @param operator   a null-safe unary operator for adjusting string values.
@@ -42,7 +62,8 @@ public class FunctionColumn
                 .<FunctionColumn, String>comparing(v -> operator.apply(v.getFunctionCat()), comparator)
                 .thenComparing(v -> operator.apply(v.getFunctionSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getFunctionName()), comparator)
-                .thenComparing(v -> operator.apply(v.getSpecificName()), comparator);
+                .thenComparing(v -> operator.apply(v.getSpecificName()), comparator)
+                .thenComparing(FunctionColumn::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     // ---------------------------------------------------------------------------------------------------- FUNCTION_CAT
@@ -198,39 +219,6 @@ public class FunctionColumn
                ",isNullable=" + isNullable +
                ",specificName=" + specificName +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (FunctionColumn) obj;
-        return Objects.equals(functionCat, that.functionCat) &&
-               Objects.equals(functionSchem, that.functionSchem) &&
-               Objects.equals(functionName, that.functionName) &&
-               Objects.equals(columnName, that.columnName) &&
-               Objects.equals(ordinalPosition, that.ordinalPosition) &&
-               Objects.equals(specificName, that.specificName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                super.hashCode(),
-                functionCat,
-                functionSchem,
-                functionName,
-                columnName,
-                ordinalPosition,
-                specificName
-        );
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat

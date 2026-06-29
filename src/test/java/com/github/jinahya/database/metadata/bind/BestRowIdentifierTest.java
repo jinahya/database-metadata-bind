@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
 
 /**
  * A class for testing {@link BestRowIdentifier} class.
@@ -37,15 +36,4 @@ class BestRowIdentifierTest
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    void equals__() {
-        super.equals__();
-    }
-
-    @Override
-    SingleTypeEqualsVerifierApi<BestRowIdentifier> equalsVerifier() {
-        return super.equalsVerifier()
-                .withOnlyTheseFields("scope", "columnName");
-    }
 }

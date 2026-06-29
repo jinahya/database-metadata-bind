@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
-
 class FunctionTest
         extends AbstractMetadataType_Test<Function> {
 
@@ -31,16 +29,6 @@ class FunctionTest
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    void equals__() {
-        super.equals__();
-    }
-
-    @Override
-    SingleTypeEqualsVerifierApi<Function> equalsVerifier() {
-        return super.equalsVerifier()
-                .withOnlyTheseFields("functionCat", "functionSchem", "functionName", "specificName");
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override

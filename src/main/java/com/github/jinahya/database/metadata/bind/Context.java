@@ -1699,14 +1699,17 @@ public class Context {
     }
 
     /**
-     * .
+     * Invokes {@link #getTables(String, String, String, String[])} method with the
+     * {@link Catalog#getTableCat() tableCat} of the specified catalog and given arguments, and returns a list of bound
+     * values.
      *
-     * @param catalog          .
-     * @param schemaPattern    .
-     * @param tableNamePattern .
-     * @param types            .
-     * @return .
-     * @throws SQLException if a database error occurs
+     * @param catalog          the catalog whose {@link Catalog#getTableCat() tableCat} is used for the {@code catalog}
+     *                         parameter; may be {@code null}.
+     * @param schemaPattern    a value for the {@code schemaPattern} parameter.
+     * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
+     * @param types            a value for the {@code types} parameter; may be {@code null}.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
      * @see Catalog#getTableCat()
      * @see #getTables(String, String, String, String[])
      */

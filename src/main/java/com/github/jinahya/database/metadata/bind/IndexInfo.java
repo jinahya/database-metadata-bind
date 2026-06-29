@@ -1,5 +1,25 @@
 package com.github.jinahya.database.metadata.bind;
 
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import jakarta.validation.constraints.AssertTrue;
 import org.jspecify.annotations.Nullable;
 
@@ -42,10 +62,10 @@ public class IndexInfo
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
-                .comparing(IndexInfo::getNonUnique, Comparator.naturalOrder())
-                .thenComparing(IndexInfo::getType, Comparator.naturalOrder())
+                .comparing(IndexInfo::getNonUnique, Comparator.nullsFirst(Comparator.naturalOrder()))
+                .thenComparing(IndexInfo::getType, Comparator.nullsFirst(Comparator.naturalOrder()))
                 .thenComparing(v -> operator.apply(v.getIndexName()), comparator)
-                .thenComparing(IndexInfo::getOrdinalPosition, Comparator.naturalOrder());
+                .thenComparing(IndexInfo::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -214,30 +234,6 @@ public class IndexInfo
                ",pages=" + pages +
                ",filterCondition=" + filterCondition +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (IndexInfo) obj;
-        return Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableSchem) &&
-               Objects.equals(tableName, that.tableName) &&
-               Objects.equals(indexName, that.indexName) &&
-               Objects.equals(ordinalPosition, that.ordinalPosition);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, indexName, ordinalPosition);
     }
 
     // ---------------------------------------------------------------------------------------------- Jakarta-Validation
@@ -514,7 +510,7 @@ public class IndexInfo
     }
 
     /**
-     * .
+     * Indicates whether this index column is sorted in <em>ascending</em> order.
      *
      * @return {@code true} if,  and only if, the current value of {@code ascOrDesc} property is equal to
      * {@value #COLUMN_VALUE_ASC_OR_DESC_A}; {@code false} otherwise.
@@ -526,7 +522,7 @@ public class IndexInfo
     }
 
     /**
-     * .
+     * Indicates whether this index column is sorted in <em>descending</em> order.
      *
      * @return {@code true} if, and only if, the current value of {@code ascOrDesc} property is equal to
      * {@value #COLUMN_VALUE_ASC_OR_DESC_D}; {@code false} otherwise.

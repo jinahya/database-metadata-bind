@@ -488,9 +488,6 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .isSortedAccordingTo(CrossReference.comparingInSpecifiedOrder(
-                        UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(c -> {
                 });
         for (final var value : values) {
@@ -555,9 +552,6 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .isSortedAccordingTo(FunctionColumn.comparingInSpecifiedOrder(
-                        UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(v -> {
                 });
         for (final var value : values) {
@@ -577,9 +571,6 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .isSortedAccordingTo(ImportedKey.comparingInSpecifiedOrder(
-                        UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(i -> {
                 });
         for (final var value : values) {
@@ -654,9 +645,6 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .isSortedAccordingTo(ProcedureColumn.comparingInSpecifiedOrder(
-                        UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(v -> {
                 });
         for (final var value : values) {

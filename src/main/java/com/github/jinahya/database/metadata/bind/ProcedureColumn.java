@@ -48,8 +48,8 @@ public class ProcedureColumn
     /**
      * Returns a comparator comparing values in the specified order.
      * <blockquote>
-     * They are ordered by <code>PROCEDURE_CAT</code>, <code>PROCEDURE_SCHEM</code>, <code>PROCEDURE_NAME</code> and
-     * <code>SPECIFIC_NAME</code>.
+     * They are ordered by <code>PROCEDURE_CAT</code>, <code>PROCEDURE_SCHEM</code>, <code>PROCEDURE_NAME</code>,
+     * <code>SPECIFIC_NAME</code>, and <code>ORDINAL_POSITION</code>.
      * </blockquote>
      *
      * @param operator   a null-safe unary operator for adjusting string values.
@@ -65,7 +65,8 @@ public class ProcedureColumn
                 .<ProcedureColumn, String>comparing(v -> operator.apply(v.getProcedureCat()), comparator)
                 .thenComparing(v -> operator.apply(v.getProcedureSchem()), comparator)
                 .thenComparing(v -> operator.apply(v.getProcedureName()), comparator)
-                .thenComparing(v -> operator.apply(v.getSpecificName()), comparator);
+                .thenComparing(v -> operator.apply(v.getSpecificName()), comparator)
+                .thenComparing(ProcedureColumn::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
@@ -293,39 +294,6 @@ public class ProcedureColumn
                ",isNullable=" + isNullable +
                ",specificName=" + specificName +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (ProcedureColumn) obj;
-        return Objects.equals(procedureCat, that.procedureCat) &&
-               Objects.equals(procedureSchem, that.procedureSchem) &&
-               Objects.equals(procedureName, that.procedureName) &&
-               Objects.equals(columnName, that.columnName) &&
-               Objects.equals(ordinalPosition, that.ordinalPosition) &&
-               Objects.equals(specificName, that.specificName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                super.hashCode(),
-                procedureCat,
-                procedureSchem,
-                procedureName,
-                columnName,
-                ordinalPosition,
-                specificName
-        );
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat

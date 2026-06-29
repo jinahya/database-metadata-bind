@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2021 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,20 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class IndexInfoTest
-        extends AbstractMetadataType_Test<IndexInfo> {
+import org.junit.jupiter.api.Test;
 
-    IndexInfoTest() {
-        super(IndexInfo.class);
+import java.sql.DriverManager;
+
+class Context_ComparingInSpecifiedOrder_Test {
+
+    @Test
+    void acceptEachEmitsValuesInSpecifiedOrder() throws Exception {
+        try (var connection = DriverManager.getConnection("jdbc:h2:mem:comparing;DB_CLOSE_DELAY=-1");
+             var statement = connection.createStatement()) {
+            Context_ComparingInSpecifiedOrder_Test_Utils.preparePortedKeyTables(statement);
+            Context_ComparingInSpecifiedOrder_Test_Utils.assertComparingInSpecifiedOrder(
+                    Context.newInstance(connection)
+            );
+        }
     }
 }

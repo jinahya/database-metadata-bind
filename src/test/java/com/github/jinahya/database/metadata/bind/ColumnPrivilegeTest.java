@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
-
 class ColumnPrivilegeTest
         extends AbstractMetadataType_Test<ColumnPrivilege> {
 
@@ -30,14 +28,4 @@ class ColumnPrivilegeTest
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    void equals__() {
-        super.equals__();
-    }
-
-    @Override
-    SingleTypeEqualsVerifierApi<ColumnPrivilege> equalsVerifier() {
-        return super.equalsVerifier()
-                .withOnlyTheseFields("tableCat", "tableSchem", "tableName", "columnName", "grantee", "privilege");
-    }
 }

@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
-
 class CrossReferenceTest
         extends AbstractMetadataType_Test<CrossReference> {
 
@@ -30,19 +28,4 @@ class CrossReferenceTest
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    void equals__() {
-        super.equals__();
-    }
-
-    @Override
-    SingleTypeEqualsVerifierApi<CrossReference> equalsVerifier() {
-        return super.equalsVerifier()
-                .withOnlyTheseFields(
-                        "fktableCat", "fktableSchem", "fktableName", "fkcolumnName",
-                        "pktableCat", "pktableSchem", "pktableName", "pkcolumnName",
-                        "keySeq", "fkName"
-                );
-    }
 }

@@ -22,7 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 /**
@@ -87,42 +86,5 @@ public class ExportedKey
                ",pkName=" + getPkName() +
                ",deferrability=" + getDeferrability() +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof ExportedKey)) {
-            return false;
-        }
-        final var that = (ExportedKey) obj;
-        return Objects.equals(fktableCat, that.fktableCat) &&
-               Objects.equals(fktableSchem, that.fktableSchem) &&
-               Objects.equals(fktableName, that.fktableName) &&
-               Objects.equals(fkcolumnName, that.fkcolumnName) &&
-               Objects.equals(pktableCat, that.pktableCat) &&
-               Objects.equals(pktableSchem, that.pktableSchem) &&
-               Objects.equals(pktableName, that.pktableName) &&
-               Objects.equals(pkcolumnName, that.pkcolumnName) &&
-               Objects.equals(keySeq, that.keySeq) &&
-               Objects.equals(getFkName(), that.getFkName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                fktableCat,
-                fktableSchem,
-                fktableName,
-                fkcolumnName,
-                pktableCat,
-                pktableSchem,
-                pktableName,
-                pkcolumnName,
-                keySeq,
-                getFkName()
-        );
     }
 }

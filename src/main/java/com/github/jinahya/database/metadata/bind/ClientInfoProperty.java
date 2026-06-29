@@ -37,6 +37,18 @@ public class ClientInfoProperty
     private static final long serialVersionUID = -2913230435651853254L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>NAME</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
     static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                                     final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
@@ -93,26 +105,6 @@ public class ClientInfoProperty
                ",defaultValue=" + defaultValue +
                ",description=" + description +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (ClientInfoProperty) obj;
-        return Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), name);
     }
 
     // ------------------------------------------------------------------------------------------------------------ name

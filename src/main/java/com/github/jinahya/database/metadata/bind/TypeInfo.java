@@ -1,11 +1,30 @@
 package com.github.jinahya.database.metadata.bind;
 
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getTypeInfo()} method.
@@ -22,8 +41,17 @@ public class TypeInfo
     private static final long serialVersionUID = -3964147654019495313L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>DATA_TYPE</code>.
+     * </blockquote>
+     *
+     * @return a comparator comparing values in the specified order.
+     */
     static Comparator<TypeInfo> comparingInSpecifiedOrder() {
-        return Comparator.comparing(TypeInfo::getDataType, Integer::compareTo);
+        return Comparator.comparing(TypeInfo::getDataType, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     // ------------------------------------------------------------------------------------------------------- TYPE_NAME
@@ -242,27 +270,6 @@ public class TypeInfo
                ",sqlDatetimeSub=" + sqlDatetimeSub +
                ",numPrecRadix=" + numPrecRadix +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (TypeInfo) obj;
-        return Objects.equals(typeName, that.typeName) &&
-               Objects.equals(dataType, that.dataType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), typeName, dataType);
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
