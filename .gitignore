@@ -31,3 +31,11 @@ tmp
 *.log
 *.sh
 
+
+.claude
+CLAUDE.md
+.codex
+AGENTS.md
+
+_*.asciidoc
+
