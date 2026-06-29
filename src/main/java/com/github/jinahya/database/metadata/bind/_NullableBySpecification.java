@@ -31,8 +31,8 @@ import java.lang.annotation.Target;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-@Documented
 @_Nullable
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 @interface _NullableBySpecification {

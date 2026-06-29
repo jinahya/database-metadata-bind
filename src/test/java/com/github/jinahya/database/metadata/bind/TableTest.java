@@ -20,11 +20,24 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
+
 class TableTest
         extends AbstractMetadataType_Test<Table> {
 
     TableTest() {
         super(Table.class);
+    }
+
+    @Override
+    void equals__() {
+        super.equals__();
+    }
+
+    @Override
+    SingleTypeEqualsVerifierApi<Table> equalsVerifier() {
+        return super.equalsVerifier()
+                .withOnlyTheseFields("tableCat", "tableSchem", "tableName");
     }
 
     @Override

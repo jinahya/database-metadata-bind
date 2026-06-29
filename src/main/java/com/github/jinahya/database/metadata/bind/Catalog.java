@@ -20,41 +20,50 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getCatalogs()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#acceptCatalogs(Consumer)
+ * @see Context#getCatalogsAndAcceptEach(Consumer)
  */
-
-@_ParentOf(Schema.class)
+@_ParentOf(TablePrivilege.class)
 @_ParentOf(Table.class)
+@_ParentOf(SuperType.class)
+@_ParentOf(SuperTable.class)
+@_ParentOf(Schema.class)
+@_ParentOf(Procedure.class)
+@_ChildOfNone
 public class Catalog
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Catalog> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return Comparator.comparing(Catalog::getTableCat, comparator);
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * The results are ordered by catalog name.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<Catalog> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                         final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator.comparing(v -> operator.apply(v.getTableCat()), comparator);
     }
 
-    static Comparator<Catalog> comparingInSpecifiedOrder(final Context context,
-                                                         final Comparator<? super String> comparator)
-            throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 
     /**
      * A column label of {@value}.
@@ -62,10 +71,16 @@ public class Catalog
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    /**
+     * Creates a new instance of the specified value of {@value #COLUMN_LABEL_TABLE_CAT} column value.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     * @return a new instance of {@code tableCat}.
+     */
     static Catalog of(final String tableCat) {
-        final Catalog instance = new Catalog();
-        instance.setTableCat(tableCat);
-        return instance;
+        return new Catalog()
+                .tableCat(tableCat);
     }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -73,12 +88,11 @@ public class Catalog
     /**
      * Creates a new instance.
      */
-    public Catalog() {
+    Catalog() {
         super();
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
-
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -88,13 +102,16 @@ public class Catalog
 
     @Override
     public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         if (!super.equals(obj)) {
             return false;
         }
-        final Catalog that = (Catalog) obj;
+        final var that = (Catalog) obj;
         return Objects.equals(tableCat, that.tableCat);
     }
 
@@ -103,30 +120,34 @@ public class Catalog
         return Objects.hash(super.hashCode(), tableCat);
     }
 
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+
     // -------------------------------------------------------------------------------------------------------- tableCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     public String getTableCat() {
         return tableCat;
     }
 
-    public void setTableCat(final String tableCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
+    }
+
+    Catalog tableCat(final String tableCat) {
+        setTableCat(tableCat);
+        return this;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<Schema> getSchemas() {
-        if (schemas == null) {
-            schemas = new ArrayList<>();
-        }
-        return schemas;
-    }
-
-    void setSchemas(final List<Schema> schemas) {
-        this.schemas = schemas;
-    }
-
-    private List<Schema> schemas;
 }

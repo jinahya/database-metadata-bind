@@ -20,19 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.jspecify.annotations.Nullable;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -42,37 +35,34 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTables(String, String, String, String[])
  */
-
-@_ChildOf(Catalog.class)
-@_ChildOf(Schema.class)
-@_ParentOf(Column.class)
-@_ParentOf(BestRowIdentifier.class)
-@_ParentOf(ColumnPrivilege.class)
-@_ParentOf(IndexInfo.class)
-@_ParentOf(PseudoColumn.class)
 @_ParentOf(VersionColumn.class)
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
+@_ParentOf(PseudoColumn.class)
+@_ParentOf(TablePrivilege.class)
+@_ParentOf(PrimaryKey.class)
+@_ParentOf(IndexInfo.class)
+@_ParentOf(ImportedKey.class)
+@_ParentOf(ExportedKey.class)
+@_ParentOf(CrossReference.class)
+@_ParentOf(Column.class)
+@_ParentOf(ColumnPrivilege.class)
+@_ParentOf(BestRowIdentifier.class)
+@_ChildOf(Schema.class)
+@_ChildOf(Catalog.class)
 public class Table
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Table> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    static Comparator<Table> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                       final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
-                .comparing(Table::getTableType, comparator)
-                .thenComparing(Table::getTableCat, comparator)
-                .thenComparing(Table::getTableSchem, comparator)
+                .<Table, String>comparing(v -> operator.apply(v.getTableType()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
                 .thenComparing(Table::getTableName, comparator);
-    }
-
-    static Comparator<Table> comparingInSpecifiedOrder(final Context context,
-                                                       final Comparator<? super String> comparator)
-            throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -104,36 +94,75 @@ public class Table
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
     // --------------------------------------------------------------------------------------------------------- REMARKS
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_REMARKS = "REMARKS";
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 
     // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
 
     // ------------------------------------------------------------------------------------------------------- TYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
     // --------------------------------------------------------------------------------------- SELF_REFERENCING_COL_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME";
 
     // -------------------------------------------------------------------------------------------------- REF_GENERATION
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_REF_GENERATION = "REF_GENERATION";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
     public static final String COLUMN_VALUE_REF_GENERATION_SYSTEM = "SYSTEM";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
     public static final String COLUMN_VALUE_REF_GENERATION_USER = "USER";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
     public static final String COLUMN_VALUE_REF_GENERATION_DERIVED = "DERIVED";
+
+    static final List<String> COLUMN_VALUES_REF_GENERATION = List.of(
+            COLUMN_VALUE_REF_GENERATION_SYSTEM,
+            COLUMN_VALUE_REF_GENERATION_USER,
+            COLUMN_VALUE_REF_GENERATION_DERIVED
+    );
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
     static Table of(final String tableCat, final String tableSchem, final String tableName) {
-        final var table = new Table();
-        table.setTableCat(tableCat);
-        table.setTableSchem(tableSchem);
-        table.setTableName(tableName);
-        return table;
+        final var instance = new Table();
+        instance.setTableCat(tableCat);
+        instance.setTableSchem(tableSchem);
+        instance.setTableName(tableName);
+        return instance;
     }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -141,7 +170,7 @@ public class Table
     /**
      * Creates a new instance.
      */
-    public Table() {
+    Table() {
         super();
     }
 
@@ -159,27 +188,30 @@ public class Table
                ",typeName=" + typeName +
                ",selfReferencingColName=" + selfReferencingColName +
                ",refGeneration=" + refGeneration +
-               ",tableCatalog_=" + tableCatalog_ +
-               ",tableSchema_=" + tableSchema_ +
-               ",typeCatalog_=" + typeCatalog_ +
-               ",typeSchema_=" + typeSchema_ +
                '}';
     }
 
-    public String getTableCatEffective() {
-        return Optional.ofNullable(getTableCat())
-                .map(String::strip)
-                .map(String::toUpperCase)
-                .orElse("");
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Table) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName);
     }
 
-    public String getTableSchemEffective() {
-        return Optional.ofNullable(getTableSchem())
-                .map(String::strip)
-                .map(String::toUpperCase)
-                .orElse("");
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName);
     }
-
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**
@@ -187,28 +219,38 @@ public class Table
      *
      * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-
+    @Nullable
     public String getTableCat() {
         return tableCat;
     }
 
-    public void setTableCat(final String tableCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
-    // ------------------------------------------------------------------------------------------------------- tableShem
+    // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
      * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      *
      * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-
+    @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
 
-    public void setTableSchem(final String tableSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -223,7 +265,12 @@ public class Table
         return tableName;
     }
 
-    public void setTableName(final String tableName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
@@ -238,65 +285,143 @@ public class Table
         return tableType;
     }
 
-    public void setTableType(final String tableType) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     *
+     * @param tableType the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     */
+    void setTableType(final String tableType) {
         this.tableType = tableType;
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
+    @Nullable
     public String getRemarks() {
         return remarks;
     }
 
-    public void setRemarks(final String remarks) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    @Nullable
     public String getTypeCat() {
         return typeCat;
     }
 
-    public void setTypeCat(final String typeCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
     // ------------------------------------------------------------------------------------------------------- typeSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    @Nullable
     public String getTypeSchem() {
         return typeSchem;
     }
 
-    public void setTypeSchem(final String typeSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    @Nullable
     public String getTypeName() {
         return typeName;
     }
 
-    public void setTypeName(String typeName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
     // --------------------------------------------------------------------------------------- selfReferencingColumnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
+     */
+    @Nullable
     public String getSelfReferencingColName() {
         return selfReferencingColName;
     }
 
-    public void setSelfReferencingColName(final String selfReferencingColName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
+     *
+     * @param selfReferencingColName the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
+     */
+    void setSelfReferencingColName(final String selfReferencingColName) {
         this.selfReferencingColName = selfReferencingColName;
     }
 
     // --------------------------------------------------------------------------------------------------- refGeneration
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
+    @Nullable
     public String getRefGeneration() {
         return refGeneration;
     }
 
-    public void setRefGeneration(final String refGeneration) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
+     *
+     * @param refGeneration the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
+    void setRefGeneration(final String refGeneration) {
         this.refGeneration = refGeneration;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
@@ -337,6 +462,7 @@ public class Table
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SELF_REFERENCING_COL_NAME)
@@ -346,214 +472,4 @@ public class Table
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REF_GENERATION)
     private String refGeneration;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Catalog tableCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Schema tableSchema_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Catalog typeCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Schema typeSchema_;
-
-    Catalog getTableCatalog_() {
-        if (tableCatalog_ == null) {
-            tableCatalog_ = Catalog.of(tableCat);
-        }
-        return tableCatalog_;
-    }
-
-    void setTableCatalog_(final Catalog tableCatalog_) {
-        this.tableCatalog_ = tableCatalog_;
-        setTableCat(
-                Optional.ofNullable(this.tableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getTableSchema_() {
-        if (tableSchema_ == null) {
-            tableSchema_ = Schema.of(getTableCatalog_(), tableSchem);
-        }
-        return tableSchema_;
-    }
-
-    void setTableSchema_(final Schema tableSchema_) {
-        this.tableSchema_ = tableSchema_;
-        setTableCatalog_(
-                Optional.ofNullable(this.tableSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
-    }
-
-    Catalog getTypeCatalog_() {
-        if (typeCatalog_ == null) {
-            typeCatalog_ = Catalog.of(typeCat);
-        }
-        return typeCatalog_;
-    }
-
-    void setTypeCatalog_(final Catalog typeCatalog_) {
-        this.typeCatalog_ = typeCatalog_;
-        setTypeCat(
-                Optional.ofNullable(this.typeCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getTypeSchema_() {
-        if (typeSchema_ == null) {
-            typeSchema_ = Schema.of(getTypeCatalog_(), typeSchem);
-        }
-        return typeSchema_;
-    }
-
-    void setTypeSchema_(final Schema typeSchema_) {
-        this.typeSchema_ = typeSchema_;
-        setTypeCatalog_(
-                Optional.ofNullable(this.typeSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
-    }
-
-    // ---------------------------------------------------------------------------------------------- bestRowIdentifiers
-    Map<Integer, Map<Boolean, List<@Valid @NotNull BestRowIdentifier>>> getBestRowIdentifiers() {
-        if (bestRowIdentifiers == null) {
-            bestRowIdentifiers = new HashMap<>();
-        }
-        return bestRowIdentifiers;
-    }
-
-    List<@Valid @NotNull BestRowIdentifier> getBestRowIdentifiers(final Context context, final String catalog,
-                                                                  final String schema, final String table,
-                                                                  final int scope, final boolean nullable)
-            throws SQLException {
-        context.acceptBestRowIdentifier(
-                catalog,
-                schema,
-                table,
-                scope,
-                nullable,
-                v -> {
-                    getBestRowIdentifiers()
-                            .computeIfAbsent(scope, k -> new HashMap<>())
-                            .computeIfAbsent(nullable, k -> new ArrayList<>())
-                            .add(v);
-                }
-        );
-        return getBestRowIdentifiers().get(scope).get(nullable);
-    }
-
-    private Map<@NotNull Integer, @NotNull Map<@NotNull Boolean, List<@Valid @NotNull BestRowIdentifier>>>
-            bestRowIdentifiers;
-
-    // ----------------------------------------------------------------------------------------------------- primaryKeys
-    List<PrimaryKey> getPrimaryKeys() {
-        if (primaryKeys == null) {
-            primaryKeys = new ArrayList<>();
-        }
-        return primaryKeys;
-    }
-
-    void setPrimaryKeys(final List<PrimaryKey> primaryKeys) {
-        this.primaryKeys = primaryKeys;
-    }
-
-    private List<@Valid @NotNull PrimaryKey> primaryKeys;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<ImportedKey> getImportedKeys() {
-        if (importedKeys == null) {
-            importedKeys = new ArrayList<>();
-        }
-        return importedKeys;
-    }
-
-    void setImportedKeys(final List<ImportedKey> importedKeys) {
-        this.importedKeys = importedKeys;
-    }
-
-    private List<@Valid @NotNull ImportedKey> importedKeys;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<ExportedKey> getExportedKeys() {
-        if (exportedKeys == null) {
-            exportedKeys = new ArrayList<>();
-        }
-        return exportedKeys;
-    }
-
-    void setExportedKeys(final List<ExportedKey> exportedKeys) {
-        this.exportedKeys = exportedKeys;
-    }
-
-    private List<@Valid @NotNull ExportedKey> exportedKeys;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<IndexInfo> getIndexInfo() {
-        if (indexInfo == null) {
-            indexInfo = new ArrayList<>();
-        }
-        return indexInfo;
-    }
-
-    void setIndexInfo(final List<IndexInfo> indexInfo) {
-        this.indexInfo = indexInfo;
-    }
-
-    private List<@Valid @NotNull IndexInfo> indexInfo;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<Column> getColumns() {
-        if (columns == null) {
-            columns = new ArrayList<>();
-        }
-        return columns;
-    }
-
-    void setColumns(final List<Column> columns) {
-        this.columns = columns;
-    }
-
-    private List<@Valid @NotNull Column> columns;
-
-    // ------------------------------------------------------------------------------------------------ columnPrivileges
-    List<ColumnPrivilege> getColumnPrivileges() {
-        if (columnPrivileges == null) {
-            columnPrivileges = new ArrayList<>();
-        }
-        return columnPrivileges;
-    }
-
-    void setColumnPrivileges(final List<ColumnPrivilege> columnPrivileges) {
-        this.columnPrivileges = columnPrivileges;
-    }
-
-    private List<@Valid @NotNull ColumnPrivilege> columnPrivileges;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<PseudoColumn> getPseudoColumns() {
-        if (pseudoColumns == null) {
-            pseudoColumns = new ArrayList<>();
-        }
-        return pseudoColumns;
-    }
-
-    void setPseudoColumns(final List<PseudoColumn> pseudoColumns) {
-        this.pseudoColumns = pseudoColumns;
-    }
-
-    private List<@Valid @NotNull PseudoColumn> pseudoColumns;
 }

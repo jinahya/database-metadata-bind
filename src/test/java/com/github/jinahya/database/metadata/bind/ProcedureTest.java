@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
 import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
@@ -31,6 +32,17 @@ class ProcedureTest
 
     ProcedureTest() {
         super(Procedure.class);
+    }
+
+    @Override
+    void equals__() {
+        super.equals__();
+    }
+
+    @Override
+    SingleTypeEqualsVerifierApi<Procedure> equalsVerifier() {
+        return super.equalsVerifier()
+                .withOnlyTheseFields("procedureCat", "procedureSchem", "procedureName", "specificName");
     }
 
     @Override

@@ -1,139 +1,211 @@
 package com.github.jinahya.database.metadata.bind;
 
-/*-
- * #%L
- * database-metadata-bind
- * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getTypeInfo()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTypeInfo()
+ * @see <a
+ * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html#getTypeInfo()">DatabaseMetaData#getTypeInfo</a>
  */
-
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true)
+@_ChildOfNone
 public class TypeInfo
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<TypeInfo> comparingInSpecifiedOrder(final Comparator<? super Integer> comparator) {
-        return Comparator
-                .comparing(TypeInfo::getDataType, comparator);
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    static Comparator<TypeInfo> comparingInSpecifiedOrder() {
+        return Comparator.comparing(TypeInfo::getDataType, Integer::compareTo);
     }
 
-    static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context,
-                                                          final Comparator<? super Integer> comparator)
-            throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- DATA_TYPE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- PRECISION
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PRECISION = "PRECISION";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- LITERAL_PREFIX
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_LITERAL_PREFIX = "LITERAL_PREFIX";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- LITERAL_SUFFIX
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_LITERAL_SUFFIX = "LITERAL_SUFFIX";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- CREATE_PARAMS
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_CREATE_PARAMS = "CREATE_PARAMS";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- NULLABLE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
+    /**
+     * A column value of {@link DatabaseMetaData#typeNoNulls}({@value DatabaseMetaData#typeNoNulls}) for the
+     * {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public static final int COLUMN_VALUE_NULLABLE_TYPE_NO_NULLS = DatabaseMetaData.typeNoNulls; // 0
 
+    /**
+     * A column value of {@link DatabaseMetaData#typeNullable}({@value DatabaseMetaData#typeNullable}) for the
+     * {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public static final int COLUMN_VALUE_NULLABLE_TYPE_NULLABLE = DatabaseMetaData.typeNullable; // 1
 
+    /**
+     * A column value of {@link DatabaseMetaData#typeNullableUnknown}({@value DatabaseMetaData#typeNullableUnknown}) for
+     * the {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public static final int COLUMN_VALUE_NULLABLE_TYPE_NULLABLE_UNKNOWN = DatabaseMetaData.typeNullableUnknown; // 2
 
-    // -----------------------------------------------------------------------------------------------------------------
+    static final List<Integer> COLUMN_VALUES_NULLABLE = List.of(
+            COLUMN_VALUE_NULLABLE_TYPE_NO_NULLS,        // 0
+            COLUMN_VALUE_NULLABLE_TYPE_NULLABLE,        // 1
+            COLUMN_VALUE_NULLABLE_TYPE_NULLABLE_UNKNOWN // 2
+    );
+
+    // -------------------------------------------------------------------------------------------------- CASE_SENSITIVE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_CASE_SENSITIVE = "CASE_SENSITIVE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------ SEARCHABLE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SEARCHABLE = "SEARCHABLE";
 
-    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_NONE = DatabaseMetaData.typePredNone; // 0
+    /**
+     * A column value of {@link DatabaseMetaData#typePredNone}({@value DatabaseMetaData#typePredNone}) for the
+     * {@value #COLUMN_LABEL_SEARCHABLE} column.
+     */
+    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_NONE = DatabaseMetaData.typePredNone;    // 0
 
-    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_CHAR = DatabaseMetaData.typePredChar; // 1
+    /**
+     * A column value of {@link DatabaseMetaData#typePredChar}({@value DatabaseMetaData#typePredChar}) for the
+     * {@value #COLUMN_LABEL_SEARCHABLE} column.
+     */
+    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_CHAR = DatabaseMetaData.typePredChar;    // 1
 
-    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_BASIC = DatabaseMetaData.typePredBasic; // 2
+    /**
+     * A column value of {@link DatabaseMetaData#typePredBasic}({@value DatabaseMetaData#typePredBasic}) for the
+     * {@value #COLUMN_LABEL_SEARCHABLE} column.
+     */
+    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_BASIC = DatabaseMetaData.typePredBasic;  // 2
 
+    /**
+     * A column value of {@link DatabaseMetaData#typeSearchable}({@value DatabaseMetaData#typeSearchable}) for the
+     * {@value #COLUMN_LABEL_SEARCHABLE} column.
+     */
     public static final int COLUMN_VALUE_SEARCHABLE_TYPE_SEARCHABLE = DatabaseMetaData.typeSearchable; // 3
+
+    static final List<Integer> COLUMN_VALUES_SEARCHABLE = List.of(
+            COLUMN_VALUE_SEARCHABLE_TYPE_PREC_NONE,
+            COLUMN_VALUE_SEARCHABLE_TYPE_PREC_CHAR,
+            COLUMN_VALUE_SEARCHABLE_TYPE_PREC_BASIC,
+            COLUMN_VALUE_SEARCHABLE_TYPE_SEARCHABLE
+    );
+
+    // ---------------------------------------------------------------------------------------------- UNSIGNED_ATTRIBUTE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_UNSIGNED_ATTRIBUTE = "UNSIGNED_ATTRIBUTE";
+
+    // ------------------------------------------------------------------------------------------------ FIXED_PREC_SCALE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_FIXED_PREC_SCALE = "FIXED_PREC_SCALE";
+
+    // -------------------------------------------------------------------------------------------------- AUTO_INCREMENT
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_AUTO_INCREMENT = "AUTO_INCREMENT";
+
+    // ------------------------------------------------------------------------------------------------- LOCAL_TYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_LOCAL_TYPE_NAME = "LOCAL_TYPE_NAME";
+
+    // --------------------------------------------------------------------------------------------------- MINIMUM_SCALE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_MINIMUM_SCALE = "MINIMUM_SCALE";
+
+    // --------------------------------------------------------------------------------------------------- MAXIMUM_SCALE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_MAXIMUM_SCALE = "MAXIMUM_SCALE";
+
+    // --------------------------------------------------------------------------------------------------- SQL_DATA_TYPE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SQL_DATA_TYPE = "SQL_DATA_TYPE";
+
+    // ------------------------------------------------------------------------------------------------ SQL_DATETIME_SUB
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
+
+    // -------------------------------------------------------------------------------------------------- NUM_PREC_RADIX
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_NUM_PREC_RADIX = "NUM_PREC_RADIX";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
@@ -142,7 +214,7 @@ public class TypeInfo
     /**
      * Creates a new instance.
      */
-    protected TypeInfo() {
+    TypeInfo() {
         super();
     }
 
@@ -172,91 +244,394 @@ public class TypeInfo
                '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (TypeInfo) obj;
+        return Objects.equals(typeName, that.typeName) &&
+               Objects.equals(dataType, that.dataType);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), typeName, dataType);
+    }
+
+    // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- dataType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
     public Integer getDataType() {
         return dataType;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
+    void setDataType(final Integer dataType) {
+        this.dataType = dataType;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- precision
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PRECISION} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PRECISION} column.
+     */
+    @Nullable
     public Integer getPrecision() {
         return precision;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PRECISION} column.
+     *
+     * @param precision the value of {@value #COLUMN_LABEL_PRECISION} column.
+     */
+    void setPrecision(final Integer precision) {
+        this.precision = precision;
+    }
+
+    // --------------------------------------------------------------------------------------------------- literalPrefix
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_LITERAL_PREFIX} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_LITERAL_PREFIX} column.
+     */
+    @Nullable
     public String getLiteralPrefix() {
         return literalPrefix;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_LITERAL_PREFIX} column.
+     *
+     * @param literalPrefix the value of {@value #COLUMN_LABEL_LITERAL_PREFIX} column.
+     */
+    void setLiteralPrefix(final String literalPrefix) {
+        this.literalPrefix = literalPrefix;
+    }
+
     // --------------------------------------------------------------------------------------------------- literalSuffix
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_LITERAL_SUFFIX} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_LITERAL_SUFFIX} column.
+     */
+    @Nullable
     public String getLiteralSuffix() {
         return literalSuffix;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_LITERAL_SUFFIX} column.
+     *
+     * @param literalSuffix the value of {@value #COLUMN_LABEL_LITERAL_SUFFIX} column.
+     */
+    void setLiteralSuffix(final String literalSuffix) {
+        this.literalSuffix = literalSuffix;
+    }
+
     // ---------------------------------------------------------------------------------------------------- createParams
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_CREATE_PARAMS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_CREATE_PARAMS} column.
+     */
+    @Nullable
     public String getCreateParams() {
         return createParams;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_CREATE_PARAMS} column.
+     *
+     * @param createParams the value of {@value #COLUMN_LABEL_CREATE_PARAMS} column.
+     */
+    void setCreateParams(final String createParams) {
+        this.createParams = createParams;
+    }
+
     // -------------------------------------------------------------------------------------------------------- nullable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public Integer getNullable() {
         return nullable;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     *
+     * @param nullable the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     */
+    void setNullable(final Integer nullable) {
+        this.nullable = nullable;
+    }
+
     // --------------------------------------------------------------------------------------------------- caseSensitive
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_CASE_SENSITIVE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_CASE_SENSITIVE} column.
+     */
     public Boolean getCaseSensitive() {
         return caseSensitive;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_CASE_SENSITIVE} column.
+     *
+     * @param caseSensitive the value of {@value #COLUMN_LABEL_CASE_SENSITIVE} column.
+     */
+    void setCaseSensitive(final Boolean caseSensitive) {
+        this.caseSensitive = caseSensitive;
+    }
+
     // ------------------------------------------------------------------------------------------------------ searchable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SEARCHABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SEARCHABLE} column.
+     */
     public Integer getSearchable() {
         return searchable;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SEARCHABLE} column.
+     *
+     * @param searchable the value of {@value #COLUMN_LABEL_SEARCHABLE} column.
+     */
+    void setSearchable(final Integer searchable) {
+        this.searchable = searchable;
+    }
+
     // ----------------------------------------------------------------------------------------------- unsignedAttribute
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_UNSIGNED_ATTRIBUTE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_UNSIGNED_ATTRIBUTE} column.
+     */
+    @Nullable
     public Boolean getUnsignedAttribute() {
         return unsignedAttribute;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_UNSIGNED_ATTRIBUTE} column.
+     *
+     * @param unsignedAttribute the value of {@value #COLUMN_LABEL_UNSIGNED_ATTRIBUTE} column.
+     */
+    void setUnsignedAttribute(final Boolean unsignedAttribute) {
+        this.unsignedAttribute = unsignedAttribute;
+    }
+
+    // -------------------------------------------------------------------------------------------------- fixedPrecScale
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FIXED_PREC_SCALE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FIXED_PREC_SCALE} column.
+     */
     public Boolean getFixedPrecScale() {
         return fixedPrecScale;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FIXED_PREC_SCALE} column.
+     *
+     * @param fixedPrecScale the value of {@value #COLUMN_LABEL_FIXED_PREC_SCALE} column.
+     */
+    void setFixedPrecScale(final Boolean fixedPrecScale) {
+        this.fixedPrecScale = fixedPrecScale;
+    }
+
+    // --------------------------------------------------------------------------------------------------- autoIncrement
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_AUTO_INCREMENT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_AUTO_INCREMENT} column.
+     */
     public Boolean getAutoIncrement() {
         return autoIncrement;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_AUTO_INCREMENT} column.
+     *
+     * @param autoIncrement the value of {@value #COLUMN_LABEL_AUTO_INCREMENT} column.
+     */
+    void setAutoIncrement(final Boolean autoIncrement) {
+        this.autoIncrement = autoIncrement;
+    }
+
+    // --------------------------------------------------------------------------------------------------- localTypeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_LOCAL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_LOCAL_TYPE_NAME} column.
+     */
+    @Nullable
     public String getLocalTypeName() {
         return localTypeName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_LOCAL_TYPE_NAME} column.
+     *
+     * @param localTypeName the value of {@value #COLUMN_LABEL_LOCAL_TYPE_NAME} column.
+     */
+    void setLocalTypeName(final String localTypeName) {
+        this.localTypeName = localTypeName;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- minimumScale
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_MINIMUM_SCALE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_MINIMUM_SCALE} column.
+     */
     public Integer getMinimumScale() {
         return minimumScale;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_MINIMUM_SCALE} column.
+     *
+     * @param minimumScale the value of {@value #COLUMN_LABEL_MINIMUM_SCALE} column.
+     */
+    void setMinimumScale(final Integer minimumScale) {
+        this.minimumScale = minimumScale;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- maximumScale
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_MAXIMUM_SCALE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_MAXIMUM_SCALE} column.
+     */
     public Integer getMaximumScale() {
         return maximumScale;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_MAXIMUM_SCALE} column.
+     *
+     * @param maximumScale the value of {@value #COLUMN_LABEL_MAXIMUM_SCALE} column.
+     */
+    void setMaximumScale(final Integer maximumScale) {
+        this.maximumScale = maximumScale;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- sqlDataType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
+     */
+    @Nullable
     public Integer getSqlDataType() {
         return sqlDataType;
     }
 
-    // -------------------------------------------------------------------------------------------------- sqlDateTimeSub
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
+     *
+     * @param sqlDataType the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
+     */
+    void setSqlDataType(final Integer sqlDataType) {
+        this.sqlDataType = sqlDataType;
+    }
+
+    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
+     */
+    @Nullable
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
+     *
+     * @param sqlDatetimeSub the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
+     */
+    void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+        this.sqlDatetimeSub = sqlDatetimeSub;
+    }
+
     // ---------------------------------------------------------------------------------------------------- numPrecRadix
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     */
     public Integer getNumPrecRadix() {
         return numPrecRadix;
     }
 
-    // -------------------------------------------------------------------------------------------------------- nullable
-
-    // ------------------------------------------------------------------------------------------------------ searchable
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     *
+     * @param numPrecRadix the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     */
+    void setNumPrecRadix(final Integer numPrecRadix) {
+        this.numPrecRadix = numPrecRadix;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
@@ -271,6 +646,7 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
@@ -281,6 +657,7 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
     private String literalSuffix;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
@@ -297,34 +674,36 @@ public class TypeInfo
 
     @Nullable
     @_NotUsedBySpecification
-    @_ColumnLabel("UNSIGNED_ATTRIBUTE")
+    @_ColumnLabel(COLUMN_LABEL_UNSIGNED_ATTRIBUTE)
     private Boolean unsignedAttribute;
 
-    @_ColumnLabel("FIXED_PREC_SCALE")
+    @_ColumnLabel(COLUMN_LABEL_FIXED_PREC_SCALE)
     private Boolean fixedPrecScale;
 
-    @_ColumnLabel("AUTO_INCREMENT")
+    @_ColumnLabel(COLUMN_LABEL_AUTO_INCREMENT)
     private Boolean autoIncrement;
 
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("LOCAL_TYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_LOCAL_TYPE_NAME)
     private String localTypeName;
 
-    @_ColumnLabel("MINIMUM_SCALE")
+    @_ColumnLabel(COLUMN_LABEL_MINIMUM_SCALE)
     private Integer minimumScale;
 
-    @_ColumnLabel("MAXIMUM_SCALE")
+    @_ColumnLabel(COLUMN_LABEL_MAXIMUM_SCALE)
     private Integer maximumScale;
 
+    @Nullable
     @_NotUsedBySpecification
-    @_ColumnLabel("SQL_DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
+    @Nullable
     @_NotUsedBySpecification
-    @_ColumnLabel("SQL_DATETIME_SUB")
+    @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
-    @_ColumnLabel("NUM_PREC_RADIX")
+    @_ColumnLabel(COLUMN_LABEL_NUM_PREC_RADIX)
     private Integer numPrecRadix;
 }

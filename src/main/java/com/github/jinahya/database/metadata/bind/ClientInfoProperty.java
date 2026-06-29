@@ -20,14 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getClientInfoProperties()} method.
@@ -35,60 +31,172 @@ import java.util.Comparator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getClientInfoProperties()
  */
-
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class ClientInfoProperty
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return Comparator.comparing(ClientInfoProperty::getName, comparator);
-    }
-
-    static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Context context,
-                                                                    final Comparator<? super String> comparator)
-            throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
-        );
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+    static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                                    final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator.comparing(v -> operator.apply(v.getName()), comparator);
     }
 
     // ------------------------------------------------------------------------------------------------------------ NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NAME = "NAME";
 
     // --------------------------------------------------------------------------------------------------------- MAX_LEN
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_MAX_LEN = "MAX_LEN";
 
     // --------------------------------------------------------------------------------------------------- DEFAULT_VALUE
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DEFAULT_VALUE = "DEFAULT_VALUE";
 
     // ----------------------------------------------------------------------------------------------------- DESCRIPTION
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DESCRIPTION = "DESCRIPTION";
 
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    ClientInfoProperty() {
+        super();
+    }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "name=" + name +
+               ",maxLen=" + maxLen +
+               ",defaultValue=" + defaultValue +
+               ",description=" + description +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (ClientInfoProperty) obj;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name);
+    }
+
+    // ------------------------------------------------------------------------------------------------------------ name
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NAME} column.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NAME} column.
+     *
+     * @param name the value of {@value #COLUMN_LABEL_NAME} column.
+     */
+    void setName(final String name) {
+        this.name = name;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- maxLen
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_MAX_LEN} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_MAX_LEN} column.
+     */
+    public Integer getMaxLen() {
+        return maxLen;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_MAX_LEN} column.
+     *
+     * @param maxLen the value of {@value #COLUMN_LABEL_MAX_LEN} column.
+     */
+    void setMaxLen(final Integer maxLen) {
+        this.maxLen = maxLen;
+    }
+
+    // --------------------------------------------------------------------------------------------------- defaultValue
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DEFAULT_VALUE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DEFAULT_VALUE} column.
+     */
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DEFAULT_VALUE} column.
+     *
+     * @param defaultValue the value of {@value #COLUMN_LABEL_DEFAULT_VALUE} column.
+     */
+    void setDefaultValue(final String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- description
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DESCRIPTION} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DESCRIPTION} column.
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DESCRIPTION} column.
+     *
+     * @param description the value of {@value #COLUMN_LABEL_DESCRIPTION} column.
+     */
+    void setDescription(final String description) {
+        this.description = description;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_NAME)
-
     private String name;
 
     // -----------------------------------------------------------------------------------------------------------------

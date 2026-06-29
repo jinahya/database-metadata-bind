@@ -39,11 +39,13 @@ class BestRowIdentifierTest
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    void equals__() {
+        super.equals__();
+    }
+
+    @Override
     SingleTypeEqualsVerifierApi<BestRowIdentifier> equalsVerifier() {
         return super.equalsVerifier()
-//                .withPrefabValues(
-//                        Table.class, new Table().tableCat("a"), new Table().tableCat("b")
-//                )
-                ;
+                .withOnlyTheseFields("columnName");
     }
 }

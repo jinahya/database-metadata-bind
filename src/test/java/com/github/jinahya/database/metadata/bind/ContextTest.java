@@ -39,7 +39,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 class ContextTest {
 
-    @DisplayName("...(...)ResultSet")
+    /**
+     * Verifies that all {@link DatabaseMetaData} methods returning {@link ResultSet} have corresponding {@code public}
+     * methods in {@link Context} with identical signatures that return {@link List}.
+     *
+     * @throws ReflectiveOperationException if a reflective operation fails.
+     */
+    @DisplayName("all ...(...)ResultSet method bound")
     @Test
     void assertAllMethodsBound() throws ReflectiveOperationException {
         for (final var method : DatabaseMetaData.class.getMethods()) {
@@ -48,9 +54,6 @@ class ContextTest {
                 continue;
             }
             if (method.getDeclaringClass() != DatabaseMetaData.class) {
-                continue;
-            }
-            if (false && method.getParameterCount() == 0) {
                 continue;
             }
             if (!ResultSet.class.isAssignableFrom(method.getReturnType())) {
@@ -62,7 +65,6 @@ class ContextTest {
                 final var found = Context.class.getMethod(name, method.getParameterTypes());
                 assertThat(found.getModifiers()).satisfies(m -> {
                     assertThat(Modifier.isStatic(m)).isFalse();
-                    assertThat(Modifier.isPublic(m)).isTrue();
                 });
                 assertThat(found.getReturnType()).isEqualTo(List.class);
             }

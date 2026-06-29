@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -75,39 +74,6 @@ abstract class Memory_$_Test {
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void acceptProperties__() {
-        applyContext(c -> {
-            try {
-                c.acceptProperties((p, r) -> {
-                    log.debug("{}: {}", p, r);
-                });
-            } catch (final IntrospectionException ie) {
-                throw new RuntimeException(ie);
-            }
-            return null;
-        });
-    }
-
-    @Test
-    void acceptValues__() {
-        applyContext(c -> {
-            c.acceptValues((m, r) -> {
-                log.debug("{}: {}", m.getName(), r);
-            });
-            return null;
-        });
-    }
-
-    @Test
-    void metadata() {
-        final var metadata = applyContext(c -> {
-            return Metadata.newInstance(c);
-        });
-        __Validation_Test_Utils.requireValid(metadata);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Test
     void test() throws SQLException {
         applyContext(c -> {
             try {
@@ -138,6 +104,24 @@ abstract class Memory_$_Test {
     }
 
     @Test
+    void catalogs() throws SQLException, IOException {
+        try (var connection = connect()) {
+            final var metaData = connection.getMetaData();
+            final var context = new Context(metaData);
+            final List<Catalog> catalogs;
+            try {
+                catalogs = context.getCatalogs();
+            } catch (final SQLFeatureNotSupportedException sqlfnse) {
+                sqlfnse.printStackTrace();
+                return;
+            }
+            json(metaData, "catalogs", catalogs);
+            for (var catalog : catalogs) {
+            }
+        }
+    }
+
+    @Test
     void columns() throws SQLException, IOException {
         try (var connection = connect()) {
             final var metaData = connection.getMetaData();
@@ -153,7 +137,7 @@ abstract class Memory_$_Test {
             final var metaData = connection.getMetaData();
             final var context = new Context(metaData);
             try {
-                final var functions = context.getFunctions(null, null, "%");
+                final var functions = context.getFunctions((String) null, null, "%");
                 json(metaData, "functions", functions);
             } catch (final SQLFeatureNotSupportedException sqlfnse) {
                 log.warn("not supported", sqlfnse);
@@ -176,6 +160,24 @@ abstract class Memory_$_Test {
     }
 
     @Test
+    void schemas() throws SQLException, IOException {
+        try (var connection = connect()) {
+            final var metaData = connection.getMetaData();
+            final var context = new Context(metaData);
+            final List<Schema> schemas;
+            try {
+                schemas = context.getSchemas((String) null, null);
+            } catch (final SQLFeatureNotSupportedException sqlfnse) {
+                sqlfnse.printStackTrace();
+                return;
+            }
+            json(metaData, "schemas", schemas);
+            for (var schema : schemas) {
+            }
+        }
+    }
+
+    @Test
     void tables() throws SQLException, IOException {
         try (var connection = connect()) {
             final var metaData = connection.getMetaData();
@@ -183,7 +185,12 @@ abstract class Memory_$_Test {
             final var tables = context.getTables((String) null, null, "%", null);
             json(metaData, "tables", tables);
             for (var table : tables) {
-                final var columnPrivileges = context.getColumnPrivileges(table, "%");
+                final var columnPrivileges = context.getColumnPrivileges(
+                        table.getTableCat(),
+                        table.getTableSchem(),
+                        table.getTableName(),
+                        "%"
+                );
                 log.debug("{}: {}", table, columnPrivileges);
             }
         }

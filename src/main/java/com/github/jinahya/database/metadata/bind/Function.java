@@ -1,34 +1,12 @@
 package com.github.jinahya.database.metadata.bind;
 
-/*-
- * #%L
- * database-metadata-bind
- * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -37,29 +15,37 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctions(String, String, String)
  */
+@_ParentOf(FunctionColumn.class)
+@_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
-@EqualsAndHashCode(callSuper = true)
 public class Function
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static @Nonnull Comparator<Function> specifiedOrder(@Nonnull final Comparator<? super String> comparator) {
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>FUNCTION_CAT</code>, <code>FUNCTION_SCHEM</code>, <code>FUNCTION_NAME</code>, and
+     * <code>SPECIFIC_NAME</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<Function> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                          final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
-                .comparing(Function::getFunctionCat, comparator)
-                .thenComparing(Function::getFunctionSchem, comparator)
-                .thenComparing(Function::getFunctionName, comparator)
-                .thenComparing(Function::getSpecificName, comparator);
-    }
-
-    static @Nonnull Comparator<Function> specifiedOrder(@Nonnull final Context context,
-                                                        @Nonnull final Comparator<? super String> comparator)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        return specifiedOrder(ContextUtils.nullPrecedence(context, comparator));
+                .<Function, String>comparing(v -> operator.apply(v.getFunctionCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getFunctionSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getFunctionName()), comparator)
+                .thenComparing(v -> operator.apply(v.getSpecificName()), comparator);
     }
 
     // ---------------------------------------------------------------------------------------------------- FUNCTION_CAT
@@ -77,9 +63,17 @@ public class Function
     public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
     // --------------------------------------------------------------------------------------------------- FUNCTION_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FUNCTION_NAME = "FUNCTION_NAME";
 
     // --------------------------------------------------------------------------------------------------------- REMARKS
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_REMARKS = "REMARKS";
 
     // --------------------------------------------------------------------------------------------------- FUNCTION_TYPE
@@ -119,7 +113,7 @@ public class Function
     public static final int COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RETURNS_TABLE =  // 2
             DatabaseMetaData.functionReturnsTable;
 
-    static final List<Integer> FUNCTION_TYPE_VALUES = List.of(
+    static final List<Integer> COLUMN_VALUES_FUNCTION_TYPE = List.of(
             COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RESULT_UNKNOWN,
             COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_NO_TABLE,
             COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RETURNS_TABLE
@@ -131,6 +125,13 @@ public class Function
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    Function() {
+        super();
+    }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
     @Override
@@ -145,63 +146,153 @@ public class Function
                '}';
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Function) obj;
+        return Objects.equals(functionCat, that.functionCat) &&
+               Objects.equals(functionSchem, that.functionSchem) &&
+               Objects.equals(functionName, that.functionName) &&
+               Objects.equals(specificName, that.specificName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), functionCat, functionSchem, functionName, specificName);
+    }
+
     // ----------------------------------------------------------------------------------------------------- functionCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     */
     @Nullable
     public String getFunctionCat() {
         return functionCat;
     }
 
-    public void setFunctionCat(@Nullable final String functionCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     *
+     * @param functionCat the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     */
+    void setFunctionCat(final String functionCat) {
         this.functionCat = functionCat;
     }
 
     // --------------------------------------------------------------------------------------------------- functionSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     */
     @Nullable
     public String getFunctionSchem() {
         return functionSchem;
     }
 
-    public void setFunctionSchem(@Nullable final String functionSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     *
+     * @param functionSchem the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     */
+    void setFunctionSchem(final String functionSchem) {
         this.functionSchem = functionSchem;
     }
 
     // ---------------------------------------------------------------------------------------------------- functionName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     */
     public String getFunctionName() {
         return functionName;
     }
 
-    public void setFunctionName(final String functionName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     *
+     * @param functionName the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     */
+    void setFunctionName(final String functionName) {
         this.functionName = functionName;
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     public String getRemarks() {
         return remarks;
     }
 
-    public void setRemarks(final String remarks) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
     // ---------------------------------------------------------------------------------------------------- functionType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
+     */
     public Integer getFunctionType() {
         return functionType;
     }
 
-    public void setFunctionType(final Integer functionType) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
+     *
+     * @param functionType the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
+     */
+    void setFunctionType(final Integer functionType) {
         this.functionType = functionType;
     }
 
     // ---------------------------------------------------------------------------------------------------- specificName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     */
     public String getSpecificName() {
         return specificName;
     }
 
-    public void setSpecificName(final String specificName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     *
+     * @param specificName the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     */
+    void setSpecificName(final String specificName) {
         this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)

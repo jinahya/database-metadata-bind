@@ -1,32 +1,10 @@
 package com.github.jinahya.database.metadata.bind;
 
-/*-
- * #%L
- * database-metadata-bind
- * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-import java.util.Optional;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -35,64 +13,191 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTables(String, String, String)
  */
-
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@_ChildOf(Schema.class)
+@_ChildOf(Catalog.class)
 public class SuperTable
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3579710773784268831L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, <code>TABLE_NAME</code>, and
+     * <code>SUPERTABLE_NAME</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<SuperTable> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                            final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<SuperTable, String>comparing(v -> operator.apply(v.getTableCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getTableName()), comparator)
+                .thenComparing(v -> operator.apply(v.getSupertableName()), comparator);
+    }
+
+    // ------------------------------------------------------------------------------------------------------- TABLE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
+    // ------------------------------------------------------------------------------------------------------ TABLE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
+    // ------------------------------------------------------------------------------------------------- SUPERTABLE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_SUPERTABLE_NAME = "SUPERTABLE_NAME";
 
-    // ------------------------------------------------------------------------------------------ STATIC FACTORY_METHODS
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
+    /**
+     * Creates a new instance.
+     */
+    SuperTable() {
+        super();
+    }
+
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
-    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",supertableName=" + supertableName +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (SuperTable) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(supertableName, that.supertableName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, supertableName);
+    }
+
+    // -------------------------------------------------------------------------------------------------------- tableCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    @Nullable
     public String getTableCat() {
         return tableCat;
     }
 
-    protected void setTableCat(final String tableCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
 
-    protected void setTableSchem(final String tableSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- tableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     public String getTableName() {
         return tableName;
     }
 
-    protected void setTableName(final String tableName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- supertableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
+     */
     public String getSupertableName() {
         return supertableName;
     }
 
-    protected void setSupertableName(final String supertableName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
+     *
+     * @param supertableName the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
+     */
+    void setSupertableName(final String supertableName) {
         this.supertableName = supertableName;
     }
 
@@ -112,87 +217,5 @@ public class SuperTable
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_SUPERTABLE_NAME)
-
     private String supertableName;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Catalog tableCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Schema tableSchema_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Catalog supertableCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Schema supertableSchema_;
-
-    Catalog getTableCatalog_() {
-        if (tableCatalog_ == null) {
-            tableCatalog_ = Catalog.of(tableCat);
-        }
-        return tableCatalog_;
-    }
-
-    void setTableCatalog_(final Catalog tableCatalog_) {
-        this.tableCatalog_ = tableCatalog_;
-        setTableCat(
-                Optional.ofNullable(this.tableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getTableSchema_() {
-        if (tableSchema_ == null) {
-            tableSchema_ = Schema.of(getTableCatalog_(), tableSchem);
-        }
-        return tableSchema_;
-    }
-
-    void setTableSchema_(final Schema tableSchema_) {
-        this.tableSchema_ = tableSchema_;
-        setTableCatalog_(
-                Optional.ofNullable(this.tableSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
-    }
-
-    Catalog getSupertableCatalog_() {
-        if (supertableCatalog_ == null) {
-            supertableCatalog_ = Catalog.of(tableCat);
-        }
-        return supertableCatalog_;
-    }
-
-    void setSupertableCatalog_(final Catalog supertableCatalog_) {
-        this.supertableCatalog_ = supertableCatalog_;
-        setTableCat(
-                Optional.ofNullable(this.supertableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getSupertableSchema_() {
-        if (supertableSchema_ == null) {
-            supertableSchema_ = Schema.of(getSupertableCatalog_(), tableSchem);
-        }
-        return supertableSchema_;
-    }
-
-    void setSupertableSchema_(final Schema supertableSchema_) {
-        this.supertableSchema_ = supertableSchema_;
-        setSupertableCatalog_(
-                Optional.ofNullable(this.supertableSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
-    }
 }

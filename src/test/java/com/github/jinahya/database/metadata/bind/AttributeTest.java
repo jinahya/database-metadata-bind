@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
+
 class AttributeTest
         extends AbstractMetadataType_Test<Attribute> {
 
@@ -30,10 +32,22 @@ class AttributeTest
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override
+    void equals__() {
+        super.equals__();
+    }
+
+    @Override
+    SingleTypeEqualsVerifierApi<Attribute> equalsVerifier() {
+        return super.equalsVerifier()
+                .withOnlyTheseFields("typeCat", "typeSchem", "typeName", "attrName");
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
     Attribute newTypeInstance() {
         final Attribute instance = super.newTypeInstance();
-        instance.attrName = "";
-        instance.typeName = "";
+        instance.setAttrName("");
+        instance.setTypeName("");
         instance.setOrdinalPosition(1);
         return instance;
     }

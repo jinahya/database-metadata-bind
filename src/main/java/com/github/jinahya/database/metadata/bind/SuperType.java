@@ -1,31 +1,9 @@
 package com.github.jinahya.database.metadata.bind;
 
-/*-
- * #%L
- * database-metadata-bind
- * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -34,13 +12,55 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTypes(String, String, String)
  */
-
 @_ChildOf(UDT.class)
-@EqualsAndHashCode(callSuper = true)
 public class SuperType
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
+
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    // -------------------------------------------------------------------------------------------------------- TYPE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
+
+    // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
+
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // ---------------------------------------------------------------------------------------------------- SUPERTYPE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SUPERTYPE_CAT = "SUPERTYPE_CAT";
+
+    // -------------------------------------------------------------------------------------------------- SUPERTYPE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SUPERTYPE_SCHEM = "SUPERTYPE_SCHEM";
+
+    // --------------------------------------------------------------------------------------------------- SUPERTYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SUPERTYPE_NAME = "SUPERTYPE_NAME";
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
@@ -64,166 +84,180 @@ public class SuperType
                '}';
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (SuperType) obj;
+        return Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName) &&
+               Objects.equals(supertypeName, that.supertypeName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, supertypeName);
+    }
+
     // --------------------------------------------------------------------------------------------------------- typeCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    @Nullable
     public String getTypeCat() {
         return typeCat;
     }
 
-    protected void setTypeCat(final String typeCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
     // ------------------------------------------------------------------------------------------------------- typeSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    @Nullable
     public String getTypeSchem() {
         return typeSchem;
     }
 
-    protected void setTypeSchem(final String typeSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
-    protected void setTypeName(final String typeName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------- supertypeCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     */
+    @Nullable
     public String getSupertypeCat() {
         return supertypeCat;
     }
 
-    protected void setSupertypeCat(final String supertypeCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     *
+     * @param supertypeCat the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     */
+    void setSupertypeCat(final String supertypeCat) {
         this.supertypeCat = supertypeCat;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- supertypeSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     */
+    @Nullable
     public String getSupertypeSchem() {
         return supertypeSchem;
     }
 
-    protected void setSupertypeSchem(final String supertypeSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     *
+     * @param supertypeSchem the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     */
+    void setSupertypeSchem(final String supertypeSchem) {
         this.supertypeSchem = supertypeSchem;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- supertypeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
+     */
     public String getSupertypeName() {
         return supertypeName;
     }
 
-    protected void setSupertypeName(final String supertypeName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
+     *
+     * @param supertypeName the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
+     */
+    void setSupertypeName(final String supertypeName) {
         this.supertypeName = supertypeName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("TYPE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("TYPE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
-    @_ColumnLabel("TYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("SUPERTYPE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_CAT)
     private String supertypeCat;
 
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("SUPERTYPE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_SCHEM)
     private String supertypeSchem;
 
-    @_ColumnLabel("SUPERTYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_NAME)
     private String supertypeName;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Catalog typeCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Schema typeSchema_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Catalog supertypeCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Schema supertypeSchema_;
-
-    Catalog getTypeCatalog_() {
-        if (typeCatalog_ == null) {
-            typeCatalog_ = Catalog.of(typeCat);
-        }
-        return typeCatalog_;
-    }
-
-    void setTypeCatalog_(final Catalog typeCatalog_) {
-        this.typeCatalog_ = typeCatalog_;
-        setTypeCat(
-                Optional.ofNullable(this.typeCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getTypeSchema_() {
-        if (typeSchema_ == null) {
-            typeSchema_ = Schema.of(getTypeCatalog_(), typeSchem);
-        }
-        return typeSchema_;
-    }
-
-    void setTypeSchema_(final Schema typeSchema_) {
-        this.typeSchema_ = typeSchema_;
-        setTypeSchem(
-                Optional.ofNullable(this.typeSchema_)
-                        .map(Schema::getTableSchem)
-                        .orElse(null)
-        );
-    }
-
-    Catalog getSupertypeCatalog_() {
-        if (supertypeCatalog_ == null) {
-            supertypeCatalog_ = Catalog.of(supertypeCat);
-        }
-        return supertypeCatalog_;
-    }
-
-    void setSupertypeCatalog_(final Catalog supertypeCatalog_) {
-        this.supertypeCatalog_ = supertypeCatalog_;
-        setSupertypeCat(
-                Optional.ofNullable(this.supertypeCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getSupertypeSchema_() {
-        if (supertypeSchema_ == null) {
-            supertypeSchema_ = Schema.of(getSupertypeCatalog_(), supertypeSchem);
-        }
-        return supertypeSchema_;
-    }
-
-    void setSupertypeSchema_(final Schema supertypeSchema_) {
-        this.supertypeSchema_ = supertypeSchema_;
-        setSupertypeSchem(
-                Optional.ofNullable(this.supertypeSchema_)
-                        .map(Schema::getTableSchem)
-                        .orElse(null)
-        );
-    }
 }

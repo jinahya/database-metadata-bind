@@ -20,14 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -39,51 +38,223 @@ import java.util.Comparator;
  */
 
 @_ChildOf(Procedure.class)
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true)
 public class ProcedureColumn
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ProcedureColumn> comparing(final Comparator<? super String> comparator) {
-        return Comparator
-                .comparing(ProcedureColumn::getProcedureCat, comparator)
-                .thenComparing(ProcedureColumn::getProcedureSchem, comparator)
-                .thenComparing(ProcedureColumn::getProcedureName, comparator)
-                .thenComparing(ProcedureColumn::getSpecificName, comparator);
-    }
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
-    static Comparator<ProcedureColumn> comparing(final Context context, final Comparator<? super String> comparator)
-            throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>PROCEDURE_CAT</code>, <code>PROCEDURE_SCHEM</code>, <code>PROCEDURE_NAME</code> and
+     * <code>SPECIFIC_NAME</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
+    static Comparator<ProcedureColumn> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                                 final Comparator<? super String> comparator) {
+        Objects.requireNonNull(operator, "operator is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .<ProcedureColumn, String>comparing(v -> operator.apply(v.getProcedureCat()), comparator)
+                .thenComparing(v -> operator.apply(v.getProcedureSchem()), comparator)
+                .thenComparing(v -> operator.apply(v.getProcedureName()), comparator)
+                .thenComparing(v -> operator.apply(v.getSpecificName()), comparator);
     }
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
-    public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
 
     /**
-     * A value for {@value #COLUMN_LABEL_COLUMN_TYPE} label. The value is
-     * {@link DatabaseMetaData#procedureColumnUnknown}({@value DatabaseMetaData#procedureColumnUnknown}).
+     * A column label of {@value}.
      */
-    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_UNKNOWN = DatabaseMetaData.procedureColumnUnknown;
+    public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
 
-    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_IN = DatabaseMetaData.procedureColumnIn;
+    // --------------------------------------------------------------------------------------------------- PROCEDURE_CAT
 
-    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_OUT = DatabaseMetaData.procedureColumnOut; // 4
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_CAT = "PROCEDURE_CAT";
 
-    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RETURN = DatabaseMetaData.procedureColumnReturn;
+    // ------------------------------------------------------------------------------------------------- PROCEDURE_SCHEM
 
-    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RESULT = DatabaseMetaData.procedureColumnResult;
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
+
+    // -------------------------------------------------------------------------------------------------- PROCEDURE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_NAME = "PROCEDURE_NAME";
+
+    // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
+
+    // ------------------------------------------------------------------------------------------------------- DATA_TYPE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
+
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // ------------------------------------------------------------------------------------------------------- PRECISION
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PRECISION = "PRECISION";
+
+    // ---------------------------------------------------------------------------------------------------------- LENGTH
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_LENGTH = "LENGTH";
+
+    // ----------------------------------------------------------------------------------------------------------- SCALE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SCALE = "SCALE";
+
+    // ----------------------------------------------------------------------------------------------------------- RADIX
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_RADIX = "RADIX";
 
     // -------------------------------------------------------------------------------------------------------- NULLABLE
 
     /**
      * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_NULLABLE = "NULLABLE";
+    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
+
+    // --------------------------------------------------------------------------------------------------------- REMARKS
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
+
+    // ------------------------------------------------------------------------------------------------------ COLUMN_DEF
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_COLUMN_DEF = "COLUMN_DEF";
+
+    // --------------------------------------------------------------------------------------------------- SQL_DATA_TYPE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SQL_DATA_TYPE = "SQL_DATA_TYPE";
+
+    // ------------------------------------------------------------------------------------------------ SQL_DATETIME_SUB
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
+
+    // ----------------------------------------------------------------------------------------------- CHAR_OCTET_LENGTH
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
+
+    // ------------------------------------------------------------------------------------------------ ORDINAL_POSITION
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_ORDINAL_POSITION = "ORDINAL_POSITION";
+
+    // ----------------------------------------------------------------------------------------------------- IS_NULLABLE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
+
+    // --------------------------------------------------------------------------------------------------- SPECIFIC_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
+
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#procedureColumnUnknown}({@value DatabaseMetaData#procedureColumnUnknown}) for the
+     * {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_UNKNOWN = DatabaseMetaData.procedureColumnUnknown;
+
+    /**
+     * A column value of {@link DatabaseMetaData#procedureColumnIn}({@value DatabaseMetaData#procedureColumnIn}) for the
+     * {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_IN = DatabaseMetaData.procedureColumnIn;
+
+    /**
+     * A column value of {@link DatabaseMetaData#procedureColumnInOut}({@value DatabaseMetaData#procedureColumnInOut})
+     * for the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_INOUT = DatabaseMetaData.procedureColumnInOut;
+
+    /**
+     * A column value of {@link DatabaseMetaData#procedureColumnOut}({@value DatabaseMetaData#procedureColumnOut}) for
+     * the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_OUT = DatabaseMetaData.procedureColumnOut;
+
+    /**
+     * A column value of {@link DatabaseMetaData#procedureColumnReturn}({@value DatabaseMetaData#procedureColumnReturn})
+     * for the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RETURN = DatabaseMetaData.procedureColumnReturn;
+
+    /**
+     * A column value of {@link DatabaseMetaData#procedureColumnResult}({@value DatabaseMetaData#procedureColumnResult})
+     * for the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RESULT = DatabaseMetaData.procedureColumnResult;
+
+    static final List<Integer> COLUMN_VALUES_COLUMN_TYPE = List.of(
+            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_UNKNOWN, // 0
+            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_IN,      // 1
+            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_INOUT,   // 2
+            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_OUT,     // 4
+            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RETURN,  // 5
+            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RESULT   // 3
+    );
+
+    // -------------------------------------------------------------------------------------------------------- NULLABLE
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
@@ -92,7 +263,7 @@ public class ProcedureColumn
     /**
      * Creates a new instance.
      */
-    protected ProcedureColumn() {
+    ProcedureColumn() {
         super();
     }
 
@@ -124,249 +295,517 @@ public class ProcedureColumn
                '}';
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (ProcedureColumn) obj;
+        return Objects.equals(procedureCat, that.procedureCat) &&
+               Objects.equals(procedureSchem, that.procedureSchem) &&
+               Objects.equals(procedureName, that.procedureName) &&
+               Objects.equals(columnName, that.columnName) &&
+               Objects.equals(ordinalPosition, that.ordinalPosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), procedureCat, procedureSchem, procedureName, columnName, ordinalPosition);
+    }
+
     // ---------------------------------------------------------------------------------------------------- procedureCat
 
+    /**
+     * Returns the value of {@code PROCEDURE_CAT} column.
+     *
+     * @return the value of {@code PROCEDURE_CAT} column.
+     */
     @Nullable
     public String getProcedureCat() {
         return procedureCat;
     }
 
-    protected void setProcedureCat(@Nullable final String procedureCat) {
+    /**
+     * Sets the value of {@code PROCEDURE_CAT} column.
+     *
+     * @param procedureCat the value of {@code PROCEDURE_CAT} column.
+     */
+    void setProcedureCat(final String procedureCat) {
         this.procedureCat = procedureCat;
     }
 
+    // -------------------------------------------------------------------------------------------------- procedureSchem
+
+    /**
+     * Returns the value of {@code PROCEDURE_SCHEM} column.
+     *
+     * @return the value of {@code PROCEDURE_SCHEM} column.
+     */
     @Nullable
     public String getProcedureSchem() {
         return procedureSchem;
     }
 
-    protected void setProcedureSchem(@Nullable final String procedureSchem) {
+    /**
+     * Sets the value of {@code PROCEDURE_SCHEM} column.
+     *
+     * @param procedureSchem the value of {@code PROCEDURE_SCHEM} column.
+     */
+    void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
     }
 
+    // --------------------------------------------------------------------------------------------------- procedureName
+
+    /**
+     * Returns the value of {@code PROCEDURE_NAME} column.
+     *
+     * @return the value of {@code PROCEDURE_NAME} column.
+     */
     public String getProcedureName() {
         return procedureName;
     }
 
-    protected void setProcedureName(final String procedureName) {
+    /**
+     * Sets the value of {@code PROCEDURE_NAME} column.
+     *
+     * @param procedureName the value of {@code PROCEDURE_NAME} column.
+     */
+    void setProcedureName(final String procedureName) {
         this.procedureName = procedureName;
     }
 
+    // ------------------------------------------------------------------------------------------------------ columnName
+
+    /**
+     * Returns the value of {@code COLUMN_NAME} column.
+     *
+     * @return the value of {@code COLUMN_NAME} column.
+     */
     public String getColumnName() {
         return columnName;
     }
 
-    protected void setColumnName(final String columnName) {
+    /**
+     * Sets the value of {@code COLUMN_NAME} column.
+     *
+     * @param columnName the value of {@code COLUMN_NAME} column.
+     */
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
+    // ------------------------------------------------------------------------------------------------------ columnType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
     public Integer getColumnType() {
         return columnType;
     }
 
-    protected void setColumnType(final Integer columnType) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     *
+     * @param columnType the value of {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    void setColumnType(final Integer columnType) {
         this.columnType = columnType;
     }
 
+    // -------------------------------------------------------------------------------------------------------- dataType
+
+    /**
+     * Returns the value of {@code DATA_TYPE} column.
+     *
+     * @return the value of {@code DATA_TYPE} column.
+     */
     public Integer getDataType() {
         return dataType;
     }
 
-    protected void setDataType(final Integer dataType) {
+    /**
+     * Sets the value of {@code DATA_TYPE} column.
+     *
+     * @param dataType the value of {@code DATA_TYPE} column.
+     */
+    void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
+    // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@code TYPE_NAME} column.
+     *
+     * @return the value of {@code TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
-    protected void setTypeName(final String typeName) {
+    /**
+     * Sets the value of {@code TYPE_NAME} column.
+     *
+     * @param typeName the value of {@code TYPE_NAME} column.
+     */
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
+    // ------------------------------------------------------------------------------------------------------- precision
+
+    /**
+     * Returns the value of {@code PRECISION} column.
+     *
+     * @return the value of {@code PRECISION} column.
+     */
     @Nullable
     public Integer getPrecision() {
         return precision;
     }
 
-    protected void setPrecision(@Nullable final Integer precision) {
+    /**
+     * Sets the value of {@code PRECISION} column.
+     *
+     * @param precision the value of {@code PRECISION} column.
+     */
+    void setPrecision(final Integer precision) {
         this.precision = precision;
     }
 
+    // ---------------------------------------------------------------------------------------------------------- length
+
+    /**
+     * Returns the value of {@code LENGTH} column.
+     *
+     * @return the value of {@code LENGTH} column.
+     */
     public Integer getLength() {
         return length;
     }
 
-    protected void setLength(final Integer length) {
+    /**
+     * Sets the value of {@code LENGTH} column.
+     *
+     * @param length the value of {@code LENGTH} column.
+     */
+    void setLength(final Integer length) {
         this.length = length;
     }
 
+    // ----------------------------------------------------------------------------------------------------------- scale
+
+    /**
+     * Returns the value of {@code SCALE} column.
+     *
+     * @return the value of {@code SCALE} column.
+     */
     @Nullable
     public Integer getScale() {
         return scale;
     }
 
-    protected void setScale(@Nullable final Integer scale) {
+    /**
+     * Sets the value of {@code SCALE} column.
+     *
+     * @param scale the value of {@code SCALE} column.
+     */
+    void setScale(final Integer scale) {
         this.scale = scale;
     }
 
+    // ----------------------------------------------------------------------------------------------------------- radix
+
+    /**
+     * Returns the value of {@code RADIX} column.
+     *
+     * @return the value of {@code RADIX} column.
+     */
     public Integer getRadix() {
         return radix;
     }
 
-    protected void setRadix(final Integer radix) {
+    /**
+     * Sets the value of {@code RADIX} column.
+     *
+     * @param radix the value of {@code RADIX} column.
+     */
+    void setRadix(final Integer radix) {
         this.radix = radix;
     }
 
+    // -------------------------------------------------------------------------------------------------------- nullable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public Integer getNullable() {
         return nullable;
     }
 
-    protected void setNullable(final Integer nullable) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     *
+     * @param nullable the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     */
+    void setNullable(final Integer nullable) {
         this.nullable = nullable;
     }
 
+    // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@code REMARKS} column.
+     *
+     * @return the value of {@code REMARKS} column.
+     */
+    @Nullable
     public String getRemarks() {
         return remarks;
     }
 
-    protected void setRemarks(final String remarks) {
+    /**
+     * Sets the value of {@code REMARKS} column.
+     *
+     * @param remarks the value of {@code REMARKS} column.
+     */
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
+    // ------------------------------------------------------------------------------------------------------- columnDef
+
+    /**
+     * Returns the value of {@code COLUMN_DEF} column.
+     *
+     * @return the value of {@code COLUMN_DEF} column.
+     */
     @Nullable
     public String getColumnDef() {
         return columnDef;
     }
 
-    protected void setColumnDef(@Nullable final String columnDef) {
+    /**
+     * Sets the value of {@code COLUMN_DEF} column.
+     *
+     * @param columnDef the value of {@code COLUMN_DEF} column.
+     */
+    void setColumnDef(final String columnDef) {
         this.columnDef = columnDef;
     }
 
+    // ----------------------------------------------------------------------------------------------------- sqlDataType
+
+    /**
+     * Returns the value of {@code SQL_DATA_TYPE} column.
+     *
+     * @return the value of {@code SQL_DATA_TYPE} column.
+     */
+    @Nullable
     public Integer getSqlDataType() {
         return sqlDataType;
     }
 
-    protected void setSqlDataType(final Integer sqlDataType) {
+    /**
+     * Sets the value of {@code SQL_DATA_TYPE} column.
+     *
+     * @param sqlDataType the value of {@code SQL_DATA_TYPE} column.
+     */
+    void setSqlDataType(final Integer sqlDataType) {
         this.sqlDataType = sqlDataType;
     }
 
+    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
+
+    /**
+     * Returns the value of {@code SQL_DATETIME_SUB} column.
+     *
+     * @return the value of {@code SQL_DATETIME_SUB} column.
+     */
+    @Nullable
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
 
-    protected void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+    /**
+     * Sets the value of {@code SQL_DATETIME_SUB} column.
+     *
+     * @param sqlDatetimeSub the value of {@code SQL_DATETIME_SUB} column.
+     */
+    void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
+    // ------------------------------------------------------------------------------------------------- charOctetLength
+
+    /**
+     * Returns the value of {@code CHAR_OCTET_LENGTH} column.
+     *
+     * @return the value of {@code CHAR_OCTET_LENGTH} column.
+     */
+    @Nullable
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
 
-    protected void setCharOctetLength(final Integer charOctetLength) {
+    /**
+     * Sets the value of {@code CHAR_OCTET_LENGTH} column.
+     *
+     * @param charOctetLength the value of {@code CHAR_OCTET_LENGTH} column.
+     */
+    void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
+    // ------------------------------------------------------------------------------------------------- ordinalPosition
+
+    /**
+     * Returns the value of {@code ORDINAL_POSITION} column.
+     *
+     * @return the value of {@code ORDINAL_POSITION} column.
+     */
     public Integer getOrdinalPosition() {
         return ordinalPosition;
     }
 
-    protected void setOrdinalPosition(final Integer ordinalPosition) {
+    /**
+     * Sets the value of {@code ORDINAL_POSITION} column.
+     *
+     * @param ordinalPosition the value of {@code ORDINAL_POSITION} column.
+     */
+    void setOrdinalPosition(final Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
     }
 
+    // ------------------------------------------------------------------------------------------------------ isNullable
+
+    /**
+     * Returns the value of {@code IS_NULLABLE} column.
+     *
+     * @return the value of {@code IS_NULLABLE} column.
+     */
     public String getIsNullable() {
         return isNullable;
     }
 
-    protected void setIsNullable(final String isNullable) {
+    /**
+     * Sets the value of {@code IS_NULLABLE} column.
+     *
+     * @param isNullable the value of {@code IS_NULLABLE} column.
+     */
+    void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }
 
+    // ---------------------------------------------------------------------------------------------------- specificName
+
+    /**
+     * Returns the value of {@code SPECIFIC_NAME} column.
+     *
+     * @return the value of {@code SPECIFIC_NAME} column.
+     */
     public String getSpecificName() {
         return specificName;
     }
 
-    protected void setSpecificName(final String specificName) {
+    /**
+     * Sets the value of {@code SPECIFIC_NAME} column.
+     *
+     * @param specificName the value of {@code SPECIFIC_NAME} column.
+     */
+    void setSpecificName(final String specificName) {
         this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("PROCEDURE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_CAT)
     private String procedureCat;
 
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("PROCEDURE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_SCHEM)
     private String procedureSchem;
 
-    @_ColumnLabel("PROCEDURE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_NAME)
     private String procedureName;
 
-    @_ColumnLabel("COLUMN_NAME")
-
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_COLUMN_TYPE)
     private Integer columnType;
 
-    @_ColumnLabel("DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @_ColumnLabel("TYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("PRECISION")
+    @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
-    @_ColumnLabel("LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_LENGTH)
     private Integer length;
 
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("SCALE")
+    @_ColumnLabel(COLUMN_LABEL_SCALE)
     private Integer scale;
 
-    @_ColumnLabel("RADIX")
+    @_ColumnLabel(COLUMN_LABEL_RADIX)
     private Integer radix;
 
-    @_ColumnLabel("NULLABLE")
+    @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @_ColumnLabel("REMARKS")
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("COLUMN_DEF")
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_DEF)
     private String columnDef;
 
+    @Nullable
     @_ReservedBySpecification
-    @_ColumnLabel("SQL_DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
+    @Nullable
     @_ReservedBySpecification
-    @_ColumnLabel("SQL_DATETIME_SUB")
+    @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("CHAR_OCTET_LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
-    @_ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 
-    @_ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
     // https://github.com/microsoft/mssql-jdbc/issues/2320
-    @_ColumnLabel("SPECIFIC_NAME")
-
+    @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
 }

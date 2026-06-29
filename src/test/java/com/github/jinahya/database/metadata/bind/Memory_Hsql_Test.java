@@ -45,12 +45,14 @@ class Memory_Hsql_Test
         try {
             DRIVER_CLASS = Class.forName(DRIVER_NAME);
         } catch (final ClassNotFoundException cnfe) {
-            throw new InstantiationError(cnfe.getMessage());
+            throw new ExceptionInInitializerError(cnfe.getMessage());
         }
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     private static final String CONNECTION_URL = "jdbc:hsqldb:mem:test";
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     protected Connection connect() throws SQLException {
         return getConnection(CONNECTION_URL);

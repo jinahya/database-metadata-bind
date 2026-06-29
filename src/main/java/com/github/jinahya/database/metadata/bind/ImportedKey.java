@@ -20,12 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getImportedKeys(String, String, String)} method.
@@ -34,24 +32,73 @@ import java.util.Comparator;
  * @see Context#getImportedKeys(String, String, String)
  * @see ExportedKey
  */
-
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@_ChildOf(Table.class)
 public class ImportedKey
         extends PortedKey {
 
     private static final long serialVersionUID = -1900794151555506751L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ImportedKey> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return PortedKey.comparingPktable(comparator);
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>PKTABLE_CAT</code>, <code>PKTABLE_SCHEM</code>, <code>PKTABLE_NAME</code>, and
+     * <code>KEY_SEQ</code>.
+     * </blockquote>
+     *
+     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @return a comparator comparing values in the specified order.
+     * @see PortedKey#comparingPk(UnaryOperator, Comparator)
+     */
+    static Comparator<ImportedKey> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
+                                                             final Comparator<? super String> comparator) {
+        return PortedKey.comparingPk(operator, comparator);
     }
 
-    static Comparator<ImportedKey> comparingInSpecifiedOrder(final Context context,
-                                                             final Comparator<? super String> comparator)
-            throws SQLException {
-        return comparingInSpecifiedOrder(
-                ContextUtils.nullPrecedence(context, comparator)
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    ImportedKey() {
+        super();
+    }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof ImportedKey)) {
+            return false;
+        }
+        final var that = (ImportedKey) obj;
+        return Objects.equals(pktableCat, that.pktableCat) &&
+               Objects.equals(pktableSchem, that.pktableSchem) &&
+               Objects.equals(pktableName, that.pktableName) &&
+               Objects.equals(pkcolumnName, that.pkcolumnName) &&
+               Objects.equals(fktableCat, that.fktableCat) &&
+               Objects.equals(fktableSchem, that.fktableSchem) &&
+               Objects.equals(fktableName, that.fktableName) &&
+               Objects.equals(fkcolumnName, that.fkcolumnName) &&
+               Objects.equals(keySeq, that.keySeq);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                pktableCat,
+                pktableSchem,
+                pktableName,
+                pkcolumnName,
+                fktableCat,
+                fktableSchem,
+                fktableName,
+                fkcolumnName,
+                keySeq
         );
     }
 }

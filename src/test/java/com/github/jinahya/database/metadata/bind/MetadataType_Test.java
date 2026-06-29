@@ -20,12 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
 import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
 import org.apache.commons.text.CaseUtils;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -51,23 +50,29 @@ abstract class MetadataType_Test<T extends MetadataType> {
         this.typeClass = Objects.requireNonNull(typeClass, "typeClass is null");
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void _Valid_NewInstance() {
+    void _Valid_NewTypeInstance() {
         final var instance = newTypeInstance();
         __Validation_Test_Utils.requireValid(instance);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @DisplayName("toString()!blank")
     @Test
-    void toString_NotBlank_() {
-        // ------------------------------------------------------------------------------------------------------- given
-        final var instance = newTypeInstance();
-        // -------------------------------------------------------------------------------------------------------- when
-        final var string = instance.toString();
-        // -------------------------------------------------------------------------------------------------------- then
-        assertThat(string).isNotBlank();
+    void _verify_NewTypeInstance() {
+        MetadataType_Test_Utils.verify(newTypeInstance());
     }
+
+//    // -----------------------------------------------------------------------------------------------------------------
+//    @DisplayName("toString()!blank")
+//    @Test
+//    void toString_NotBlank_() {
+//        // ------------------------------------------------------------------------------------------------------- given
+//        final var instance = newTypeInstance();
+//        // -------------------------------------------------------------------------------------------------------- when
+//        final var string = instance.toString();
+//        // -------------------------------------------------------------------------------------------------------- then
+//        assertThat(string).isNotBlank();
+//    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @DisplayName("equals/hashCode")
@@ -80,28 +85,56 @@ abstract class MetadataType_Test<T extends MetadataType> {
         return EqualsVerifier
                 .simple()
                 .forClass(typeClass)
-                .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Test
-    void lombokEqualsAndHashCode_ForNow() {
-//        final var annotation = typeClass.getAnnotation(EqualsAndHashCode.class);
-//        assertThat(annotation).isNotNull();
+                .withIgnoredFields("unmappedColumns")
+                ;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nested
     class FieldTest {
 
-        @DisplayName("@_NullableBySpecification -> @Nullable")
+        /**
+         * Asserts, any field annotated with the specified annotation should be annotated with {@link Nullable}, and its
+         * standard getter, which should have {@code public} modifier, should also be annoated with {@link Nullable}.
+         */
+        void _Nullable_(final Class<? extends Annotation> annotationClass) {
+            for (final var field : fieldsAnnotatedWith(annotationClass)) {
+                assertThat(field.getType())
+                        .as("type of %s.%s", typeClass.getSimpleName(), field.getName())
+                        .isNotPrimitive();
+                assertThat(field.getAnnotatedType().getAnnotation(Nullable.class))
+                        .as("@Nullable annotation on field %s.%s", typeClass.getSimpleName(), field.getName())
+                        .isNotNull();
+                final var getter = MetadataType_Test_Utils.getterMethod(field);
+                assertThat(getter)
+                        .as("getter for %s.%s", typeClass.getSimpleName(), field.getName())
+                        .isNotNull();
+                assertThat(getter.getAnnotatedReturnType().getAnnotation(Nullable.class))
+                        .as("@Nullable annotation on getter %s.%s", typeClass.getSimpleName(), getter.getName())
+                        .isNotNull();
+            }
+        }
+
+        /**
+         * Asserts, any fiels annotated with {@link _NullableBySpecification} should be annotated with {@link Nullable},
+         * and it's standard accessor should also be annoated with {@link Nullable}.
+         */
+        @DisplayName("@_NullableBySpecification")
         @Test
         void _Nullable_NullableBySpecification() {
-            for (final var field : fieldsAnnotatedWith(_NullableBySpecification.class)) {
-                assertThat(field.isAnnotationPresent(Nullable.class))
-                        .as("should be annotated with @jakarta.annotation.Nullable; field: %s", field)
-                        .isTrue();
-            }
+            _Nullable_(_NullableBySpecification.class);
+        }
+
+        @DisplayName("@_NotUsedBySpecification")
+        @Test
+        void _Nullable_NotUsedBySpecification() {
+            _Nullable_(_NotUsedBySpecification.class);
+        }
+
+        @DisplayName("@_ReservedBySpecification")
+        @Test
+        void _Nullable_ReservedBySpecification() {
+            _Nullable_(_ReservedBySpecification.class);
         }
 
         @DisplayName("@ColumnLabel -> has accessors")
@@ -161,34 +194,14 @@ abstract class MetadataType_Test<T extends MetadataType> {
         }
     }
 
-    @DisplayName("setXxx(getXxx())")
-    @Test
-    void accessors() throws Exception {
-        final var instance = newTypeInstance();
-        final var beanInfo = Introspector.getBeanInfo(typeClass);
-        for (final var descriptor : beanInfo.getPropertyDescriptors()) {
-            final var reader = descriptor.getReadMethod();
-            final var writer = descriptor.getWriteMethod();
-            if (reader != null) {
-                if (!reader.canAccess(instance)) {
-                    reader.setAccessible(true);
-                }
-                final var value = reader.invoke(instance);
-                if (writer != null) {
-                    if (!writer.canAccess(instance)) {
-                        writer.setAccessible(true);
-                    }
-                    writer.invoke(instance, value);
-                }
-            }
-            if (writer != null) {
-                writer.invoke(instance, (Object) null);
-            }
-        }
-    }
+//    @DisplayName("setXxx(getXxx())")
+//    @Test
+//    void accessors() {
+//        final var instance = newTypeInstance();
+//        MetadataType_Test_Utils.verifyAccessors(typeClass, instance);
+//    }
 
     // ------------------------------------------------------------------------------------------------------- typeClass
-
     T newTypeInstance() {
         try {
             final var constructor = typeClass.getDeclaredConstructor();

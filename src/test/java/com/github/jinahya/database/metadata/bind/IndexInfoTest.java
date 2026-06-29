@@ -20,10 +20,23 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
+
 class IndexInfoTest
         extends AbstractMetadataType_Test<IndexInfo> {
 
     IndexInfoTest() {
         super(IndexInfo.class);
+    }
+
+    @Override
+    void equals__() {
+        super.equals__();
+    }
+
+    @Override
+    SingleTypeEqualsVerifierApi<IndexInfo> equalsVerifier() {
+        return super.equalsVerifier()
+                .withOnlyTheseFields("tableCat", "tableSchem", "tableName", "indexName", "ordinalPosition");
     }
 }

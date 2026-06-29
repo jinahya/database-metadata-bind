@@ -20,10 +20,17 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * An abstract class for implementing {@link MetadataType}.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
 abstract class AbstractMetadataType
         implements MetadataType {
 
@@ -33,13 +40,20 @@ abstract class AbstractMetadataType
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
+    /**
+     * Creates a new instance.
+     */
+    AbstractMetadataType() {
+        super();
+    }
+
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
-               "unmappedColumns=" + unmappedColumns +
+               "unknownColumns=" + unknownColumns +
                '}';
     }
 
@@ -59,10 +73,17 @@ abstract class AbstractMetadataType
         return Objects.hash(getClass());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    private final transient Map<String, Object> unmappedColumns = new HashMap<>();
-
-    Object putUnmappedColumn(final String columnName, final Object value) {
-        return unmappedColumns.put(columnName, value);
+    // -------------------------------------------------------------------------------------------------- unknownColumns
+    @Override
+    public Map<String, Object> getUnknownColumns() {
+        return unknownColumns;
     }
+
+    @Nullable
+    Object putUnknownColumn(final String label, final Object value) {
+        return unknownColumns.put(label, value);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    private final transient Map<String, Object> unknownColumns = new HashMap<>();
 }

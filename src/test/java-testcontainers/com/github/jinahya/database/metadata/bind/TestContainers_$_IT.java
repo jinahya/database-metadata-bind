@@ -25,7 +25,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -35,6 +34,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 // https://java.testcontainers.org/modules/databases/jdbc/
+
 @Testcontainers
 @Slf4j
 abstract class TestContainers_$_IT {
@@ -76,41 +76,11 @@ abstract class TestContainers_$_IT {
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void acceptProperties__() {
-        applyContext(c -> {
+    void test() {
+        applyConnection(c -> {
             try {
-                c.acceptProperties((p, r) -> {
-                    log.debug("{}: {}", p, r);
-                });
-            } catch (final IntrospectionException ie) {
-                throw new RuntimeException(ie);
-            }
-            return null;
-        });
-    }
-
-    @Test
-    void acceptValues__() {
-        applyContext(c -> {
-            c.acceptValues((m, r) -> {
-                log.debug("{}: {}", m.getName(), r);
-            });
-            return null;
-        });
-    }
-
-    @Test
-    void test() throws SQLException {
-        applyContext(c -> {
-            c.connectionSupplier = () -> {
-                try {
-                    return connect();
-                } catch (final SQLException sqle) {
-                    throw new RuntimeException("failed to connect", sqle);
-                }
-            };
-            try {
-                Context_Test_Utils.test(c);
+                final var context = Context.newInstance(c);
+                Context_Test_Utils.test(context);
             } catch (final SQLException sqle) {
                 if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
                     log.warn("not supported", sqlfnse);
@@ -126,11 +96,6 @@ abstract class TestContainers_$_IT {
     @Test
     void functions() {
         applyContext(c -> {
-            try {
-                Context_Test_Utils.info(c);
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
             try {
                 final var functions = c.getFunctions(null, null, "%");
                 Context_Test_Utils.functions(c, functions);
@@ -148,11 +113,6 @@ abstract class TestContainers_$_IT {
     @Test
     void schemas() {
         applyContext(c -> {
-            try {
-                Context_Test_Utils.info(c);
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
             try {
                 final var schemas = c.getSchemas((String) null, "%");
                 Context_Test_Utils.schemas(c, schemas);
