@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.util.List;
 
@@ -38,6 +39,7 @@ import java.util.List;
 public class VersionColumn
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 3587959398829593292L;
 
     // ----------------------------------------------------------------------------------------------------------- SCOPE

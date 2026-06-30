@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 
 /**
@@ -35,6 +36,7 @@ import java.sql.DatabaseMetaData;
 public class SuperType
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 4603878785941565029L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS

@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,7 @@ import java.util.Map;
 abstract class AbstractMetadataType
         implements MetadataType {
 
+    @Serial
     private static final long serialVersionUID = -3285362930174073345L;
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS

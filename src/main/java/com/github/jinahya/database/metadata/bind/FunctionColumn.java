@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
@@ -38,6 +39,7 @@ import java.util.function.UnaryOperator;
 public class FunctionColumn
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = -7445156446214062680L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS

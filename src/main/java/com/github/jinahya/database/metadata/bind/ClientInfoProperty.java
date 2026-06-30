@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
@@ -34,6 +35,7 @@ import java.util.function.UnaryOperator;
 public class ClientInfoProperty
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = -2913230435651853254L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS

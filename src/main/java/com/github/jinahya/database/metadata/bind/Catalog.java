@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import java.io.Serial;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -41,6 +42,7 @@ import java.util.function.UnaryOperator;
 public class Catalog
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 6239185259128825953L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS

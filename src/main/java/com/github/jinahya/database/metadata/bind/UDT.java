@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -43,6 +44,7 @@ import java.util.function.UnaryOperator;
 public class UDT
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 8665246093405057553L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS

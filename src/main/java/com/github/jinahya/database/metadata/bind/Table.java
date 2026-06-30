@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +52,7 @@ import java.util.function.UnaryOperator;
 public class Table
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 6590036695540141125L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
