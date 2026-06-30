@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.AssertTrue;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
@@ -154,15 +153,6 @@ public class VersionColumn
                ",decimalDigits=" + decimalDigits +
                ",pseudoColumn=" + pseudoColumn +
                '}';
-    }
-
-    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
-    @AssertTrue
-    private boolean isPseudoColumnValid() {
-        if (pseudoColumn == null) {
-            return true;
-        }
-        return COLUMN_VALUES_PSEUDO_COLUMN.contains(pseudoColumn);
     }
 
     // ----------------------------------------------------------------------------------------------------------- scope

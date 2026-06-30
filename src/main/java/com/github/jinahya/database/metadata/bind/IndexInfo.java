@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.AssertTrue;
 import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
@@ -235,110 +234,6 @@ public class IndexInfo
                ",pages=" + pages +
                ",filterCondition=" + filterCondition +
                '}';
-    }
-
-    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
-
-    /**
-     * Asserts that {@value #COLUMN_LABEL_NON_UNIQUE} is {@code false} when {@value #COLUMN_LABEL_TYPE} is
-     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
-     *
-     * @return {@code true} if the constraint holds; {@code false} otherwise.
-     */
-    @AssertTrue(message = "NON_UNIQUE is false when TYPE is tableIndexStatistic(0)")
-    private boolean isNonUniqueFalseWhenTypeIsTableIndexStatistic() {
-        if (type == null) {
-            return true;
-        }
-        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
-            return nonUnique == null || !nonUnique;
-        }
-        return true;
-    }
-
-    /**
-     * Asserts that {@value #COLUMN_LABEL_INDEX_QUALIFIER} is {@code null} when {@value #COLUMN_LABEL_TYPE} is
-     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
-     *
-     * @return {@code true} if the constraint holds; {@code false} otherwise.
-     */
-    @AssertTrue(message = "INDEX_QUALIFIER is null when TYPE is tableIndexStatistic(0)")
-    private boolean isIndexQualifierNullWhenTypeIsTableIndexStatistic() {
-        if (type == null) {
-            return true;
-        }
-        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
-            return indexQualifier == null;
-        }
-        return true;
-    }
-
-    /**
-     * Asserts that {@value #COLUMN_LABEL_INDEX_NAME} is {@code null} when {@value #COLUMN_LABEL_TYPE} is
-     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
-     *
-     * @return {@code true} if the constraint holds; {@code false} otherwise.
-     */
-    @AssertTrue(message = "INDEX_NAME is null when TYPE is tableIndexStatistic(0)")
-    private boolean isIndexNameNullWhenTypeIsTableIndexStatistic() {
-        if (type == null) {
-            return true;
-        }
-        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
-            return indexName == null;
-        }
-        return true;
-    }
-
-    /**
-     * Asserts that {@value #COLUMN_LABEL_ORDINAL_POSITION} is zero when {@value #COLUMN_LABEL_TYPE} is
-     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
-     *
-     * @return {@code true} if the constraint holds; {@code false} otherwise.
-     */
-    @AssertTrue(message = "ORDINAL_POSITION is zero when TYPE is tableIndexStatistic(0)")
-    private boolean isOrdinalPositionZeroWhenTypeIsTableIndexStatistic() {
-        if (type == null) {
-            return true;
-        }
-        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
-            return ordinalPosition == null || ordinalPosition == 0;
-        }
-        return true;
-    }
-
-    /**
-     * Asserts that {@value #COLUMN_LABEL_COLUMN_NAME} is {@code null} when {@value #COLUMN_LABEL_TYPE} is
-     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
-     *
-     * @return {@code true} if the constraint holds; {@code false} otherwise.
-     */
-    @AssertTrue(message = "COLUMN_NAME is null when TYPE is tableIndexStatistic(0)")
-    private boolean isColumnNameNullWhenTypeIsTableIndexStatistic() {
-        if (type == null) {
-            return true;
-        }
-        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
-            return columnName == null;
-        }
-        return true;
-    }
-
-    /**
-     * Asserts that {@value #COLUMN_LABEL_ASC_OR_DESC} is {@code null} when {@value #COLUMN_LABEL_TYPE} is
-     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
-     *
-     * @return {@code true} if the constraint holds; {@code false} otherwise.
-     */
-    @AssertTrue(message = "ASC_OR_DESC is null when TYPE is tableIndexStatistic(0)")
-    private boolean isAscOrDescNullWhenTypeIsTableIndexStatistic() {
-        if (type == null) {
-            return true;
-        }
-        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
-            return ascOrDesc == null;
-        }
-        return true;
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

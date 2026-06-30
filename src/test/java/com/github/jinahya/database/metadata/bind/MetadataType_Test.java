@@ -50,12 +50,6 @@ abstract class MetadataType_Test<T extends MetadataType> {
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void _Valid_NewTypeInstance() {
-        final var instance = newTypeInstance();
-        __Validation_Test_Utils.requireValid(instance);
-    }
-
-    @Test
     void _verify_NewTypeInstance() {
         MetadataType_Test_Utils.verify(newTypeInstance());
     }

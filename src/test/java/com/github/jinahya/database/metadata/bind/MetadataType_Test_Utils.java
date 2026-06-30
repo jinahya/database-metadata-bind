@@ -112,7 +112,6 @@ final class MetadataType_Test_Utils {
     }
 
     static void verify(final MetadataType obj) {
-        __Validation_Test_Utils.requireValid(obj);
         verifyAccessorsHelper(obj.getClass().asSubclass(MetadataType.class), obj);
         // toString()
         assertThatCode(obj::toString).doesNotThrowAnyException();
