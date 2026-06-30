@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -38,6 +40,8 @@ import java.util.Objects;
  * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html#getTypeInfo()">DatabaseMetaData#getTypeInfo</a>
  */
 @_ChildOfNone
+@XmlRootElement(name = "typeInfo")
+@XmlType(name = "typeInfo")
 public class TypeInfo
         extends AbstractMetadataType {
 

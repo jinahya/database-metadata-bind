@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -41,6 +43,8 @@ import java.util.Objects;
  * schema, table, scope, nullable)</a>
  */
 @_ChildOf(Table.class)
+@XmlRootElement(name = "bestRowIdentifier")
+@XmlType(name = "bestRowIdentifier")
 public class BestRowIdentifier
         extends AbstractMetadataType {
 

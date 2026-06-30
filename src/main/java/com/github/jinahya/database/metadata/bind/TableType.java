@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import java.io.Serial;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -32,6 +34,8 @@ import java.util.Objects;
  * @see Context#getTableTypes()
  */
 @_ChildOfNone
+@XmlRootElement(name = "tableType")
+@XmlType(name = "tableType")
 public class TableType
         extends AbstractMetadataType {
 

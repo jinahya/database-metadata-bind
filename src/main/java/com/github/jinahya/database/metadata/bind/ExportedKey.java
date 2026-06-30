@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -33,6 +35,8 @@ import java.util.Comparator;
  * @see ImportedKey
  */
 @_ChildOf(Table.class)
+@XmlRootElement(name = "exportedKey")
+@XmlType(name = "exportedKey")
 public class ExportedKey
         extends PortedKey {
 

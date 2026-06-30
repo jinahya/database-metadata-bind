@@ -34,6 +34,7 @@
  * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html">java.sql.DatabaseMetaData</a>
  */
 @org.jspecify.annotations.NullMarked
+@jakarta.xml.bind.annotation.XmlAccessorType(jakarta.xml.bind.annotation.XmlAccessType.FIELD)
 package com.github.jinahya.database.metadata.bind;
 
 /*-

@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -36,6 +38,8 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @_ChildOf(Table.class)
+@XmlRootElement(name = "crossReference")
+@XmlType(name = "crossReference")
 public class CrossReference
         extends AbstractMetadataType {
 

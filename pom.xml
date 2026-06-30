@@ -50,6 +50,7 @@
     <version.com.oracle.ojdbc>23.3.0.23.09</version.com.oracle.ojdbc>
     <version.com.google.errorprone>2.45.0</version.com.google.errorprone>
     <version.com.uber.nullaway>0.12.15</version.com.uber.nullaway>
+    <version.jakarta.xml.bind>4.1.0-M1</version.jakarta.xml.bind>
     <version.lombok>1.18.46</version.lombok>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <!-- https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-surefire-plugin/versions -->
@@ -61,6 +62,7 @@
     <version.ojdbc8>21.8.0.0</version.ojdbc8>
     <version.ojdbc10>19.17.0.0</version.ojdbc10>
     <version.ojdbc11>21.8.0.0</version.ojdbc11>
+    <version.org.hibernate.validator>8.0.1.Final</version.org.hibernate.validator>
   </properties>
 
   <dependencyManagement>
@@ -153,6 +155,26 @@
     <!--      <scope>provided</scope>-->
     <!--    </dependency>-->
     <dependency>
+      <groupId>jakarta.json.bind</groupId>
+      <artifactId>jakarta.json.bind-api</artifactId>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <!-- https://central.sonatype.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api/versions -->
+      <version>${version.jakarta.xml.bind}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier-nodep</artifactId>
       <version>4.5</version>
@@ -176,6 +198,32 @@
       <artifactId>duckdb_jdbc</artifactId>
       <!-- https://central.sonatype.com/artifact/org.duckdb/duckdb_jdbc/versions -->
       <version>1.5.4.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse</groupId>
+      <artifactId>yasson</artifactId>
+      <version>3.0.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.expressly</groupId>
+      <artifactId>expressly</artifactId>
+      <!-- https://central.sonatype.com/artifact/org.glassfish.expressly/expressly/versions -->
+      <version>6.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+      <version>4.0.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <!-- https://central.sonatype.com/artifact/org.hibernate.validator/hibernate-validator/versions -->
+      <version>9.0.0.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -231,6 +279,7 @@
             </additionalOptions>
             <links>
               <!--              <link>https://javadoc.io/doc/jakarta.annotation/jakarta.annotation-api/latest</link>-->
+              <link>https://javadoc.io/doc/jakarta.validation/jakarta.validation-api/latest</link>
               <link>https://jspecify.dev/docs/api</link>
             </links>
             <release>${maven.compiler.testRelease}</release>

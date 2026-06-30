@@ -22,6 +22,8 @@ import org.jspecify.annotations.Nullable;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import java.io.Serial;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -40,6 +42,8 @@ import java.util.function.Consumer;
 @_ParentOf(Function.class)
 @_ParentOf(UDT.class)
 @_ChildOfNone
+@XmlRootElement(name = "catalog")
+@XmlType(name = "catalog")
 public class Catalog
         extends AbstractMetadataType {
 

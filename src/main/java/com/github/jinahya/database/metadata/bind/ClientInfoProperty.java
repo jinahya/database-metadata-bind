@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -33,6 +35,8 @@ import java.util.Objects;
  * @see Context#getClientInfoProperties()
  */
 @_ChildOfNone
+@XmlRootElement(name = "clientInfoProperty")
+@XmlType(name = "clientInfoProperty")
 public class ClientInfoProperty
         extends AbstractMetadataType {
 

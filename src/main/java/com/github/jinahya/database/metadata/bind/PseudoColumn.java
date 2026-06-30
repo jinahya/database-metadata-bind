@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -36,6 +38,8 @@ import java.util.Objects;
  * @see Context#getPseudoColumns(String, String, String, String)
  */
 @_ChildOf(Table.class)
+@XmlRootElement(name = "pseudoColumn")
+@XmlType(name = "pseudoColumn")
 public class PseudoColumn
         extends AbstractMetadataType {
 

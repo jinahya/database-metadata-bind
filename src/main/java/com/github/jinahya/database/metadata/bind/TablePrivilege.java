@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -35,6 +37,8 @@ import java.util.Objects;
  * @see Context#getTablePrivileges(String, String, String)
  */
 @_ChildOf(Table.class)
+@XmlRootElement(name = "tablePrivilege")
+@XmlType(name = "tablePrivilege")
 public class TablePrivilege
         extends AbstractMetadataType {
 

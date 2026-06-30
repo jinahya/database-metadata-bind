@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -41,6 +43,8 @@ import java.util.Objects;
 @_ParentOf(SuperType.class)
 @_ParentOf(Attribute.class)
 @_ChildOfNone
+@XmlRootElement(name = "udt")
+@XmlType(name = "udt")
 public class UDT
         extends AbstractMetadataType {
 

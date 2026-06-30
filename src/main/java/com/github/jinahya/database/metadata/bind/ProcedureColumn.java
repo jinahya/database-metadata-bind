@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -39,6 +41,8 @@ import java.util.Objects;
  */
 
 @_ChildOf(Procedure.class)
+@XmlRootElement(name = "procedureColumn")
+@XmlType(name = "procedureColumn")
 public class ProcedureColumn
         extends AbstractMetadataType {
 

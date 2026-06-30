@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.xml.bind.annotation.XmlTransient;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -32,6 +34,7 @@ import java.util.Map;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
+@XmlTransient
 abstract class AbstractMetadataType
         implements MetadataType {
 
@@ -68,6 +71,8 @@ abstract class AbstractMetadataType
      * @return an unmodifiable view of unknown columns and their values; never {@code null}.
      */
     @Override
+    @XmlTransient
+    @JsonbTransient
     public Map<String, Object> getUnknownColumns() {
         return Collections.unmodifiableMap(unknownColumns);
     }
