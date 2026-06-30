@@ -163,7 +163,7 @@ public class VersionColumn
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
-    protected boolean isPseudoColumnValid_() {
+    protected boolean isPseudoColumnValid() {
         if (pseudoColumn == null) {
             return true;
         }

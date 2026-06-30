@@ -368,7 +368,7 @@ public class Column
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
-    protected boolean isNullableValid_() {
+    protected boolean isNullableValid() {
         if (nullable == null) {
             return true;
         }
@@ -382,7 +382,7 @@ public class Column
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
     // Correct: null if DATA_TYPE isn't REF
-    protected boolean isScopeCatalogNullWhenDataTypeIsNotRef_() {
+    protected boolean isScopeCatalogNullWhenDataTypeIsNotRef() {
         if (dataType == null) {
             return true;
         }
@@ -399,7 +399,7 @@ public class Column
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
     // Correct: null if DATA_TYPE isn't REF
-    protected boolean isScopeSchemaNullWhenDataTypeIsNotRef_() {
+    protected boolean isScopeSchemaNullWhenDataTypeIsNotRef() {
         if (dataType == null) {
             return true;
         }
@@ -416,7 +416,7 @@ public class Column
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
     // Correct: null if DATA_TYPE isn't REF
-    protected boolean isScopeTableNullWhenDataTypeIsNotRef_() {
+    protected boolean isScopeTableNullWhenDataTypeIsNotRef() {
         if (dataType == null) {
             return true;
         }
@@ -436,7 +436,7 @@ public class Column
     // null if DATA_TYPE isn't DISTINCT or user-generated REF
     // Note: This validation uses Types.REF without distinguishing user-generated vs system-generated REF.
     //       This is slightly more permissive than the spec, but JDBC doesn't provide an easy way to distinguish them.
-    protected boolean isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_() {
+    protected boolean isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef() {
         if (dataType == null) {
             return true;
         }

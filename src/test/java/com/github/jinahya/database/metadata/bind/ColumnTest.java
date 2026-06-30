@@ -40,17 +40,17 @@ class ColumnTest
         final var instance = newTypeInstance();
         // null -> holds
         instance.setNullable(null);
-        assertThat(instance.isNullableValid_()).isTrue();
+        assertThat(instance.isNullableValid()).isTrue();
         // known values -> hold
         instance.setNullable(Column.COLUMN_VALUE_NULLABLE_COLUMN_NO_NULLS);
-        assertThat(instance.isNullableValid_()).isTrue();
+        assertThat(instance.isNullableValid()).isTrue();
         instance.setNullable(Column.COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE);
-        assertThat(instance.isNullableValid_()).isTrue();
+        assertThat(instance.isNullableValid()).isTrue();
         instance.setNullable(Column.COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE_UNKNOWN);
-        assertThat(instance.isNullableValid_()).isTrue();
+        assertThat(instance.isNullableValid()).isTrue();
         // unknown value -> violated
         instance.setNullable(Integer.MIN_VALUE);
-        assertThat(instance.isNullableValid_()).isFalse();
+        assertThat(instance.isNullableValid()).isFalse();
     }
 
     @Test
@@ -60,26 +60,26 @@ class ColumnTest
         instance.setScopeCatalog("c");
         instance.setScopeSchema("s");
         instance.setScopeTable("t");
-        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef_()).isTrue();
-        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef_()).isTrue();
-        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef_()).isTrue();
+        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef()).isTrue();
+        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef()).isTrue();
+        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef()).isTrue();
         instance.setDataType(java.sql.Types.INTEGER);
-        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef_()).isFalse();
-        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef_()).isFalse();
-        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef_()).isFalse();
+        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef()).isFalse();
+        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef()).isFalse();
+        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef()).isFalse();
         instance.setScopeCatalog(null);
         instance.setScopeSchema(null);
         instance.setScopeTable(null);
-        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef_()).isTrue();
-        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef_()).isTrue();
-        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef_()).isTrue();
+        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef()).isTrue();
+        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef()).isTrue();
+        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef()).isTrue();
         instance.setDataType(java.sql.Types.REF);
         instance.setScopeCatalog("c");
         instance.setScopeSchema("s");
         instance.setScopeTable("t");
-        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef_()).isTrue();
-        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef_()).isTrue();
-        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef_()).isTrue();
+        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef()).isTrue();
+        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef()).isTrue();
+        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef()).isTrue();
     }
 
     @Test
@@ -87,16 +87,16 @@ class ColumnTest
         final var instance = newTypeInstance();
         instance.setSourceDataType(java.sql.Types.INTEGER);
         instance.setDataType(null);
-        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_()).isTrue();
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef()).isTrue();
         instance.setDataType(java.sql.Types.VARCHAR);
-        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_()).isFalse();
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef()).isFalse();
         instance.setSourceDataType(null);
-        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_()).isTrue();
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef()).isTrue();
         instance.setSourceDataType(java.sql.Types.INTEGER);
         instance.setDataType(java.sql.Types.DISTINCT);
-        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_()).isTrue();
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef()).isTrue();
         instance.setDataType(java.sql.Types.REF);
-        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_()).isTrue();
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef()).isTrue();
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -40,16 +40,16 @@ class VersionColumnTest
         final var instance = newTypeInstance();
         // null -> holds
         instance.setPseudoColumn(null);
-        assertThat(instance.isPseudoColumnValid_()).isTrue();
+        assertThat(instance.isPseudoColumnValid()).isTrue();
         // known values -> hold
         instance.setPseudoColumn(VersionColumn.COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_UNKNOWN);
-        assertThat(instance.isPseudoColumnValid_()).isTrue();
+        assertThat(instance.isPseudoColumnValid()).isTrue();
         instance.setPseudoColumn(VersionColumn.COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_NOT_PSEUDO);
-        assertThat(instance.isPseudoColumnValid_()).isTrue();
+        assertThat(instance.isPseudoColumnValid()).isTrue();
         instance.setPseudoColumn(VersionColumn.COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_PSEUDO);
-        assertThat(instance.isPseudoColumnValid_()).isTrue();
+        assertThat(instance.isPseudoColumnValid()).isTrue();
         // unknown value -> violated
         instance.setPseudoColumn(Integer.MIN_VALUE);
-        assertThat(instance.isPseudoColumnValid_()).isFalse();
+        assertThat(instance.isPseudoColumnValid()).isFalse();
     }
 }

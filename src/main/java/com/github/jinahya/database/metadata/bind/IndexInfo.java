@@ -244,7 +244,7 @@ public class IndexInfo
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
-    protected boolean isNonUniqueFalseWhenTypeIsTableIndexStatistic_() {
+    protected boolean isNonUniqueFalseWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
         }
@@ -260,7 +260,7 @@ public class IndexInfo
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
-    protected boolean isIndexQualifierNullWhenTypeIsTableIndexStatistic_() {
+    protected boolean isIndexQualifierNullWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
         }
@@ -276,7 +276,7 @@ public class IndexInfo
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
-    protected boolean isIndexNameNullWhenTypeIsTableIndexStatistic_() {
+    protected boolean isIndexNameNullWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
         }
@@ -292,7 +292,7 @@ public class IndexInfo
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
-    protected boolean isOrdinalPositionZeroWhenTypeIsTableIndexStatistic_() {
+    protected boolean isOrdinalPositionZeroWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
         }
@@ -308,7 +308,7 @@ public class IndexInfo
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
-    protected boolean isColumnNameNullWhenTypeIsTableIndexStatistic_() {
+    protected boolean isColumnNameNullWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
         }
@@ -324,7 +324,7 @@ public class IndexInfo
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
-    protected boolean isAscOrDescNullWhenTypeIsTableIndexStatistic_() {
+    protected boolean isAscOrDescNullWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
         }
