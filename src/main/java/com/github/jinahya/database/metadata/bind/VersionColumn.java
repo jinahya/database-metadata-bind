@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.validation.constraints.AssertTrue;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -37,6 +40,8 @@ import java.util.List;
  * schema, table)</a>
  */
 @_ChildOf(Table.class)
+@XmlRootElement(name = "versionColumn")
+@XmlType(name = "versionColumn")
 public class VersionColumn
         extends AbstractMetadataType {
 
@@ -165,6 +170,7 @@ public class VersionColumn
     }
 
     // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+    @AssertTrue
 
     /**
      * Asserts that the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column, when present, is one of the values defined

@@ -1,5 +1,7 @@
 package com.github.jinahya.database.metadata.bind;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import java.io.Serial;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -41,6 +43,8 @@ import java.util.Objects;
 @SuppressWarnings({
         "java:S2637"
 })
+@XmlRootElement(name = "catalog")
+@XmlType(name = "catalog")
 public class Catalog
         extends AbstractMetadataType {
 

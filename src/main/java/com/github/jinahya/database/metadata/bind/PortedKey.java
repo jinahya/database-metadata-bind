@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlTransient;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -37,6 +38,7 @@ import java.util.Objects;
  * @see ExportedKey
  * @see ImportedKey
  */
+@XmlTransient
 abstract class PortedKey
         extends AbstractMetadataType {
 

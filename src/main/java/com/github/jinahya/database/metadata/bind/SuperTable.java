@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -33,6 +35,8 @@ import java.io.Serial;
  * @see Context#getSuperTables(String, String, String)
  */
 @_ChildOf(Table.class)
+@XmlRootElement(name = "superTable")
+@XmlType(name = "superTable")
 public class SuperTable
         extends AbstractMetadataType {
 

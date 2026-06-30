@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.validation.constraints.AssertTrue;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -39,6 +42,8 @@ import java.util.Optional;
  * @see Context#getIndexInfo(String, String, String, boolean, boolean)
  */
 @_ChildOf(Table.class)
+@XmlRootElement(name = "indexInfo")
+@XmlType(name = "indexInfo")
 public class IndexInfo
         extends AbstractMetadataType {
 
@@ -258,6 +263,7 @@ public class IndexInfo
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
+    @AssertTrue(message = "NON_UNIQUE is false when TYPE is tableIndexStatistic(0)")
     protected boolean isNonUniqueFalseWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
@@ -274,6 +280,7 @@ public class IndexInfo
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
+    @AssertTrue(message = "INDEX_QUALIFIER is null when TYPE is tableIndexStatistic(0)")
     protected boolean isIndexQualifierNullWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
@@ -290,6 +297,7 @@ public class IndexInfo
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
+    @AssertTrue(message = "INDEX_NAME is null when TYPE is tableIndexStatistic(0)")
     protected boolean isIndexNameNullWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
@@ -306,6 +314,7 @@ public class IndexInfo
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
+    @AssertTrue(message = "ORDINAL_POSITION is zero when TYPE is tableIndexStatistic(0)")
     protected boolean isOrdinalPositionZeroWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
@@ -322,6 +331,7 @@ public class IndexInfo
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
+    @AssertTrue(message = "COLUMN_NAME is null when TYPE is tableIndexStatistic(0)")
     protected boolean isColumnNameNullWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
@@ -338,6 +348,7 @@ public class IndexInfo
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
+    @AssertTrue(message = "ASC_OR_DESC is null when TYPE is tableIndexStatistic(0)")
     protected boolean isAscOrDescNullWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;

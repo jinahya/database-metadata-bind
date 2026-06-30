@@ -20,6 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Positive;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -37,6 +41,8 @@ import java.util.Objects;
  * @see Context#getColumns(String, String, String, String)
  */
 @_ChildOf(Table.class)
+@XmlRootElement(name = "column")
+@XmlType(name = "column")
 public class Column
         extends AbstractMetadataType {
 
@@ -391,6 +397,7 @@ public class Column
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
+    @AssertTrue
     // Correct: null if DATA_TYPE isn't REF
     protected boolean isScopeCatalogNullWhenDataTypeIsNotRef() {
         if (dataType == null) {
@@ -408,6 +415,7 @@ public class Column
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
+    @AssertTrue
     // Correct: null if DATA_TYPE isn't REF
     protected boolean isScopeSchemaNullWhenDataTypeIsNotRef() {
         if (dataType == null) {
@@ -425,6 +433,7 @@ public class Column
      *
      * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
+    @AssertTrue
     // Correct: null if DATA_TYPE isn't REF
     protected boolean isScopeTableNullWhenDataTypeIsNotRef() {
         if (dataType == null) {
@@ -1063,6 +1072,7 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
+    @Positive
     @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 

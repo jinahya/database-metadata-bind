@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -34,6 +36,8 @@ import java.sql.DatabaseMetaData;
  * @see Context#getSuperTypes(String, String, String)
  */
 @_ChildOf(UDT.class)
+@XmlRootElement(name = "superType")
+@XmlType(name = "superType")
 public class SuperType
         extends AbstractMetadataType {
 
