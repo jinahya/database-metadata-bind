@@ -99,6 +99,14 @@
         <scope>import</scope>
       </dependency>
       <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-bom</artifactId>
+        <!-- https://central.sonatype.com/artifact/org.assertj/assertj-bom/versions -->
+        <version>4.0.0-M1</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
         <!-- https://central.sonatype.com/artifact/org.junit/junit-bom/versions -->
@@ -200,7 +208,6 @@
       <artifactId>assertj-core</artifactId>
       <!-- https://central.sonatype.com/artifact/org.assertj/assertj-core/versions -->
       <!--      <version>3.27.3</version>-->
-      <version>3.27.6</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -386,7 +393,7 @@
             <id>enforce-dependency-convergence</id>
             <configuration>
               <rules>
-                <dependencyConvergence />
+                <dependencyConvergence/>
               </rules>
             </configuration>
             <goals>
@@ -598,7 +605,7 @@
           <artifactId>mssql-jdbc</artifactId>
           <!-- https://central.sonatype.com/artifact/com.microsoft.sqlserver/mssql-jdbc/versions -->
           <!--          <version>11.2.3.jre17</version>-->
-<!--          <version>12.6.1.jre11</version>-->
+          <!--          <version>12.6.1.jre11</version>-->
           <version>13.4.0.jre11</version>
           <scope>test</scope>
         </dependency>
