@@ -61,8 +61,6 @@
     <version.ojdbc8>21.8.0.0</version.ojdbc8>
     <version.ojdbc10>19.17.0.0</version.ojdbc10>
     <version.ojdbc11>21.8.0.0</version.ojdbc11>
-    <!--    <version.org.apache.derby>10.16.1.1</version.org.apache.derby>-->
-    <version.org.apache.derby>10.17.1.0</version.org.apache.derby>
     <version.org.hibernate.validator>8.0.1.Final</version.org.hibernate.validator>
   </properties>
 
@@ -183,24 +181,6 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
       <version>1.15.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derby</artifactId>
-      <version>${version.org.apache.derby}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derbyshared</artifactId>
-      <version>${version.org.apache.derby}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derbytools</artifactId>
-      <version>${version.org.apache.derby}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -436,12 +416,6 @@
           <excludes>
             <exclude>**/*IT.java</exclude> <!-- 이게 왜 필요한지 확인 필요 -->
           </excludes>
-          <systemProperties>
-            <property>
-              <name>derby.stream.error.file</name>
-              <value>target/derby.log</value>
-            </property>
-          </systemProperties>
           <trimStackTrace>false</trimStackTrace>
         </configuration>
       </plugin>

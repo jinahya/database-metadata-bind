@@ -185,7 +185,7 @@ Methods must appear in this order: `toString`, `equals`, `hashCode`.
 |---------|---------|
 | `*Test.java` | Unit tests, extend `AbstractMetadataType_Test<T>` |
 | `*IT.java` | Integration tests with TestContainers |
-| `Memory_*_Test.java` | In-memory databases (Derby, H2, HSQL, SQLite) |
+| `Memory_*_Test.java` | In-memory databases (H2, HSQL, SQLite) |
 
 ## New Binding Class Checklist
 

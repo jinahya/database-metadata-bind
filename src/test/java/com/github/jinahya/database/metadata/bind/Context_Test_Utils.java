@@ -351,8 +351,7 @@ final class Context_Test_Utils {
         // ------------------------------------------------------------------------------------------------------ tables
         try {
             final var values = context.getTables(value.getTableCat(), null, "%", (String[]) null);
-            if (!databaseProductName(context).equals(DatabaseProductNames.APACHE_DERBY) &&
-                !databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)) {
+            if (!databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)) {
                 values.forEach(t -> {
                     assertType(t).isOf(value);
                 });

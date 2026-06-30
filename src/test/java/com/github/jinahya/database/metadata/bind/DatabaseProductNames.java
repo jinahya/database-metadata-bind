@@ -25,8 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 final class DatabaseProductNames {
 
-    static final String APACHE_DERBY = "Apache Derby";
-
     static final String H2 = "H2";
 
     static final String HSQL_DATABASE_ENGINE = "HSQL Database Engine";
