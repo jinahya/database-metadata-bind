@@ -32,9 +32,9 @@ public interface MetadataType
         extends Serializable {
 
     /**
-     * Returns a map of unknown columns and values.
+     * Returns an unmodifiable view of unknown columns and values.
      *
-     * @return a map of unknown columns and values.
+     * @return an unmodifiable view of unknown columns and values.
      */
     Map<String, Object> getUnknownColumns();
 }

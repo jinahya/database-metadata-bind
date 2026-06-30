@@ -32,7 +32,7 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getVersionColumns(String, String, String)
  * @see <a
- * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html#getVersionColumns(java.lang.String,java.lang.String,java.lang.String)">DatabaseMetaData#getVresionColumns(catalog,
+ * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html#getVersionColumns(java.lang.String,java.lang.String,java.lang.String)">DatabaseMetaData#getVersionColumns(catalog,
  * schema, table)</a>
  */
 @_ChildOf(Table.class)
@@ -121,6 +121,9 @@ public class VersionColumn
     public static final int COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_PSEUDO =
             DatabaseMetaData.versionColumnPseudo;    // 2
 
+    /**
+     * A list of values for the {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     */
     static final List<Integer> COLUMN_VALUES_PSEUDO_COLUMN = List.of(
             COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_UNKNOWN,    // 0
             COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_NOT_PSEUDO, // 1
@@ -165,9 +168,9 @@ public class VersionColumn
     // ----------------------------------------------------------------------------------------------------------- scope
 
     /**
-     * Returns the value of {@value COLUMN_LABEL_SCOPE} column.
+     * Returns the value of {@value #COLUMN_LABEL_SCOPE} column.
      *
-     * @return the value of {@value COLUMN_LABEL_SCOPE} column.
+     * @return the value of {@value #COLUMN_LABEL_SCOPE} column.
      */
     @Nullable
     public Integer getScope() {
@@ -175,9 +178,9 @@ public class VersionColumn
     }
 
     /**
-     * Sets the value of {@value COLUMN_LABEL_SCOPE} column.
+     * Sets the value of {@value #COLUMN_LABEL_SCOPE} column.
      *
-     * @param scope the value of {@value COLUMN_LABEL_SCOPE} column.
+     * @param scope the value of {@value #COLUMN_LABEL_SCOPE} column.
      */
     void setScope(final Integer scope) {
         this.scope = scope;
@@ -206,9 +209,9 @@ public class VersionColumn
     // -------------------------------------------------------------------------------------------------------- dataType
 
     /**
-     * Returns the value of {@code DATA_TYPE} column.
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      *
-     * @return the value of {@code DATA_TYPE} column.
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      * @see java.sql.Types
      */
     public Integer getDataType() {
@@ -216,9 +219,9 @@ public class VersionColumn
     }
 
     /**
-     * Sets the value of {@code DATA_TYPE} column.
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      *
-     * @param dataType the value of {@code DATA_TYPE} column.
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      */
     void setDataType(final Integer dataType) {
         this.dataType = dataType;
@@ -227,18 +230,18 @@ public class VersionColumn
     // -------------------------------------------------------------------------------------------------------- typeName
 
     /**
-     * Returns the value of {@code TYPE_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      *
-     * @return the value of {@code TYPE_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
     public String getTypeName() {
         return typeName;
     }
 
     /**
-     * Sets the value of {@code TYPE_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      *
-     * @param typeName the value of {@code TYPE_NAME} column.
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
     void setTypeName(final String typeName) {
         this.typeName = typeName;
@@ -247,9 +250,9 @@ public class VersionColumn
     // ------------------------------------------------------------------------------------------------------ columnSize
 
     /**
-     * Returns the value of {@code COLUMN_SIZE} column.
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
      *
-     * @return the value of {@code COLUMN_SIZE} column.
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
      */
     @Nullable
     public Integer getColumnSize() {
@@ -257,9 +260,9 @@ public class VersionColumn
     }
 
     /**
-     * Sets the value of {@code COLUMN_SIZE} column.
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
      *
-     * @param columnSize the value of {@code COLUMN_SIZE} column.
+     * @param columnSize the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
      */
     void setColumnSize(final Integer columnSize) {
         this.columnSize = columnSize;
@@ -268,18 +271,18 @@ public class VersionColumn
     // ---------------------------------------------------------------------------------------------------- bufferLength
 
     /**
-     * Returns the value of {@code BUFFER_LENGTH} column.
+     * Returns the value of {@value #COLUMN_LABEL_BUFFER_LENGTH} column.
      *
-     * @return the value of {@code BUFFER_LENGTH} column.
+     * @return the value of {@value #COLUMN_LABEL_BUFFER_LENGTH} column.
      */
     public Integer getBufferLength() {
         return bufferLength;
     }
 
     /**
-     * Sets the value of {@code BUFFER_LENGTH} column.
+     * Sets the value of {@value #COLUMN_LABEL_BUFFER_LENGTH} column.
      *
-     * @param bufferLength the value of {@code BUFFER_LENGTH} column.
+     * @param bufferLength the value of {@value #COLUMN_LABEL_BUFFER_LENGTH} column.
      */
     void setBufferLength(final Integer bufferLength) {
         this.bufferLength = bufferLength;
@@ -288,9 +291,9 @@ public class VersionColumn
     // --------------------------------------------------------------------------------------------------- decimalDigits
 
     /**
-     * Returns the value of {@code DECIMAL_DIGITS} column.
+     * Returns the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
      *
-     * @return the value of {@code DECIMAL_DIGITS} column.
+     * @return the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
      */
     @Nullable
     public Integer getDecimalDigits() {
@@ -298,9 +301,9 @@ public class VersionColumn
     }
 
     /**
-     * Sets the value of {@code DECIMAL_DIGITS} column.
+     * Sets the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
      *
-     * @param decimalDigits the value of {@code DECIMAL_DIGITS} column.
+     * @param decimalDigits the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
      */
     void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;

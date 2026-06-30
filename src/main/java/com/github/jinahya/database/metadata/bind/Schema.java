@@ -54,18 +54,19 @@ public class Schema
      * The results are ordered by <code>TABLE_CATALOG</code> and <code>TABLE_SCHEM</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see java.sql.DatabaseMetaData#getSchemas(String, String)
      */
     static Comparator<Schema> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                         final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<Schema, String>comparing(v -> operator.apply(v.getTableCatalog()), comparator)
-                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator);
+                .<Schema, String>comparing(v -> op.apply(v.getTableCatalog()), comparator)
+                .thenComparing(v -> op.apply(v.getTableSchem()), comparator);
     }
 
     // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
@@ -81,14 +82,6 @@ public class Schema
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
-
-    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
-    static Schema of(final String tableCatalog, final String tableSchem) {
-        final var instance = new Schema();
-        instance.setTableCatalog(tableCatalog);
-        instance.setTableSchem(tableSchem);
-        return instance;
-    }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 

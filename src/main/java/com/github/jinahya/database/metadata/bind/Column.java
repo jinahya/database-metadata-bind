@@ -52,7 +52,7 @@ public class Column
      * <code>ORDINAL_POSITION</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
      * @see DatabaseMetaData#getColumns(String, String, String, String)
@@ -61,10 +61,11 @@ public class Column
                                                         final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<Column, String>comparing(v -> operator.apply(v.getTableCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getTableName()), comparator)
+                .<Column, String>comparing(v -> op.apply(v.getTableCat()), comparator)
+                .thenComparing(v -> op.apply(v.getTableSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getTableName()), comparator)
                 .thenComparing(Column::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
@@ -95,90 +96,6 @@ public class Column
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
-
-    // -------------------------------------------------------------------------------------------------------- NULLABLE
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
-
-    /**
-     * A value of {@value} for the {@value #COLUMN_LABEL_NULLABLE} column
-     */
-    public static final int COLUMN_VALUE_NULLABLE_COLUMN_NO_NULLS = DatabaseMetaData.columnNoNulls;
-
-    /**
-     * A value of {@value} for the {@value #COLUMN_LABEL_NULLABLE} column
-     */
-    public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE = DatabaseMetaData.columnNullable;
-
-    /**
-     * A value of {@value} for the {@value #COLUMN_LABEL_NULLABLE} column
-     */
-    public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE_UNKNOWN = DatabaseMetaData.columnNullableUnknown;
-
-    static final List<Integer> COLUMN_VALUES_NULLABLE = List.of(
-            COLUMN_VALUE_NULLABLE_COLUMN_NO_NULLS,        // 0
-            COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE,        // 1
-            COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE_UNKNOWN // 2
-    );
-
-    // ------------------------------------------------------------------------------------------------ IS_AUTOINCREMENT
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
-
-    /**
-     * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
-     */
-    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_YES = MetadataTypeConstants.YES;
-
-    /**
-     * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
-     */
-    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_NO = MetadataTypeConstants.NO;
-
-    /**
-     * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
-     */
-    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_UNKNOWN = MetadataTypeConstants.EMPTY;
-
-    static final List<String> COLUMN_VALUES_IS_AUTOINCREMENT = List.of(
-            COLUMN_VALUE_IS_AUTOINCREMENT_YES,
-            COLUMN_VALUE_IS_AUTOINCREMENT_NO,
-            COLUMN_VALUE_IS_AUTOINCREMENT_UNKNOWN
-    );
-
-    // ---------------------------------------------------------------------------------------------- IS_GENERATEDCOLUMN
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
-
-    /**
-     * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
-     */
-    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_YES = MetadataTypeConstants.YES;
-
-    /**
-     * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
-     */
-    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_NO = MetadataTypeConstants.NO;
-
-    /**
-     * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
-     */
-    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_UNKNOWN = MetadataTypeConstants.EMPTY;
-
-    static final List<String> COLUMN_VALUES_IS_GENERATEDCOLUMN = List.of(
-            COLUMN_VALUE_IS_GENERATEDCOLUMN_YES,
-            COLUMN_VALUE_IS_GENERATEDCOLUMN_NO,
-            COLUMN_VALUE_IS_GENERATEDCOLUMN_UNKNOWN
-    );
 
     // ------------------------------------------------------------------------------------------------------- DATA_TYPE
 
@@ -221,6 +138,34 @@ public class Column
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NUM_PREC_RADIX = "NUM_PREC_RADIX";
+
+    // -------------------------------------------------------------------------------------------------------- NULLABLE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_NULLABLE} column.
+     */
+    public static final int COLUMN_VALUE_NULLABLE_COLUMN_NO_NULLS = DatabaseMetaData.columnNoNulls;
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_NULLABLE} column.
+     */
+    public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE = DatabaseMetaData.columnNullable;
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_NULLABLE} column.
+     */
+    public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE_UNKNOWN = DatabaseMetaData.columnNullableUnknown;
+
+    static final List<Integer> COLUMN_VALUES_NULLABLE = List.of(
+            COLUMN_VALUE_NULLABLE_COLUMN_NO_NULLS,        // 0
+            COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE,        // 1
+            COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE_UNKNOWN // 2
+    );
 
     // --------------------------------------------------------------------------------------------------------- REMARKS
 
@@ -320,15 +265,61 @@ public class Column
      */
     public static final String COLUMN_LABEL_SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
 
-    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
-    static Column of(final String tableCat, final String tableSchem, final String tableName, final String columnName) {
-        final var instance = new Column();
-        instance.setTableCat(tableCat);
-        instance.setTableSchem(tableSchem);
-        instance.setTableName(tableName);
-        instance.setColumnName(columnName);
-        return instance;
-    }
+    // ------------------------------------------------------------------------------------------------ IS_AUTOINCREMENT
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     */
+    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_YES = MetadataTypeConstants.YES;
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     */
+    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_NO = MetadataTypeConstants.NO;
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     */
+    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_UNKNOWN = MetadataTypeConstants.EMPTY;
+
+    static final List<String> COLUMN_VALUES_IS_AUTOINCREMENT = List.of(
+            COLUMN_VALUE_IS_AUTOINCREMENT_YES,
+            COLUMN_VALUE_IS_AUTOINCREMENT_NO,
+            COLUMN_VALUE_IS_AUTOINCREMENT_UNKNOWN
+    );
+
+    // ---------------------------------------------------------------------------------------------- IS_GENERATEDCOLUMN
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     */
+    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_YES = MetadataTypeConstants.YES;
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     */
+    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_NO = MetadataTypeConstants.NO;
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     */
+    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_UNKNOWN = MetadataTypeConstants.EMPTY;
+
+    static final List<String> COLUMN_VALUES_IS_GENERATEDCOLUMN = List.of(
+            COLUMN_VALUE_IS_GENERATEDCOLUMN_YES,
+            COLUMN_VALUE_IS_GENERATEDCOLUMN_NO,
+            COLUMN_VALUE_IS_GENERATEDCOLUMN_UNKNOWN
+    );
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
@@ -372,6 +363,13 @@ public class Column
     }
 
     // ------------------------------------------------------------------------------------------------ Jakarta-Validation
+
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_NULLABLE} column, when present, is one of the values defined for
+     * the column.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     private boolean isNullableValid() {
         if (nullable == null) {
             return true;
@@ -379,6 +377,12 @@ public class Column
         return COLUMN_VALUES_NULLABLE.contains(nullable);
     }
 
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SCOPE_CATALOG} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is not {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     @AssertTrue
     // Correct: null if DATA_TYPE isn't REF
     private boolean isScopeCatalogNullWhenDataTypeIsNotRef() {
@@ -391,6 +395,12 @@ public class Column
         return true;
     }
 
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SCOPE_SCHEMA} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is not {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     @AssertTrue
     // Correct: null if DATA_TYPE isn't REF
     private boolean isScopeSchemaNullWhenDataTypeIsNotRef() {
@@ -403,6 +413,12 @@ public class Column
         return true;
     }
 
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SCOPE_TABLE} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is not {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     @AssertTrue
     // Correct: null if DATA_TYPE isn't REF
     private boolean isScopeTableNullWhenDataTypeIsNotRef() {
@@ -415,6 +431,13 @@ public class Column
         return true;
     }
 
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SOURCE_DATA_TYPE} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is neither {@link java.sql.Types#DISTINCT} nor
+     * {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     //    @AssertTrue
     // null if DATA_TYPE isn't DISTINCT or user-generated REF
     // Note: This validation uses Types.REF without distinguishing user-generated vs system-generated REF.
@@ -748,7 +771,6 @@ public class Column
      *
      * @return the value of {@code CHAR_OCTET_LENGTH} column.
      */
-    @Nullable
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
@@ -992,8 +1014,8 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
-    @Nullable
-    @_NullableBySpecification
+    //    @Nullable
+//    @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 

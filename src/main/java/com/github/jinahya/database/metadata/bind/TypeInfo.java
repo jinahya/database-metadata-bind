@@ -49,6 +49,7 @@ public class TypeInfo
      * </blockquote>
      *
      * @return a comparator comparing values in the specified order.
+     * @see DatabaseMetaData#getTypeInfo()
      */
     static Comparator<TypeInfo> comparingInSpecifiedOrder() {
         return Comparator.comparing(TypeInfo::getDataType, Comparator.nullsFirst(Comparator.naturalOrder()));
@@ -463,7 +464,6 @@ public class TypeInfo
      *
      * @return the value of {@value #COLUMN_LABEL_UNSIGNED_ATTRIBUTE} column.
      */
-    @Nullable
     public Boolean getUnsignedAttribute() {
         return unsignedAttribute;
     }
@@ -679,8 +679,6 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
     private Integer searchable;
 
-    @Nullable
-    @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_UNSIGNED_ATTRIBUTE)
     private Boolean unsignedAttribute;
 

@@ -28,7 +28,7 @@ import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
- * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
+ * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTables(String, String, String)
@@ -49,20 +49,21 @@ public class SuperTable
      * <code>SUPERTABLE_NAME</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see java.sql.DatabaseMetaData#getSuperTables(String, String, String)
      */
     static Comparator<SuperTable> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                             final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<SuperTable, String>comparing(v -> operator.apply(v.getTableCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getTableName()), comparator)
-                .thenComparing(v -> operator.apply(v.getSupertableName()), comparator);
+                .<SuperTable, String>comparing(v -> op.apply(v.getTableCat()), comparator)
+                .thenComparing(v -> op.apply(v.getTableSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getTableName()), comparator)
+                .thenComparing(v -> op.apply(v.getSupertableName()), comparator);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

@@ -46,7 +46,7 @@ public class ImportedKey
      * <code>KEY_SEQ</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
      * @see PortedKey#comparingPk(UnaryOperator, Comparator)

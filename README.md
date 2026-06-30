@@ -113,11 +113,11 @@ $ mvn \
 ## Links
 
 ### Docker
-* [Running Oracle XE with TestContainers on Apple Silicon](https://blog.jdriven.com/2022/07/running-oracle-xe-with-testcontainers-on-apple-silicon/)
+* [Running Oracle XE with Testcontainers on Apple Silicon](https://blog.jdriven.com/2022/07/running-oracle-xe-with-testcontainers-on-apple-silicon/)
 
 ### MariaDB
 * [getTables should be ordered as expected](https://jira.mariadb.org/browse/CONJ-1156)
-* [DatabaseMetaData#getFunctions's result not property ordered](https://jira.mariadb.org/browse/CONJ-1158)
+* [DatabaseMetaData#getFunctions's result not properly ordered](https://jira.mariadb.org/browse/CONJ-1158)
 * [DatabaseMetaData#getClientInfoProperties not ordered correctly](https://jira.mariadb.org/browse/CONJ-1159)
 
 ### MySQL

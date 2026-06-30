@@ -33,7 +33,7 @@ import java.util.function.UnaryOperator;
  * {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getFunctionColumns(String, String, String, String)
+ * @see Context#getProcedures(String, String, String)
  * @see ProcedureColumn
  */
 @_ParentOf(ProcedureColumn.class)
@@ -53,21 +53,50 @@ public class Procedure
      * <code>SPECIFIC_NAME</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see DatabaseMetaData#getProcedures(String, String, String)
      */
     static Comparator<Procedure> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                            final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<Procedure, String>comparing(v -> operator.apply(v.getProcedureCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getProcedureSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getProcedureName()), comparator)
-                .thenComparing(v -> operator.apply(v.getSpecificName()), comparator);
+                .<Procedure, String>comparing(v -> op.apply(v.getProcedureCat()), comparator)
+                .thenComparing(v -> op.apply(v.getProcedureSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getProcedureName()), comparator)
+                .thenComparing(v -> op.apply(v.getSpecificName()), comparator);
     }
+
+    // --------------------------------------------------------------------------------------------------- PROCEDURE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_CAT = "PROCEDURE_CAT";
+
+    // ------------------------------------------------------------------------------------------------- PROCEDURE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
+
+    // -------------------------------------------------------------------------------------------------- PROCEDURE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_NAME = "PROCEDURE_NAME";
+
+    // --------------------------------------------------------------------------------------------------------- REMARKS
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
 
     // -------------------------------------------------------------------------------------------------- PROCEDURE_TYPE
 
@@ -111,34 +140,6 @@ public class Procedure
      */
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
-    // --------------------------------------------------------------------------------------------------- PROCEDURE_CAT
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_PROCEDURE_CAT = "PROCEDURE_CAT";
-
-    // ------------------------------------------------------------------------------------------------- PROCEDURE_SCHEM
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
-
-    // -------------------------------------------------------------------------------------------------- PROCEDURE_NAME
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_PROCEDURE_NAME = "PROCEDURE_NAME";
-
-    // --------------------------------------------------------------------------------------------------------- REMARKS
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
-
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -167,9 +168,9 @@ public class Procedure
     // ---------------------------------------------------------------------------------------------------- procedureCat
 
     /**
-     * Returns the value of {@code PROCEDURE_CAT} column.
+     * Returns the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
      *
-     * @return the value of {@code PROCEDURE_CAT} column.
+     * @return the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
      */
     @Nullable
     public String getProcedureCat() {
@@ -177,9 +178,9 @@ public class Procedure
     }
 
     /**
-     * Sets the value of {@code PROCEDURE_CAT} column.
+     * Sets the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
      *
-     * @param procedureCat the value of {@code PROCEDURE_CAT} column.
+     * @param procedureCat the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
      */
     void setProcedureCat(final String procedureCat) {
         this.procedureCat = procedureCat;
@@ -188,9 +189,9 @@ public class Procedure
     // -------------------------------------------------------------------------------------------------- procedureSchem
 
     /**
-     * Returns the value of {@code PROCEDURE_SCHEM} column.
+     * Returns the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
      *
-     * @return the value of {@code PROCEDURE_SCHEM} column.
+     * @return the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
      */
     @Nullable
     public String getProcedureSchem() {
@@ -198,9 +199,9 @@ public class Procedure
     }
 
     /**
-     * Sets the value of {@code PROCEDURE_SCHEM} column.
+     * Sets the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
      *
-     * @param procedureSchem the value of {@code PROCEDURE_SCHEM} column.
+     * @param procedureSchem the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
      */
     void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
@@ -209,18 +210,18 @@ public class Procedure
     // --------------------------------------------------------------------------------------------------- procedureName
 
     /**
-     * Returns the value of {@code PROCEDURE_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_PROCEDURE_NAME} column.
      *
-     * @return the value of {@code PROCEDURE_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_PROCEDURE_NAME} column.
      */
     public String getProcedureName() {
         return procedureName;
     }
 
     /**
-     * Sets the value of {@code PROCEDURE_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_PROCEDURE_NAME} column.
      *
-     * @param procedureName the value of {@code PROCEDURE_NAME} column.
+     * @param procedureName the value of {@value #COLUMN_LABEL_PROCEDURE_NAME} column.
      */
     void setProcedureName(final String procedureName) {
         this.procedureName = procedureName;
@@ -229,18 +230,18 @@ public class Procedure
     // ---------------------------------------------------------------------------------------------------------- remark
 
     /**
-     * Returns the value of {@code REMARKS} column.
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
      *
-     * @return the value of {@code REMARKS} column.
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
      */
     public String getRemarks() {
         return remarks;
     }
 
     /**
-     * Sets the value of {@code REMARKS} column.
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
      *
-     * @param remarks the value of {@code REMARKS} column.
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
      */
     void setRemarks(final String remarks) {
         this.remarks = remarks;

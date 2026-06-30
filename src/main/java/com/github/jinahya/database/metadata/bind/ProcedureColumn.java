@@ -52,29 +52,23 @@ public class ProcedureColumn
      * <code>SPECIFIC_NAME</code>, and <code>ORDINAL_POSITION</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see DatabaseMetaData#getProcedureColumns(String, String, String, String)
      */
     static Comparator<ProcedureColumn> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                                  final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<ProcedureColumn, String>comparing(v -> operator.apply(v.getProcedureCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getProcedureSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getProcedureName()), comparator)
-                .thenComparing(v -> operator.apply(v.getSpecificName()), comparator)
+                .<ProcedureColumn, String>comparing(v -> op.apply(v.getProcedureCat()), comparator)
+                .thenComparing(v -> op.apply(v.getProcedureSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getProcedureName()), comparator)
+                .thenComparing(v -> op.apply(v.getSpecificName()), comparator)
                 .thenComparing(ProcedureColumn::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
-
-    // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
 
     // --------------------------------------------------------------------------------------------------- PROCEDURE_CAT
 
@@ -103,6 +97,59 @@ public class ProcedureColumn
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
+
+    // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
+
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#procedureColumnUnknown}({@value DatabaseMetaData#procedureColumnUnknown}) for the
+     * {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_UNKNOWN = DatabaseMetaData.procedureColumnUnknown;
+
+    /**
+     * A column value of {@link DatabaseMetaData#procedureColumnIn}({@value DatabaseMetaData#procedureColumnIn}) for the
+     * {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_IN = DatabaseMetaData.procedureColumnIn;
+
+    /**
+     * A column value of {@link DatabaseMetaData#procedureColumnInOut}({@value DatabaseMetaData#procedureColumnInOut})
+     * for the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_INOUT = DatabaseMetaData.procedureColumnInOut;
+
+    /**
+     * A column value of {@link DatabaseMetaData#procedureColumnOut}({@value DatabaseMetaData#procedureColumnOut}) for
+     * the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_OUT = DatabaseMetaData.procedureColumnOut;
+
+    /**
+     * A column value of {@link DatabaseMetaData#procedureColumnReturn}({@value DatabaseMetaData#procedureColumnReturn})
+     * for the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RETURN = DatabaseMetaData.procedureColumnReturn;
+
+    /**
+     * A column value of {@link DatabaseMetaData#procedureColumnResult}({@value DatabaseMetaData#procedureColumnResult})
+     * for the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RESULT = DatabaseMetaData.procedureColumnResult;
+
+    static final List<Integer> COLUMN_VALUES_COLUMN_TYPE = List.of(
+            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_UNKNOWN, // 0
+            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_IN,      // 1
+            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_INOUT,   // 2
+            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_OUT,     // 4
+            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RETURN,  // 5
+            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RESULT   // 3
+    );
 
     // ------------------------------------------------------------------------------------------------------- DATA_TYPE
 
@@ -209,52 +256,6 @@ public class ProcedureColumn
      */
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
-    /**
-     * A column value of
-     * {@link DatabaseMetaData#procedureColumnUnknown}({@value DatabaseMetaData#procedureColumnUnknown}) for the
-     * {@value #COLUMN_LABEL_COLUMN_TYPE} column.
-     */
-    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_UNKNOWN = DatabaseMetaData.procedureColumnUnknown;
-
-    /**
-     * A column value of {@link DatabaseMetaData#procedureColumnIn}({@value DatabaseMetaData#procedureColumnIn}) for the
-     * {@value #COLUMN_LABEL_COLUMN_TYPE} column.
-     */
-    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_IN = DatabaseMetaData.procedureColumnIn;
-
-    /**
-     * A column value of {@link DatabaseMetaData#procedureColumnInOut}({@value DatabaseMetaData#procedureColumnInOut})
-     * for the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
-     */
-    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_INOUT = DatabaseMetaData.procedureColumnInOut;
-
-    /**
-     * A column value of {@link DatabaseMetaData#procedureColumnOut}({@value DatabaseMetaData#procedureColumnOut}) for
-     * the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
-     */
-    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_OUT = DatabaseMetaData.procedureColumnOut;
-
-    /**
-     * A column value of {@link DatabaseMetaData#procedureColumnReturn}({@value DatabaseMetaData#procedureColumnReturn})
-     * for the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
-     */
-    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RETURN = DatabaseMetaData.procedureColumnReturn;
-
-    /**
-     * A column value of {@link DatabaseMetaData#procedureColumnResult}({@value DatabaseMetaData#procedureColumnResult})
-     * for the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
-     */
-    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RESULT = DatabaseMetaData.procedureColumnResult;
-
-    static final List<Integer> COLUMN_VALUES_COLUMN_TYPE = List.of(
-            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_UNKNOWN, // 0
-            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_IN,      // 1
-            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_INOUT,   // 2
-            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_OUT,     // 4
-            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RETURN,  // 5
-            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RESULT   // 3
-    );
-
     // -------------------------------------------------------------------------------------------------------- NULLABLE
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
@@ -299,9 +300,9 @@ public class ProcedureColumn
     // ---------------------------------------------------------------------------------------------------- procedureCat
 
     /**
-     * Returns the value of {@code PROCEDURE_CAT} column.
+     * Returns the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
      *
-     * @return the value of {@code PROCEDURE_CAT} column.
+     * @return the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
      */
     @Nullable
     public String getProcedureCat() {
@@ -309,9 +310,9 @@ public class ProcedureColumn
     }
 
     /**
-     * Sets the value of {@code PROCEDURE_CAT} column.
+     * Sets the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
      *
-     * @param procedureCat the value of {@code PROCEDURE_CAT} column.
+     * @param procedureCat the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
      */
     void setProcedureCat(final String procedureCat) {
         this.procedureCat = procedureCat;
@@ -320,9 +321,9 @@ public class ProcedureColumn
     // -------------------------------------------------------------------------------------------------- procedureSchem
 
     /**
-     * Returns the value of {@code PROCEDURE_SCHEM} column.
+     * Returns the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
      *
-     * @return the value of {@code PROCEDURE_SCHEM} column.
+     * @return the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
      */
     @Nullable
     public String getProcedureSchem() {
@@ -330,9 +331,9 @@ public class ProcedureColumn
     }
 
     /**
-     * Sets the value of {@code PROCEDURE_SCHEM} column.
+     * Sets the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
      *
-     * @param procedureSchem the value of {@code PROCEDURE_SCHEM} column.
+     * @param procedureSchem the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
      */
     void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
@@ -341,18 +342,18 @@ public class ProcedureColumn
     // --------------------------------------------------------------------------------------------------- procedureName
 
     /**
-     * Returns the value of {@code PROCEDURE_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_PROCEDURE_NAME} column.
      *
-     * @return the value of {@code PROCEDURE_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_PROCEDURE_NAME} column.
      */
     public String getProcedureName() {
         return procedureName;
     }
 
     /**
-     * Sets the value of {@code PROCEDURE_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_PROCEDURE_NAME} column.
      *
-     * @param procedureName the value of {@code PROCEDURE_NAME} column.
+     * @param procedureName the value of {@value #COLUMN_LABEL_PROCEDURE_NAME} column.
      */
     void setProcedureName(final String procedureName) {
         this.procedureName = procedureName;
@@ -361,18 +362,18 @@ public class ProcedureColumn
     // ------------------------------------------------------------------------------------------------------ columnName
 
     /**
-     * Returns the value of {@code COLUMN_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
      *
-     * @return the value of {@code COLUMN_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
      */
     public String getColumnName() {
         return columnName;
     }
 
     /**
-     * Sets the value of {@code COLUMN_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
      *
-     * @param columnName the value of {@code COLUMN_NAME} column.
+     * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
      */
     void setColumnName(final String columnName) {
         this.columnName = columnName;
@@ -401,18 +402,18 @@ public class ProcedureColumn
     // -------------------------------------------------------------------------------------------------------- dataType
 
     /**
-     * Returns the value of {@code DATA_TYPE} column.
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      *
-     * @return the value of {@code DATA_TYPE} column.
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      */
     public Integer getDataType() {
         return dataType;
     }
 
     /**
-     * Sets the value of {@code DATA_TYPE} column.
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      *
-     * @param dataType the value of {@code DATA_TYPE} column.
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      */
     void setDataType(final Integer dataType) {
         this.dataType = dataType;
@@ -421,18 +422,18 @@ public class ProcedureColumn
     // -------------------------------------------------------------------------------------------------------- typeName
 
     /**
-     * Returns the value of {@code TYPE_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      *
-     * @return the value of {@code TYPE_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
     public String getTypeName() {
         return typeName;
     }
 
     /**
-     * Sets the value of {@code TYPE_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      *
-     * @param typeName the value of {@code TYPE_NAME} column.
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
     void setTypeName(final String typeName) {
         this.typeName = typeName;
@@ -441,9 +442,9 @@ public class ProcedureColumn
     // ------------------------------------------------------------------------------------------------------- precision
 
     /**
-     * Returns the value of {@code PRECISION} column.
+     * Returns the value of {@value #COLUMN_LABEL_PRECISION} column.
      *
-     * @return the value of {@code PRECISION} column.
+     * @return the value of {@value #COLUMN_LABEL_PRECISION} column.
      */
     @Nullable
     public Integer getPrecision() {
@@ -451,9 +452,9 @@ public class ProcedureColumn
     }
 
     /**
-     * Sets the value of {@code PRECISION} column.
+     * Sets the value of {@value #COLUMN_LABEL_PRECISION} column.
      *
-     * @param precision the value of {@code PRECISION} column.
+     * @param precision the value of {@value #COLUMN_LABEL_PRECISION} column.
      */
     void setPrecision(final Integer precision) {
         this.precision = precision;
@@ -462,18 +463,18 @@ public class ProcedureColumn
     // ---------------------------------------------------------------------------------------------------------- length
 
     /**
-     * Returns the value of {@code LENGTH} column.
+     * Returns the value of {@value #COLUMN_LABEL_LENGTH} column.
      *
-     * @return the value of {@code LENGTH} column.
+     * @return the value of {@value #COLUMN_LABEL_LENGTH} column.
      */
     public Integer getLength() {
         return length;
     }
 
     /**
-     * Sets the value of {@code LENGTH} column.
+     * Sets the value of {@value #COLUMN_LABEL_LENGTH} column.
      *
-     * @param length the value of {@code LENGTH} column.
+     * @param length the value of {@value #COLUMN_LABEL_LENGTH} column.
      */
     void setLength(final Integer length) {
         this.length = length;
@@ -482,9 +483,9 @@ public class ProcedureColumn
     // ----------------------------------------------------------------------------------------------------------- scale
 
     /**
-     * Returns the value of {@code SCALE} column.
+     * Returns the value of {@value #COLUMN_LABEL_SCALE} column.
      *
-     * @return the value of {@code SCALE} column.
+     * @return the value of {@value #COLUMN_LABEL_SCALE} column.
      */
     @Nullable
     public Integer getScale() {
@@ -492,9 +493,9 @@ public class ProcedureColumn
     }
 
     /**
-     * Sets the value of {@code SCALE} column.
+     * Sets the value of {@value #COLUMN_LABEL_SCALE} column.
      *
-     * @param scale the value of {@code SCALE} column.
+     * @param scale the value of {@value #COLUMN_LABEL_SCALE} column.
      */
     void setScale(final Integer scale) {
         this.scale = scale;
@@ -503,18 +504,18 @@ public class ProcedureColumn
     // ----------------------------------------------------------------------------------------------------------- radix
 
     /**
-     * Returns the value of {@code RADIX} column.
+     * Returns the value of {@value #COLUMN_LABEL_RADIX} column.
      *
-     * @return the value of {@code RADIX} column.
+     * @return the value of {@value #COLUMN_LABEL_RADIX} column.
      */
     public Integer getRadix() {
         return radix;
     }
 
     /**
-     * Sets the value of {@code RADIX} column.
+     * Sets the value of {@value #COLUMN_LABEL_RADIX} column.
      *
-     * @param radix the value of {@code RADIX} column.
+     * @param radix the value of {@value #COLUMN_LABEL_RADIX} column.
      */
     void setRadix(final Integer radix) {
         this.radix = radix;
@@ -543,19 +544,18 @@ public class ProcedureColumn
     // --------------------------------------------------------------------------------------------------------- remarks
 
     /**
-     * Returns the value of {@code REMARKS} column.
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
      *
-     * @return the value of {@code REMARKS} column.
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
      */
-    @Nullable
     public String getRemarks() {
         return remarks;
     }
 
     /**
-     * Sets the value of {@code REMARKS} column.
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
      *
-     * @param remarks the value of {@code REMARKS} column.
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
      */
     void setRemarks(final String remarks) {
         this.remarks = remarks;
@@ -564,9 +564,9 @@ public class ProcedureColumn
     // ------------------------------------------------------------------------------------------------------- columnDef
 
     /**
-     * Returns the value of {@code COLUMN_DEF} column.
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_DEF} column.
      *
-     * @return the value of {@code COLUMN_DEF} column.
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_DEF} column.
      */
     @Nullable
     public String getColumnDef() {
@@ -574,9 +574,9 @@ public class ProcedureColumn
     }
 
     /**
-     * Sets the value of {@code COLUMN_DEF} column.
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_DEF} column.
      *
-     * @param columnDef the value of {@code COLUMN_DEF} column.
+     * @param columnDef the value of {@value #COLUMN_LABEL_COLUMN_DEF} column.
      */
     void setColumnDef(final String columnDef) {
         this.columnDef = columnDef;
@@ -585,9 +585,9 @@ public class ProcedureColumn
     // ----------------------------------------------------------------------------------------------------- sqlDataType
 
     /**
-     * Returns the value of {@code SQL_DATA_TYPE} column.
+     * Returns the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
      *
-     * @return the value of {@code SQL_DATA_TYPE} column.
+     * @return the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
      */
     @Nullable
     public Integer getSqlDataType() {
@@ -595,9 +595,9 @@ public class ProcedureColumn
     }
 
     /**
-     * Sets the value of {@code SQL_DATA_TYPE} column.
+     * Sets the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
      *
-     * @param sqlDataType the value of {@code SQL_DATA_TYPE} column.
+     * @param sqlDataType the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
      */
     void setSqlDataType(final Integer sqlDataType) {
         this.sqlDataType = sqlDataType;
@@ -606,9 +606,9 @@ public class ProcedureColumn
     // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
 
     /**
-     * Returns the value of {@code SQL_DATETIME_SUB} column.
+     * Returns the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
      *
-     * @return the value of {@code SQL_DATETIME_SUB} column.
+     * @return the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
      */
     @Nullable
     public Integer getSqlDatetimeSub() {
@@ -616,9 +616,9 @@ public class ProcedureColumn
     }
 
     /**
-     * Sets the value of {@code SQL_DATETIME_SUB} column.
+     * Sets the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
      *
-     * @param sqlDatetimeSub the value of {@code SQL_DATETIME_SUB} column.
+     * @param sqlDatetimeSub the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
      */
     void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
         this.sqlDatetimeSub = sqlDatetimeSub;
@@ -627,9 +627,9 @@ public class ProcedureColumn
     // ------------------------------------------------------------------------------------------------- charOctetLength
 
     /**
-     * Returns the value of {@code CHAR_OCTET_LENGTH} column.
+     * Returns the value of {@value #COLUMN_LABEL_CHAR_OCTET_LENGTH} column.
      *
-     * @return the value of {@code CHAR_OCTET_LENGTH} column.
+     * @return the value of {@value #COLUMN_LABEL_CHAR_OCTET_LENGTH} column.
      */
     @Nullable
     public Integer getCharOctetLength() {
@@ -637,9 +637,9 @@ public class ProcedureColumn
     }
 
     /**
-     * Sets the value of {@code CHAR_OCTET_LENGTH} column.
+     * Sets the value of {@value #COLUMN_LABEL_CHAR_OCTET_LENGTH} column.
      *
-     * @param charOctetLength the value of {@code CHAR_OCTET_LENGTH} column.
+     * @param charOctetLength the value of {@value #COLUMN_LABEL_CHAR_OCTET_LENGTH} column.
      */
     void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
@@ -648,18 +648,18 @@ public class ProcedureColumn
     // ------------------------------------------------------------------------------------------------- ordinalPosition
 
     /**
-     * Returns the value of {@code ORDINAL_POSITION} column.
+     * Returns the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
      *
-     * @return the value of {@code ORDINAL_POSITION} column.
+     * @return the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
      */
     public Integer getOrdinalPosition() {
         return ordinalPosition;
     }
 
     /**
-     * Sets the value of {@code ORDINAL_POSITION} column.
+     * Sets the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
      *
-     * @param ordinalPosition the value of {@code ORDINAL_POSITION} column.
+     * @param ordinalPosition the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
      */
     void setOrdinalPosition(final Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
@@ -668,18 +668,18 @@ public class ProcedureColumn
     // ------------------------------------------------------------------------------------------------------ isNullable
 
     /**
-     * Returns the value of {@code IS_NULLABLE} column.
+     * Returns the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
      *
-     * @return the value of {@code IS_NULLABLE} column.
+     * @return the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
      */
     public String getIsNullable() {
         return isNullable;
     }
 
     /**
-     * Sets the value of {@code IS_NULLABLE} column.
+     * Sets the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
      *
-     * @param isNullable the value of {@code IS_NULLABLE} column.
+     * @param isNullable the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
      */
     void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
@@ -688,18 +688,18 @@ public class ProcedureColumn
     // ---------------------------------------------------------------------------------------------------- specificName
 
     /**
-     * Returns the value of {@code SPECIFIC_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
      *
-     * @return the value of {@code SPECIFIC_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
      */
     public String getSpecificName() {
         return specificName;
     }
 
     /**
-     * Sets the value of {@code SPECIFIC_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
      *
-     * @param specificName the value of {@code SPECIFIC_NAME} column.
+     * @param specificName the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
      */
     void setSpecificName(final String specificName) {
         this.specificName = specificName;
@@ -751,8 +751,8 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @Nullable
-    @_NullableBySpecification
+    //    @Nullable
+//    @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 

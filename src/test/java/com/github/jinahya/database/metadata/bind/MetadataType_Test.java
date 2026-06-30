@@ -77,7 +77,7 @@ abstract class MetadataType_Test<T extends MetadataType> {
 
         /**
          * Asserts, any field annotated with the specified annotation should be annotated with {@link Nullable}, and its
-         * standard getter, which should have {@code public} modifier, should also be annoated with {@link Nullable}.
+         * standard getter, which should have {@code public} modifier, should also be annotated with {@link Nullable}.
          */
         void _Nullable_(final Class<? extends Annotation> annotationClass) {
             for (final var field : fieldsAnnotatedWith(annotationClass)) {
@@ -98,8 +98,8 @@ abstract class MetadataType_Test<T extends MetadataType> {
         }
 
         /**
-         * Asserts, any fiels annotated with {@link _NullableBySpecification} should be annotated with {@link Nullable},
-         * and it's standard accessor should also be annoated with {@link Nullable}.
+         * Asserts, any fields annotated with {@link _NullableBySpecification} should be annotated with
+         * {@link Nullable}, and it's standard accessor should also be annotated with {@link Nullable}.
          */
         @DisplayName("@_NullableBySpecification")
         @Test

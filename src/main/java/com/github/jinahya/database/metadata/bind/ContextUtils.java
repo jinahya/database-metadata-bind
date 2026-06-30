@@ -29,14 +29,33 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * A class of utilities for binding {@link java.sql.DatabaseMetaData} result sets to metadata types.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
 public final class ContextUtils {
 
     private static final System.Logger logger = System.getLogger(MethodHandles.lookup().lookupClass().getName());
 
+    /**
+     * Collects, into the specified map, all declared fields of the specified class (and its superclasses) annotated
+     * with the specified annotation type, mapping each field to its annotation value.
+     * <p>
+     * Each matching non-enum-constant field is made {@linkplain Field#setAccessible(boolean) accessible} so that its
+     * value can later be read or written reflectively. The search recurses into superclasses.
+     *
+     * @param c   the class whose declared fields, along with those of its superclasses, are inspected.
+     * @param a   the annotation type to look for.
+     * @param m   the map into which matching fields and their annotation values are put.
+     * @param <T> annotation type parameter
+     * @return the specified map, with matching fields added.
+     */
     @SuppressWarnings({
             "java:S3011" // setAccessible
     })
@@ -56,6 +75,15 @@ public final class ContextUtils {
         return superclass == null ? m : getFieldsAnnotatedWith(superclass, a, m);
     }
 
+    /**
+     * Returns a map of all declared fields of the specified class (and its superclasses) annotated with the specified
+     * annotation type, each mapped to its annotation value.
+     *
+     * @param c   the class whose declared fields, along with those of its superclasses, are inspected.
+     * @param a   the annotation type to look for.
+     * @param <T> annotation type parameter
+     * @return a new map of matching fields and their annotation values; may be empty but never {@code null}.
+     */
     static <T extends Annotation> Map<Field, T> getFieldsAnnotatedWith(final Class<?> c, final Class<T> a) {
         return getFieldsAnnotatedWith(c, a, new HashMap<>());
     }
@@ -73,14 +101,33 @@ public final class ContextUtils {
         final int count = metadata.getColumnCount();
         final Set<String> labels = new HashSet<>(count);
         for (int i = 1; i <= count; i++) {
-            labels.add(metadata.getColumnLabel(i).toUpperCase());
+            labels.add(metadata.getColumnLabel(i).toUpperCase(Locale.ROOT));
         }
         return labels;
     }
 
+    /**
+     * Reads the value of the specified column from the specified result set and sets it to the specified field of the
+     * specified object.
+     * <p>
+     * The value is first read with {@link ResultSet#getObject(String)} and a direct assignment is attempted. When the
+     * read value is not directly assignable to the field's type, a series of coercion attempts are made: a {@code null}
+     * value is left unset; otherwise the value is re-read using a type-specific accessor
+     * ({@link ResultSet#getBoolean(String)}, {@link ResultSet#getShort(String)}, {@link ResultSet#getInt(String)}, or
+     * {@link ResultSet#getLong(String)}) matching the field type, and finally
+     * {@link ResultSet#getObject(String, Class)} is tried. If all coercion attempts fail, a {@link RuntimeException} is
+     * thrown.
+     *
+     * @param field   the field to set; must be accessible on {@code obj} and of a non-primitive type.
+     * @param obj     the object whose field is set.
+     * @param results the result set from which the value is read.
+     * @param label   the label of the column to read.
+     * @throws SQLException                 if a database error occurs.
+     * @throws ReflectiveOperationException if setting the field reflectively fails.
+     * @throws RuntimeException             if the value can neither be assigned directly nor coerced to the field
+     *                                      type.
+     */
     @SuppressWarnings({
-            "deprecation", // isAccessible
-            "java:S1874", // isAccessible
             "java:S3011" // accessibility bypass
     })
     static void setFieldValue(final Field field, final Object obj, final ResultSet results, final String label)
@@ -89,7 +136,7 @@ public final class ContextUtils {
         Objects.requireNonNull(obj, "obj is null");
         Objects.requireNonNull(results, "results is null");
         Objects.requireNonNull(label, "label is null");
-        assert field.isAccessible();
+        assert field.canAccess(obj);
         final Class<?> fieldType = field.getType();
         assert !fieldType.isPrimitive();
         final Object value = results.getObject(label);
@@ -135,11 +182,24 @@ public final class ContextUtils {
                 () -> String.format("failed to set; label: %s, value: %s (%s), field: %s",
                                     label, value, value.getClass().getName(), field)
         );
-        if (true) {
-            throw new RuntimeException("failed to set " + value + " for " + field);
-        }
+        throw new RuntimeException("failed to set " + value + " for " + field);
     }
 
+    /**
+     * Returns a null-safe variant of the specified comparator whose handling of {@code null} elements reflects how the
+     * underlying database sorts {@code null} values.
+     * <p>
+     * When the database {@linkplain java.sql.DatabaseMetaData#nullsAreSortedAtStart() sorts nulls at the start} or
+     * {@linkplain java.sql.DatabaseMetaData#nullsAreSortedLow() sorts nulls low}, the result orders {@code null} first
+     * ({@link Comparator#nullsFirst(Comparator)}); otherwise it orders {@code null} last
+     * ({@link Comparator#nullsLast(Comparator)}).
+     *
+     * @param context    the context whose metadata determines the {@code null} ordering.
+     * @param comparator the comparator to wrap.
+     * @param <T>        the type of elements compared.
+     * @return a null-safe comparator wrapping the specified comparator.
+     * @throws SQLException if a database error occurs while querying the {@code null} ordering.
+     */
     public static <T> Comparator<T> nullOrdered(final Context context, final Comparator<? super T> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -152,6 +212,10 @@ public final class ContextUtils {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
     private ContextUtils() {
         throw new AssertionError("instantiation is not allowed");
     }

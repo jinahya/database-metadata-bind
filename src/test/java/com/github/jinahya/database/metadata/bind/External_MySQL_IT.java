@@ -72,7 +72,7 @@ class External_MySQL_IT {
                 try (var jsonWriter = mapper.writerWithDefaultPrettyPrinter().writeValuesAsArray(writer)) {
                     context.getColumnsAndAcceptEach(null, null, "%", "%", c -> {
                         log.debug("column: {}", c);
-                        c.getUnknownColumns().clear();
+                        c.unknownColumns.clear();
                         try {
                             jsonWriter.write(c);
                         } catch (final IOException ioe) {
@@ -113,7 +113,7 @@ class External_MySQL_IT {
                                 true,
                                 v -> {
                                     log.debug("index: {}", v);
-                                    v.getUnknownColumns().clear();
+                                    v.unknownColumns.clear();
                                     try {
                                         jsonWriter.write(v);
                                     } catch (final IOException ioe) {
@@ -195,7 +195,7 @@ class External_MySQL_IT {
                                 table.getTableName(),
                                 ek -> {
                                     log.debug("exportedKey: {}", ek);
-                                    ek.getUnknownColumns().clear();
+                                    ek.unknownColumns.clear();
                                     try {
                                         jsonWriter.write(ek);
                                     } catch (final IOException ioe) {

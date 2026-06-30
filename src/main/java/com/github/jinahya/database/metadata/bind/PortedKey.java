@@ -42,123 +42,152 @@ abstract class PortedKey
     private static final long serialVersionUID = 6713872409315471232L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>PKTABLE_CAT</code>, <code>PKTABLE_SCHEM</code>, <code>PKTABLE_NAME</code>, and
+     * <code>KEY_SEQ</code>.
+     * </blockquote>
+     *
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @param <T>        the type of {@link PortedKey} to compare.
+     * @return a comparator comparing values in the specified order.
+     * @see ImportedKey#comparingInSpecifiedOrder(UnaryOperator, Comparator)
+     */
     static <T extends PortedKey> Comparator<T> comparingPk(final UnaryOperator<String> operator,
                                                            final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<T, String>comparing(v -> operator.apply(v.getPktableCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getPktableSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getPktableName()), comparator)
+                .<T, String>comparing(v -> op.apply(v.getPktableCat()), comparator)
+                .thenComparing(v -> op.apply(v.getPktableSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getPktableName()), comparator)
                 .thenComparing(PortedKey::getKeySeq, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
+    /**
+     * Returns a comparator comparing values in the specified order.
+     * <blockquote>
+     * They are ordered by <code>FKTABLE_CAT</code>, <code>FKTABLE_SCHEM</code>, <code>FKTABLE_NAME</code>, and
+     * <code>KEY_SEQ</code>.
+     * </blockquote>
+     *
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
+     * @param comparator a null-safe string comparator for comparing values.
+     * @param <T>        the type of {@link PortedKey} to compare.
+     * @return a comparator comparing values in the specified order.
+     * @see ExportedKey#comparingInSpecifiedOrder(UnaryOperator, Comparator)
+     */
     static <T extends PortedKey> Comparator<T> comparingFk(final UnaryOperator<String> operator,
                                                            final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<T, String>comparing(v -> operator.apply(v.getFktableCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getFktableSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getFktableName()), comparator)
+                .<T, String>comparing(v -> op.apply(v.getFktableCat()), comparator)
+                .thenComparing(v -> op.apply(v.getFktableSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getFktableName()), comparator)
                 .thenComparing(PortedKey::getKeySeq, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     // ----------------------------------------------------------------------------------------------------- PKTABLE_CAT
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PKTABLE_CAT = "PKTABLE_CAT";
 
     // --------------------------------------------------------------------------------------------------- PKTABLE_SCHEM
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PKTABLE_SCHEM = "PKTABLE_SCHEM";
 
     // ---------------------------------------------------------------------------------------------------- PKTABLE_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PKTABLE_NAME = "PKTABLE_NAME";
 
     // --------------------------------------------------------------------------------------------------- PKCOLUMN_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PKCOLUMN_NAME = "PKCOLUMN_NAME";
 
     // ----------------------------------------------------------------------------------------------------- FKTABLE_CAT
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FKTABLE_CAT = "FKTABLE_CAT";
 
     // --------------------------------------------------------------------------------------------------- FKTABLE_SCHEM
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FKTABLE_SCHEM = "FKTABLE_SCHEM";
 
     // ---------------------------------------------------------------------------------------------------- FKTABLE_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FKTABLE_NAME = "FKTABLE_NAME";
 
     // --------------------------------------------------------------------------------------------------- FKCOLUMN_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FKCOLUMN_NAME = "FKCOLUMN_NAME";
 
     // --------------------------------------------------------------------------------------------------------- KEY_SEQ
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_KEY_SEQ = "KEY_SEQ";
 
     // ----------------------------------------------------------------------------------------------------- UPDATE_RULE
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
 
     // ----------------------------------------------------------------------------------------------------- DELETE_RULE
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DELETE_RULE = "DELETE_RULE";
 
     // --------------------------------------------------------------------------------------------------------- FK_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FK_NAME = "FK_NAME";
 
     // --------------------------------------------------------------------------------------------------------- PK_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
 
     // --------------------------------------------------------------------------------------------------- DEFERRABILITY
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DEFERRABILITY = "DEFERRABILITY";
 
@@ -195,6 +224,10 @@ abstract class PortedKey
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
     PortedKey() {
         super();
     }
@@ -448,7 +481,7 @@ abstract class PortedKey
      *
      * @return the value of {@value #COLUMN_LABEL_FK_NAME} column.
      */
-    @Nullable
+//    @Nullable
     public String getFkName() {
         return fkName;
     }
@@ -469,7 +502,7 @@ abstract class PortedKey
      *
      * @return the value of {@value #COLUMN_LABEL_PK_NAME} column.
      */
-    @Nullable
+//    @Nullable
     public String getPkName() {
         return pkName;
     }

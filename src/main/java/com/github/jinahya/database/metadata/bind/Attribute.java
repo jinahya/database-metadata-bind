@@ -53,19 +53,20 @@ public class Attribute
      * <code>ORDINAL_POSITION</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing attributes.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see DatabaseMetaData#getAttributes(String, String, String, String)
      */
     static Comparator<Attribute> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                            final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<Attribute, String>comparing(v -> operator.apply(v.getTypeCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getTypeSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getTypeName()), comparator)
+                .<Attribute, String>comparing(v -> op.apply(v.getTypeCat()), comparator)
+                .thenComparing(v -> op.apply(v.getTypeSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getTypeName()), comparator)
                 .thenComparing(Attribute::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
@@ -103,20 +104,6 @@ public class Attribute
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
-    // -------------------------------------------------------------------------------------------------------- NULLABLE
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
-
-    // ----------------------------------------------------------------------------------------------------- IS_NULLABLE
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
-
     // -------------------------------------------------------------------------------------------------- ATTR_TYPE_NAME
 
     /**
@@ -144,6 +131,13 @@ public class Attribute
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NUM_PREC_RADIX = "NUM_PREC_RADIX";
+
+    // -------------------------------------------------------------------------------------------------------- NULLABLE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
     // --------------------------------------------------------------------------------------------------------- REMARKS
 
@@ -186,6 +180,13 @@ public class Attribute
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_ORDINAL_POSITION = "ORDINAL_POSITION";
+
+    // ----------------------------------------------------------------------------------------------------- IS_NULLABLE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
     // --------------------------------------------------------------------------------------------------- SCOPE_CATALOG
 
@@ -254,6 +255,13 @@ public class Attribute
     }
 
     // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SCOPE_CATALOG} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is not {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     @AssertTrue
     // Correct: null if DATA_TYPE isn't REF
     private boolean isScopeCatalogNullWhenDataTypeIsNotRef() {
@@ -266,6 +274,12 @@ public class Attribute
         return true;
     }
 
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SCOPE_SCHEMA} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is not {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     @AssertTrue
     // Correct: null if DATA_TYPE isn't REF
     private boolean isScopeSchemaNullWhenDataTypeIsNotRef() {
@@ -278,6 +292,12 @@ public class Attribute
         return true;
     }
 
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SCOPE_TABLE} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is not {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     @AssertTrue
     // Correct: null if DATA_TYPE isn't REF
     private boolean isScopeTableNullWhenDataTypeIsNotRef() {
@@ -290,6 +310,13 @@ public class Attribute
         return true;
     }
 
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SOURCE_DATA_TYPE} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is neither {@link java.sql.Types#DISTINCT} nor
+     * {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     //    @AssertTrue
     // null if DATA_TYPE isn't DISTINCT or user-generated REF
     // Note: This validation uses Types.REF without distinguishing user-generated vs system-generated REF.
@@ -307,10 +334,9 @@ public class Attribute
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**
-     * Returns current value of {@value #COLUMN_LABEL_TYPE_CAT} property.
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
      *
-     * @return current value of the {@value #COLUMN_LABEL_TYPE_CAT} property.
-     * @see #setTypeCat(String)
+     * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
      */
 
     @Nullable
@@ -319,10 +345,9 @@ public class Attribute
     }
 
     /**
-     * Replaces current value of {@value #COLUMN_LABEL_TYPE_CAT} property with specified value.
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
      *
-     * @param typeCat new value for the {@value #COLUMN_LABEL_TYPE_CAT} property.
-     * @see #getTypeCat()
+     * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
      */
     void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;

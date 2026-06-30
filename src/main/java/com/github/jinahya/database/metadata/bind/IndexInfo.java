@@ -52,19 +52,20 @@ public class IndexInfo
      * <code>ORDINAL_POSITION</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
      */
     static Comparator<IndexInfo> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                            final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
                 .comparing(IndexInfo::getNonUnique, Comparator.nullsFirst(Comparator.naturalOrder()))
                 .thenComparing(IndexInfo::getType, Comparator.nullsFirst(Comparator.naturalOrder()))
-                .thenComparing(v -> operator.apply(v.getIndexName()), comparator)
+                .thenComparing(v -> op.apply(v.getIndexName()), comparator)
                 .thenComparing(IndexInfo::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
@@ -237,8 +238,15 @@ public class IndexInfo
     }
 
     // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+
+    /**
+     * Asserts that {@value #COLUMN_LABEL_NON_UNIQUE} is {@code false} when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     @AssertTrue(message = "NON_UNIQUE is false when TYPE is tableIndexStatistic(0)")
-    private boolean isNonUniqueFalseWhenTypeIsTableIndexStatic() {
+    private boolean isNonUniqueFalseWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
         }
@@ -248,8 +256,14 @@ public class IndexInfo
         return true;
     }
 
+    /**
+     * Asserts that {@value #COLUMN_LABEL_INDEX_QUALIFIER} is {@code null} when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     @AssertTrue(message = "INDEX_QUALIFIER is null when TYPE is tableIndexStatistic(0)")
-    private boolean isIndexQualifierNullWhenTypeIsTableIndexStatic() {
+    private boolean isIndexQualifierNullWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
         }
@@ -259,8 +273,14 @@ public class IndexInfo
         return true;
     }
 
+    /**
+     * Asserts that {@value #COLUMN_LABEL_INDEX_NAME} is {@code null} when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     @AssertTrue(message = "INDEX_NAME is null when TYPE is tableIndexStatistic(0)")
-    private boolean isIndexNameNullWhenTypeIsTableIndexStatic() {
+    private boolean isIndexNameNullWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
         }
@@ -270,8 +290,14 @@ public class IndexInfo
         return true;
     }
 
+    /**
+     * Asserts that {@value #COLUMN_LABEL_ORDINAL_POSITION} is zero when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     @AssertTrue(message = "ORDINAL_POSITION is zero when TYPE is tableIndexStatistic(0)")
-    private boolean isOrdinalPositionZeroWhenTypeIsTableIndexStatic() {
+    private boolean isOrdinalPositionZeroWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
         }
@@ -281,8 +307,14 @@ public class IndexInfo
         return true;
     }
 
+    /**
+     * Asserts that {@value #COLUMN_LABEL_COLUMN_NAME} is {@code null} when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     @AssertTrue(message = "COLUMN_NAME is null when TYPE is tableIndexStatistic(0)")
-    private boolean isColumnNameNullWhenTypeIsTableIndexStatic() {
+    private boolean isColumnNameNullWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
         }
@@ -292,8 +324,14 @@ public class IndexInfo
         return true;
     }
 
+    /**
+     * Asserts that {@value #COLUMN_LABEL_ASC_OR_DESC} is {@code null} when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
     @AssertTrue(message = "ASC_OR_DESC is null when TYPE is tableIndexStatistic(0)")
-    private boolean isAscOrDescNullWhenTypeIsTableIndexStatic() {
+    private boolean isAscOrDescNullWhenTypeIsTableIndexStatistic() {
         if (type == null) {
             return true;
         }
@@ -553,6 +591,15 @@ public class IndexInfo
         this.cardinality = cardinality;
     }
 
+    /**
+     * Returns the number of rows in the table. When {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}, the {@value #COLUMN_LABEL_CARDINALITY} column holds the number
+     * of rows in the table, and this method returns it; otherwise this method returns {@code null}.
+     *
+     * @return the value of the {@value #COLUMN_LABEL_CARDINALITY} column when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}; {@code null} otherwise.
+     */
+    @Nullable
     Long getNumberOfRowsInTheTable() {
         if (Objects.equals(getType(), COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC)) {
             return getCardinality();
@@ -560,6 +607,16 @@ public class IndexInfo
         return null;
     }
 
+    /**
+     * Returns the number of unique values in the index. When {@value #COLUMN_LABEL_TYPE} is <em>not</em>
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}, the {@value #COLUMN_LABEL_CARDINALITY} column holds the number
+     * of unique values in the index, and this method returns it; otherwise this method returns {@code null}.
+     *
+     * @return the value of the {@value #COLUMN_LABEL_CARDINALITY} column when {@value #COLUMN_LABEL_TYPE} is
+     * <em>not</em>
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}; {@code null} otherwise.
+     */
+    @Nullable
     Long getNumberOfUniqueValuesInTheIndex() {
         if (!Objects.equals(getType(), COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC)) {
             return getCardinality();
@@ -587,18 +644,36 @@ public class IndexInfo
         this.pages = pages;
     }
 
+    /**
+     * Returns the number of pages used for the table. When {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}, the {@value #COLUMN_LABEL_PAGES} column holds the number of
+     * pages used for the table, and this method returns it; otherwise this method returns {@code null}.
+     *
+     * @return the value of the {@value #COLUMN_LABEL_PAGES} column when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}; {@code null} otherwise.
+     */
+    @Nullable
     Long getNumberOfPagesUsedForTheTable() {
-        if (!Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC)) {
+        if (Objects.equals(getType(), COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC)) {
             return getPages();
         }
         return null;
     }
 
+    /**
+     * Returns the number of pages used for the current index. When {@value #COLUMN_LABEL_TYPE} is <em>not</em>
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}, the {@value #COLUMN_LABEL_PAGES} column holds the number of
+     * pages used for the current index, and this method returns it; otherwise this method returns {@code null}.
+     *
+     * @return the value of the {@value #COLUMN_LABEL_PAGES} column when {@value #COLUMN_LABEL_TYPE} is <em>not</em>
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}; {@code null} otherwise.
+     */
+    @Nullable
     Long getNumberOfPagesUsedForTheCurrentIndex() {
-        if (Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC)) {
-            return null;
+        if (!Objects.equals(getType(), COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC)) {
+            return getPages();
         }
-        return getPages();
+        return null;
     }
 
     // ------------------------------------------------------------------------------------------------- filterCondition

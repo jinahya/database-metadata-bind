@@ -10,6 +10,18 @@
  *     var tables = context.getTables(null, null, "%", null);
  * }
  *}
+ * <p>
+ * Each binding type provides package-private {@code comparingInSpecifiedOrder(...)} factories that reproduce the order
+ * specified by the corresponding {@link java.sql.DatabaseMetaData} method. Two properties of these comparators are
+ * worth noting:
+ * <ul>
+ *   <li>The {@code operator} argument is applied only to non-{@code null} key values, so it need not itself be
+ *       null-safe (e.g. {@link java.lang.String#toLowerCase()} may be used directly); {@code null} catalog/schema
+ *       values are passed through to the supplied {@code comparator}.</li>
+ *   <li>They impose a <em>partial</em> order: distinct rows may compare equal (the JDBC-specified order does not key on
+ *       every bound column). They are intended for sorting {@link java.util.List}s, not for use as
+ *       {@link java.util.TreeSet}/{@link java.util.TreeMap} keys, where equal-comparing rows would be dropped.</li>
+ * </ul>
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see com.github.jinahya.database.metadata.bind.Context

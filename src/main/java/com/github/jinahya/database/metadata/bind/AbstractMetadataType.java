@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,16 +58,36 @@ abstract class AbstractMetadataType
     }
 
     // -------------------------------------------------------------------------------------------------- unknownColumns
+
+    /**
+     * {@inheritDoc} The returned map contains result-set columns, by label, that have no field of this type mapped to
+     * them.
+     *
+     * @return an unmodifiable view of unknown columns and their values; never {@code null}.
+     */
     @Override
     public Map<String, Object> getUnknownColumns() {
-        return unknownColumns;
+        return Collections.unmodifiableMap(unknownColumns);
     }
 
+    /**
+     * Associates the specified value with the specified column label in the map of
+     * {@link #getUnknownColumns() unknown columns} of this instance.
+     *
+     * @param label the column label.
+     * @param value the value mapped to the specified label.
+     * @return the value previously associated with the specified label, or {@code null} if there was none.
+     */
     @Nullable
     Object putUnknownColumn(final String label, final Object value) {
         return unknownColumns.put(label, value);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    private final transient Map<String, Object> unknownColumns = new HashMap<>();
+
+    /**
+     * The map holding result-set columns, by label, that have no field of this type mapped to them. This map is
+     * {@code transient} and is therefore not serialized.
+     */
+    final transient Map<String, Object> unknownColumns = new HashMap<>();
 }

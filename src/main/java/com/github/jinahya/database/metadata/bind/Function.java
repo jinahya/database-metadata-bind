@@ -52,20 +52,21 @@ public class Function
      * <code>SPECIFIC_NAME</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see DatabaseMetaData#getFunctions(String, String, String)
      */
     static Comparator<Function> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                           final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<Function, String>comparing(v -> operator.apply(v.getFunctionCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getFunctionSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getFunctionName()), comparator)
-                .thenComparing(v -> operator.apply(v.getSpecificName()), comparator);
+                .<Function, String>comparing(v -> op.apply(v.getFunctionCat()), comparator)
+                .thenComparing(v -> op.apply(v.getFunctionSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getFunctionName()), comparator)
+                .thenComparing(v -> op.apply(v.getSpecificName()), comparator);
     }
 
     // ---------------------------------------------------------------------------------------------------- FUNCTION_CAT
@@ -140,6 +141,10 @@ public class Function
     );
 
     // --------------------------------------------------------------------------------------------------- SPECIFIC_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS

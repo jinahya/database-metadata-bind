@@ -47,6 +47,19 @@ final class Context_Test_Utils {
         return context.metadata.getDatabaseProductName();
     }
 
+    private static Catalog catalogOf(final String tableCat) {
+        final var instance = new Catalog();
+        instance.setTableCat(tableCat);
+        return instance;
+    }
+
+    private static Schema schemaOf(final String tableCatalog, final String tableSchem) {
+        final var instance = new Schema();
+        instance.setTableCatalog(tableCatalog);
+        instance.setTableSchem(tableSchem);
+        return instance;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     static void test(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -54,7 +67,7 @@ final class Context_Test_Utils {
         {
             final var catalogs = context.getCatalogs();
             if (catalogs.isEmpty()) {
-                catalogs.add(Catalog.of(null));
+                catalogs.add(catalogOf(null));
             }
             catalogs(context, catalogs);
         }
@@ -123,7 +136,7 @@ final class Context_Test_Utils {
         try {
             final var schemas = context.getSchemas((String) null, null);
             if (schemas.isEmpty()) {
-                schemas.add(Schema.of((String) null, null));
+                schemas.add(schemaOf(null, null));
             }
             schemas(context, schemas);
         } catch (final SQLException sqle) {
@@ -314,7 +327,7 @@ final class Context_Test_Utils {
             try {
                 final var schemas = context.getSchemasOf(value, schemaPattern);
                 if (schemas.isEmpty()) {
-                    schemas.add(Schema.of(null, null));
+                    schemas.add(schemaOf(null, null));
                 }
                 schemas(context, schemas);
             } catch (final SQLException sqle) {

@@ -62,47 +62,48 @@ public class Table
      * <code>TABLE_NAME</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see java.sql.DatabaseMetaData#getTables(String, String, String, String[])
      */
     static Comparator<Table> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                        final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<Table, String>comparing(v -> operator.apply(v.getTableType()), comparator)
-                .thenComparing(v -> operator.apply(v.getTableCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
+                .<Table, String>comparing(v -> op.apply(v.getTableType()), comparator)
+                .thenComparing(v -> op.apply(v.getTableCat()), comparator)
+                .thenComparing(v -> op.apply(v.getTableSchem()), comparator)
                 .thenComparing(Table::getTableName, comparator);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
     // ------------------------------------------------------------------------------------------------------ TABLE_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     // ------------------------------------------------------------------------------------------------------ TABLE_TYPE
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
@@ -168,15 +169,6 @@ public class Table
             COLUMN_VALUE_REF_GENERATION_USER,
             COLUMN_VALUE_REF_GENERATION_DERIVED
     );
-
-    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
-    static Table of(final String tableCat, final String tableSchem, final String tableName) {
-        final var instance = new Table();
-        instance.setTableCat(tableCat);
-        instance.setTableSchem(tableSchem);
-        instance.setTableName(tableName);
-        return instance;
-    }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 

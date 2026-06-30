@@ -54,22 +54,37 @@ public class UDT
      * <code>TYPE_NAME</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see DatabaseMetaData#getUDTs(String, String, String, int[])
      */
     static Comparator<UDT> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                      final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
                 .comparing(UDT::getDataType, Comparator.nullsFirst(Comparator.naturalOrder()))
-                .thenComparing(v -> operator.apply(v.getTypeCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getTypeSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getTypeName()), comparator);
+                .thenComparing(v -> op.apply(v.getTypeCat()), comparator)
+                .thenComparing(v -> op.apply(v.getTypeSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getTypeName()), comparator);
     }
 
+    /**
+     * Returns a comparator comparing values, using specified context for ordering {@code null} values, in the specified
+     * order.
+     * <blockquote>
+     * They are ordered by <code>DATA_TYPE</code>, <code>TYPE_CAT</code>, <code>TYPE_SCHEM</code> and
+     * <code>TYPE_NAME</code>.
+     * </blockquote>
+     *
+     * @param context    a context for ordering {@code null} values.
+     * @param comparator a comparator for comparing string values.
+     * @return a comparator comparing values in the specified order.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#nullOrdered(Context, Comparator)
+     */
     static Comparator<UDT> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
         return Comparator
@@ -114,10 +129,21 @@ public class UDT
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
+    /**
+     * A column value of {@link Types#JAVA_OBJECT}({@value Types#JAVA_OBJECT}) for the {@value #COLUMN_LABEL_DATA_TYPE}
+     * column.
+     */
     public static final int COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT = Types.JAVA_OBJECT; // 2000
 
+    /**
+     * A column value of {@link Types#DISTINCT}({@value Types#DISTINCT}) for the {@value #COLUMN_LABEL_DATA_TYPE}
+     * column.
+     */
     public static final int COLUMN_VALUES_DATA_TYPE_DISTINCT = Types.DISTINCT;       // 2001
 
+    /**
+     * A column value of {@link Types#STRUCT}({@value Types#STRUCT}) for the {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
     public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT;           // 2002
 
     static final List<Integer> COLUMN_VALUES_DATA_TYPE = List.of(

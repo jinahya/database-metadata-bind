@@ -50,20 +50,21 @@ public class TablePrivilege
      * <code>PRIVILEGE</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see java.sql.DatabaseMetaData#getTablePrivileges(String, String, String)
      */
     static Comparator<TablePrivilege> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                                 final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<TablePrivilege, String>comparing(v -> operator.apply(v.getTableCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getTableName()), comparator)
-                .thenComparing(v -> operator.apply(v.getPrivilege()), comparator);
+                .<TablePrivilege, String>comparing(v -> op.apply(v.getTableCat()), comparator)
+                .thenComparing(v -> op.apply(v.getTableSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getTableName()), comparator)
+                .thenComparing(v -> op.apply(v.getPrivilege()), comparator);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -49,18 +49,19 @@ public class ColumnPrivilege
      * They are ordered by <code>COLUMN_NAME</code> and <code>PRIVILEGE</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
      */
     static Comparator<ColumnPrivilege> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                                  final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<ColumnPrivilege, String>comparing(v -> operator.apply(v.getColumnName()), comparator)
-                .thenComparing(v -> operator.apply(v.getPrivilege()), comparator);
+                .<ColumnPrivilege, String>comparing(v -> op.apply(v.getColumnName()), comparator)
+                .thenComparing(v -> op.apply(v.getPrivilege()), comparator);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -129,6 +130,9 @@ public class ColumnPrivilege
      */
     public static final String COLUMN_VALUE_IS_GRANTABLE_NO = MetadataTypeConstants.NO;
 
+    /**
+     * A list of values for the {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     */
     static final List<String> COLUMN_VALUES_IS_GRANTABLE = List.of(
             COLUMN_VALUE_IS_GRANTABLE_YES,
             COLUMN_VALUE_IS_GRANTABLE_NO

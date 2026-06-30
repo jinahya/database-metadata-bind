@@ -49,20 +49,21 @@ public class FunctionColumn
      * <code>SPECIFIC_NAME</code>, and <code>ORDINAL_POSITION</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
      */
     static Comparator<FunctionColumn> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                                 final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<FunctionColumn, String>comparing(v -> operator.apply(v.getFunctionCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getFunctionSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getFunctionName()), comparator)
-                .thenComparing(v -> operator.apply(v.getSpecificName()), comparator)
+                .<FunctionColumn, String>comparing(v -> op.apply(v.getFunctionCat()), comparator)
+                .thenComparing(v -> op.apply(v.getFunctionSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getFunctionName()), comparator)
+                .thenComparing(v -> op.apply(v.getSpecificName()), comparator)
                 .thenComparing(FunctionColumn::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
@@ -100,20 +101,6 @@ public class FunctionColumn
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
-
-    // -------------------------------------------------------------------------------------------------------- NULLABLE
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
-
-    // ----------------------------------------------------------------------------------------------------- IS_NULLABLE
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
     // ------------------------------------------------------------------------------------------------------- DATA_TYPE
 
@@ -157,6 +144,13 @@ public class FunctionColumn
      */
     public static final String COLUMN_LABEL_RADIX = "RADIX";
 
+    // -------------------------------------------------------------------------------------------------------- NULLABLE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
+
     // --------------------------------------------------------------------------------------------------------- REMARKS
 
     /**
@@ -177,6 +171,13 @@ public class FunctionColumn
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_ORDINAL_POSITION = "ORDINAL_POSITION";
+
+    // ----------------------------------------------------------------------------------------------------- IS_NULLABLE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
     // --------------------------------------------------------------------------------------------------- SPECIFIC_NAME
 
@@ -326,18 +327,18 @@ public class FunctionColumn
     // -------------------------------------------------------------------------------------------------------- dataType
 
     /**
-     * Returns the value of {@code DATA_TYPE} column.
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      *
-     * @return the value of {@code DATA_TYPE} column.
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      */
     public Integer getDataType() {
         return dataType;
     }
 
     /**
-     * Sets the value of {@code DATA_TYPE} column.
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      *
-     * @param dataType the value of {@code DATA_TYPE} column.
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      */
     void setDataType(final Integer dataType) {
         this.dataType = dataType;
@@ -346,18 +347,18 @@ public class FunctionColumn
     // -------------------------------------------------------------------------------------------------------- typeName
 
     /**
-     * Returns the value of {@code TYPE_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      *
-     * @return the value of {@code TYPE_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
     public String getTypeName() {
         return typeName;
     }
 
     /**
-     * Sets the value of {@code TYPE_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      *
-     * @param typeName the value of {@code TYPE_NAME} column.
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
     void setTypeName(final String typeName) {
         this.typeName = typeName;
@@ -366,9 +367,9 @@ public class FunctionColumn
     // ------------------------------------------------------------------------------------------------------- precision
 
     /**
-     * Returns the value of {@code PRECISION} column.
+     * Returns the value of {@value #COLUMN_LABEL_PRECISION} column.
      *
-     * @return the value of {@code PRECISION} column.
+     * @return the value of {@value #COLUMN_LABEL_PRECISION} column.
      */
     @Nullable
     public Integer getPrecision() {
@@ -376,9 +377,9 @@ public class FunctionColumn
     }
 
     /**
-     * Sets the value of {@code PRECISION} column.
+     * Sets the value of {@value #COLUMN_LABEL_PRECISION} column.
      *
-     * @param precision the value of {@code PRECISION} column.
+     * @param precision the value of {@value #COLUMN_LABEL_PRECISION} column.
      */
     void setPrecision(final Integer precision) {
         this.precision = precision;
@@ -387,18 +388,18 @@ public class FunctionColumn
     // ---------------------------------------------------------------------------------------------------------- length
 
     /**
-     * Returns the value of {@code LENGTH} column.
+     * Returns the value of {@value #COLUMN_LABEL_LENGTH} column.
      *
-     * @return the value of {@code LENGTH} column.
+     * @return the value of {@value #COLUMN_LABEL_LENGTH} column.
      */
     public Integer getLength() {
         return length;
     }
 
     /**
-     * Sets the value of {@code LENGTH} column.
+     * Sets the value of {@value #COLUMN_LABEL_LENGTH} column.
      *
-     * @param length the value of {@code LENGTH} column.
+     * @param length the value of {@value #COLUMN_LABEL_LENGTH} column.
      */
     void setLength(final Integer length) {
         this.length = length;
@@ -407,9 +408,9 @@ public class FunctionColumn
     // ----------------------------------------------------------------------------------------------------------- scale
 
     /**
-     * Returns the value of {@code SCALE} column.
+     * Returns the value of {@value #COLUMN_LABEL_SCALE} column.
      *
-     * @return the value of {@code SCALE} column.
+     * @return the value of {@value #COLUMN_LABEL_SCALE} column.
      */
     @Nullable
     public Integer getScale() {
@@ -417,9 +418,9 @@ public class FunctionColumn
     }
 
     /**
-     * Sets the value of {@code SCALE} column.
+     * Sets the value of {@value #COLUMN_LABEL_SCALE} column.
      *
-     * @param scale the value of {@code SCALE} column.
+     * @param scale the value of {@value #COLUMN_LABEL_SCALE} column.
      */
     void setScale(final Integer scale) {
         this.scale = scale;
@@ -428,18 +429,18 @@ public class FunctionColumn
     // ----------------------------------------------------------------------------------------------------------- radix
 
     /**
-     * Returns the value of {@code RADIX} column.
+     * Returns the value of {@value #COLUMN_LABEL_RADIX} column.
      *
-     * @return the value of {@code RADIX} column.
+     * @return the value of {@value #COLUMN_LABEL_RADIX} column.
      */
     public Integer getRadix() {
         return radix;
     }
 
     /**
-     * Sets the value of {@code RADIX} column.
+     * Sets the value of {@value #COLUMN_LABEL_RADIX} column.
      *
-     * @param radix the value of {@code RADIX} column.
+     * @param radix the value of {@value #COLUMN_LABEL_RADIX} column.
      */
     void setRadix(final Integer radix) {
         this.radix = radix;
@@ -468,18 +469,18 @@ public class FunctionColumn
     // --------------------------------------------------------------------------------------------------------- remarks
 
     /**
-     * Returns the value of {@code REMARKS} column.
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
      *
-     * @return the value of {@code REMARKS} column.
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
      */
     public String getRemarks() {
         return remarks;
     }
 
     /**
-     * Sets the value of {@code REMARKS} column.
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
      *
-     * @param remarks the value of {@code REMARKS} column.
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
      */
     void setRemarks(final String remarks) {
         this.remarks = remarks;
@@ -488,9 +489,9 @@ public class FunctionColumn
     // ------------------------------------------------------------------------------------------------- charOctetLength
 
     /**
-     * Returns the value of {@code CHAR_OCTET_LENGTH} column.
+     * Returns the value of {@value #COLUMN_LABEL_CHAR_OCTET_LENGTH} column.
      *
-     * @return the value of {@code CHAR_OCTET_LENGTH} column.
+     * @return the value of {@value #COLUMN_LABEL_CHAR_OCTET_LENGTH} column.
      */
     @Nullable
     public Integer getCharOctetLength() {
@@ -498,9 +499,9 @@ public class FunctionColumn
     }
 
     /**
-     * Sets the value of {@code CHAR_OCTET_LENGTH} column.
+     * Sets the value of {@value #COLUMN_LABEL_CHAR_OCTET_LENGTH} column.
      *
-     * @param charOctetLength the value of {@code CHAR_OCTET_LENGTH} column.
+     * @param charOctetLength the value of {@value #COLUMN_LABEL_CHAR_OCTET_LENGTH} column.
      */
     void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
@@ -509,18 +510,18 @@ public class FunctionColumn
     // ------------------------------------------------------------------------------------------------- ordinalPosition
 
     /**
-     * Returns the value of {@code ORDINAL_POSITION} column.
+     * Returns the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
      *
-     * @return the value of {@code ORDINAL_POSITION} column.
+     * @return the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
      */
     public Integer getOrdinalPosition() {
         return ordinalPosition;
     }
 
     /**
-     * Sets the value of {@code ORDINAL_POSITION} column.
+     * Sets the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
      *
-     * @param ordinalPosition the value of {@code ORDINAL_POSITION} column.
+     * @param ordinalPosition the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
      */
     void setOrdinalPosition(final Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
@@ -549,18 +550,18 @@ public class FunctionColumn
     // ---------------------------------------------------------------------------------------------------- specificName
 
     /**
-     * Returns the value of {@code SPECIFIC_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
      *
-     * @return the value of {@code SPECIFIC_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
      */
     public String getSpecificName() {
         return specificName;
     }
 
     /**
-     * Sets the value of {@code SPECIFIC_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
      *
-     * @param specificName the value of {@code SPECIFIC_NAME} column.
+     * @param specificName the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
      */
     void setSpecificName(final String specificName) {
         this.specificName = specificName;

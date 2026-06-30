@@ -32,6 +32,7 @@ import java.util.function.UnaryOperator;
  * A class for binding results of the {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getPseudoColumns(String, String, String, String)
  */
 @_ChildOf(Table.class)
 public class PseudoColumn
@@ -48,20 +49,21 @@ public class PseudoColumn
      * <code>COLUMN_NAME</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
      */
     static Comparator<PseudoColumn> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                               final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<PseudoColumn, String>comparing(v -> operator.apply(v.getTableCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getTableSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getTableName()), comparator)
-                .thenComparing(v -> operator.apply(v.getColumnName()), comparator);
+                .<PseudoColumn, String>comparing(v -> op.apply(v.getTableCat()), comparator)
+                .thenComparing(v -> op.apply(v.getTableSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getTableName()), comparator)
+                .thenComparing(v -> op.apply(v.getColumnName()), comparator);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -163,6 +165,9 @@ public class PseudoColumn
      */
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY = MetadataTypeConstants.EMPTY;
 
+    /**
+     * A list of values for the {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     */
     static final List<String> COLUMN_VALUES_IS_NULLABLE = List.of(
             COLUMN_VALUE_COLUMN_IS_NULLABLE_YES,
             COLUMN_VALUE_COLUMN_IS_NULLABLE_NO,

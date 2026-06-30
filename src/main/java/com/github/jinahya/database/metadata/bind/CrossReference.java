@@ -49,19 +49,20 @@ public class CrossReference
      * <code>KEY_SEQ</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see DatabaseMetaData#getCrossReference(String, String, String, String, String, String)
      */
     static Comparator<CrossReference> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                                 final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<CrossReference, String>comparing(v -> operator.apply(v.getFktableCat()), comparator)
-                .thenComparing(v -> operator.apply(v.getFktableSchem()), comparator)
-                .thenComparing(v -> operator.apply(v.getFktableName()), comparator)
+                .<CrossReference, String>comparing(v -> op.apply(v.getFktableCat()), comparator)
+                .thenComparing(v -> op.apply(v.getFktableSchem()), comparator)
+                .thenComparing(v -> op.apply(v.getFktableName()), comparator)
                 .thenComparing(CrossReference::getKeySeq, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 

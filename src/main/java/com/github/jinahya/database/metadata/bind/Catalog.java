@@ -51,16 +51,17 @@ public class Catalog
      * The results are ordered by catalog name.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see java.sql.DatabaseMetaData#getCatalogs()
      */
     static Comparator<Catalog> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                          final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(v -> operator.apply(v.getTableCat()), comparator);
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
+        return Comparator.comparing(v -> op.apply(v.getTableCat()), comparator);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -69,19 +70,6 @@ public class Catalog
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
-
-    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
-
-    /**
-     * Creates a new instance of the specified value of {@value #COLUMN_LABEL_TABLE_CAT} column value.
-     *
-     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
-     * @return a new instance of {@code tableCat}.
-     */
-    static Catalog of(final String tableCat) {
-        return new Catalog()
-                .tableCat(tableCat);
-    }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
@@ -120,11 +108,6 @@ public class Catalog
      */
     void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
-    }
-
-    Catalog tableCat(final String tableCat) {
-        setTableCat(tableCat);
-        return this;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

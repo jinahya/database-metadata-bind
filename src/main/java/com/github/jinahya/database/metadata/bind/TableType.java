@@ -44,16 +44,17 @@ public class TableType
      * They are ordered by <code>TABLE_TYPE</code>.
      * </blockquote>
      *
-     * @param operator   a null-safe unary operator for adjusting string values.
+     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see java.sql.DatabaseMetaData#getTableTypes()
      */
     static Comparator<TableType> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
                                                            final Comparator<? super String> comparator) {
         Objects.requireNonNull(operator, "operator is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(v -> operator.apply(v.getTableType()), comparator);
+        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
+        return Comparator.comparing(v -> op.apply(v.getTableType()), comparator);
     }
 
     // ------------------------------------------------------------------------------------------------------ TABLE_TYPE

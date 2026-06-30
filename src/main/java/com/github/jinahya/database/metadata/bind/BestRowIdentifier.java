@@ -52,6 +52,7 @@ public class BestRowIdentifier
      * </blockquote>
      *
      * @return a comparator comparing values in the specified order.
+     * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
      */
     static Comparator<BestRowIdentifier> comparingInSpecifiedOrder() {
         return Comparator.comparing(BestRowIdentifier::getScope, Comparator.nullsFirst(Comparator.naturalOrder()));
@@ -105,13 +106,6 @@ public class BestRowIdentifier
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
-    // --------------------------------------------------------------------------------------------------- PSEUDO_COLUMN
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
-
     // ------------------------------------------------------------------------------------------------------- TYPE_NAME
 
     /**
@@ -139,6 +133,13 @@ public class BestRowIdentifier
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DECIMAL_DIGITS = "DECIMAL_DIGITS";
+
+    // --------------------------------------------------------------------------------------------------- PSEUDO_COLUMN
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
@@ -228,18 +229,18 @@ public class BestRowIdentifier
     // -------------------------------------------------------------------------------------------------------- typeName
 
     /**
-     * Returns the value of {@code TYPE_NAME} column.
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      *
-     * @return the value of {@code TYPE_NAME} column.
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
     public String getTypeName() {
         return typeName;
     }
 
     /**
-     * Sets the value of {@code TYPE_NAME} column.
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      *
-     * @param typeName the value of {@code TYPE_NAME} column.
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
     void setTypeName(final String typeName) {
         this.typeName = typeName;
@@ -248,9 +249,9 @@ public class BestRowIdentifier
     // ------------------------------------------------------------------------------------------------------ columnSize
 
     /**
-     * Returns the value of {@code COLUMN_SIZE} column.
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
      *
-     * @return the value of {@code COLUMN_SIZE} column.
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
      */
     @Nullable
     public Integer getColumnSize() {
@@ -258,9 +259,9 @@ public class BestRowIdentifier
     }
 
     /**
-     * Sets the value of {@code COLUMN_SIZE} column.
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
      *
-     * @param columnSize the value of {@code COLUMN_SIZE} column.
+     * @param columnSize the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
      */
     void setColumnSize(final Integer columnSize) {
         this.columnSize = columnSize;
@@ -269,9 +270,9 @@ public class BestRowIdentifier
     // ---------------------------------------------------------------------------------------------------- bufferLength
 
     /**
-     * Returns the value of {@code BUFFER_LENGTH} column.
+     * Returns the value of {@value #COLUMN_LABEL_BUFFER_LENGTH} column.
      *
-     * @return the value of {@code BUFFER_LENGTH} column.
+     * @return the value of {@value #COLUMN_LABEL_BUFFER_LENGTH} column.
      */
     @Nullable
     public Integer getBufferLength() {
@@ -279,9 +280,9 @@ public class BestRowIdentifier
     }
 
     /**
-     * Sets the value of {@code BUFFER_LENGTH} column.
+     * Sets the value of {@value #COLUMN_LABEL_BUFFER_LENGTH} column.
      *
-     * @param bufferLength the value of {@code BUFFER_LENGTH} column.
+     * @param bufferLength the value of {@value #COLUMN_LABEL_BUFFER_LENGTH} column.
      */
     void setBufferLength(final Integer bufferLength) {
         this.bufferLength = bufferLength;
@@ -290,9 +291,9 @@ public class BestRowIdentifier
     // --------------------------------------------------------------------------------------------------- decimalDigits
 
     /**
-     * Returns the value of {@code DECIMAL_DIGITS} column.
+     * Returns the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
      *
-     * @return the value of {@code DECIMAL_DIGITS} column.
+     * @return the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
      */
     @Nullable
     public Integer getDecimalDigits() {
@@ -300,9 +301,9 @@ public class BestRowIdentifier
     }
 
     /**
-     * Sets the value of {@code DECIMAL_DIGITS} column.
+     * Sets the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
      *
-     * @param decimalDigits the value of {@code DECIMAL_DIGITS} column.
+     * @param decimalDigits the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
      */
     void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
