@@ -20,6 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 class AttributeTest
         extends AbstractMetadataType_Test<Attribute> {
 
@@ -28,7 +32,63 @@ class AttributeTest
         super(Attribute.class);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+    // Note: these assert the (Bean-Validation-free) predicate logic ported from the 'jakarta' branch. This branch does
+    //       NOT depend on Jakarta Bean Validation; the predicates are plain methods, exercised here directly.
+
+    @Test
+    void isScopeXxxNullWhenDataTypeIsNotRef_HoldsAsSpecified() {
+        final var instance = newTypeInstance();
+        // dataType unknown -> always holds, regardless of scope values
+        instance.setDataType(null);
+        instance.setScopeCatalog("c");
+        instance.setScopeSchema("s");
+        instance.setScopeTable("t");
+        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef_()).isTrue();
+        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef_()).isTrue();
+        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef_()).isTrue();
+        // dataType is not REF, scope values present -> violated
+        instance.setDataType(java.sql.Types.INTEGER);
+        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef_()).isFalse();
+        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef_()).isFalse();
+        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef_()).isFalse();
+        // dataType is not REF, scope values null -> holds
+        instance.setScopeCatalog(null);
+        instance.setScopeSchema(null);
+        instance.setScopeTable(null);
+        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef_()).isTrue();
+        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef_()).isTrue();
+        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef_()).isTrue();
+        // dataType is REF, scope values present -> holds (not constrained)
+        instance.setDataType(java.sql.Types.REF);
+        instance.setScopeCatalog("c");
+        instance.setScopeSchema("s");
+        instance.setScopeTable("t");
+        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef_()).isTrue();
+        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef_()).isTrue();
+        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef_()).isTrue();
+    }
+
+    @Test
+    void isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_HoldsAsSpecified() {
+        final var instance = newTypeInstance();
+        instance.setSourceDataType(java.sql.Types.INTEGER);
+        // dataType unknown -> holds
+        instance.setDataType(null);
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_()).isTrue();
+        // dataType is a plain type with a non-null source -> violated
+        instance.setDataType(java.sql.Types.VARCHAR);
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_()).isFalse();
+        // ... unless source is null
+        instance.setSourceDataType(null);
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_()).isTrue();
+        // DISTINCT or REF may carry a source type -> holds
+        instance.setSourceDataType(java.sql.Types.INTEGER);
+        instance.setDataType(java.sql.Types.DISTINCT);
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_()).isTrue();
+        instance.setDataType(java.sql.Types.REF);
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_()).isTrue();
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override

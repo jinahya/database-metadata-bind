@@ -80,4 +80,70 @@ class IndexInfoTest
         org.assertj.core.api.Assertions.assertThat(instance.getNumberOfPagesUsedForTheTable()).isNull();
         org.assertj.core.api.Assertions.assertThat(instance.getNumberOfPagesUsedForTheCurrentIndex()).isEqualTo(17L);
     }
+
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+    // Note: these assert the (Bean-Validation-free) predicate logic ported from the 'jakarta' branch. This branch does
+    //       NOT depend on Jakarta Bean Validation; the predicates are plain methods, exercised here directly.
+
+    @org.junit.jupiter.api.Test
+    void tableIndexStatisticPredicates_HoldOnlyForConformingStatisticRows() {
+        final var instance = newTypeInstance();
+        final var statistic = IndexInfo.COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC;
+        final var other = IndexInfo.COLUMN_VALUE_TYPE_TABLE_INDEX_OTHER;
+
+        // type unknown -> every predicate holds, whatever the values are
+        instance.setType(null);
+        instance.setNonUnique(Boolean.TRUE);
+        instance.setIndexQualifier("q");
+        instance.setIndexName("n");
+        instance.setOrdinalPosition(7);
+        instance.setColumnName("c");
+        instance.setAscOrDesc(IndexInfo.COLUMN_VALUE_ASC_OR_DESC_A);
+        org.assertj.core.api.Assertions.assertThat(instance.isNonUniqueFalseWhenTypeIsTableIndexStatistic_()).isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isIndexQualifierNullWhenTypeIsTableIndexStatistic_())
+                .isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isIndexNameNullWhenTypeIsTableIndexStatistic_()).isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isOrdinalPositionZeroWhenTypeIsTableIndexStatistic_())
+                .isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isColumnNameNullWhenTypeIsTableIndexStatistic_()).isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isAscOrDescNullWhenTypeIsTableIndexStatistic_()).isTrue();
+
+        // type is a non-statistic index -> not constrained, holds even with the same values
+        instance.setType(other);
+        org.assertj.core.api.Assertions.assertThat(instance.isNonUniqueFalseWhenTypeIsTableIndexStatistic_()).isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isIndexQualifierNullWhenTypeIsTableIndexStatistic_())
+                .isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isIndexNameNullWhenTypeIsTableIndexStatistic_()).isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isOrdinalPositionZeroWhenTypeIsTableIndexStatistic_())
+                .isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isColumnNameNullWhenTypeIsTableIndexStatistic_()).isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isAscOrDescNullWhenTypeIsTableIndexStatistic_()).isTrue();
+
+        // type is tableIndexStatistic with non-conforming values -> every predicate violated
+        instance.setType(statistic);
+        org.assertj.core.api.Assertions.assertThat(instance.isNonUniqueFalseWhenTypeIsTableIndexStatistic_()).isFalse();
+        org.assertj.core.api.Assertions.assertThat(instance.isIndexQualifierNullWhenTypeIsTableIndexStatistic_())
+                .isFalse();
+        org.assertj.core.api.Assertions.assertThat(instance.isIndexNameNullWhenTypeIsTableIndexStatistic_()).isFalse();
+        org.assertj.core.api.Assertions.assertThat(instance.isOrdinalPositionZeroWhenTypeIsTableIndexStatistic_())
+                .isFalse();
+        org.assertj.core.api.Assertions.assertThat(instance.isColumnNameNullWhenTypeIsTableIndexStatistic_()).isFalse();
+        org.assertj.core.api.Assertions.assertThat(instance.isAscOrDescNullWhenTypeIsTableIndexStatistic_()).isFalse();
+
+        // type is tableIndexStatistic with conforming values -> every predicate holds
+        instance.setNonUnique(Boolean.FALSE);
+        instance.setIndexQualifier(null);
+        instance.setIndexName(null);
+        instance.setOrdinalPosition(0);
+        instance.setColumnName(null);
+        instance.setAscOrDesc(null);
+        org.assertj.core.api.Assertions.assertThat(instance.isNonUniqueFalseWhenTypeIsTableIndexStatistic_()).isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isIndexQualifierNullWhenTypeIsTableIndexStatistic_())
+                .isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isIndexNameNullWhenTypeIsTableIndexStatistic_()).isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isOrdinalPositionZeroWhenTypeIsTableIndexStatistic_())
+                .isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isColumnNameNullWhenTypeIsTableIndexStatistic_()).isTrue();
+        org.assertj.core.api.Assertions.assertThat(instance.isAscOrDescNullWhenTypeIsTableIndexStatistic_()).isTrue();
+    }
 }

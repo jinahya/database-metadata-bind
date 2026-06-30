@@ -261,6 +261,7 @@ abstract class PortedKey
      *
      * @return the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
      */
+    @Nullable
     public String getPktableCat() {
         return pktableCat;
     }
@@ -281,6 +282,7 @@ abstract class PortedKey
      *
      * @return the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
      */
+    @Nullable
     public String getPktableSchem() {
         return pktableSchem;
     }
@@ -341,6 +343,7 @@ abstract class PortedKey
      *
      * @return the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
      */
+    @Nullable
     public String getFktableCat() {
         return fktableCat;
     }
@@ -361,6 +364,7 @@ abstract class PortedKey
      *
      * @return the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
      */
+    @Nullable
     public String getFktableSchem() {
         return fktableSchem;
     }
@@ -481,7 +485,7 @@ abstract class PortedKey
      *
      * @return the value of {@value #COLUMN_LABEL_FK_NAME} column.
      */
-//    @Nullable
+    @Nullable
     public String getFkName() {
         return fkName;
     }
@@ -502,7 +506,7 @@ abstract class PortedKey
      *
      * @return the value of {@value #COLUMN_LABEL_PK_NAME} column.
      */
-//    @Nullable
+    @Nullable
     public String getPkName() {
         return pkName;
     }

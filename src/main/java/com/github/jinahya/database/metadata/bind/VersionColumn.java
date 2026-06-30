@@ -155,6 +155,21 @@ public class VersionColumn
                '}';
     }
 
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column, when present, is one of the values defined
+     * for the column.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    protected boolean isPseudoColumnValid_() {
+        if (pseudoColumn == null) {
+            return true;
+        }
+        return COLUMN_VALUES_PSEUDO_COLUMN.contains(pseudoColumn);
+    }
+
     // ----------------------------------------------------------------------------------------------------------- scope
 
     /**

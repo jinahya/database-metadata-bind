@@ -252,6 +252,79 @@ public class Attribute
                '}';
     }
 
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SCOPE_CATALOG} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is not {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    // Correct: null if DATA_TYPE isn't REF
+    protected boolean isScopeCatalogNullWhenDataTypeIsNotRef_() {
+        if (dataType == null) {
+            return true;
+        }
+        if (dataType != java.sql.Types.REF) {
+            return scopeCatalog == null;
+        }
+        return true;
+    }
+
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SCOPE_SCHEMA} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is not {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    // Correct: null if DATA_TYPE isn't REF
+    protected boolean isScopeSchemaNullWhenDataTypeIsNotRef_() {
+        if (dataType == null) {
+            return true;
+        }
+        if (dataType != java.sql.Types.REF) {
+            return scopeSchema == null;
+        }
+        return true;
+    }
+
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SCOPE_TABLE} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is not {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    // Correct: null if DATA_TYPE isn't REF
+    protected boolean isScopeTableNullWhenDataTypeIsNotRef_() {
+        if (dataType == null) {
+            return true;
+        }
+        if (dataType != java.sql.Types.REF) {
+            return scopeTable == null;
+        }
+        return true;
+    }
+
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SOURCE_DATA_TYPE} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is neither {@link java.sql.Types#DISTINCT} nor
+     * {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    // null if DATA_TYPE isn't DISTINCT or user-generated REF
+    // Note: This validation uses Types.REF without distinguishing user-generated vs system-generated REF.
+    //       This is slightly more permissive than the spec, but JDBC doesn't provide an easy way to distinguish them.
+    protected boolean isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_() {
+        if (dataType == null) {
+            return true;
+        }
+        if (dataType != java.sql.Types.DISTINCT && dataType != java.sql.Types.REF) {
+            return sourceDataType == null;
+        }
+        return true;
+    }
+
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**

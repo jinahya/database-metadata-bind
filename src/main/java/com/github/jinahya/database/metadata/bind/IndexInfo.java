@@ -236,6 +236,104 @@ public class IndexInfo
                '}';
     }
 
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+
+    /**
+     * Asserts that {@value #COLUMN_LABEL_NON_UNIQUE} is {@code false} when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    protected boolean isNonUniqueFalseWhenTypeIsTableIndexStatistic_() {
+        if (type == null) {
+            return true;
+        }
+        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
+            return nonUnique == null || !nonUnique;
+        }
+        return true;
+    }
+
+    /**
+     * Asserts that {@value #COLUMN_LABEL_INDEX_QUALIFIER} is {@code null} when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    protected boolean isIndexQualifierNullWhenTypeIsTableIndexStatistic_() {
+        if (type == null) {
+            return true;
+        }
+        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
+            return indexQualifier == null;
+        }
+        return true;
+    }
+
+    /**
+     * Asserts that {@value #COLUMN_LABEL_INDEX_NAME} is {@code null} when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    protected boolean isIndexNameNullWhenTypeIsTableIndexStatistic_() {
+        if (type == null) {
+            return true;
+        }
+        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
+            return indexName == null;
+        }
+        return true;
+    }
+
+    /**
+     * Asserts that {@value #COLUMN_LABEL_ORDINAL_POSITION} is zero when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    protected boolean isOrdinalPositionZeroWhenTypeIsTableIndexStatistic_() {
+        if (type == null) {
+            return true;
+        }
+        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
+            return ordinalPosition == null || ordinalPosition == 0;
+        }
+        return true;
+    }
+
+    /**
+     * Asserts that {@value #COLUMN_LABEL_COLUMN_NAME} is {@code null} when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    protected boolean isColumnNameNullWhenTypeIsTableIndexStatistic_() {
+        if (type == null) {
+            return true;
+        }
+        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
+            return columnName == null;
+        }
+        return true;
+    }
+
+    /**
+     * Asserts that {@value #COLUMN_LABEL_ASC_OR_DESC} is {@code null} when {@value #COLUMN_LABEL_TYPE} is
+     * {@link #COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    protected boolean isAscOrDescNullWhenTypeIsTableIndexStatistic_() {
+        if (type == null) {
+            return true;
+        }
+        if (type == COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) {
+            return ascOrDesc == null;
+        }
+        return true;
+    }
+
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**
