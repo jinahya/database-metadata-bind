@@ -40,7 +40,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * A class for retrieving information from an instance of {@link java.sql.DatabaseMetaData}.
@@ -119,8 +118,8 @@ public class Context {
             final Object value = results.getObject(label);
             logger.log(System.Logger.Level.TRACE,
                        "unknown column; type: {0}, label: {1}, value: {2}", type.getSimpleName(), label, value);
-            if (instance instanceof AbstractMetadataType) {
-                ((AbstractMetadataType) instance).putUnknownColumn(label, value);
+            if (instance instanceof AbstractMetadataType metadata) {
+                metadata.putUnknownColumn(label, value);
             }
         }
         assert resultLabels.isEmpty() : "remaining result labels: " + resultLabels;
@@ -3048,6 +3047,6 @@ public class Context {
         return Arrays.stream(commaSeparated.split(","))
                 .map(String::strip)
                 .filter(v -> !v.isBlank())
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
 }

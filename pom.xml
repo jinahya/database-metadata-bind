@@ -14,7 +14,7 @@
 
   <name>${project.artifactId}</name>
   <description>Class for binding results of java.sql.DatabaseMetaData</description>
-  <url>https://github.com/jinahya/$project.artifactId}</url>
+  <url>https://github.com/jinahya/${project.artifactId}</url>
   <inceptionYear>2011</inceptionYear>
   <organization>
     <name>Jinahya, Inc.</name>
@@ -24,7 +24,7 @@
   <scm>
     <connection>scm:git:git@github.com:jinahya/${project.artifactId}.git</connection>
     <developerConnection>scm:git:git@github.com:jinahya/${project.artifactId}.git</developerConnection>
-    <url>https://github.com:jinahya/${project.artifactId}</url>
+    <url>https://github.com/jinahya/${project.artifactId}</url>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
@@ -32,12 +32,12 @@
     <url>https://github.com/jinahya/${project.artifactId}/issues</url>
   </issueManagement>
   <ciManagement>
-    <system>Travis CI</system>
-    <url>https://travis-ci.org/jinahya/${project.artifactId}</url>
+    <system>GitHub Actions</system>
+    <url>https://github.com/jinahya/${project.artifactId}/actions</url>
   </ciManagement>
 
   <properties>
-    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
     <maven.compiler.release>${maven.compiler.target}</maven.compiler.release>
     <maven.compiler.testSource>25</maven.compiler.testSource>
@@ -367,7 +367,7 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>[1.8.0,)</version>
+                  <version>[25,)</version>
                 </requireJavaVersion>
               </rules>
             </configuration>
@@ -393,7 +393,7 @@
         <version>${version.maven-surefire}</version>
         <configuration>
           <excludes>
-            <exclude>**/*IT.java</exclude> <!-- 이게 왜 필요한지 확인 필요 -->
+            <exclude>**/*IT.java</exclude>
           </excludes>
           <trimStackTrace>false</trimStackTrace>
         </configuration>
