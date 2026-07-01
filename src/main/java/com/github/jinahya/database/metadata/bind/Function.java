@@ -23,11 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
+import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -48,27 +48,42 @@ public class Function
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
+     * Returns a comparator comparing values in the specified order, placing {@code null} values as the specified
+     * context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator comparing values in the specified order.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
+     */
+    static Comparator<Function> comparingInSpecifiedOrder(final Context context,
+                                                      final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return comparingInSpecifiedOrder(
+                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
+    }
+
+    /**
      * Returns a comparator comparing values in the specified order.
      * <blockquote>
      * They are ordered by <code>FUNCTION_CAT</code>, <code>FUNCTION_SCHEM</code>, <code>FUNCTION_NAME</code>, and
      * <code>SPECIFIC_NAME</code>.
      * </blockquote>
      *
-     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
      * @see DatabaseMetaData#getFunctions(String, String, String)
      */
-    static Comparator<Function> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
-                                                          final Comparator<? super String> comparator) {
-        Objects.requireNonNull(operator, "operator is null");
+    static Comparator<Function> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
-        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<Function, String>comparing(v -> op.apply(v.getFunctionCat()), comparator)
-                .thenComparing(v -> op.apply(v.getFunctionSchem()), comparator)
-                .thenComparing(v -> op.apply(v.getFunctionName()), comparator)
-                .thenComparing(v -> op.apply(v.getSpecificName()), comparator);
+                .<Function, String>comparing(Function::getFunctionCat, comparator)
+                .thenComparing(Function::getFunctionSchem, comparator)
+                .thenComparing(Function::getFunctionName, comparator)
+                .thenComparing(Function::getSpecificName, comparator);
     }
 
     // ---------------------------------------------------------------------------------------------------- FUNCTION_CAT
@@ -194,6 +209,10 @@ public class Function
         this.functionCat = functionCat;
     }
 
+    String getEffectiveFunctionCat() {
+        return functionCat == null ? "" : functionCat;
+    }
+
     // --------------------------------------------------------------------------------------------------- functionSchem
 
     /**
@@ -213,6 +232,10 @@ public class Function
      */
     void setFunctionSchem(final String functionSchem) {
         this.functionSchem = functionSchem;
+    }
+
+    String getEffectiveFunctionSchem() {
+        return functionSchem == null ? "" : functionSchem;
     }
 
     // ---------------------------------------------------------------------------------------------------- functionName

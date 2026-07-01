@@ -23,10 +23,10 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
+import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)}
@@ -51,22 +51,44 @@ public class FunctionColumn
      * <code>SPECIFIC_NAME</code>, and <code>ORDINAL_POSITION</code>.
      * </blockquote>
      *
-     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
      * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
      */
-    static Comparator<FunctionColumn> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
-                                                                final Comparator<? super String> comparator) {
-        Objects.requireNonNull(operator, "operator is null");
+    static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
-        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<FunctionColumn, String>comparing(v -> op.apply(v.getFunctionCat()), comparator)
-                .thenComparing(v -> op.apply(v.getFunctionSchem()), comparator)
-                .thenComparing(v -> op.apply(v.getFunctionName()), comparator)
-                .thenComparing(v -> op.apply(v.getSpecificName()), comparator)
+                .<FunctionColumn, String>comparing(FunctionColumn::getFunctionCat, comparator)
+                .thenComparing(FunctionColumn::getFunctionSchem, comparator)
+                .thenComparing(FunctionColumn::getFunctionName, comparator)
+                .thenComparing(FunctionColumn::getSpecificName, comparator)
                 .thenComparing(FunctionColumn::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
+    }
+
+    /**
+     * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
+     * specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator comparing values in the specified order.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
+     */
+    static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Context context,
+                                                                final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
+        final var i = ContextUtils.withDatabaseNullOrdering(
+                context, Comparator.<Integer>naturalOrder(), ContextUtils.SortDirection.ASCENDING);
+        return Comparator
+                .<FunctionColumn, String>comparing(FunctionColumn::getFunctionCat, s)
+                .thenComparing(FunctionColumn::getFunctionSchem, s)
+                .thenComparing(FunctionColumn::getFunctionName, s)
+                .thenComparing(FunctionColumn::getSpecificName, s)
+                .thenComparing(FunctionColumn::getOrdinalPosition, i);
     }
 
     // ---------------------------------------------------------------------------------------------------- FUNCTION_CAT

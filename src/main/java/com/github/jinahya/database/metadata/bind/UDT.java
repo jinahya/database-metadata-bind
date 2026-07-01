@@ -29,7 +29,6 @@ import java.sql.Types;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
@@ -56,21 +55,17 @@ public class UDT
      * <code>TYPE_NAME</code>.
      * </blockquote>
      *
-     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
      * @see DatabaseMetaData#getUDTs(String, String, String, int[])
      */
-    static Comparator<UDT> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
-                                                     final Comparator<? super String> comparator) {
-        Objects.requireNonNull(operator, "operator is null");
+    static Comparator<UDT> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
-        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
                 .comparing(UDT::getDataType, Comparator.nullsFirst(Comparator.naturalOrder()))
-                .thenComparing(v -> op.apply(v.getTypeCat()), comparator)
-                .thenComparing(v -> op.apply(v.getTypeSchem()), comparator)
-                .thenComparing(v -> op.apply(v.getTypeName()), comparator);
+                .thenComparing(UDT::getTypeCat, comparator)
+                .thenComparing(UDT::getTypeSchem, comparator)
+                .thenComparing(UDT::getTypeName, comparator);
     }
 
     /**
@@ -85,15 +80,19 @@ public class UDT
      * @param comparator a comparator for comparing string values.
      * @return a comparator comparing values in the specified order.
      * @throws SQLException if a database access error occurs.
-     * @see ContextUtils#nullOrdered(Context, Comparator)
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
      */
-    static Comparator<UDT> comparing(final Context context, final Comparator<? super String> comparator)
+    static Comparator<UDT> comparingInSpecifiedOrder(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
         return Comparator
-                .comparing(UDT::getDataType, ContextUtils.nullOrdered(context, Comparator.naturalOrder()))
-                .thenComparing(UDT::getTypeCat, ContextUtils.nullOrdered(context, comparator))
-                .thenComparing(UDT::getTypeSchem, ContextUtils.nullOrdered(context, comparator))
-                .thenComparing(UDT::getTypeName, ContextUtils.nullOrdered(context, comparator));
+                .comparing(UDT::getDataType, ContextUtils.withDatabaseNullOrdering(
+                        context, Comparator.naturalOrder(), ContextUtils.SortDirection.ASCENDING))
+                .thenComparing(UDT::getTypeCat, ContextUtils.withDatabaseNullOrdering(
+                        context, comparator, ContextUtils.SortDirection.ASCENDING))
+                .thenComparing(UDT::getTypeSchem, ContextUtils.withDatabaseNullOrdering(
+                        context, comparator, ContextUtils.SortDirection.ASCENDING))
+                .thenComparing(UDT::getTypeName, ContextUtils.withDatabaseNullOrdering(
+                        context, comparator, ContextUtils.SortDirection.ASCENDING));
     }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
@@ -215,6 +214,10 @@ public class UDT
         this.typeCat = typeCat;
     }
 
+    String getEffectiveTypeCat() {
+        return typeCat == null ? "" : typeCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------- typeSchem
 
     /**
@@ -234,6 +237,10 @@ public class UDT
      */
     void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
+    }
+
+    String getEffectiveTypeSchem() {
+        return typeSchem == null ? "" : typeSchem;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName

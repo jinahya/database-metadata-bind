@@ -21,9 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.io.Serial;
+import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getImportedKeys(String, String, String)} method.
@@ -48,14 +48,28 @@ public class ImportedKey
      * <code>KEY_SEQ</code>.
      * </blockquote>
      *
-     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
-     * @see PortedKey#comparingPk(UnaryOperator, Comparator)
+     * @see PortedKey#comparingPk(Comparator)
      */
-    static Comparator<ImportedKey> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
-                                                             final Comparator<? super String> comparator) {
-        return PortedKey.comparingPk(operator, comparator);
+    static Comparator<ImportedKey> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
+        return PortedKey.comparingPk(comparator);
+    }
+
+    /**
+     * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
+     * specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator comparing values in the specified order.
+     * @throws SQLException if a database access error occurs.
+     * @see PortedKey#comparingPk(Context, Comparator)
+     */
+    static Comparator<ImportedKey> comparingInSpecifiedOrder(final Context context,
+                                                             final Comparator<? super String> comparator)
+            throws SQLException {
+        return PortedKey.comparingPk(context, comparator);
     }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS

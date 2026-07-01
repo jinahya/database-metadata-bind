@@ -27,7 +27,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import static com.github.jinahya.database.metadata.bind._Assertions.assertType;
@@ -240,8 +239,8 @@ final class Context_Test_Utils {
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
                 .isSortedAccordingTo(Attribute.comparingInSpecifiedOrder(
-                        UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                        ContextUtils.withDatabaseNullOrdering(
+                                context, String.CASE_INSENSITIVE_ORDER, ContextUtils.SortDirection.ASCENDING)))
                 .allSatisfy(v -> {
                 });
         for (final var attribute : attributes) {
@@ -298,8 +297,8 @@ final class Context_Test_Utils {
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
                 .isSortedAccordingTo(Catalog.comparingInSpecifiedOrder(
-                        UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                        ContextUtils.withDatabaseNullOrdering(
+                                context, String.CASE_INSENSITIVE_ORDER, ContextUtils.SortDirection.ASCENDING)))
                 .allSatisfy(v -> {
                 })
         ;
@@ -383,7 +382,7 @@ final class Context_Test_Utils {
                 .doesNotHaveDuplicates()
 //                .isSortedAccordingTo(ClientInfoProperty.comparingInSpecifiedOrder(
 //                        UnaryOperator.identity(),
-//                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER.thenComparing(
+//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER.thenComparing(
 //                                Comparator.naturalOrder()))))
                 .allSatisfy(c -> {
                 });
@@ -408,8 +407,8 @@ final class Context_Test_Utils {
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
                 .isSortedAccordingTo(Column.comparingInSpecifiedOrder(
-                        UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                        ContextUtils.withDatabaseNullOrdering(
+                                context, String.CASE_INSENSITIVE_ORDER, ContextUtils.SortDirection.ASCENDING)))
                 .allSatisfy(c -> {
                     assertThat(c.getTableName()).isNotNull();
                     assertThat(c.getColumnName()).isNotNull();
@@ -480,7 +479,7 @@ final class Context_Test_Utils {
                 .doesNotHaveDuplicates()
 //                .isSortedAccordingTo(ColumnPrivilege.comparingInSpecifiedOrder(
 //                        UnaryOperator.identity(),
-//                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(v -> {
                 });
         for (final var value : values) {
@@ -520,7 +519,7 @@ final class Context_Test_Utils {
                 .doesNotHaveDuplicates()
 //                .isSortedAccordingTo(ExportedKey.comparingInSpecifiedOrder(
 //                        UnaryOperator.identity(),
-//                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(e -> {
                 });
         for (final var value : values) {
@@ -540,7 +539,7 @@ final class Context_Test_Utils {
                 .doesNotHaveDuplicates()
 //                .isSortedAccordingTo(Function.comparingInSpecifiedOrder(
 //                        UnaryOperator.identity(),
-//                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(v -> {
                 });
         for (final var value : values) {
@@ -608,7 +607,7 @@ final class Context_Test_Utils {
                 .doesNotHaveDuplicates()
 //                .isSortedAccordingTo(IndexInfo.comparingInSpecifiedOrder(
 //                        UnaryOperator.identity(),
-//                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(v -> {
                 });
         for (final var value : values) {
@@ -629,7 +628,7 @@ final class Context_Test_Utils {
                 .doesNotHaveDuplicates()
 //                .isSortedAccordingTo(Procedure.comparingInSpecifiedOrder(
 //                        UnaryOperator.identity(),
-//                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(v -> {
                 });
         if (!databaseProductName(context).equals(DatabaseProductNames.MARIA_DB) &&
@@ -678,8 +677,8 @@ final class Context_Test_Utils {
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
                 .isSortedAccordingTo(Schema.comparingInSpecifiedOrder(
-                        UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                        ContextUtils.withDatabaseNullOrdering(
+                                context, String.CASE_INSENSITIVE_ORDER, ContextUtils.SortDirection.ASCENDING)))
                 .allSatisfy(v -> {
                 })
         ;
@@ -757,7 +756,7 @@ final class Context_Test_Utils {
                 .doesNotHaveDuplicates()
 //                .isSortedAccordingTo(Table.comparingInSpecifiedOrder(
 //                        UnaryOperator.identity(),
-//                        ContextUtils.nullOrdered(context, Comparator.naturalOrder())))
+//                        ContextUtils.withDatabaseNullOrdering(context, Comparator.naturalOrder())))
                 .allSatisfy(v -> {
                 });
         for (final var value : values) {
@@ -887,7 +886,7 @@ final class Context_Test_Utils {
                 .doesNotHaveDuplicates()
 //                .isSortedAccordingTo(PrimaryKey.comparingInSpecifiedOrder(
 //                        UnaryOperator.identity(),
-//                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(p -> {
                 });
         if (!databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL) &&
@@ -912,8 +911,8 @@ final class Context_Test_Utils {
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
                 .isSortedAccordingTo(PseudoColumn.comparingInSpecifiedOrder(
-                        UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                        ContextUtils.withDatabaseNullOrdering(
+                                context, String.CASE_INSENSITIVE_ORDER, ContextUtils.SortDirection.ASCENDING)))
                 .allSatisfy(p -> {
                 });
         for (final var value : values) {
@@ -932,9 +931,7 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .isSortedAccordingTo(SuperTable.comparingInSpecifiedOrder(
-                        UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                // getSuperTables does not specify a result ordering; no comparator to assert against
                 .allSatisfy(s -> {
                 });
         for (final var superTable : values) {
@@ -955,7 +952,7 @@ final class Context_Test_Utils {
                 .doesNotHaveDuplicates()
 //                .isSortedAccordingTo(TablePrivilege.comparingInSpecifiedOrder(
 //                        UnaryOperator.identity(),
-//                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
                 .allSatisfy(v -> {
                 });
         for (final var value : values) {
@@ -974,8 +971,8 @@ final class Context_Test_Utils {
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
                 .isSortedAccordingTo(TableType.comparingInSpecifiedOrder(
-                        UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)))
+                        ContextUtils.withDatabaseNullOrdering(
+                                context, String.CASE_INSENSITIVE_ORDER, ContextUtils.SortDirection.ASCENDING)))
                 .allSatisfy(t -> {
                 });
         for (final var value : values) {
@@ -1035,7 +1032,7 @@ final class Context_Test_Utils {
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .isSortedAccordingTo(UDT.comparing(context, String.CASE_INSENSITIVE_ORDER))
+                .isSortedAccordingTo(UDT.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER))
                 .allSatisfy(u -> {
                 });
         for (final var value : values) {

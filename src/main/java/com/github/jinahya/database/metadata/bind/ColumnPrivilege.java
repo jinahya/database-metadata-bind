@@ -23,11 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
+import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)}
@@ -46,24 +46,39 @@ public class ColumnPrivilege
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
+     * Returns a comparator comparing values in the specified order, placing {@code null} values as the specified
+     * context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator comparing values in the specified order.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
+     */
+    static Comparator<ColumnPrivilege> comparingInSpecifiedOrder(final Context context,
+                                                      final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return comparingInSpecifiedOrder(
+                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
+    }
+
+    /**
      * Returns a comparator comparing values in the specified order.
      * <blockquote>
      * They are ordered by <code>COLUMN_NAME</code> and <code>PRIVILEGE</code>.
      * </blockquote>
      *
-     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
      * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
      */
-    static Comparator<ColumnPrivilege> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
-                                                                 final Comparator<? super String> comparator) {
-        Objects.requireNonNull(operator, "operator is null");
+    static Comparator<ColumnPrivilege> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
-        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<ColumnPrivilege, String>comparing(v -> op.apply(v.getColumnName()), comparator)
-                .thenComparing(v -> op.apply(v.getPrivilege()), comparator);
+                .<ColumnPrivilege, String>comparing(ColumnPrivilege::getColumnName, comparator)
+                .thenComparing(ColumnPrivilege::getPrivilege, comparator);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

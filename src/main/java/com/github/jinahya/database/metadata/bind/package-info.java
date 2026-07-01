@@ -15,9 +15,13 @@
  * specified by the corresponding {@link java.sql.DatabaseMetaData} method. Two properties of these comparators are
  * worth noting:
  * <ul>
- *   <li>The {@code operator} argument is applied only to non-{@code null} key values, so it need not itself be
- *       null-safe (e.g. {@link java.lang.String#toLowerCase()} may be used directly); {@code null} catalog/schema
- *       values are passed through to the supplied {@code comparator}.</li>
+ *   <li>String key values are passed straight to the supplied {@code comparator}, including {@code null}
+ *       catalog/schema values, so the {@code comparator} must be null-safe (e.g. wrap with
+ *       {@link java.util.Comparator#nullsFirst(java.util.Comparator)}, or use
+ *       {@link com.github.jinahya.database.metadata.bind.ContextUtils#withDatabaseNullOrdering(com.github.jinahya.database.metadata.bind.Context,
+ *       java.util.Comparator, com.github.jinahya.database.metadata.bind.ContextUtils.SortDirection)} to follow the
+ *       database's own {@code null} ordering). The library imposes no case/collation policy of its own; callers choose it
+ *       via the {@code comparator} (e.g. {@link java.text.Collator} for locale-aware ordering).</li>
  *   <li>They impose a <em>partial</em> order: distinct rows may compare equal (the JDBC-specified order does not key on
  *       every bound column). They are intended for sorting {@link java.util.List}s, not for use as
  *       {@link java.util.TreeSet}/{@link java.util.TreeMap} keys, where equal-comparing rows would be dropped.</li>

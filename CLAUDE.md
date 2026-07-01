@@ -7,7 +7,7 @@ Instructions for Claude Code when working on this project.
 Type-safe Java bindings for `java.sql.DatabaseMetaData` ResultSet results.
 
 - **Core**: `Context` wraps `DatabaseMetaData`, returns `List<T>` instead of `ResultSet`
-- **Build**: Maven, Java 11 (source), Java 25 (tests)
+- **Build**: Maven, Java 17 (source), Java 25 (tests)
 - **Package**: `com.github.jinahya.database.metadata.bind`
 - **Coverage**: All 26 JDBC `DatabaseMetaData` methods returning `ResultSet` are bound
 
@@ -69,7 +69,7 @@ The last example (all hyphens, no name) is used only for the instance fields sec
 3. `// ----- {COLUMN_NAME}` — Column label constants (`COLUMN_LABEL_XXX`) and column value constants (`COLUMN_VALUE_XXX`), grouped by column (e.g., `// ----- TABLE_CAT`)
 4. `// ----- STATIC_FACTORY_METHODS`
 5. `// ----- CONSTRUCTORS`
-6. `// ----- java.lang.Object` — Overrides in order: `toString`, `equals`, `hashCode`
+6. `// ----- java.lang.Object` — `toString` override only
 7. `// ----- Jakarta-Validation` — Bean validation methods
 8. `// ----- {fieldName}` — Getter/setter pairs, grouped per field (e.g., `// ----- tableCat`)
 9. `// -----` — Instance fields (no name, just hyphens)
@@ -78,51 +78,77 @@ The last example (all hyphens, no name) is used only for the instance fields sec
 
 ### Comparators
 
-Two patterns exist. **New code should prefer the new pattern.**
+Sorting is provided by **package-private** static factories `comparingInSpecifiedOrder(...)`
+(`PortedKey` uses `comparingPk`/`comparingFk`). They reproduce the ordering documented by the
+corresponding `DatabaseMetaData.getXxx()` javadoc. **Return `Comparator<T>`** (never a wildcard —
+*Effective Java* Item 31); **accept `Comparator<? super String>`** (consumer position; also lets a
+caller pass `java.text.Collator`, which is `Comparator<Object>`).
 
-#### New Pattern (Preferred)
+**No `operator` / `UnaryOperator` parameter, no internal `op` guard** — removed. Collation and
+string-null policy belong entirely to the caller's one `Comparator<? super String>`.
 
-Caller controls both null handling and case sensitivity via parameters:
+#### Overload shape depends on key types
+
+**Types with string keys** (Catalog, Table, Column, UDT, …) — two overloads:
 
 ```java
-static Comparator<Attribute> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
-                                                       final Comparator<? super String> comparator) {
-    Objects.requireNonNull(operator, "operator is null");
+// pure: caller owns collation + string-null placement; non-string keys use fixed nullsFirst
+static Comparator<Column> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
     Objects.requireNonNull(comparator, "comparator is null");
     return Comparator
-            .<Attribute, String>comparing(v -> operator.apply(v.getTypeCat()), comparator)
-            .thenComparing(v -> operator.apply(v.getTypeSchem()), comparator)
-            .thenComparing(v -> operator.apply(v.getTypeName()), comparator)
-            .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder());
+            .<Column, String>comparing(Column::getTableCat, comparator)   // method ref; raw nullable value
+            .thenComparing(Column::getTableSchem, comparator)
+            .thenComparing(Column::getTableName, comparator)
+            .thenComparing(Column::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
 }
-```
 
-Rules:
-- `operator`: transforms strings (e.g., `String::toLowerCase` for case-insensitivity)
-- `comparator`: must be null-safe (caller wraps with `Comparator.nullsFirst/Last` or uses `ContextUtils.nullOrdered`)
-- No `SQLException` thrown
-- Package-private visibility
-
-#### Legacy Pattern (Context-based)
-
-```java
+// DB-faithful: withDatabaseNullOrdering applied to ALL keys (string AND numeric)
 static Comparator<Column> comparingInSpecifiedOrder(final Context context,
                                                     final Comparator<? super String> comparator)
         throws SQLException {
     Objects.requireNonNull(context, "context is null");
     Objects.requireNonNull(comparator, "comparator is null");
-    final var nullSafe = ContextUtils.nullOrdered(context, comparator);
+    final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
+    final var i = ContextUtils.withDatabaseNullOrdering(
+            context, Comparator.<Integer>naturalOrder(), ContextUtils.SortDirection.ASCENDING);
     return Comparator
-            .comparing(Column::getTableCat, nullSafe)        // nullable
-            .thenComparing(Column::getTableSchem, nullSafe)  // nullable
-            .thenComparing(Column::getTableName, comparator) // NOT nullable
-            .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder()); // NOT nullable
+            .<Column, String>comparing(Column::getTableCat, s)
+            .thenComparing(Column::getTableSchem, s)
+            .thenComparing(Column::getTableName, s)
+            .thenComparing(Column::getOrdinalPosition, i);
 }
 ```
 
-Rules:
-- Do not remove existing legacy methods
-- `nullSafe` on ALL `*_CAT` and `*_SCHEM` fields
+**Types whose only sort key is numeric/ordinal** (`BestRowIdentifier` → SCOPE, `TypeInfo` → DATA_TYPE)
+— `()` + `(Context)`:
+
+```java
+static Comparator<TypeInfo> comparingInSpecifiedOrder() {
+    return Comparator.comparing(TypeInfo::getDataType, Comparator.nullsFirst(Comparator.naturalOrder()));
+}
+static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context) throws SQLException {
+    Objects.requireNonNull(context, "context is null");
+    return Comparator.comparing(TypeInfo::getDataType, ContextUtils.withDatabaseNullOrdering(
+            context, Comparator.<Integer>naturalOrder(), ContextUtils.SortDirection.ASCENDING));
+}
+```
+
+#### Rules
+
+- **Non-string keys** (`Integer`/`Boolean`: ORDINAL_POSITION, KEY_SEQ, SCOPE, DATA_TYPE, NON_UNIQUE):
+  always wrap with `Comparator.nullsFirst(Comparator.naturalOrder())` (fields are nullable wrappers;
+  drivers may return null even where the spec says non-null).
+- **String keys**: pass the raw value (`Xxx::getYyy`) to the caller's `comparator`; it must be
+  null-safe (`Comparator.nullsFirst(...)`, or `ContextUtils.withDatabaseNullOrdering(...)`).
+- **No no-arg `()` for string-keyed types.** `naturalOrder()` on strings is binary and matches no DB
+  collation — meaningless in the JDBC domain. A no-arg exists **only** for numeric-only types, where
+  the key is a genuine ordinal and `naturalOrder()` reproduces the documented order.
+- **The library never emulates DB collation** (JDBC exposes none) — the caller injects it via the
+  `comparator` (e.g. `Collator`). Only **null placement** can follow the DB, via the `Context`
+  overload's `ContextUtils.withDatabaseNullOrdering(...)` (prefer over the deprecated `nullOrdered`).
+- **No comparator for order-unspecified types** (`SuperTable`, `SuperType`, `VersionColumn` — their
+  `getXxx` documents no order).
+- All factories package-private; return `Comparator<T>`; parameter `Comparator<? super String>`.
 
 ### Accessors
 
@@ -172,12 +198,11 @@ List<Xxx> getXxxOf(ParentType parent, ...)
 - `getProceduresOf(@Nullable Schema)` → "Get procedures, optionally scoped to this schema"
 - `getSuperTablesOf(Schema)` → "Get super tables FOR this schema" (schema is the required scope)
 
-### toString/equals/hashCode
+### toString
 
-Methods must appear in this order: `toString`, `equals`, `hashCode`.
+Binding classes override `toString()` only. They intentionally do **not** override `equals()`/`hashCode()` — do not add identity semantics without an explicit design decision.
 
 - `toString`: Include ONLY `@_ColumnLabel` fields, in field definition order
-- `equals`/`hashCode`: Based on identifying fields (catalog, schema, name)
 
 ## Testing
 
@@ -195,8 +220,8 @@ Methods must appear in this order: `toString`, `equals`, `hashCode`.
 4. Add `@_ColumnLabel` to all fields
 5. Add `@_NullableBySpecification` + `@Nullable` where spec allows null
 6. Implement `public` getters, package-private setters
-7. Add comparator using new pattern (`UnaryOperator`, `Comparator`); keep legacy pattern if exists
-8. Override `toString()`, `equals()`, `hashCode()` (in this order)
+7. Add comparator per **Comparators** conventions above — `comparingInSpecifiedOrder(Comparator<? super String>)` + `(Context, Comparator<? super String>)` for string-keyed types (or `()` + `(Context)` for numeric-only types). Skip entirely if the `getXxx` documents no order.
+8. Override `toString()` only
 9. Add Context methods (`getXxxAndAcceptEach`, `getXxxAndAddAll`, `getXxx`)
 10. Add unit test extending `AbstractMetadataType_Test<T>`
 

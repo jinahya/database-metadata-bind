@@ -23,9 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -46,27 +46,42 @@ public class TablePrivilege
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
+     * Returns a comparator comparing values in the specified order, placing {@code null} values as the specified
+     * context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator comparing values in the specified order.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
+     */
+    static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Context context,
+                                                      final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return comparingInSpecifiedOrder(
+                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
+    }
+
+    /**
      * Returns a comparator comparing values in the specified order.
      * <blockquote>
      * They are ordered by <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, <code>TABLE_NAME</code>, and
      * <code>PRIVILEGE</code>.
      * </blockquote>
      *
-     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
      * @see java.sql.DatabaseMetaData#getTablePrivileges(String, String, String)
      */
-    static Comparator<TablePrivilege> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
-                                                                final Comparator<? super String> comparator) {
-        Objects.requireNonNull(operator, "operator is null");
+    static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
-        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<TablePrivilege, String>comparing(v -> op.apply(v.getTableCat()), comparator)
-                .thenComparing(v -> op.apply(v.getTableSchem()), comparator)
-                .thenComparing(v -> op.apply(v.getTableName()), comparator)
-                .thenComparing(v -> op.apply(v.getPrivilege()), comparator);
+                .<TablePrivilege, String>comparing(TablePrivilege::getTableCat, comparator)
+                .thenComparing(TablePrivilege::getTableSchem, comparator)
+                .thenComparing(TablePrivilege::getTableName, comparator)
+                .thenComparing(TablePrivilege::getPrivilege, comparator);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

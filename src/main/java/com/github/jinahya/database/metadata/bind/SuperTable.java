@@ -23,9 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -41,32 +38,6 @@ public class SuperTable
 
     @Serial
     private static final long serialVersionUID = 3579710773784268831L;
-
-    // ----------------------------------------------------------------------------------------------------- COMPARATORS
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, <code>TABLE_NAME</code>, and
-     * <code>SUPERTABLE_NAME</code>.
-     * </blockquote>
-     *
-     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see java.sql.DatabaseMetaData#getSuperTables(String, String, String)
-     */
-    static Comparator<SuperTable> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
-                                                            final Comparator<? super String> comparator) {
-        Objects.requireNonNull(operator, "operator is null");
-        Objects.requireNonNull(comparator, "comparator is null");
-        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
-        return Comparator
-                .<SuperTable, String>comparing(v -> op.apply(v.getTableCat()), comparator)
-                .thenComparing(v -> op.apply(v.getTableSchem()), comparator)
-                .thenComparing(v -> op.apply(v.getTableName()), comparator)
-                .thenComparing(v -> op.apply(v.getSupertableName()), comparator);
-    }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 

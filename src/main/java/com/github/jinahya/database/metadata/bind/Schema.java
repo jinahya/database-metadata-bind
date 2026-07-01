@@ -23,9 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
@@ -48,6 +48,25 @@ public class Schema
     private static final long serialVersionUID = 7457236468401244963L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values in the specified order, placing {@code null} values as the specified
+     * context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator comparing values in the specified order.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
+     */
+    static Comparator<Schema> comparingInSpecifiedOrder(final Context context,
+                                                      final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return comparingInSpecifiedOrder(
+                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
+    }
     // The results are ordered by TABLE_CATALOG and TABLE_SCHEM.
 
     /**
@@ -56,19 +75,15 @@ public class Schema
      * The results are ordered by <code>TABLE_CATALOG</code> and <code>TABLE_SCHEM</code>.
      * </blockquote>
      *
-     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
      * @see java.sql.DatabaseMetaData#getSchemas(String, String)
      */
-    static Comparator<Schema> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
-                                                        final Comparator<? super String> comparator) {
-        Objects.requireNonNull(operator, "operator is null");
+    static Comparator<Schema> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
-        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<Schema, String>comparing(v -> op.apply(v.getTableCatalog()), comparator)
-                .thenComparing(v -> op.apply(v.getTableSchem()), comparator);
+                .<Schema, String>comparing(Schema::getTableCatalog, comparator)
+                .thenComparing(Schema::getTableSchem, comparator);
     }
 
     // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
@@ -127,6 +142,10 @@ public class Schema
         this.tableSchem = tableSchem;
     }
 
+    String getEffectiveTableSchem() {
+        return tableSchem == null ? "" : tableSchem;
+    }
+
     // ---------------------------------------------------------------------------------------------------- tableCatalog
 
     /**
@@ -146,6 +165,10 @@ public class Schema
      */
     void setTableCatalog(final String tableCatalog) {
         this.tableCatalog = tableCatalog;
+    }
+
+    String getEffectiveTableCatalog() {
+        return tableCatalog == null ? "" : tableCatalog;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

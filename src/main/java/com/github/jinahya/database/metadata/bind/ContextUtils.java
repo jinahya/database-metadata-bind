@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
@@ -42,6 +44,22 @@ import java.util.Set;
 public final class ContextUtils {
 
     private static final System.Logger logger = System.getLogger(MethodHandles.lookup().lookupClass().getName());
+
+    /**
+     * An enum for sort directions.
+     */
+    public enum SortDirection {
+
+        /**
+         * A direction for ascending order.
+         */
+        ASCENDING,
+
+        /**
+         * A direction for descending order.
+         */
+        DESCENDING
+    }
 
     /**
      * Collects, into the specified map, all declared fields of the specified class (and its superclasses) annotated
@@ -186,29 +204,86 @@ public final class ContextUtils {
     }
 
     /**
-     * Returns a null-safe variant of the specified comparator whose handling of {@code null} elements reflects how the
-     * underlying database sorts {@code null} values.
+     * Returns a null-safe variant of the specified ascending comparator whose handling of {@code null} elements
+     * reflects how the underlying database sorts {@code null} values.
      * <p>
-     * When the database {@linkplain java.sql.DatabaseMetaData#nullsAreSortedAtStart() sorts nulls at the start} or
-     * {@linkplain java.sql.DatabaseMetaData#nullsAreSortedLow() sorts nulls low}, the result orders {@code null} first
-     * ({@link Comparator#nullsFirst(Comparator)}); otherwise it orders {@code null} last
-     * ({@link Comparator#nullsLast(Comparator)}).
+     * This method is equivalent to invoking {@link #withDatabaseNullOrdering(Context, Comparator, SortDirection)} with
+     * {@link SortDirection#ASCENDING}.
+     *
+     * @param context    the context whose metadata determines the {@code null} ordering.
+     * @param comparator the ascending comparator to wrap.
+     * @param <T>        the type of elements compared.
+     * @return a null-safe comparator wrapping the specified comparator.
+     * @throws SQLException if a database error occurs while querying the {@code null} ordering.
+     * @deprecated use {@link #withDatabaseNullOrdering(Context, Comparator, SortDirection)} to state the comparator
+     * direction explicitly.
+     */
+    @Deprecated
+    public static <T> Comparator<@Nullable T> nullOrdered(final Context context, final Comparator<? super T> comparator)
+            throws SQLException {
+        return withDatabaseNullOrdering(context, comparator, SortDirection.ASCENDING);
+    }
+
+    /**
+     * Returns a null-safe variant of the specified comparator whose handling of {@code null} elements reflects how the
+     * underlying database sorts {@code null} values for the specified sort direction.
      *
      * @param context    the context whose metadata determines the {@code null} ordering.
      * @param comparator the comparator to wrap.
+     * @param direction  the direction in which the specified comparator orders non-{@code null} values.
+     * @param <T>        the type of elements compared.
+     * @return a null-safe comparator wrapping the specified comparator.
+     * @throws SQLException if a database error occurs while querying the {@code null} ordering.
+     * @deprecated use {@link #withDatabaseNullOrdering(Context, Comparator, SortDirection)}.
+     */
+    @Deprecated
+    public static <T> Comparator<@Nullable T> nullOrdered(final Context context, final Comparator<? super T> comparator,
+                                                          final SortDirection direction)
+            throws SQLException {
+        return withDatabaseNullOrdering(context, comparator, direction);
+    }
+
+    /**
+     * Returns a null-safe variant of the specified comparator whose handling of {@code null} elements reflects how the
+     * underlying database sorts {@code null} values for the specified sort direction.
+     * <p>
+     * {@link java.sql.DatabaseMetaData#nullsAreSortedAtStart()} and
+     * {@link java.sql.DatabaseMetaData#nullsAreSortedAtEnd()} describe absolute result positions, so they are applied
+     * independently of {@code direction}. {@link java.sql.DatabaseMetaData#nullsAreSortedLow()} and
+     * {@link java.sql.DatabaseMetaData#nullsAreSortedHigh()} describe the value domain, so their result position
+     * depends on {@code direction}.
+     *
+     * @param context    the context whose metadata determines the {@code null} ordering.
+     * @param comparator the comparator to wrap.
+     * @param direction  the direction in which the specified comparator orders non-{@code null} values.
      * @param <T>        the type of elements compared.
      * @return a null-safe comparator wrapping the specified comparator.
      * @throws SQLException if a database error occurs while querying the {@code null} ordering.
      */
-    public static <T> Comparator<T> nullOrdered(final Context context, final Comparator<? super T> comparator)
+    public static <T> Comparator<@Nullable T> withDatabaseNullOrdering(final Context context,
+                                                                       final Comparator<? super T> comparator,
+                                                                       final SortDirection direction)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        if (context.metadata.nullsAreSortedAtStart() || context.metadata.nullsAreSortedLow()) {
+        Objects.requireNonNull(direction, "direction is null");
+        if (context.metadata.nullsAreSortedAtStart()) {
             return Comparator.nullsFirst(comparator);
-        } else {
+        }
+        if (context.metadata.nullsAreSortedAtEnd()) {
             return Comparator.nullsLast(comparator);
         }
+        if (context.metadata.nullsAreSortedLow()) {
+            return direction == SortDirection.ASCENDING
+                   ? Comparator.nullsFirst(comparator)
+                   : Comparator.nullsLast(comparator);
+        }
+        if (context.metadata.nullsAreSortedHigh()) {
+            return direction == SortDirection.ASCENDING
+                   ? Comparator.nullsLast(comparator)
+                   : Comparator.nullsFirst(comparator);
+        }
+        return Comparator.nullsLast(comparator);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

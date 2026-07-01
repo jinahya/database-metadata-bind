@@ -23,6 +23,8 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
+import java.sql.SQLException;
+import java.util.Objects;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.List;
@@ -55,6 +57,21 @@ public class TypeInfo
      */
     static Comparator<TypeInfo> comparingInSpecifiedOrder() {
         return Comparator.comparing(TypeInfo::getDataType, Comparator.nullsFirst(Comparator.naturalOrder()));
+    }
+
+    /**
+     * Returns a comparator comparing values in the specified order, placing {@code null} values as the specified
+     * context's database sorts them.
+     *
+     * @param context a context whose metadata determines the {@code null} ordering.
+     * @return a comparator comparing values in the specified order.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
+     */
+    static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return Comparator.comparing(TypeInfo::getDataType, ContextUtils.withDatabaseNullOrdering(
+                context, Comparator.<Integer>naturalOrder(), ContextUtils.SortDirection.ASCENDING));
     }
 
     // ------------------------------------------------------------------------------------------------------- TYPE_NAME

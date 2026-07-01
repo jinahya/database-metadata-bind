@@ -23,11 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
+import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.UnaryOperator;
 
 /**
  * A class for binding results of the
@@ -49,27 +49,42 @@ public class Procedure
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
+     * Returns a comparator comparing values in the specified order, placing {@code null} values as the specified
+     * context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator comparing values in the specified order.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
+     */
+    static Comparator<Procedure> comparingInSpecifiedOrder(final Context context,
+                                                      final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return comparingInSpecifiedOrder(
+                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
+    }
+
+    /**
      * Returns a comparator comparing values in the specified order.
      * <blockquote>
      * They are ordered by <code>PROCEDURE_CAT</code>, <code>PROCEDURE_SCHEM</code>, <code>PROCEDURE_NAME</code> and
      * <code>SPECIFIC_NAME</code>.
      * </blockquote>
      *
-     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @return a comparator comparing values in the specified order.
      * @see DatabaseMetaData#getProcedures(String, String, String)
      */
-    static Comparator<Procedure> comparingInSpecifiedOrder(final UnaryOperator<String> operator,
-                                                           final Comparator<? super String> comparator) {
-        Objects.requireNonNull(operator, "operator is null");
+    static Comparator<Procedure> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
-        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<Procedure, String>comparing(v -> op.apply(v.getProcedureCat()), comparator)
-                .thenComparing(v -> op.apply(v.getProcedureSchem()), comparator)
-                .thenComparing(v -> op.apply(v.getProcedureName()), comparator)
-                .thenComparing(v -> op.apply(v.getSpecificName()), comparator);
+                .<Procedure, String>comparing(Procedure::getProcedureCat, comparator)
+                .thenComparing(Procedure::getProcedureSchem, comparator)
+                .thenComparing(Procedure::getProcedureName, comparator)
+                .thenComparing(Procedure::getSpecificName, comparator);
     }
 
     // --------------------------------------------------------------------------------------------------- PROCEDURE_CAT
@@ -188,6 +203,10 @@ public class Procedure
         this.procedureCat = procedureCat;
     }
 
+    String getEffectiveProcedureCat() {
+        return procedureCat == null ? "" : procedureCat;
+    }
+
     // -------------------------------------------------------------------------------------------------- procedureSchem
 
     /**
@@ -207,6 +226,10 @@ public class Procedure
      */
     void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
+    }
+
+    String getEffectiveProcedureSchem() {
+        return procedureSchem == null ? "" : procedureSchem;
     }
 
     // --------------------------------------------------------------------------------------------------- procedureName

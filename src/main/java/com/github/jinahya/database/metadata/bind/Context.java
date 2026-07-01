@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -275,10 +274,23 @@ public class Context {
     List<Attribute> getAttributesOf(final UDT udt, final String attributeNamePattern) throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
         return getAttributes(
-                udt.getTypeCat(),
-                udt.getTypeSchem(),
+                udt.getEffectiveTypeCat(),
+                udt.getEffectiveTypeSchem(),
                 udt.getTypeName(),
                 attributeNamePattern
+        );
+    }
+
+    void forEachAttributeOf(final UDT udt, final String attributeNamePattern,
+                            final Consumer<? super Attribute> consumer)
+            throws SQLException {
+        Objects.requireNonNull(udt, "udt is null");
+        forEachAttribute(
+                udt.getEffectiveTypeCat(),
+                udt.getEffectiveTypeSchem(),
+                udt.getTypeName(),
+                attributeNamePattern,
+                consumer
         );
     }
 
@@ -400,11 +412,25 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getBestRowIdentifier(
-                table.getTableCat(),
-                table.getTableSchem(),
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
                 table.getTableName(),
                 scope,
                 nullable
+        );
+    }
+
+    void forEachBestRowIdentifierOf(final Table table, final int scope, final boolean nullable,
+                                    final Consumer<? super BestRowIdentifier> consumer)
+            throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        forEachBestRowIdentifier(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                scope,
+                nullable,
+                consumer
         );
     }
 
@@ -611,6 +637,30 @@ public class Context {
         return getColumnPrivilegesAndAddAll(catalog, schema, table, columnNamePattern, new ArrayList<>());
     }
 
+    List<ColumnPrivilege> getColumnPrivilegesOf(final Table table, final String columnNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        return getColumnPrivileges(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                columnNamePattern
+        );
+    }
+
+    void forEachColumnPrivilegeOf(final Table table, final String columnNamePattern,
+                                  final Consumer<? super ColumnPrivilege> consumer)
+            throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        forEachColumnPrivilege(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                columnNamePattern,
+                consumer
+        );
+    }
+
     // ------------------------------------------------------------------------------------------------------ getColumns
 
     /**
@@ -697,6 +747,29 @@ public class Context {
                                    final String tableNamePattern, final String columnNamePattern)
             throws SQLException {
         return getColumnsAndAddAll(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
+    }
+
+    List<Column> getColumnsOf(final Table table, final String columnNamePattern) throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        return getColumns(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                columnNamePattern
+        );
+    }
+
+    void forEachColumnOf(final Table table, final String columnNamePattern,
+                         final Consumer<? super Column> consumer)
+            throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        forEachColumn(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                columnNamePattern,
+                consumer
+        );
     }
 
     // ----------------------------------------------------------------------------------------------- getCrossReference
@@ -805,9 +878,44 @@ public class Context {
                                                   @Nullable final String foreignCatalog,
                                                   @Nullable final String foreignSchema, final String foreignTable)
             throws SQLException {
-        return getCrossReferenceAndAddAll(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema,
-                                          foreignTable,
-                                          new ArrayList<>());
+        return getCrossReferenceAndAddAll(
+                parentCatalog,
+                parentSchema,
+                parentTable,
+                foreignCatalog,
+                foreignSchema,
+                foreignTable,
+                new ArrayList<>()
+        );
+    }
+
+    List<CrossReference> getCrossReferenceOf(final Table parentTable, final Table foreignTable) throws SQLException {
+        Objects.requireNonNull(parentTable, "parentTable is null");
+        Objects.requireNonNull(foreignTable, "foreignTable is null");
+        return getCrossReference(
+                parentTable.getEffectiveTableCat(),
+                parentTable.getEffectiveTableSchem(),
+                parentTable.getTableName(),
+                foreignTable.getEffectiveTableCat(),
+                foreignTable.getEffectiveTableSchem(),
+                foreignTable.getTableName()
+        );
+    }
+
+    void forEachCrossReferenceOf(final Table parentTable, final Table foreignTable,
+                                 final Consumer<? super CrossReference> consumer)
+            throws SQLException {
+        Objects.requireNonNull(parentTable, "parentTable is null");
+        Objects.requireNonNull(foreignTable, "foreignTable is null");
+        forEachCrossReference(
+                parentTable.getEffectiveTableCat(),
+                parentTable.getEffectiveTableSchem(),
+                parentTable.getTableName(),
+                foreignTable.getEffectiveTableCat(),
+                foreignTable.getEffectiveTableSchem(),
+                foreignTable.getTableName(),
+                consumer
+        );
     }
 
     // ------------------------------------------------------------------------------------------------- getExportedKeys
@@ -907,9 +1015,19 @@ public class Context {
     List<ExportedKey> getExportedKeysOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getExportedKeys(
-                table.getTableCat(),
-                table.getTableSchem(),
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
                 table.getTableName()
+        );
+    }
+
+    void forEachExportedKeyOf(final Table table, final Consumer<? super ExportedKey> consumer) throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        forEachExportedKey(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                consumer
         );
     }
 
@@ -1014,9 +1132,20 @@ public class Context {
                                   @Nullable final String functionNamePattern)
             throws SQLException {
         return getFunctions(
-                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
+                catalog == null ? null : catalog.getEffectiveTableCat(),
                 schemaPattern,
                 functionNamePattern
+        );
+    }
+
+    void forEachFunctionOf(@Nullable final Catalog catalog, @Nullable final String schemaPattern,
+                           @Nullable final String functionNamePattern, final Consumer<? super Function> consumer)
+            throws SQLException {
+        forEachFunction(
+                catalog == null ? null : catalog.getEffectiveTableCat(),
+                schemaPattern,
+                functionNamePattern,
+                consumer
         );
     }
 
@@ -1034,9 +1163,20 @@ public class Context {
     List<Function> getFunctionsOf(@Nullable final Schema schema, @Nullable final String functionNamePattern)
             throws SQLException {
         return getFunctions(
-                Optional.ofNullable(schema).map(Schema::getTableCatalog).orElse(null),
-                Optional.ofNullable(schema).map(Schema::getTableSchem).orElse(null),
+                schema == null ? null : schema.getEffectiveTableCatalog(),
+                schema == null ? null : schema.getEffectiveTableSchem(),
                 functionNamePattern
+        );
+    }
+
+    void forEachFunctionOf(@Nullable final Schema schema, @Nullable final String functionNamePattern,
+                           final Consumer<? super Function> consumer)
+            throws SQLException {
+        forEachFunction(
+                schema == null ? null : schema.getEffectiveTableCatalog(),
+                schema == null ? null : schema.getEffectiveTableSchem(),
+                functionNamePattern,
+                consumer
         );
     }
 
@@ -1147,10 +1287,23 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(function, "function is null");
         return getFunctionColumns(
-                function.getFunctionCat(),
-                function.getFunctionSchem(),
+                function.getEffectiveFunctionCat(),
+                function.getEffectiveFunctionSchem(),
                 function.getFunctionName(),
                 columnNamePattern
+        );
+    }
+
+    void forEachFunctionColumnOf(final Function function, final String columnNamePattern,
+                                 final Consumer<? super FunctionColumn> consumer)
+            throws SQLException {
+        Objects.requireNonNull(function, "function is null");
+        forEachFunctionColumn(
+                function.getEffectiveFunctionCat(),
+                function.getEffectiveFunctionSchem(),
+                function.getFunctionName(),
+                columnNamePattern,
+                consumer
         );
     }
 
@@ -1251,9 +1404,19 @@ public class Context {
     List<ImportedKey> getImportedKeysOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getImportedKeys(
-                table.getTableCat(),
-                table.getTableSchem(),
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
                 table.getTableName()
+        );
+    }
+
+    void forEachImportedKeyOf(final Table table, final Consumer<? super ImportedKey> consumer) throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        forEachImportedKey(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                consumer
         );
     }
 
@@ -1374,11 +1537,25 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getIndexInfo(
-                table.getTableCat(),
-                table.getTableSchem(),
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
                 table.getTableName(),
                 unique,
                 approximate
+        );
+    }
+
+    void forEachIndexInfoOf(final Table table, final boolean unique, final boolean approximate,
+                            final Consumer<? super IndexInfo> consumer)
+            throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        forEachIndexInfo(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                unique,
+                approximate,
+                consumer
         );
     }
 
@@ -1479,9 +1656,19 @@ public class Context {
     List<PrimaryKey> getPrimaryKeysOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPrimaryKeys(
-                table.getTableCat(),
-                table.getTableSchem(),
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
                 table.getTableName()
+        );
+    }
+
+    void forEachPrimaryKeyOf(final Table table, final Consumer<? super PrimaryKey> consumer) throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        forEachPrimaryKey(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                consumer
         );
     }
 
@@ -1593,8 +1780,22 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(procedure, "procedure is null");
         return getProcedureColumns(
-                procedure.getProcedureCat(), procedure.getProcedureSchem(), procedure.getProcedureName(),
+                procedure.getEffectiveProcedureCat(), procedure.getEffectiveProcedureSchem(),
+                procedure.getProcedureName(),
                 columnNamePattern
+        );
+    }
+
+    void forEachProcedureColumnOf(final Procedure procedure, final String columnNamePattern,
+                                  final Consumer<? super ProcedureColumn> consumer)
+            throws SQLException {
+        Objects.requireNonNull(procedure, "procedure is null");
+        forEachProcedureColumn(
+                procedure.getEffectiveProcedureCat(),
+                procedure.getEffectiveProcedureSchem(),
+                procedure.getProcedureName(),
+                columnNamePattern,
+                consumer
         );
     }
 
@@ -1700,9 +1901,20 @@ public class Context {
                                     final String procedureNamePattern)
             throws SQLException {
         return getProcedures(
-                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
+                catalog == null ? null : catalog.getEffectiveTableCat(),
                 schemaPattern,
                 procedureNamePattern
+        );
+    }
+
+    void forEachProcedureOf(@Nullable final Catalog catalog, @Nullable final String schemaPattern,
+                            final String procedureNamePattern, final Consumer<? super Procedure> consumer)
+            throws SQLException {
+        forEachProcedure(
+                catalog == null ? null : catalog.getEffectiveTableCat(),
+                schemaPattern,
+                procedureNamePattern,
+                consumer
         );
     }
 
@@ -1720,9 +1932,20 @@ public class Context {
     List<Procedure> getProceduresOf(@Nullable final Schema schema, final String procedureNamePattern)
             throws SQLException {
         return getProcedures(
-                Optional.ofNullable(schema).map(Schema::getTableCatalog).orElse(null),
-                Optional.ofNullable(schema).map(Schema::getTableSchem).orElse(null),
+                schema == null ? null : schema.getEffectiveTableCatalog(),
+                schema == null ? null : schema.getEffectiveTableSchem(),
                 procedureNamePattern
+        );
+    }
+
+    void forEachProcedureOf(@Nullable final Schema schema, final String procedureNamePattern,
+                            final Consumer<? super Procedure> consumer)
+            throws SQLException {
+        forEachProcedure(
+                schema == null ? null : schema.getEffectiveTableCatalog(),
+                schema == null ? null : schema.getEffectiveTableSchem(),
+                procedureNamePattern,
+                consumer
         );
     }
 
@@ -1835,8 +2058,21 @@ public class Context {
     List<PseudoColumn> getPseudoColumnsOf(final Table table, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPseudoColumns(
-                table.getTableCat(), table.getTableSchem(), table.getTableName(),
+                table.getEffectiveTableCat(), table.getEffectiveTableSchem(), table.getTableName(),
                 columnNamePattern
+        );
+    }
+
+    void forEachPseudoColumnOf(final Table table, final String columnNamePattern,
+                               final Consumer<? super PseudoColumn> consumer)
+            throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        forEachPseudoColumn(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                columnNamePattern,
+                consumer
         );
     }
 
@@ -1983,8 +2219,18 @@ public class Context {
     List<Schema> getSchemasOf(@Nullable final Catalog catalog, @Nullable final String schemaPattern)
             throws SQLException {
         return getSchemas(
-                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
+                catalog == null ? null : catalog.getEffectiveTableCat(),
                 schemaPattern
+        );
+    }
+
+    void forEachSchemaOf(@Nullable final Catalog catalog, @Nullable final String schemaPattern,
+                         final Consumer<? super Schema> consumer)
+            throws SQLException {
+        forEachSchema(
+                catalog == null ? null : catalog.getEffectiveTableCat(),
+                schemaPattern,
+                consumer
         );
     }
 
@@ -2087,9 +2333,20 @@ public class Context {
                                       final String tableNamePattern)
             throws SQLException {
         return getSuperTables(
-                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
+                catalog == null ? null : catalog.getEffectiveTableCat(),
                 schemaPattern,
                 tableNamePattern
+        );
+    }
+
+    void forEachSuperTableOf(@Nullable final Catalog catalog, final String schemaPattern,
+                             final String tableNamePattern, final Consumer<? super SuperTable> consumer)
+            throws SQLException {
+        forEachSuperTable(
+                catalog == null ? null : catalog.getEffectiveTableCat(),
+                schemaPattern,
+                tableNamePattern,
+                consumer
         );
     }
 
@@ -2105,9 +2362,21 @@ public class Context {
     List<SuperTable> getSuperTablesOf(final Schema schema, final String tableNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTables(
-                schema.getTableCatalog(),
-                schema.getTableSchem(),
+                schema.getEffectiveTableCatalog(),
+                schema.getEffectiveTableSchem(),
                 tableNamePattern
+        );
+    }
+
+    void forEachSuperTableOf(final Schema schema, final String tableNamePattern,
+                             final Consumer<? super SuperTable> consumer)
+            throws SQLException {
+        Objects.requireNonNull(schema, "schema is null");
+        forEachSuperTable(
+                schema.getEffectiveTableCatalog(),
+                schema.getEffectiveTableSchem(),
+                tableNamePattern,
+                consumer
         );
     }
 
@@ -2122,9 +2391,19 @@ public class Context {
     List<SuperTable> getSuperTablesOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getSuperTables(
-                table.getTableCat(),
-                table.getTableSchem(),
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
                 table.getTableName()
+        );
+    }
+
+    void forEachSuperTableOf(final Table table, final Consumer<? super SuperTable> consumer) throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        forEachSuperTable(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                consumer
         );
     }
 
@@ -2229,9 +2508,20 @@ public class Context {
                                     final String typeNamePattern)
             throws SQLException {
         return getSuperTypes(
-                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
+                catalog == null ? null : catalog.getEffectiveTableCat(),
                 schemaPattern,
                 typeNamePattern
+        );
+    }
+
+    void forEachSuperTypeOf(@Nullable final Catalog catalog, final String schemaPattern,
+                            final String typeNamePattern, final Consumer<? super SuperType> consumer)
+            throws SQLException {
+        forEachSuperType(
+                catalog == null ? null : catalog.getEffectiveTableCat(),
+                schemaPattern,
+                typeNamePattern,
+                consumer
         );
     }
 
@@ -2248,9 +2538,21 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTypes(
-                schema.getTableCatalog(),
-                schema.getTableSchem(),
+                schema.getEffectiveTableCatalog(),
+                schema.getEffectiveTableSchem(),
                 typeNamePattern
+        );
+    }
+
+    void forEachSuperTypeOf(final Schema schema, final String typeNamePattern,
+                            final Consumer<? super SuperType> consumer)
+            throws SQLException {
+        Objects.requireNonNull(schema, "schema is null");
+        forEachSuperType(
+                schema.getEffectiveTableCatalog(),
+                schema.getEffectiveTableSchem(),
+                typeNamePattern,
+                consumer
         );
     }
 
@@ -2265,9 +2567,19 @@ public class Context {
     List<SuperType> getSuperTypesOf(final UDT udt) throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
         return getSuperTypes(
-                udt.getTypeCat(),
-                udt.getTypeSchem(),
+                udt.getEffectiveTypeCat(),
+                udt.getEffectiveTypeSchem(),
                 udt.getTypeName()
+        );
+    }
+
+    void forEachSuperTypeOf(final UDT udt, final Consumer<? super SuperType> consumer) throws SQLException {
+        Objects.requireNonNull(udt, "udt is null");
+        forEachSuperType(
+                udt.getEffectiveTypeCat(),
+                udt.getEffectiveTypeSchem(),
+                udt.getTypeName(),
+                consumer
         );
     }
 
@@ -2375,9 +2687,20 @@ public class Context {
                                               final String tableNamePattern)
             throws SQLException {
         return getTablePrivileges(
-                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
+                catalog == null ? null : catalog.getEffectiveTableCat(),
                 schemaPattern,
                 tableNamePattern
+        );
+    }
+
+    void forEachTablePrivilegeOf(@Nullable final Catalog catalog, @Nullable final String schemaPattern,
+                                 final String tableNamePattern, final Consumer<? super TablePrivilege> consumer)
+            throws SQLException {
+        forEachTablePrivilege(
+                catalog == null ? null : catalog.getEffectiveTableCat(),
+                schemaPattern,
+                tableNamePattern,
+                consumer
         );
     }
 
@@ -2395,9 +2718,20 @@ public class Context {
     List<TablePrivilege> getTablePrivilegesOf(@Nullable final Schema schema, final String tableNamePattern)
             throws SQLException {
         return getTablePrivileges(
-                Optional.ofNullable(schema).map(Schema::getTableCatalog).orElse(null),
-                Optional.ofNullable(schema).map(Schema::getTableSchem).orElse(null),
+                schema == null ? null : schema.getEffectiveTableCatalog(),
+                schema == null ? null : schema.getEffectiveTableSchem(),
                 tableNamePattern
+        );
+    }
+
+    void forEachTablePrivilegeOf(@Nullable final Schema schema, final String tableNamePattern,
+                                 final Consumer<? super TablePrivilege> consumer)
+            throws SQLException {
+        forEachTablePrivilege(
+                schema == null ? null : schema.getEffectiveTableCatalog(),
+                schema == null ? null : schema.getEffectiveTableSchem(),
+                tableNamePattern,
+                consumer
         );
     }
 
@@ -2412,9 +2746,20 @@ public class Context {
     List<TablePrivilege> getTablePrivilegesOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getTablePrivileges(
-                table.getTableCat(),
-                table.getTableSchem(),
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
                 table.getTableName()
+        );
+    }
+
+    void forEachTablePrivilegeOf(final Table table, final Consumer<? super TablePrivilege> consumer)
+            throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        forEachTablePrivilege(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                consumer
         );
     }
 
@@ -2600,10 +2945,23 @@ public class Context {
                             final String tableNamePattern, @Nullable final String[] types)
             throws SQLException {
         return getTables(
-                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
+                catalog == null ? null : catalog.getEffectiveTableCat(),
                 schemaPattern,
                 tableNamePattern,
                 types
+        );
+    }
+
+    void forEachTableOf(@Nullable final Catalog catalog, @Nullable final String schemaPattern,
+                        final String tableNamePattern, @Nullable final String[] types,
+                        final Consumer<? super Table> consumer)
+            throws SQLException {
+        forEachTable(
+                catalog == null ? null : catalog.getEffectiveTableCat(),
+                schemaPattern,
+                tableNamePattern,
+                types,
+                consumer
         );
     }
 
@@ -2623,10 +2981,22 @@ public class Context {
                             @Nullable final String[] types)
             throws SQLException {
         return getTables(
-                Optional.ofNullable(schema).map(Schema::getTableCatalog).orElse(null),
-                Optional.ofNullable(schema).map(Schema::getTableSchem).orElse(null),
+                schema == null ? null : schema.getEffectiveTableCatalog(),
+                schema == null ? null : schema.getEffectiveTableSchem(),
                 tableNamePattern,
                 types
+        );
+    }
+
+    void forEachTableOf(@Nullable final Schema schema, final String tableNamePattern, @Nullable final String[] types,
+                        final Consumer<? super Table> consumer)
+            throws SQLException {
+        forEachTable(
+                schema == null ? null : schema.getEffectiveTableCatalog(),
+                schema == null ? null : schema.getEffectiveTableSchem(),
+                tableNamePattern,
+                types,
+                consumer
         );
     }
 
@@ -2804,10 +3174,23 @@ public class Context {
                         final String typeNamePattern, @Nullable final int[] types)
             throws SQLException {
         return getUDTs(
-                Optional.ofNullable(catalog).map(Catalog::getTableCat).orElse(null),
+                catalog == null ? null : catalog.getEffectiveTableCat(),
                 schemaPattern,
                 typeNamePattern,
                 types
+        );
+    }
+
+    void forEachUDTOf(@Nullable final Catalog catalog, @Nullable final String schemaPattern,
+                      final String typeNamePattern, @Nullable final int[] types,
+                      final Consumer<? super UDT> consumer)
+            throws SQLException {
+        forEachUDT(
+                catalog == null ? null : catalog.getEffectiveTableCat(),
+                schemaPattern,
+                typeNamePattern,
+                types,
+                consumer
         );
     }
 
@@ -2826,10 +3209,22 @@ public class Context {
     List<UDT> getUDTsOf(@Nullable final Schema schema, final String typeNamePattern, @Nullable final int[] types)
             throws SQLException {
         return getUDTs(
-                Optional.ofNullable(schema).map(Schema::getTableCatalog).orElse(null),
-                Optional.ofNullable(schema).map(Schema::getTableSchem).orElse(null),
+                schema == null ? null : schema.getEffectiveTableCatalog(),
+                schema == null ? null : schema.getEffectiveTableSchem(),
                 typeNamePattern,
                 types
+        );
+    }
+
+    void forEachUDTOf(@Nullable final Schema schema, final String typeNamePattern, @Nullable final int[] types,
+                      final Consumer<? super UDT> consumer)
+            throws SQLException {
+        forEachUDT(
+                schema == null ? null : schema.getEffectiveTableCatalog(),
+                schema == null ? null : schema.getEffectiveTableSchem(),
+                typeNamePattern,
+                types,
+                consumer
         );
     }
 
@@ -2934,9 +3329,20 @@ public class Context {
     List<VersionColumn> getVersionColumnsOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getVersionColumns(
-                table.getTableCat(),
-                table.getTableSchem(),
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
                 table.getTableName()
+        );
+    }
+
+    void forEachVersionColumnOf(final Table table, final Consumer<? super VersionColumn> consumer)
+            throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        forEachVersionColumn(
+                table.getEffectiveTableCat(),
+                table.getEffectiveTableSchem(),
+                table.getTableName(),
+                consumer
         );
     }
 

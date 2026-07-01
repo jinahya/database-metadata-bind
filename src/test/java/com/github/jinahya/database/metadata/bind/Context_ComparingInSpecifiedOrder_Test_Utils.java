@@ -63,8 +63,8 @@ final class Context_ComparingInSpecifiedOrder_Test_Utils {
         try {
             assertEachAccepted(
                     FunctionColumn.comparingInSpecifiedOrder(
-                            java.util.function.UnaryOperator.identity(),
-                            ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)
+                            ContextUtils.withDatabaseNullOrdering(
+                                    context, String.CASE_INSENSITIVE_ORDER, ContextUtils.SortDirection.ASCENDING)
                     ),
                     c -> context.getFunctionColumnsAndAcceptEach(null, null, "%", "%", c)
             );
@@ -77,8 +77,8 @@ final class Context_ComparingInSpecifiedOrder_Test_Utils {
         try {
             assertEachAccepted(
                     ProcedureColumn.comparingInSpecifiedOrder(
-                            java.util.function.UnaryOperator.identity(),
-                            ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)
+                            ContextUtils.withDatabaseNullOrdering(
+                                    context, String.CASE_INSENSITIVE_ORDER, ContextUtils.SortDirection.ASCENDING)
                     ),
                     c -> context.getProcedureColumnsAndAcceptEach(null, null, "%", "%", c)
             );
@@ -91,8 +91,8 @@ final class Context_ComparingInSpecifiedOrder_Test_Utils {
         final var child = tableName(context, "DMB_CHILD");
         assertEachAccepted(
                 ImportedKey.comparingInSpecifiedOrder(
-                        java.util.function.UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)
+                        ContextUtils.withDatabaseNullOrdering(
+                                context, String.CASE_INSENSITIVE_ORDER, ContextUtils.SortDirection.ASCENDING)
                 ),
                 c -> context.getImportedKeysAndAcceptEach(null, null, child, c)
         );
@@ -102,8 +102,8 @@ final class Context_ComparingInSpecifiedOrder_Test_Utils {
         final var parent = tableName(context, "DMB_PARENT");
         assertEachAccepted(
                 ExportedKey.comparingInSpecifiedOrder(
-                        java.util.function.UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)
+                        ContextUtils.withDatabaseNullOrdering(
+                                context, String.CASE_INSENSITIVE_ORDER, ContextUtils.SortDirection.ASCENDING)
                 ),
                 c -> context.getExportedKeysAndAcceptEach(null, null, parent, c)
         );
@@ -114,8 +114,8 @@ final class Context_ComparingInSpecifiedOrder_Test_Utils {
         final var child = tableName(context, "DMB_CHILD");
         assertEachAccepted(
                 CrossReference.comparingInSpecifiedOrder(
-                        java.util.function.UnaryOperator.identity(),
-                        ContextUtils.nullOrdered(context, String.CASE_INSENSITIVE_ORDER)
+                        ContextUtils.withDatabaseNullOrdering(
+                                context, String.CASE_INSENSITIVE_ORDER, ContextUtils.SortDirection.ASCENDING)
                 ),
                 c -> context.getCrossReferenceAndAcceptEach(
                         null,

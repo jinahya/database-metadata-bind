@@ -23,11 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
+import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.UnaryOperator;
 
 /**
  * An abstract class for binding results of the
@@ -52,22 +52,43 @@ abstract class PortedKey
      * <code>KEY_SEQ</code>.
      * </blockquote>
      *
-     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @param <T>        the type of {@link PortedKey} to compare.
      * @return a comparator comparing values in the specified order.
-     * @see ImportedKey#comparingInSpecifiedOrder(UnaryOperator, Comparator)
+     * @see ImportedKey#comparingInSpecifiedOrder(Comparator)
      */
-    static <T extends PortedKey> Comparator<T> comparingPk(final UnaryOperator<String> operator,
-                                                           final Comparator<? super String> comparator) {
-        Objects.requireNonNull(operator, "operator is null");
+    static <T extends PortedKey> Comparator<T> comparingPk(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
-        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<T, String>comparing(v -> op.apply(v.getPktableCat()), comparator)
-                .thenComparing(v -> op.apply(v.getPktableSchem()), comparator)
-                .thenComparing(v -> op.apply(v.getPktableName()), comparator)
+                .<T, String>comparing(PortedKey::getPktableCat, comparator)
+                .thenComparing(PortedKey::getPktableSchem, comparator)
+                .thenComparing(PortedKey::getPktableName, comparator)
                 .thenComparing(PortedKey::getKeySeq, Comparator.nullsFirst(Comparator.naturalOrder()));
+    }
+
+    /**
+     * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
+     * specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @param <T>        the type of {@link PortedKey} to compare.
+     * @return a comparator comparing values in the specified order.
+     * @throws SQLException if a database access error occurs.
+     */
+    static <T extends PortedKey> Comparator<T> comparingPk(final Context context,
+                                                           final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
+        final var i = ContextUtils.withDatabaseNullOrdering(
+                context, Comparator.<Integer>naturalOrder(), ContextUtils.SortDirection.ASCENDING);
+        return Comparator
+                .<T, String>comparing(PortedKey::getPktableCat, s)
+                .thenComparing(PortedKey::getPktableSchem, s)
+                .thenComparing(PortedKey::getPktableName, s)
+                .thenComparing(PortedKey::getKeySeq, i);
     }
 
     /**
@@ -77,22 +98,43 @@ abstract class PortedKey
      * <code>KEY_SEQ</code>.
      * </blockquote>
      *
-     * @param operator   a unary operator for adjusting string values; applied only to non-{@code null} values.
      * @param comparator a null-safe string comparator for comparing values.
      * @param <T>        the type of {@link PortedKey} to compare.
      * @return a comparator comparing values in the specified order.
-     * @see ExportedKey#comparingInSpecifiedOrder(UnaryOperator, Comparator)
+     * @see ExportedKey#comparingInSpecifiedOrder(Comparator)
      */
-    static <T extends PortedKey> Comparator<T> comparingFk(final UnaryOperator<String> operator,
-                                                           final Comparator<? super String> comparator) {
-        Objects.requireNonNull(operator, "operator is null");
+    static <T extends PortedKey> Comparator<T> comparingFk(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
-        final UnaryOperator<String> op = v -> v == null ? null : operator.apply(v);
         return Comparator
-                .<T, String>comparing(v -> op.apply(v.getFktableCat()), comparator)
-                .thenComparing(v -> op.apply(v.getFktableSchem()), comparator)
-                .thenComparing(v -> op.apply(v.getFktableName()), comparator)
+                .<T, String>comparing(PortedKey::getFktableCat, comparator)
+                .thenComparing(PortedKey::getFktableSchem, comparator)
+                .thenComparing(PortedKey::getFktableName, comparator)
                 .thenComparing(PortedKey::getKeySeq, Comparator.nullsFirst(Comparator.naturalOrder()));
+    }
+
+    /**
+     * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
+     * specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @param <T>        the type of {@link PortedKey} to compare.
+     * @return a comparator comparing values in the specified order.
+     * @throws SQLException if a database access error occurs.
+     */
+    static <T extends PortedKey> Comparator<T> comparingFk(final Context context,
+                                                           final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
+        final var i = ContextUtils.withDatabaseNullOrdering(
+                context, Comparator.<Integer>naturalOrder(), ContextUtils.SortDirection.ASCENDING);
+        return Comparator
+                .<T, String>comparing(PortedKey::getFktableCat, s)
+                .thenComparing(PortedKey::getFktableSchem, s)
+                .thenComparing(PortedKey::getFktableName, s)
+                .thenComparing(PortedKey::getKeySeq, i);
     }
 
     // ----------------------------------------------------------------------------------------------------- PKTABLE_CAT
