@@ -23,8 +23,8 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
-import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -38,7 +38,8 @@ import java.util.Objects;
 @_ChildOf(Table.class)
 @_ParentOf(ColumnPrivilege.class)
 public class Column
-        extends AbstractMetadataType {
+        extends AbstractMetadataType
+        implements ColumnView {
 
     @Serial
     private static final long serialVersionUID = -409653682729081530L;
@@ -1069,4 +1070,58 @@ public class Column
 
     @_ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The table that owns this column.
+     * <p>
+     * This reference is not a value read from the {@link DatabaseMetaData#getColumns(String, String, String, String)}
+     * result set. It is a transient, resolved object link for the table identified by
+     * {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM}, and {@value #COLUMN_LABEL_TABLE_NAME}.
+     * </p>
+     */
+    @Nullable
+    private transient Table table_;
+
+    /**
+     * The table that scopes values of this column when this column is a {@link java.sql.Types#REF REF} column.
+     * <p>
+     * This reference is not the owning table. It is a transient, resolved object link for the table identified by
+     * {@value #COLUMN_LABEL_SCOPE_CATALOG}, {@value #COLUMN_LABEL_SCOPE_SCHEMA}, and
+     * {@value #COLUMN_LABEL_SCOPE_TABLE}. Those scope columns are meaningful only when
+     * {@value #COLUMN_LABEL_DATA_TYPE} is {@link java.sql.Types#REF}; otherwise the JDBC specification says they are
+     * {@code null}.
+     * </p>
+     */
+    @Nullable
+    private transient Table scopeTable_;
+
+    /**
+     * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT},
+     * {@value #COLUMN_LABEL_TABLE_SCHEM}, and {@value #COLUMN_LABEL_TABLE_NAME}.
+     *
+     * @return the table reference identified by this column.
+     */
+    Table getTable_() {
+        final var table = new Table();
+        table.setTableCat(getEffectiveTableCat());
+        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableName(tableName);
+        return table;
+    }
+
+    /**
+     * Returns the table reference identified by {@value #COLUMN_LABEL_SCOPE_CATALOG},
+     * {@value #COLUMN_LABEL_SCOPE_SCHEMA}, and {@value #COLUMN_LABEL_SCOPE_TABLE}.
+     *
+     * @return the REF scope table reference identified by this column.
+     */
+    Table getScopeTable_() {
+        final var table = new Table();
+        table.setTableCat(getEffectiveScopeCatalog());
+        table.setTableSchem(getEffectiveScopeSchema());
+        table.setTableName(scopeTable);
+        return table;
+    }
 }

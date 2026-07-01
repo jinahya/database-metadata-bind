@@ -33,6 +33,7 @@ import java.io.Serial;
  */
 @_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
+@_ChildOf(Table.class)
 public class SuperTable
         extends AbstractMetadataType {
 

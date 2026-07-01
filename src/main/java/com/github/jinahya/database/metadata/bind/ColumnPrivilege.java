@@ -37,6 +37,7 @@ import java.util.Objects;
  * @see Context#getColumnPrivileges(String, String, String, String)
  */
 @_ChildOf(Table.class)
+@_ChildOf(Column.class)
 public class ColumnPrivilege
         extends AbstractMetadataType {
 

@@ -44,13 +44,15 @@ import java.util.Objects;
 @_ParentOf(ImportedKey.class)
 @_ParentOf(ExportedKey.class)
 @_ParentOf(CrossReference.class)
+@_ParentOf(SuperTable.class)
 @_ParentOf(Column.class)
 @_ParentOf(ColumnPrivilege.class)
 @_ParentOf(BestRowIdentifier.class)
 @_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
 public class Table
-        extends AbstractMetadataType {
+        extends AbstractMetadataType
+        implements TableView {
 
     @Serial
     private static final long serialVersionUID = 6590036695540141125L;
@@ -233,10 +235,6 @@ public class Table
         this.tableCat = tableCat;
     }
 
-    String getEffectiveTableCat() {
-        return tableCat == null ? "" : tableCat;
-    }
-
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -256,10 +254,6 @@ public class Table
      */
     void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
-    }
-
-    String getEffectiveTableSchem() {
-        return tableSchem == null ? "" : tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName

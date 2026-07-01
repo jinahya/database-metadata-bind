@@ -39,10 +39,13 @@ import java.util.Objects;
 @_ParentOf(SuperType.class)
 @_ParentOf(SuperTable.class)
 @_ParentOf(Procedure.class)
+@_ParentOf(Function.class)
+@_ParentOf(UDT.class)
 @_ChildOf(Catalog.class)
 @_ChildOfNone
 public class Schema
-        extends AbstractMetadataType {
+        extends AbstractMetadataType
+        implements SchemaView {
 
     @Serial
     private static final long serialVersionUID = 7457236468401244963L;
@@ -129,6 +132,7 @@ public class Schema
      *
      * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
+    @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
@@ -140,10 +144,6 @@ public class Schema
      */
     void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
-    }
-
-    String getEffectiveTableSchem() {
-        return tableSchem == null ? "" : tableSchem;
     }
 
     // ---------------------------------------------------------------------------------------------------- tableCatalog
@@ -167,12 +167,9 @@ public class Schema
         this.tableCatalog = tableCatalog;
     }
 
-    String getEffectiveTableCatalog() {
-        return tableCatalog == null ? "" : tableCatalog;
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 

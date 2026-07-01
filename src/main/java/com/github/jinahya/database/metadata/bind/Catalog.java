@@ -1,5 +1,7 @@
 package com.github.jinahya.database.metadata.bind;
 
+import org.jspecify.annotations.Nullable;
+
 /*-
  * #%L
  * database-metadata-bind
@@ -38,9 +40,12 @@ import java.util.function.Consumer;
 @_ParentOf(SuperTable.class)
 @_ParentOf(Schema.class)
 @_ParentOf(Procedure.class)
+@_ParentOf(Function.class)
+@_ParentOf(UDT.class)
 @_ChildOfNone
 public class Catalog
-        extends AbstractMetadataType {
+        extends AbstractMetadataType
+        implements CatalogView {
 
     @Serial
     private static final long serialVersionUID = 6239185259128825953L;
@@ -114,6 +119,7 @@ public class Catalog
      *
      * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
+    @Nullable
     public String getTableCat() {
         return tableCat;
     }
@@ -127,11 +133,8 @@ public class Catalog
         this.tableCat = tableCat;
     }
 
-    String getEffectiveTableCat() {
-        return tableCat == null ? "" : tableCat;
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 }

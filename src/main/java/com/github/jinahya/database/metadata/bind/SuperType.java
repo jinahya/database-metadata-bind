@@ -33,6 +33,8 @@ import java.sql.DatabaseMetaData;
  * @see Context#getSuperTypes(String, String, String)
  */
 @_ChildOf(UDT.class)
+@_ChildOf(Schema.class)
+@_ChildOf(Catalog.class)
 public class SuperType
         extends AbstractMetadataType {
 

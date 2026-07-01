@@ -32,6 +32,7 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getClientInfoProperties()
  */
+@_ChildOfNone
 public class ClientInfoProperty
         extends AbstractMetadataType {
 
