@@ -115,7 +115,6 @@ public class Catalog
      *
      * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    @Nullable
     public String getTableCat() {
         return tableCat;
     }
@@ -134,7 +133,6 @@ public class Catalog
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 }

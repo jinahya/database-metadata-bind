@@ -128,7 +128,6 @@ public class Schema
      *
      * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
@@ -172,8 +171,6 @@ public class Schema
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Nullable
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
