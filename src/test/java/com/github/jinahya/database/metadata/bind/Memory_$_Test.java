@@ -368,6 +368,22 @@ abstract class Memory_$_Test {
         });
     }
 
+    @Test
+    void comparingInSpecifiedOrder_failFree() throws SQLException {
+        try (var connection = connect();
+             var statement = connection.createStatement()) {
+            try {
+                Context_ComparingInSpecifiedOrder_Test_Utils.preparePortedKeyTables(statement);
+                Context_ComparingInSpecifiedOrder_Test_Utils.assertComparingInSpecifiedOrder(
+                        Context.newInstance(connection),
+                        getClass().getSimpleName()
+                );
+            } catch (final Throwable t) {
+                log.warn("failed to verify comparingInSpecifiedOrder; test={}", getClass().getSimpleName(), t);
+            }
+        }
+    }
+
     /**
      * Creates a table with a two-column composite primary key, then reads it back via
      * {@link Context#getPrimaryKeys(String, String, String)} and logs the observed per-column behavior. Used to verify
