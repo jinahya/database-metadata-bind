@@ -49,6 +49,25 @@ public class Context {
 
     private static final System.Logger logger = System.getLogger(MethodHandles.lookup().lookupClass().getName());
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Splits a comma-separated string into an unmodifiable list of non-blank, stripped elements.
+     *
+     * @param commaSeparated a comma-separated string; may be {@code null} (some drivers return {@code null} despite the
+     *                       specification).
+     * @return an unmodifiable list of elements; empty when {@code commaSeparated} is {@code null} or blank.
+     */
+    private static List<String> commaSplitToUnmodifiableList(final String commaSeparated) {
+        if (commaSeparated == null) {
+            return List.of();
+        }
+        return Arrays.stream(commaSeparated.split(","))
+                .map(String::strip)
+                .filter(v -> !v.isBlank())
+                .toList();
+    }
+
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     /**
@@ -408,7 +427,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getBestRowIdentifier(String, String, String, int, boolean)
      */
-    List<BestRowIdentifier> getBestRowIdentifierOf(final TableView table, final int scope, final boolean nullable)
+    List<BestRowIdentifier> getBestRowIdentifierOf(final Table table, final int scope, final boolean nullable)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getBestRowIdentifier(
@@ -420,7 +439,7 @@ public class Context {
         );
     }
 
-    void forEachBestRowIdentifierOf(final TableView table, final int scope, final boolean nullable,
+    void forEachBestRowIdentifierOf(final Table table, final int scope, final boolean nullable,
                                     final Consumer<? super BestRowIdentifier> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
@@ -637,7 +656,7 @@ public class Context {
         return getColumnPrivilegesAndAddAll(catalog, schema, table, columnNamePattern, new ArrayList<>());
     }
 
-    List<ColumnPrivilege> getColumnPrivilegesOf(final TableView table, final String columnNamePattern)
+    List<ColumnPrivilege> getColumnPrivilegesOf(final Table table, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumnPrivileges(
@@ -648,7 +667,7 @@ public class Context {
         );
     }
 
-    void forEachColumnPrivilegeOf(final TableView table, final String columnNamePattern,
+    void forEachColumnPrivilegeOf(final Table table, final String columnNamePattern,
                                   final Consumer<? super ColumnPrivilege> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
@@ -749,7 +768,7 @@ public class Context {
         return getColumnsAndAddAll(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
     }
 
-    List<Column> getColumnsOf(final TableView table, final String columnNamePattern) throws SQLException {
+    List<Column> getColumnsOf(final Table table, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumns(
                 table.getEffectiveTableCat(),
@@ -759,7 +778,7 @@ public class Context {
         );
     }
 
-    void forEachColumnOf(final TableView table, final String columnNamePattern,
+    void forEachColumnOf(final Table table, final String columnNamePattern,
                          final Consumer<? super Column> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
@@ -889,7 +908,7 @@ public class Context {
         );
     }
 
-    List<CrossReference> getCrossReferenceOf(final TableView parentTable, final TableView foreignTable) throws SQLException {
+    List<CrossReference> getCrossReferenceOf(final Table parentTable, final Table foreignTable) throws SQLException {
         Objects.requireNonNull(parentTable, "parentTable is null");
         Objects.requireNonNull(foreignTable, "foreignTable is null");
         return getCrossReference(
@@ -902,7 +921,7 @@ public class Context {
         );
     }
 
-    void forEachCrossReferenceOf(final TableView parentTable, final TableView foreignTable,
+    void forEachCrossReferenceOf(final Table parentTable, final Table foreignTable,
                                  final Consumer<? super CrossReference> consumer)
             throws SQLException {
         Objects.requireNonNull(parentTable, "parentTable is null");
@@ -1012,7 +1031,7 @@ public class Context {
      * @see #getExportedKeys(String, String, String)
      */
 
-    List<ExportedKey> getExportedKeysOf(final TableView table) throws SQLException {
+    List<ExportedKey> getExportedKeysOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getExportedKeys(
                 table.getEffectiveTableCat(),
@@ -1021,7 +1040,7 @@ public class Context {
         );
     }
 
-    void forEachExportedKeyOf(final TableView table, final Consumer<? super ExportedKey> consumer) throws SQLException {
+    void forEachExportedKeyOf(final Table table, final Consumer<? super ExportedKey> consumer) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachExportedKey(
                 table.getEffectiveTableCat(),
@@ -1154,15 +1173,15 @@ public class Context {
     /**
      * Retrieves functions scoped to the specified schema.
      *
-     * @param schema              the schema whose {@link SchemaView#getTableCatalog() tableCatalog} and
-     *                            {@link SchemaView#getTableSchem() tableSchem} are used for the {@code catalog} and
+     * @param schema              the schema whose {@link Schema#getTableCatalog() tableCatalog} and
+     *                            {@link Schema#getTableSchem() tableSchem} are used for the {@code catalog} and
      *                            {@code schemaPattern} parameters.
      * @param functionNamePattern a value for the {@code functionNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      * @see #getFunctions(String, String, String)
      */
-    List<Function> getFunctionsOf(final SchemaView schema, @Nullable final String functionNamePattern)
+    List<Function> getFunctionsOf(final Schema schema, @Nullable final String functionNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getFunctions(
@@ -1172,7 +1191,7 @@ public class Context {
         );
     }
 
-    void forEachFunctionOf(final SchemaView schema, @Nullable final String functionNamePattern,
+    void forEachFunctionOf(final Schema schema, @Nullable final String functionNamePattern,
                            final Consumer<? super Function> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
@@ -1405,7 +1424,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getImportedKeys(String, String, String)
      */
-    List<ImportedKey> getImportedKeysOf(final TableView table) throws SQLException {
+    List<ImportedKey> getImportedKeysOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getImportedKeys(
                 table.getEffectiveTableCat(),
@@ -1414,7 +1433,7 @@ public class Context {
         );
     }
 
-    void forEachImportedKeyOf(final TableView table, final Consumer<? super ImportedKey> consumer) throws SQLException {
+    void forEachImportedKeyOf(final Table table, final Consumer<? super ImportedKey> consumer) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachImportedKey(
                 table.getEffectiveTableCat(),
@@ -1537,7 +1556,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getIndexInfo(String, String, String, boolean, boolean)
      */
-    List<IndexInfo> getIndexInfoOf(final TableView table, final boolean unique, final boolean approximate)
+    List<IndexInfo> getIndexInfoOf(final Table table, final boolean unique, final boolean approximate)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getIndexInfo(
@@ -1549,7 +1568,7 @@ public class Context {
         );
     }
 
-    void forEachIndexInfoOf(final TableView table, final boolean unique, final boolean approximate,
+    void forEachIndexInfoOf(final Table table, final boolean unique, final boolean approximate,
                             final Consumer<? super IndexInfo> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
@@ -1657,7 +1676,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getPrimaryKeys(String, String, String)
      */
-    List<PrimaryKey> getPrimaryKeysOf(final TableView table) throws SQLException {
+    List<PrimaryKey> getPrimaryKeysOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPrimaryKeys(
                 table.getEffectiveTableCat(),
@@ -1666,7 +1685,7 @@ public class Context {
         );
     }
 
-    void forEachPrimaryKeyOf(final TableView table, final Consumer<? super PrimaryKey> consumer) throws SQLException {
+    void forEachPrimaryKeyOf(final Table table, final Consumer<? super PrimaryKey> consumer) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachPrimaryKey(
                 table.getEffectiveTableCat(),
@@ -1927,15 +1946,15 @@ public class Context {
     /**
      * Retrieves procedures scoped to the specified schema.
      *
-     * @param schema               the schema whose {@link SchemaView#getTableCatalog() tableCatalog} and
-     *                             {@link SchemaView#getTableSchem() tableSchem} are used for the {@code catalog} and
+     * @param schema               the schema whose {@link Schema#getTableCatalog() tableCatalog} and
+     *                             {@link Schema#getTableSchem() tableSchem} are used for the {@code catalog} and
      *                             {@code schemaPattern} parameters.
      * @param procedureNamePattern a value for the {@code procedureNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      * @see #getProcedures(String, String, String)
      */
-    List<Procedure> getProceduresOf(final SchemaView schema, final String procedureNamePattern)
+    List<Procedure> getProceduresOf(final Schema schema, final String procedureNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getProcedures(
@@ -1945,7 +1964,7 @@ public class Context {
         );
     }
 
-    void forEachProcedureOf(final SchemaView schema, final String procedureNamePattern,
+    void forEachProcedureOf(final Schema schema, final String procedureNamePattern,
                             final Consumer<? super Procedure> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
@@ -2063,7 +2082,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getPseudoColumns(String, String, String, String)
      */
-    List<PseudoColumn> getPseudoColumnsOf(final TableView table, final String columnNamePattern) throws SQLException {
+    List<PseudoColumn> getPseudoColumnsOf(final Table table, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPseudoColumns(
                 table.getEffectiveTableCat(), table.getEffectiveTableSchem(), table.getTableName(),
@@ -2071,7 +2090,7 @@ public class Context {
         );
     }
 
-    void forEachPseudoColumnOf(final TableView table, final String columnNamePattern,
+    void forEachPseudoColumnOf(final Table table, final String columnNamePattern,
                                final Consumer<? super PseudoColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
@@ -2217,18 +2236,18 @@ public class Context {
     /**
      * Retrieves schemas, optionally scoped to the specified catalog.
      *
-     * @param catalog       the catalog whose {@link CatalogView#getTableCat() tableCat} is used for the {@code catalog}
+     * @param catalog       the catalog whose {@link Catalog#getTableCat() tableCat} is used for the {@code catalog}
      *                      parameter.
      * @param schemaPattern a value for the {@code schemaPattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      * @see #getSchemas(String, String)
      */
-    List<Schema> getSchemasOf(final CatalogView catalog, @Nullable final String schemaPattern)
+    List<Schema> getSchemasOf(final Catalog catalog, @Nullable final String schemaPattern)
             throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
         return getSchemas(
-                catalog.getTableCat(),
+                catalog.getEffectiveTableCat(),
                 schemaPattern
         );
     }
@@ -2371,7 +2390,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getSuperTables(String, String, String)
      */
-    List<SuperTable> getSuperTablesOf(final SchemaView schema, final String tableNamePattern) throws SQLException {
+    List<SuperTable> getSuperTablesOf(final Schema schema, final String tableNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTables(
                 schema.getEffectiveTableCatalog(),
@@ -2380,7 +2399,7 @@ public class Context {
         );
     }
 
-    void forEachSuperTableOf(final SchemaView schema, final String tableNamePattern,
+    void forEachSuperTableOf(final Schema schema, final String tableNamePattern,
                              final Consumer<? super SuperTable> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
@@ -2400,7 +2419,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getSuperTables(String, String, String)
      */
-    List<SuperTable> getSuperTablesOf(final TableView table) throws SQLException {
+    List<SuperTable> getSuperTablesOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getSuperTables(
                 table.getEffectiveTableCat(),
@@ -2409,7 +2428,7 @@ public class Context {
         );
     }
 
-    void forEachSuperTableOf(final TableView table, final Consumer<? super SuperTable> consumer) throws SQLException {
+    void forEachSuperTableOf(final Table table, final Consumer<? super SuperTable> consumer) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachSuperTable(
                 table.getEffectiveTableCat(),
@@ -2548,7 +2567,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getSuperTypes(String, String, String)
      */
-    List<SuperType> getSuperTypesOf(final SchemaView schema, final String typeNamePattern)
+    List<SuperType> getSuperTypesOf(final Schema schema, final String typeNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTypes(
@@ -2558,7 +2577,7 @@ public class Context {
         );
     }
 
-    void forEachSuperTypeOf(final SchemaView schema, final String typeNamePattern,
+    void forEachSuperTypeOf(final Schema schema, final String typeNamePattern,
                             final Consumer<? super SuperType> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
@@ -2723,15 +2742,15 @@ public class Context {
     /**
      * Retrieves table privileges scoped to the specified schema.
      *
-     * @param schema           the schema whose {@link SchemaView#getTableCatalog() tableCatalog} and
-     *                         {@link SchemaView#getTableSchem() tableSchem} are used for the {@code catalog} and
+     * @param schema           the schema whose {@link Schema#getTableCatalog() tableCatalog} and
+     *                         {@link Schema#getTableSchem() tableSchem} are used for the {@code catalog} and
      *                         {@code schemaPattern} parameters.
      * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      * @see #getTablePrivileges(String, String, String)
      */
-    List<TablePrivilege> getTablePrivilegesOf(final SchemaView schema, final String tableNamePattern)
+    List<TablePrivilege> getTablePrivilegesOf(final Schema schema, final String tableNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getTablePrivileges(
@@ -2741,7 +2760,7 @@ public class Context {
         );
     }
 
-    void forEachTablePrivilegeOf(final SchemaView schema, final String tableNamePattern,
+    void forEachTablePrivilegeOf(final Schema schema, final String tableNamePattern,
                                  final Consumer<? super TablePrivilege> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
@@ -2761,7 +2780,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getTablePrivileges(String, String, String)
      */
-    List<TablePrivilege> getTablePrivilegesOf(final TableView table) throws SQLException {
+    List<TablePrivilege> getTablePrivilegesOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getTablePrivileges(
                 table.getEffectiveTableCat(),
@@ -2770,7 +2789,7 @@ public class Context {
         );
     }
 
-    void forEachTablePrivilegeOf(final TableView table, final Consumer<? super TablePrivilege> consumer)
+    void forEachTablePrivilegeOf(final Table table, final Consumer<? super TablePrivilege> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachTablePrivilege(
@@ -2988,8 +3007,8 @@ public class Context {
     /**
      * Retrieves tables scoped to the specified schema.
      *
-     * @param schema           the schema whose {@link SchemaView#getTableCatalog() tableCatalog} and
-     *                         {@link SchemaView#getTableSchem() tableSchem} are used for the {@code catalog} and
+     * @param schema           the schema whose {@link Schema#getTableCatalog() tableCatalog} and
+     *                         {@link Schema#getTableSchem() tableSchem} are used for the {@code catalog} and
      *                         {@code schemaPattern} parameters.
      * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
      * @param types            a value for the {@code types} parameter; may be {@code null}.
@@ -2997,7 +3016,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getTables(String, String, String, String[])
      */
-    List<Table> getTablesOf(final SchemaView schema, final String tableNamePattern,
+    List<Table> getTablesOf(final Schema schema, final String tableNamePattern,
                             @Nullable final String[] types)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
@@ -3009,7 +3028,7 @@ public class Context {
         );
     }
 
-    void forEachTableOf(final SchemaView schema, final String tableNamePattern, @Nullable final String[] types,
+    void forEachTableOf(final Schema schema, final String tableNamePattern, @Nullable final String[] types,
                         final Consumer<? super Table> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
@@ -3221,8 +3240,8 @@ public class Context {
     /**
      * Retrieves user-defined types scoped to the specified schema.
      *
-     * @param schema          the schema whose {@link SchemaView#getTableCatalog() tableCatalog} and
-     *                        {@link SchemaView#getTableSchem() tableSchem} are used for the {@code catalog} and
+     * @param schema          the schema whose {@link Schema#getTableCatalog() tableCatalog} and
+     *                        {@link Schema#getTableSchem() tableSchem} are used for the {@code catalog} and
      *                        {@code schemaPattern} parameters.
      * @param typeNamePattern a value for the {@code typeNamePattern} parameter.
      * @param types           a value for the {@code types} parameter; may be {@code null}.
@@ -3230,7 +3249,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getUDTs(String, String, String, int[])
      */
-    List<UDT> getUDTsOf(final SchemaView schema, final String typeNamePattern, @Nullable final int[] types)
+    List<UDT> getUDTsOf(final Schema schema, final String typeNamePattern, @Nullable final int[] types)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getUDTs(
@@ -3241,7 +3260,7 @@ public class Context {
         );
     }
 
-    void forEachUDTOf(final SchemaView schema, final String typeNamePattern, @Nullable final int[] types,
+    void forEachUDTOf(final Schema schema, final String typeNamePattern, @Nullable final int[] types,
                       final Consumer<? super UDT> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
@@ -3352,7 +3371,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getVersionColumns(String, String, String)
      */
-    List<VersionColumn> getVersionColumnsOf(final TableView table) throws SQLException {
+    List<VersionColumn> getVersionColumnsOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getVersionColumns(
                 table.getEffectiveTableCat(),
@@ -3361,7 +3380,7 @@ public class Context {
         );
     }
 
-    void forEachVersionColumnOf(final TableView table, final Consumer<? super VersionColumn> consumer)
+    void forEachVersionColumnOf(final Table table, final Consumer<? super VersionColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachVersionColumn(
@@ -3463,22 +3482,5 @@ public class Context {
      */
     public List<String> getTimeDateFunctions() throws SQLException {
         return commaSplitToUnmodifiableList(metadata.getTimeDateFunctions());
-    }
-
-    /**
-     * Splits a comma-separated string into an unmodifiable list of non-blank, stripped elements.
-     *
-     * @param commaSeparated a comma-separated string; may be {@code null} (some drivers return {@code null} despite the
-     *                       specification).
-     * @return an unmodifiable list of elements; empty when {@code commaSeparated} is {@code null} or blank.
-     */
-    private static List<String> commaSplitToUnmodifiableList(final String commaSeparated) {
-        if (commaSeparated == null) {
-            return List.of();
-        }
-        return Arrays.stream(commaSeparated.split(","))
-                .map(String::strip)
-                .filter(v -> !v.isBlank())
-                .toList();
     }
 }

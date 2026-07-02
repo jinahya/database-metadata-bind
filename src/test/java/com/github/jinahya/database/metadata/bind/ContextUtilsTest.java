@@ -97,7 +97,7 @@ class ContextUtilsTest {
         final var context = context(false, false, true, false);
         assertThat(ContextUtils.nullOrdered(context, Comparator.<String>naturalOrder()).compare(null, "a"))
                 .isEqualTo(ContextUtils.withDatabaseNullOrdering(
-                        context, Comparator.<String>naturalOrder(), ContextUtils.SortDirection.ASCENDING)
+                                context, Comparator.<String>naturalOrder(), ContextUtils.SortDirection.ASCENDING)
                                    .compare(null, "a"));
     }
 
@@ -108,7 +108,7 @@ class ContextUtilsTest {
         assertThat(ContextUtils.nullOrdered(
                 context, Comparator.<String>reverseOrder(), ContextUtils.SortDirection.DESCENDING).compare(null, "a"))
                 .isEqualTo(ContextUtils.withDatabaseNullOrdering(
-                        context, Comparator.<String>reverseOrder(), ContextUtils.SortDirection.DESCENDING)
+                                context, Comparator.<String>reverseOrder(), ContextUtils.SortDirection.DESCENDING)
                                    .compare(null, "a"));
     }
 

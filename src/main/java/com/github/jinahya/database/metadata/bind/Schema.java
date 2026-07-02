@@ -44,8 +44,7 @@ import java.util.Objects;
 @_ChildOf(Catalog.class)
 @_ChildOfNone
 public class Schema
-        extends AbstractMetadataType
-        implements SchemaView {
+        extends AbstractMetadataType {
 
     @Serial
     private static final long serialVersionUID = 7457236468401244963L;
@@ -63,7 +62,7 @@ public class Schema
      * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
      */
     static Comparator<Schema> comparingInSpecifiedOrder(final Context context,
-                                                      final Comparator<? super String> comparator)
+                                                        final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
@@ -146,6 +145,10 @@ public class Schema
         this.tableSchem = tableSchem;
     }
 
+    String getEffectiveTableSchem() {
+        return tableSchem == null ? "" : tableSchem;
+    }
+
     // ---------------------------------------------------------------------------------------------------- tableCatalog
 
     /**
@@ -165,6 +168,10 @@ public class Schema
      */
     void setTableCatalog(final String tableCatalog) {
         this.tableCatalog = tableCatalog;
+    }
+
+    String getEffectiveTableCatalog() {
+        return tableCatalog == null ? "" : tableCatalog;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

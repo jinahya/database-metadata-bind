@@ -23,8 +23,8 @@ package com.github.jinahya.database.metadata.bind;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
-import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -54,7 +54,7 @@ public class PrimaryKey
      * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
      */
     static Comparator<PrimaryKey> comparingInSpecifiedOrder(final Context context,
-                                                      final Comparator<? super String> comparator)
+                                                            final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");

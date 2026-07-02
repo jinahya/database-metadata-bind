@@ -44,8 +44,7 @@ import java.util.function.Consumer;
 @_ParentOf(UDT.class)
 @_ChildOfNone
 public class Catalog
-        extends AbstractMetadataType
-        implements CatalogView {
+        extends AbstractMetadataType {
 
     @Serial
     private static final long serialVersionUID = 6239185259128825953L;
@@ -131,6 +130,10 @@ public class Catalog
      */
     void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
+    }
+
+    String getEffectiveTableCat() {
+        return tableCat == null ? "" : tableCat;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

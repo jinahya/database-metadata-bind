@@ -56,7 +56,7 @@ public class TablePrivilege
      * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
      */
     static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Context context,
-                                                      final Comparator<? super String> comparator)
+                                                                final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");

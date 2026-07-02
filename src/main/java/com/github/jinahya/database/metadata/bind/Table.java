@@ -51,8 +51,7 @@ import java.util.Objects;
 @_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
 public class Table
-        extends AbstractMetadataType
-        implements TableView {
+        extends AbstractMetadataType {
 
     @Serial
     private static final long serialVersionUID = 6590036695540141125L;
@@ -70,7 +69,7 @@ public class Table
      * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
      */
     static Comparator<Table> comparingInSpecifiedOrder(final Context context,
-                                                      final Comparator<? super String> comparator)
+                                                       final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
@@ -235,6 +234,10 @@ public class Table
         this.tableCat = tableCat;
     }
 
+    String getEffectiveTableCat() {
+        return tableCat == null ? "" : tableCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -254,6 +257,10 @@ public class Table
      */
     void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
+    }
+
+    String getEffectiveTableSchem() {
+        return tableSchem == null ? "" : tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName

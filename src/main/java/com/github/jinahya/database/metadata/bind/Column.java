@@ -38,8 +38,7 @@ import java.util.Objects;
 @_ChildOf(Table.class)
 @_ParentOf(ColumnPrivilege.class)
 public class Column
-        extends AbstractMetadataType
-        implements ColumnView {
+        extends AbstractMetadataType {
 
     @Serial
     private static final long serialVersionUID = -409653682729081530L;
@@ -491,6 +490,10 @@ public class Column
         this.tableCat = tableCat;
     }
 
+    String getEffectiveTableCat() {
+        return tableCat == null ? "" : tableCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -510,6 +513,10 @@ public class Column
      */
     void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
+    }
+
+    String getEffectiveTableSchem() {
+        return tableSchem == null ? "" : tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
@@ -863,6 +870,10 @@ public class Column
         this.scopeCatalog = scopeCatalog;
     }
 
+    String getEffectiveScopeCatalog() {
+        return scopeCatalog == null ? "" : scopeCatalog;
+    }
+
     // ----------------------------------------------------------------------------------------------------- scopeSchema
 
     /**
@@ -882,6 +893,10 @@ public class Column
      */
     void setScopeSchema(final String scopeSchema) {
         this.scopeSchema = scopeSchema;
+    }
+
+    String getEffectiveScopeSchema() {
+        return scopeSchema == null ? "" : scopeSchema;
     }
 
     // ------------------------------------------------------------------------------------------------------ scopeTable
@@ -1077,8 +1092,8 @@ public class Column
      * The table that owns this column.
      * <p>
      * This reference is not a value read from the {@link DatabaseMetaData#getColumns(String, String, String, String)}
-     * result set. It is a transient, resolved object link for the table identified by
-     * {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM}, and {@value #COLUMN_LABEL_TABLE_NAME}.
+     * result set. It is a transient, resolved object link for the table identified by {@value #COLUMN_LABEL_TABLE_CAT},
+     * {@value #COLUMN_LABEL_TABLE_SCHEM}, and {@value #COLUMN_LABEL_TABLE_NAME}.
      * </p>
      */
     @Nullable
@@ -1089,17 +1104,16 @@ public class Column
      * <p>
      * This reference is not the owning table. It is a transient, resolved object link for the table identified by
      * {@value #COLUMN_LABEL_SCOPE_CATALOG}, {@value #COLUMN_LABEL_SCOPE_SCHEMA}, and
-     * {@value #COLUMN_LABEL_SCOPE_TABLE}. Those scope columns are meaningful only when
-     * {@value #COLUMN_LABEL_DATA_TYPE} is {@link java.sql.Types#REF}; otherwise the JDBC specification says they are
-     * {@code null}.
+     * {@value #COLUMN_LABEL_SCOPE_TABLE}. Those scope columns are meaningful only when {@value #COLUMN_LABEL_DATA_TYPE}
+     * is {@link java.sql.Types#REF}; otherwise the JDBC specification says they are {@code null}.
      * </p>
      */
     @Nullable
     private transient Table scopeTable_;
 
     /**
-     * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT},
-     * {@value #COLUMN_LABEL_TABLE_SCHEM}, and {@value #COLUMN_LABEL_TABLE_NAME}.
+     * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
+     * and {@value #COLUMN_LABEL_TABLE_NAME}.
      *
      * @return the table reference identified by this column.
      */

@@ -21,8 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.io.Serial;
-import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 
 /**
