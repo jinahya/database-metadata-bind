@@ -26,7 +26,15 @@ final class _Assertions {
         return new SuperTypeAssert(actual);
     }
 
+    static SuperTypeAssert assertSuperType(final SuperType actual) {
+        return new SuperTypeAssert(actual);
+    }
+
     static TableAssert assertType(final Table actual) {
+        return new TableAssert(actual);
+    }
+
+    static TableAssert assertTable(final Table actual) {
         return new TableAssert(actual);
     }
 
