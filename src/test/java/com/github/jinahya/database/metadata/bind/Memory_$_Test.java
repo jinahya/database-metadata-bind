@@ -20,16 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
@@ -92,201 +87,6 @@ abstract class Memory_$_Test {
                 throw new RuntimeException(sqle);
             }
         });
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    private static File prefix(final DatabaseMetaData metaData) throws SQLException {
-        final var productName = metaData.getDatabaseProductName();
-        final var productVersion = metaData.getDatabaseProductVersion();
-        return new File("target", productName + "_" + productVersion);
-    }
-
-    private static void json(final DatabaseMetaData metaData, final String name, final List<?> values)
-            throws IOException, SQLException {
-        try (var stream = new FileOutputStream(prefix(metaData) + "_" + name + ".json")) {
-            new ObjectMapper().writeValue(stream, values);
-        }
-    }
-
-    private static void metadataType(final DatabaseMetaData metaData, final Context context, final String name,
-                                     final MetadataTypeQuery query) throws IOException, SQLException {
-        try {
-            json(metaData, name, query.get(context));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.warn("not supported: {}", name, sqlfnse);
-        }
-    }
-
-    @Test
-    void metadataTypes() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = Context.newInstance(connection);
-            final var tables = context.getTables(null, null, "%", null);
-            final var table = tables.isEmpty() ? null : tables.get(0);
-            metadataType(metaData, context, "attributes", c -> c.getAttributes(null, null, "%", "%"));
-            metadataType(metaData, context, "bestRowIdentifier", c -> c.getBestRowIdentifier(
-                    table == null ? null : table.getTableCat(),
-                    table == null ? null : table.getTableSchem(),
-                    table == null ? "" : table.getTableName(),
-                    BestRowIdentifier.COLUMN_VALUE_SCOPE_BEST_ROW_SESSION,
-                    true));
-            metadataType(metaData, context, "catalogs", Context::getCatalogs);
-            metadataType(metaData, context, "clientInfoProperties", Context::getClientInfoProperties);
-            metadataType(metaData, context, "columnPrivileges", c -> c.getColumnPrivileges(
-                    table == null ? null : table.getTableCat(),
-                    table == null ? null : table.getTableSchem(),
-                    table == null ? "" : table.getTableName(),
-                    "%"));
-            metadataType(metaData, context, "columns", c -> c.getColumns(null, null, "%", "%"));
-            metadataType(metaData, context, "crossReference", c -> c.getCrossReference(null, null, "%", null, null,
-                                                                                       "%"));
-            metadataType(metaData, context, "exportedKeys", c -> c.getExportedKeys(
-                    table == null ? null : table.getTableCat(),
-                    table == null ? null : table.getTableSchem(),
-                    table == null ? "" : table.getTableName()));
-            metadataType(metaData, context, "functions", c -> c.getFunctions(null, null, "%"));
-            metadataType(metaData, context, "functionColumns", c -> c.getFunctionColumns(null, null, "%", "%"));
-            metadataType(metaData, context, "importedKeys", c -> c.getImportedKeys(
-                    table == null ? null : table.getTableCat(),
-                    table == null ? null : table.getTableSchem(),
-                    table == null ? "" : table.getTableName()));
-            metadataType(metaData, context, "indexInfo", c -> c.getIndexInfo(
-                    table == null ? null : table.getTableCat(),
-                    table == null ? null : table.getTableSchem(),
-                    table == null ? "" : table.getTableName(),
-                    false,
-                    false));
-            metadataType(metaData, context, "primaryKeys", c -> c.getPrimaryKeys(
-                    table == null ? null : table.getTableCat(),
-                    table == null ? null : table.getTableSchem(),
-                    table == null ? "" : table.getTableName()));
-            metadataType(metaData, context, "procedureColumns", c -> c.getProcedureColumns(null, null, "%", "%"));
-            metadataType(metaData, context, "procedures", c -> c.getProcedures(null, null, "%"));
-            metadataType(metaData, context, "pseudoColumns", c -> c.getPseudoColumns(
-                    table == null ? null : table.getTableCat(),
-                    table == null ? null : table.getTableSchem(),
-                    table == null ? "" : table.getTableName(),
-                    "%"));
-            metadataType(metaData, context, "schemas", c -> c.getSchemas(null, null));
-            metadataType(metaData, context, "superTables", c -> c.getSuperTables(null, "%", "%"));
-            metadataType(metaData, context, "superTypes", c -> c.getSuperTypes(null, "%", "%"));
-            metadataType(metaData, context, "tablePrivileges", c -> c.getTablePrivileges(
-                    table == null ? null : table.getTableCat(),
-                    table == null ? null : table.getTableSchem(),
-                    table == null ? "" : table.getTableName()));
-            metadataType(metaData, context, "tableTypes", Context::getTableTypes);
-            json(metaData, "tables", tables);
-            metadataType(metaData, context, "typeInfo", Context::getTypeInfo);
-            metadataType(metaData, context, "udts", c -> c.getUDTs(null, null, "%", null));
-            metadataType(metaData, context, "versionColumns", c -> c.getVersionColumns(
-                    table == null ? null : table.getTableCat(),
-                    table == null ? null : table.getTableSchem(),
-                    table == null ? "" : table.getTableName()));
-        }
-    }
-
-    @Test
-    void catalogs() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = new Context(metaData);
-            final List<Catalog> catalogs;
-            try {
-                catalogs = context.getCatalogs();
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                sqlfnse.printStackTrace();
-                return;
-            }
-            json(metaData, "catalogs", catalogs);
-            for (var catalog : catalogs) {
-            }
-        }
-    }
-
-    @Test
-    void columns() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = new Context(metaData);
-            final var columns = context.getColumns(null, null, "%", "%");
-            json(metaData, "columns", columns);
-        }
-    }
-
-    @Test
-    void functions() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = new Context(metaData);
-            try {
-                final var functions = context.getFunctions((String) null, null, "%");
-                json(metaData, "functions", functions);
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                log.warn("not supported", sqlfnse);
-            }
-        }
-    }
-
-    @Test
-    void functionColumns() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = new Context(metaData);
-            try {
-                final var functionColumns = context.getFunctionColumns(null, null, "%", "%");
-                json(metaData, "functionColumns", functionColumns);
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                log.warn("not supported", sqlfnse);
-            }
-        }
-    }
-
-    @Test
-    void schemas() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = new Context(metaData);
-            final List<Schema> schemas;
-            try {
-                schemas = context.getSchemas((String) null, null);
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                sqlfnse.printStackTrace();
-                return;
-            }
-            json(metaData, "schemas", schemas);
-            for (var schema : schemas) {
-            }
-        }
-    }
-
-    @Test
-    void tables() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = new Context(metaData);
-            final var tables = context.getTables((String) null, null, "%", null);
-            json(metaData, "tables", tables);
-            for (var table : tables) {
-                final var columnPrivileges = context.getColumnPrivileges(
-                        table.getTableCat(),
-                        table.getTableSchem(),
-                        table.getTableName(),
-                        "%"
-                );
-                log.debug("{}: {}", table, columnPrivileges);
-            }
-        }
-    }
-
-    @Test
-    void tablesTypes() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = new Context(metaData);
-            final var tableTypes = context.getTableTypes();
-            json(metaData, "tableTypes", tableTypes);
-        }
     }
 
     @Test
@@ -425,12 +225,6 @@ abstract class Memory_$_Test {
                      keys.get(0).getTableCat() == null,
                      keys.get(0).getTableSchem() == null);
         }
-    }
-
-    @FunctionalInterface
-    private interface MetadataTypeQuery {
-
-        List<?> get(Context context) throws SQLException;
     }
 
     private static <T> List<T> unsupportedAsEmpty(final Query<T> query) throws SQLException {

@@ -66,14 +66,6 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.fasterxml.jackson</groupId>
-        <artifactId>jackson-bom</artifactId>
-        <!-- https://central.sonatype.com/artifact/com.fasterxml.jackson/jackson-bom/versions -->
-        <version>2.22.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
         <groupId>com.google.errorprone</groupId>
         <artifactId>error_prone_parent</artifactId>
         <version>${version.com.google.errorprone}</version>
@@ -134,11 +126,6 @@
       <groupId>com.diffplug.durian</groupId>
       <artifactId>durian</artifactId>
       <version>3.4.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
