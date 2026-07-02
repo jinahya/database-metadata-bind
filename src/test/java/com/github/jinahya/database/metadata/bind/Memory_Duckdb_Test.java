@@ -24,11 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 
 /**
  * Tests for DuckDB.
@@ -62,21 +60,4 @@ class Memory_Duckdb_Test
         super.test();
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Overridden for DuckDB: it does not implement
-     * {@link java.sql.DatabaseMetaData#getColumnPrivileges(String, String, String, String) getColumnPrivileges(...)}
-     * and throws {@link SQLFeatureNotSupportedException}. The shared implementation invokes it per table without
-     * tolerating that, so this override swallows the (expected) unsupported-feature exception.
-     */
-    @Test
-    @Override
-    void tables() throws SQLException, IOException {
-        try {
-            super.tables();
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.warn("not supported by DuckDB", sqlfnse);
-        }
-    }
 }
