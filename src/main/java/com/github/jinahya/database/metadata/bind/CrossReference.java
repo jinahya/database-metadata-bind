@@ -347,6 +347,10 @@ public class CrossReference
         this.pktableCat = pktableCat;
     }
 
+    String getEffectivePktableCat() {
+        return pktableCat == null ? "" : pktableCat;
+    }
+
     // --------------------------------------------------------------------------------------------------- pktableSchem
 
     /**
@@ -366,6 +370,10 @@ public class CrossReference
      */
     void setPktableSchem(final String pktableSchem) {
         this.pktableSchem = pktableSchem;
+    }
+
+    String getEffectivePktableSchem() {
+        return pktableSchem == null ? "" : pktableSchem;
     }
 
     // ---------------------------------------------------------------------------------------------------- pktableName
@@ -429,6 +437,10 @@ public class CrossReference
         this.fktableCat = fktableCat;
     }
 
+    String getEffectiveFktableCat() {
+        return fktableCat == null ? "" : fktableCat;
+    }
+
     // --------------------------------------------------------------------------------------------------- fktableSchem
 
     /**
@@ -448,6 +460,10 @@ public class CrossReference
      */
     void setFktableSchem(final String fktableSchem) {
         this.fktableSchem = fktableSchem;
+    }
+
+    String getEffectiveFktableSchem() {
+        return fktableSchem == null ? "" : fktableSchem;
     }
 
     // ---------------------------------------------------------------------------------------------------- fktableName
@@ -673,4 +689,64 @@ public class CrossReference
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_DEFERRABILITY)
     private Integer deferrability;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the primary-key table reference identified by {@value #COLUMN_LABEL_PKTABLE_CAT},
+     * {@value #COLUMN_LABEL_PKTABLE_SCHEM}, and {@value #COLUMN_LABEL_PKTABLE_NAME}.
+     *
+     * @return the primary-key table reference identified by this cross-reference row.
+     */
+    Table getPkTableRef() {
+        final var table = new Table();
+        table.setTableCat(getEffectivePktableCat());
+        table.setTableSchem(getEffectivePktableSchem());
+        table.setTableName(pktableName);
+        return table;
+    }
+
+    /**
+     * Returns the primary-key column reference identified by the {@code PKTABLE_*} columns and
+     * {@value #COLUMN_LABEL_PKCOLUMN_NAME}.
+     *
+     * @return the primary-key column reference identified by this cross-reference row.
+     */
+    Column getPkColumnRef() {
+        final var column = new Column();
+        column.setTableCat(getEffectivePktableCat());
+        column.setTableSchem(getEffectivePktableSchem());
+        column.setTableName(pktableName);
+        column.setColumnName(pkcolumnName);
+        return column;
+    }
+
+    /**
+     * Returns the foreign-key table reference identified by {@value #COLUMN_LABEL_FKTABLE_CAT},
+     * {@value #COLUMN_LABEL_FKTABLE_SCHEM}, and {@value #COLUMN_LABEL_FKTABLE_NAME}.
+     *
+     * @return the foreign-key table reference identified by this cross-reference row.
+     */
+    Table getFkTableRef() {
+        final var table = new Table();
+        table.setTableCat(getEffectiveFktableCat());
+        table.setTableSchem(getEffectiveFktableSchem());
+        table.setTableName(fktableName);
+        return table;
+    }
+
+    /**
+     * Returns the foreign-key column reference identified by the {@code FKTABLE_*} columns and
+     * {@value #COLUMN_LABEL_FKCOLUMN_NAME}.
+     *
+     * @return the foreign-key column reference identified by this cross-reference row.
+     */
+    Column getFkColumnRef() {
+        final var column = new Column();
+        column.setTableCat(getEffectiveFktableCat());
+        column.setTableSchem(getEffectiveFktableSchem());
+        column.setTableName(fktableName);
+        column.setColumnName(fkcolumnName);
+        return column;
+    }
 }

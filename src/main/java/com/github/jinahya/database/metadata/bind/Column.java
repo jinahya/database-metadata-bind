@@ -36,7 +36,6 @@ import java.util.Objects;
  * @see Context#getColumns(String, String, String, String)
  */
 @_ChildOf(Table.class)
-@_ParentOf(ColumnPrivilege.class)
 public class Column
         extends AbstractMetadataType {
 
@@ -1089,35 +1088,12 @@ public class Column
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The table that owns this column.
-     * <p>
-     * This reference is not a value read from the {@link DatabaseMetaData#getColumns(String, String, String, String)}
-     * result set. It is a transient, resolved object link for the table identified by {@value #COLUMN_LABEL_TABLE_CAT},
-     * {@value #COLUMN_LABEL_TABLE_SCHEM}, and {@value #COLUMN_LABEL_TABLE_NAME}.
-     * </p>
-     */
-    @Nullable
-    private transient Table table_;
-
-    /**
-     * The table that scopes values of this column when this column is a {@link java.sql.Types#REF REF} column.
-     * <p>
-     * This reference is not the owning table. It is a transient, resolved object link for the table identified by
-     * {@value #COLUMN_LABEL_SCOPE_CATALOG}, {@value #COLUMN_LABEL_SCOPE_SCHEMA}, and
-     * {@value #COLUMN_LABEL_SCOPE_TABLE}. Those scope columns are meaningful only when {@value #COLUMN_LABEL_DATA_TYPE}
-     * is {@link java.sql.Types#REF}; otherwise the JDBC specification says they are {@code null}.
-     * </p>
-     */
-    @Nullable
-    private transient Table scopeTable_;
-
-    /**
      * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
      * and {@value #COLUMN_LABEL_TABLE_NAME}.
      *
      * @return the table reference identified by this column.
      */
-    Table getTable_() {
+    Table getTableRef() {
         final var table = new Table();
         table.setTableCat(getEffectiveTableCat());
         table.setTableSchem(getEffectiveTableSchem());
@@ -1131,7 +1107,11 @@ public class Column
      *
      * @return the REF scope table reference identified by this column.
      */
-    Table getScopeTable_() {
+    @Nullable
+    Table getScopeTableRef() {
+        if (!Objects.equals(dataType, java.sql.Types.REF)) {
+            return null;
+        }
         final var table = new Table();
         table.setTableCat(getEffectiveScopeCatalog());
         table.setTableSchem(getEffectiveScopeSchema());

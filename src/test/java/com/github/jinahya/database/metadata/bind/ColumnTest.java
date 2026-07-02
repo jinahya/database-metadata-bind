@@ -83,6 +83,54 @@ class ColumnTest
     }
 
     @Test
+    void getScopeTableRef_MapsScopeColumns() {
+        final var instance = newTypeInstance();
+        instance.setDataType(java.sql.Types.REF);
+        instance.setScopeCatalog("c");
+        instance.setScopeSchema("s");
+        instance.setScopeTable("t");
+        final var result = instance.getScopeTableRef();
+        assertThat(result).isNotNull();
+        assertThat(result.getTableCat()).isEqualTo("c");
+        assertThat(result.getTableSchem()).isEqualTo("s");
+        assertThat(result.getTableName()).isEqualTo("t");
+    }
+
+    @Test
+    void getScopeTableRef_UsesEmptyStringsForNullScopeCatalogAndSchema() {
+        final var instance = newTypeInstance();
+        instance.setDataType(java.sql.Types.REF);
+        instance.setScopeCatalog(null);
+        instance.setScopeSchema(null);
+        instance.setScopeTable("t");
+        final var result = instance.getScopeTableRef();
+        assertThat(result).isNotNull();
+        assertThat(result.getTableCat()).isEmpty();
+        assertThat(result.getTableSchem()).isEmpty();
+        assertThat(result.getTableName()).isEqualTo("t");
+    }
+
+    @Test
+    void getScopeTableRef_ReturnsNullWhenDataTypeIsNotRef() {
+        final var instance = newTypeInstance();
+        instance.setDataType(java.sql.Types.INTEGER);
+        instance.setScopeCatalog("c");
+        instance.setScopeSchema("s");
+        instance.setScopeTable("t");
+        assertThat(instance.getScopeTableRef()).isNull();
+    }
+
+    @Test
+    void getScopeTableRef_ReturnsNullWhenDataTypeIsNull() {
+        final var instance = newTypeInstance();
+        instance.setDataType(null);
+        instance.setScopeCatalog("c");
+        instance.setScopeSchema("s");
+        instance.setScopeTable("t");
+        assertThat(instance.getScopeTableRef()).isNull();
+    }
+
+    @Test
     void isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_HoldsAsSpecified() {
         final var instance = newTypeInstance();
         instance.setSourceDataType(java.sql.Types.INTEGER);

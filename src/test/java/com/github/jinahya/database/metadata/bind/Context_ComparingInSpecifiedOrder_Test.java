@@ -32,7 +32,8 @@ class Context_ComparingInSpecifiedOrder_Test {
              var statement = connection.createStatement()) {
             Context_ComparingInSpecifiedOrder_Test_Utils.preparePortedKeyTables(statement);
             Context_ComparingInSpecifiedOrder_Test_Utils.assertComparingInSpecifiedOrder(
-                    Context.newInstance(connection)
+                    Context.newInstance(connection),
+                    getClass().getSimpleName()
             );
         }
     }

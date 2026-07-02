@@ -164,6 +164,10 @@ public class PrimaryKey
         this.tableCat = tableCat;
     }
 
+    String getEffectiveTableCat() {
+        return tableCat == null ? "" : tableCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -183,6 +187,10 @@ public class PrimaryKey
      */
     void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
+    }
+
+    String getEffectiveTableSchem() {
+        return tableSchem == null ? "" : tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
@@ -291,4 +299,35 @@ public class PrimaryKey
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
+     * and {@value #COLUMN_LABEL_TABLE_NAME}.
+     *
+     * @return the table reference identified by this primary-key row.
+     */
+    Table getTableRef() {
+        final var table = new Table();
+        table.setTableCat(getEffectiveTableCat());
+        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableName(tableName);
+        return table;
+    }
+
+    /**
+     * Returns the column reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
+     * {@value #COLUMN_LABEL_TABLE_NAME}, and {@value #COLUMN_LABEL_COLUMN_NAME}.
+     *
+     * @return the column reference identified by this primary-key row.
+     */
+    Column getColumnRef() {
+        final var column = new Column();
+        column.setTableCat(getEffectiveTableCat());
+        column.setTableSchem(getEffectiveTableSchem());
+        column.setTableName(tableName);
+        column.setColumnName(columnName);
+        return column;
+    }
 }

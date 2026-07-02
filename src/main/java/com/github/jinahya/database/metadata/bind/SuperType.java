@@ -33,8 +33,6 @@ import java.sql.DatabaseMetaData;
  * @see Context#getSuperTypes(String, String, String)
  */
 @_ChildOf(UDT.class)
-@_ChildOf(Schema.class)
-@_ChildOf(Catalog.class)
 public class SuperType
         extends AbstractMetadataType {
 
@@ -128,6 +126,10 @@ public class SuperType
         this.typeCat = typeCat;
     }
 
+    String getEffectiveTypeCat() {
+        return typeCat == null ? "" : typeCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------- typeSchem
 
     /**
@@ -147,6 +149,10 @@ public class SuperType
      */
     void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
+    }
+
+    String getEffectiveTypeSchem() {
+        return typeSchem == null ? "" : typeSchem;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
@@ -190,6 +196,10 @@ public class SuperType
         this.supertypeCat = supertypeCat;
     }
 
+    String getEffectiveSupertypeCat() {
+        return supertypeCat == null ? "" : supertypeCat;
+    }
+
     // -------------------------------------------------------------------------------------------------- supertypeSchem
 
     /**
@@ -209,6 +219,10 @@ public class SuperType
      */
     void setSupertypeSchem(final String supertypeSchem) {
         this.supertypeSchem = supertypeSchem;
+    }
+
+    String getEffectiveSupertypeSchem() {
+        return supertypeSchem == null ? "" : supertypeSchem;
     }
 
     // --------------------------------------------------------------------------------------------------- supertypeName
@@ -260,4 +274,34 @@ public class SuperType
 
     @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_NAME)
     private String supertypeName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the UDT reference identified by {@value #COLUMN_LABEL_TYPE_CAT}, {@value #COLUMN_LABEL_TYPE_SCHEM}, and
+     * {@value #COLUMN_LABEL_TYPE_NAME}.
+     *
+     * @return the UDT reference identified by this super-type row.
+     */
+    UDT getTypeRef() {
+        final var udt = new UDT();
+        udt.setTypeCat(getEffectiveTypeCat());
+        udt.setTypeSchem(getEffectiveTypeSchem());
+        udt.setTypeName(typeName);
+        return udt;
+    }
+
+    /**
+     * Returns the direct super UDT reference identified by {@value #COLUMN_LABEL_SUPERTYPE_CAT},
+     * {@value #COLUMN_LABEL_SUPERTYPE_SCHEM}, and {@value #COLUMN_LABEL_SUPERTYPE_NAME}.
+     *
+     * @return the direct super UDT reference identified by this super-type row.
+     */
+    UDT getSupertypeRef() {
+        final var udt = new UDT();
+        udt.setTypeCat(getEffectiveSupertypeCat());
+        udt.setTypeSchem(getEffectiveSupertypeSchem());
+        udt.setTypeName(supertypeName);
+        return udt;
+    }
 }

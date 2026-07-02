@@ -40,6 +40,7 @@ import java.util.Objects;
 @_ChildOf(Catalog.class)
 @_ParentOf(SuperType.class)
 @_ParentOf(Attribute.class)
+@_ChildOfNone
 public class UDT
         extends AbstractMetadataType {
 
@@ -373,4 +374,7 @@ public class UDT
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_BASE_TYPE)
     private Integer baseType;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    private transient List<Attribute> attributes_;
 }

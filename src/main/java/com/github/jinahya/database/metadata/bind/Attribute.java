@@ -370,6 +370,10 @@ public class Attribute
         this.typeCat = typeCat;
     }
 
+    String getEffectiveTypeCat() {
+        return typeCat == null ? "" : typeCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------- typeSchem
 
     /**
@@ -390,6 +394,10 @@ public class Attribute
      */
     void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
+    }
+
+    String getEffectiveTypeSchem() {
+        return typeSchem == null ? "" : typeSchem;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
@@ -718,6 +726,10 @@ public class Attribute
         this.scopeCatalog = scopeCatalog;
     }
 
+    String getEffectiveScopeCatalog() {
+        return scopeCatalog == null ? "" : scopeCatalog;
+    }
+
     // ----------------------------------------------------------------------------------------------------- scopeSchema
 
     /**
@@ -737,6 +749,10 @@ public class Attribute
      */
     void setScopeSchema(final String scopeSchema) {
         this.scopeSchema = scopeSchema;
+    }
+
+    String getEffectiveScopeSchema() {
+        return scopeSchema == null ? "" : scopeSchema;
     }
 
     // ------------------------------------------------------------------------------------------------------ scopeTable
@@ -867,4 +883,39 @@ public class Attribute
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SOURCE_DATA_TYPE)
     private Integer sourceDataType;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the UDT reference identified by {@value #COLUMN_LABEL_TYPE_CAT}, {@value #COLUMN_LABEL_TYPE_SCHEM}, and
+     * {@value #COLUMN_LABEL_TYPE_NAME}.
+     *
+     * @return the UDT reference identified by this attribute.
+     */
+    UDT getTypeRef() {
+        final var udt = new UDT();
+        udt.setTypeCat(getEffectiveTypeCat());
+        udt.setTypeSchem(getEffectiveTypeSchem());
+        udt.setTypeName(typeName);
+        return udt;
+    }
+
+    /**
+     * Returns the table reference identified by {@value #COLUMN_LABEL_SCOPE_CATALOG},
+     * {@value #COLUMN_LABEL_SCOPE_SCHEMA}, and {@value #COLUMN_LABEL_SCOPE_TABLE}.
+     *
+     * @return the REF scope table reference identified by this attribute; {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} is not {@link java.sql.Types#REF}.
+     */
+    @Nullable
+    Table getScopeTableRef() {
+        if (!Objects.equals(dataType, java.sql.Types.REF)) {
+            return null;
+        }
+        final var table = new Table();
+        table.setTableCat(getEffectiveScopeCatalog());
+        table.setTableSchem(getEffectiveScopeSchema());
+        table.setTableName(scopeTable);
+        return table;
+    }
 }

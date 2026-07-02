@@ -246,6 +246,10 @@ public class PseudoColumn
         this.tableCat = tableCat;
     }
 
+    String getEffectiveTableCat() {
+        return tableCat == null ? "" : tableCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -265,6 +269,10 @@ public class PseudoColumn
      */
     void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
+    }
+
+    String getEffectiveTableSchem() {
+        return tableSchem == null ? "" : tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
@@ -517,4 +525,20 @@ public class PseudoColumn
 
     @_ColumnLabel(COLUMN_LABEL_COLUMN_IS_NULLABLE)
     private String isNullable;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
+     * and {@value #COLUMN_LABEL_TABLE_NAME}.
+     *
+     * @return the table reference identified by this pseudo-column row.
+     */
+    Table getTableRef() {
+        final var table = new Table();
+        table.setTableCat(getEffectiveTableCat());
+        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableName(tableName);
+        return table;
+    }
 }

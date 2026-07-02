@@ -29,8 +29,12 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 // https://java.testcontainers.org/modules/databases/jdbc/
@@ -115,7 +119,10 @@ abstract class TestContainers_$_IT {
         applyConnection(c -> {
             try (var statement = c.createStatement()) {
                 Context_ComparingInSpecifiedOrder_Test_Utils.preparePortedKeyTables(statement);
-                Context_ComparingInSpecifiedOrder_Test_Utils.assertPortedKeysInSpecifiedOrder(Context.newInstance(c));
+                Context_ComparingInSpecifiedOrder_Test_Utils.assertComparingInSpecifiedOrder(
+                        Context.newInstance(c),
+                        getClass().getSimpleName()
+                );
             } catch (final SQLException sqle) {
                 if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
                     log.error("not supported", sqlfnse);
@@ -164,5 +171,127 @@ abstract class TestContainers_$_IT {
             }
             return null;
         });
+    }
+
+    @Test
+    void directMetadataMappings() {
+        applyContext(context -> {
+            try {
+                final var tables = unsupportedAsEmpty(() -> context.getTables(null, null, "%", null));
+                final var table = tables.isEmpty() ? null : tables.get(0);
+                assertDirect("attributes", () -> context.getAttributes(null, null, "%", "%"),
+                             c -> context.forEachAttribute(null, null, "%", "%", c));
+                if (table != null) {
+                    assertDirect("bestRowIdentifier", () -> context.getBestRowIdentifier(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(),
+                                         BestRowIdentifier.COLUMN_VALUE_SCOPE_BEST_ROW_SESSION, true),
+                                 c -> context.forEachBestRowIdentifier(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(),
+                                         BestRowIdentifier.COLUMN_VALUE_SCOPE_BEST_ROW_SESSION, true, c));
+                }
+                assertDirect("catalogs", context::getCatalogs, c -> context.forEachCatalog(c));
+                assertDirect("clientInfoProperties", context::getClientInfoProperties,
+                             c -> context.forEachClientInfoProperty(c));
+                if (table != null) {
+                    assertDirect("columnPrivileges", () -> context.getColumnPrivileges(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), "%"),
+                                 c -> context.forEachColumnPrivilege(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), "%", c));
+                }
+                assertDirect("columns", () -> context.getColumns(null, null, "%", "%"),
+                             c -> context.forEachColumn(null, null, "%", "%", c));
+                if (table != null) {
+                    assertDirect("exportedKeys", () -> context.getExportedKeys(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName()),
+                                 c -> context.forEachExportedKey(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), c));
+                    assertDirect("importedKeys", () -> context.getImportedKeys(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName()),
+                                 c -> context.forEachImportedKey(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), c));
+                    assertDirect("indexInfo", () -> context.getIndexInfo(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), false,
+                                         false),
+                                 c -> context.forEachIndexInfo(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), false,
+                                         false, c));
+                    assertDirect("primaryKeys", () -> context.getPrimaryKeys(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName()),
+                                 c -> context.forEachPrimaryKey(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), c));
+                }
+                assertDirect("functions", () -> context.getFunctions(null, null, "%"),
+                             c -> context.forEachFunction(null, null, "%", c));
+                assertDirect("functionColumns", () -> context.getFunctionColumns(null, null, "%", "%"),
+                             c -> context.forEachFunctionColumn(null, null, "%", "%", c));
+                assertDirect("procedureColumns", () -> context.getProcedureColumns(null, null, "%", "%"),
+                             c -> context.forEachProcedureColumn(null, null, "%", "%", c));
+                assertDirect("procedures", () -> context.getProcedures(null, null, "%"),
+                             c -> context.forEachProcedure(null, null, "%", c));
+                assertDirect("pseudoColumns", () -> context.getPseudoColumns(null, null, "%", "%"),
+                             c -> context.forEachPseudoColumn(null, null, "%", "%", c));
+                assertDirect("schemas", context::getSchemas, c -> context.forEachSchema(c));
+                assertDirect("schemasPattern", () -> context.getSchemas(null, "%"),
+                             c -> context.forEachSchema(null, "%", c));
+                assertDirect("superTables", () -> context.getSuperTables(null, "%", "%"),
+                             c -> context.forEachSuperTable(null, "%", "%", c));
+                assertDirect("superTypes", () -> context.getSuperTypes(null, "%", "%"),
+                             c -> context.forEachSuperType(null, "%", "%", c));
+                assertDirect("tablePrivileges", () -> context.getTablePrivileges(null, null, "%"),
+                             c -> context.forEachTablePrivilege(null, null, "%", c));
+                assertDirect("tableTypes", context::getTableTypes, c -> context.forEachTableType(c));
+                assertDirect("tables", () -> context.getTables(null, null, "%", null),
+                             c -> context.forEachTable(null, null, "%", null, c));
+                assertDirect("typeInfo", context::getTypeInfo, c -> context.forEachTypeInfo(c));
+                assertDirect("udts", () -> context.getUDTs(null, null, "%", null),
+                             c -> context.forEachUDT(null, null, "%", null, c));
+                if (table != null) {
+                    assertDirect("versionColumns", () -> context.getVersionColumns(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName()),
+                                 c -> context.forEachVersionColumn(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), c));
+                }
+            } catch (final SQLException sqle) {
+                throw new RuntimeException(sqle);
+            }
+            return null;
+        });
+    }
+
+    private static <T> List<T> unsupportedAsEmpty(final Query<T> query) throws SQLException {
+        try {
+            return query.get();
+        } catch (final SQLFeatureNotSupportedException ignored) {
+            return List.of();
+        }
+    }
+
+    private static <T> void assertDirect(final String name, final Query<T> query, final Iteration<T> iteration)
+            throws SQLException {
+        final List<T> values;
+        try {
+            values = query.get();
+        } catch (final SQLFeatureNotSupportedException ignored) {
+            return;
+        }
+        final var accepted = new ArrayList<T>();
+        try {
+            iteration.accept(accepted::add);
+        } catch (final SQLFeatureNotSupportedException ignored) {
+            return;
+        }
+        assertThat(accepted).as(name).hasSameSizeAs(values);
+    }
+
+    @FunctionalInterface
+    private interface Query<T> {
+
+        List<T> get() throws SQLException;
+    }
+
+    @FunctionalInterface
+    private interface Iteration<T> {
+
+        void accept(Consumer<? super T> consumer) throws SQLException;
     }
 }

@@ -267,6 +267,10 @@ public class FunctionColumn
         this.functionCat = functionCat;
     }
 
+    String getEffectiveFunctionCat() {
+        return functionCat == null ? "" : functionCat;
+    }
+
     // --------------------------------------------------------------------------------------------------- functionSchem
 
     /**
@@ -286,6 +290,10 @@ public class FunctionColumn
      */
     void setFunctionSchem(final String functionSchem) {
         this.functionSchem = functionSchem;
+    }
+
+    String getEffectiveFunctionSchem() {
+        return functionSchem == null ? "" : functionSchem;
     }
 
     // ---------------------------------------------------------------------------------------------------- functionName
@@ -655,4 +663,21 @@ public class FunctionColumn
     // https://github.com/microsoft/mssql-jdbc/issues/849
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the function reference identified by {@value #COLUMN_LABEL_FUNCTION_CAT},
+     * {@value #COLUMN_LABEL_FUNCTION_SCHEM}, and {@value #COLUMN_LABEL_FUNCTION_NAME}.
+     *
+     * @return the function reference identified by this function-column row.
+     */
+    Function getFunctionRef() {
+        final var function = new Function();
+        function.setFunctionCat(getEffectiveFunctionCat());
+        function.setFunctionSchem(getEffectiveFunctionSchem());
+        function.setFunctionName(functionName);
+        function.setSpecificName(specificName);
+        return function;
+    }
 }

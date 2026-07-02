@@ -50,6 +50,7 @@ import java.util.Objects;
 @_ParentOf(BestRowIdentifier.class)
 @_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
+@_ChildOfNone
 public class Table
         extends AbstractMetadataType {
 
@@ -345,6 +346,10 @@ public class Table
         this.typeCat = typeCat;
     }
 
+    String getEffectiveTypeCat() {
+        return typeCat == null ? "" : typeCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------- typeSchem
 
     /**
@@ -364,6 +369,10 @@ public class Table
      */
     void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
+    }
+
+    String getEffectiveTypeSchem() {
+        return typeSchem == null ? "" : typeSchem;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
@@ -481,4 +490,25 @@ public class Table
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REF_GENERATION)
     private String refGeneration;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the typed-table UDT reference identified by {@value #COLUMN_LABEL_TYPE_CAT},
+     * {@value #COLUMN_LABEL_TYPE_SCHEM}, and {@value #COLUMN_LABEL_TYPE_NAME}.
+     *
+     * @return the typed-table UDT reference identified by this table; {@code null} when
+     * {@value #COLUMN_LABEL_TYPE_NAME} is {@code null}.
+     */
+    @Nullable
+    UDT getTypeRef() {
+        if (typeName == null) {
+            return null;
+        }
+        final var udt = new UDT();
+        udt.setTypeCat(getEffectiveTypeCat());
+        udt.setTypeSchem(getEffectiveTypeSchem());
+        udt.setTypeName(typeName);
+        return udt;
+    }
 }

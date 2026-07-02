@@ -31,8 +31,6 @@ import java.io.Serial;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTables(String, String, String)
  */
-@_ChildOf(Schema.class)
-@_ChildOf(Catalog.class)
 @_ChildOf(Table.class)
 public class SuperTable
         extends AbstractMetadataType {
@@ -112,6 +110,10 @@ public class SuperTable
         this.tableCat = tableCat;
     }
 
+    String getEffectiveTableCat() {
+        return tableCat == null ? "" : tableCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -131,6 +133,10 @@ public class SuperTable
      */
     void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
+    }
+
+    String getEffectiveTableSchem() {
+        return tableSchem == null ? "" : tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
@@ -190,4 +196,34 @@ public class SuperTable
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_SUPERTABLE_NAME)
     private String supertableName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
+     * and {@value #COLUMN_LABEL_TABLE_NAME}.
+     *
+     * @return the table reference identified by this super-table row.
+     */
+    Table getTableRef() {
+        final var table = new Table();
+        table.setTableCat(getEffectiveTableCat());
+        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableName(tableName);
+        return table;
+    }
+
+    /**
+     * Returns the direct super table reference identified by {@value #COLUMN_LABEL_TABLE_CAT},
+     * {@value #COLUMN_LABEL_TABLE_SCHEM}, and {@value #COLUMN_LABEL_SUPERTABLE_NAME}.
+     *
+     * @return the direct super table reference identified by this super-table row.
+     */
+    Table getSupertableRef() {
+        final var table = new Table();
+        table.setTableCat(getEffectiveTableCat());
+        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableName(supertableName);
+        return table;
+    }
 }

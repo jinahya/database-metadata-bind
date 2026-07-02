@@ -34,10 +34,7 @@ import java.util.function.Consumer;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getCatalogsAndAcceptEach(Consumer)
  */
-@_ParentOf(TablePrivilege.class)
 @_ParentOf(Table.class)
-@_ParentOf(SuperType.class)
-@_ParentOf(SuperTable.class)
 @_ParentOf(Schema.class)
 @_ParentOf(Procedure.class)
 @_ParentOf(Function.class)

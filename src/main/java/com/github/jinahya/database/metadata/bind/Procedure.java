@@ -40,6 +40,7 @@ import java.util.Objects;
 @_ParentOf(ProcedureColumn.class)
 @_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
+@_ChildOfNone
 public class Procedure
         extends AbstractMetadataType {
 

@@ -342,6 +342,10 @@ public class ProcedureColumn
         this.procedureCat = procedureCat;
     }
 
+    String getEffectiveProcedureCat() {
+        return procedureCat == null ? "" : procedureCat;
+    }
+
     // -------------------------------------------------------------------------------------------------- procedureSchem
 
     /**
@@ -361,6 +365,10 @@ public class ProcedureColumn
      */
     void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
+    }
+
+    String getEffectiveProcedureSchem() {
+        return procedureSchem == null ? "" : procedureSchem;
     }
 
     // --------------------------------------------------------------------------------------------------- procedureName
@@ -809,4 +817,21 @@ public class ProcedureColumn
     // https://github.com/microsoft/mssql-jdbc/issues/2320
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the procedure reference identified by {@value #COLUMN_LABEL_PROCEDURE_CAT},
+     * {@value #COLUMN_LABEL_PROCEDURE_SCHEM}, and {@value #COLUMN_LABEL_PROCEDURE_NAME}.
+     *
+     * @return the procedure reference identified by this procedure-column row.
+     */
+    Procedure getProcedureRef() {
+        final var procedure = new Procedure();
+        procedure.setProcedureCat(getEffectiveProcedureCat());
+        procedure.setProcedureSchem(getEffectiveProcedureSchem());
+        procedure.setProcedureName(procedureName);
+        procedure.setSpecificName(specificName);
+        return procedure;
+    }
 }

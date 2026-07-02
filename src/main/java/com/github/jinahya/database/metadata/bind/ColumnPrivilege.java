@@ -37,7 +37,6 @@ import java.util.Objects;
  * @see Context#getColumnPrivileges(String, String, String, String)
  */
 @_ChildOf(Table.class)
-@_ChildOf(Column.class)
 public class ColumnPrivilege
         extends AbstractMetadataType {
 
@@ -204,6 +203,10 @@ public class ColumnPrivilege
         this.tableCat = tableCat;
     }
 
+    String getEffectiveTableCat() {
+        return tableCat == null ? "" : tableCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -223,6 +226,10 @@ public class ColumnPrivilege
      */
     void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
+    }
+
+    String getEffectiveTableSchem() {
+        return tableSchem == null ? "" : tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
@@ -382,4 +389,35 @@ public class ColumnPrivilege
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
     private String isGrantable;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
+     * and {@value #COLUMN_LABEL_TABLE_NAME}.
+     *
+     * @return the table reference identified by this column privilege.
+     */
+    Table getTableRef() {
+        final var table = new Table();
+        table.setTableCat(getEffectiveTableCat());
+        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableName(tableName);
+        return table;
+    }
+
+    /**
+     * Returns the column reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
+     * {@value #COLUMN_LABEL_TABLE_NAME}, and {@value #COLUMN_LABEL_COLUMN_NAME}.
+     *
+     * @return the column reference identified by this column privilege.
+     */
+    Column getColumnRef() {
+        final var column = new Column();
+        column.setTableCat(getEffectiveTableCat());
+        column.setTableSchem(getEffectiveTableSchem());
+        column.setTableName(tableName);
+        column.setColumnName(columnName);
+        return column;
+    }
 }

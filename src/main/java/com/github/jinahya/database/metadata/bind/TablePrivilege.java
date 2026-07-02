@@ -35,8 +35,6 @@ import java.util.Objects;
  * @see Context#getTablePrivileges(String, String, String)
  */
 @_ChildOf(Table.class)
-@_ChildOf(Schema.class)
-@_ChildOf(Catalog.class)
 public class TablePrivilege
         extends AbstractMetadataType {
 
@@ -176,6 +174,10 @@ public class TablePrivilege
         this.tableCat = tableCat;
     }
 
+    String getEffectiveTableCat() {
+        return tableCat == null ? "" : tableCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -195,6 +197,10 @@ public class TablePrivilege
      */
     void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
+    }
+
+    String getEffectiveTableSchem() {
+        return tableSchem == null ? "" : tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
@@ -331,4 +337,20 @@ public class TablePrivilege
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
     private String isGrantable;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
+     * and {@value #COLUMN_LABEL_TABLE_NAME}.
+     *
+     * @return the table reference identified by this table privilege.
+     */
+    Table getTableRef() {
+        final var table = new Table();
+        table.setTableCat(getEffectiveTableCat());
+        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableName(tableName);
+        return table;
+    }
 }

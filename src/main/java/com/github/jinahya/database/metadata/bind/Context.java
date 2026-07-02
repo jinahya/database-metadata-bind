@@ -281,6 +281,14 @@ public class Context {
         );
     }
 
+    void forEachAttribute(final Consumer<? super Attribute> consumer) throws SQLException {
+        getAttributesAndAcceptEach(null, null, "%", "%", consumer);
+    }
+
+    List<Attribute> getAllAttributes() throws SQLException {
+        return getAttributes(null, null, "%", "%");
+    }
+
     /**
      * Retrieves attributes of the specified user-defined type.
      *
@@ -768,6 +776,14 @@ public class Context {
         return getColumnsAndAddAll(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
     }
 
+    void forEachColumn(final Consumer<? super Column> consumer) throws SQLException {
+        getColumnsAndAcceptEach(null, null, "%", "%", consumer);
+    }
+
+    List<Column> getAllColumns() throws SQLException {
+        return getColumns(null, null, "%", "%");
+    }
+
     List<Column> getColumnsOf(final Table table, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumns(
@@ -1203,6 +1219,32 @@ public class Context {
         );
     }
 
+    /**
+     * Invokes {@link DatabaseMetaData#getFunctions(String, String, String)} method with {@code (null, null, "%")}, and
+     * accepts each bound value to the specified consumer.
+     *
+     * @param consumer the consumer to which bound values are accepted.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getFunctions(String, String, String)
+     * @see #forEachFunction(String, String, String, Consumer)
+     */
+    void forEachFunction(final Consumer<? super Function> consumer) throws SQLException {
+        getFunctionsAndAcceptEach(null, null, "%", consumer);
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#getFunctions(String, String, String)} method with {@code (null, null, "%")}, and
+     * returns a list of bound values.
+     *
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getFunctions(String, String, String)
+     * @see #getFunctions(String, String, String)
+     */
+    List<Function> getAllFunctions() throws SQLException {
+        return getFunctions(null, null, "%");
+    }
+
     // ------------------------------ getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern)
 
     /**
@@ -1295,6 +1337,14 @@ public class Context {
                 catalog, schemaPattern, functionNamePattern, columnNamePattern,
                 new ArrayList<>()
         );
+    }
+
+    void forEachFunctionColumn(final Consumer<? super FunctionColumn> consumer) throws SQLException {
+        getFunctionColumnsAndAcceptEach(null, null, "%", "%", consumer);
+    }
+
+    List<FunctionColumn> getAllFunctionColumns() throws SQLException {
+        return getFunctionColumns(null, null, "%", "%");
     }
 
     /**
@@ -1790,6 +1840,14 @@ public class Context {
         );
     }
 
+    void forEachProcedureColumn(final Consumer<? super ProcedureColumn> consumer) throws SQLException {
+        getProcedureColumnsAndAcceptEach(null, null, "%", "%", consumer);
+    }
+
+    List<ProcedureColumn> getAllProcedureColumns() throws SQLException {
+        return getProcedureColumns(null, null, "%", "%");
+    }
+
     /**
      * Retrieves columns of the specified procedure.
      *
@@ -1907,6 +1965,14 @@ public class Context {
                 procedureNamePattern,
                 new ArrayList<>()
         );
+    }
+
+    void forEachProcedure(final Consumer<? super Procedure> consumer) throws SQLException {
+        getProceduresAndAcceptEach(null, null, "%", consumer);
+    }
+
+    List<Procedure> getAllProcedures() throws SQLException {
+        return getProcedures(null, null, "%");
     }
 
     /**
@@ -2071,6 +2137,14 @@ public class Context {
                 catalog, schemaPattern, tableNamePattern, columnNamePattern,
                 new ArrayList<>()
         );
+    }
+
+    void forEachPseudoColumn(final Consumer<? super PseudoColumn> consumer) throws SQLException {
+        getPseudoColumnsAndAcceptEach(null, null, "%", "%", consumer);
+    }
+
+    List<PseudoColumn> getAllPseudoColumns() throws SQLException {
+        return getPseudoColumns(null, null, "%", "%");
     }
 
     /**
@@ -2705,6 +2779,14 @@ public class Context {
         );
     }
 
+    void forEachTablePrivilege(final Consumer<? super TablePrivilege> consumer) throws SQLException {
+        getTablePrivilegesAndAcceptEach(null, null, "%", consumer);
+    }
+
+    List<TablePrivilege> getAllTablePrivileges() throws SQLException {
+        return getTablePrivileges(null, null, "%");
+    }
+
     /**
      * Retrieves table privileges, optionally scoped to the specified catalog.
      *
@@ -2963,6 +3045,14 @@ public class Context {
         );
     }
 
+    void forEachTable(final Consumer<? super Table> consumer) throws SQLException {
+        getTablesAndAcceptEach(null, null, "%", null, consumer);
+    }
+
+    List<Table> getAllTables() throws SQLException {
+        return getTables(null, null, "%", null);
+    }
+
     /**
      * Invokes {@link #getTables(String, String, String, String[])} method with the
      * {@link Catalog#getTableCat() tableCat} of the specified catalog and given arguments, and returns a list of bound
@@ -3197,6 +3287,14 @@ public class Context {
                 types,
                 new ArrayList<>()
         );
+    }
+
+    void forEachUDT(final Consumer<? super UDT> consumer) throws SQLException {
+        getUDTsAndAcceptEach(null, null, "%", null, consumer);
+    }
+
+    List<UDT> getAllUDTs() throws SQLException {
+        return getUDTs(null, null, "%", null);
     }
 
     /**

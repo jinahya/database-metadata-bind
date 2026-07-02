@@ -39,6 +39,7 @@ import java.util.Objects;
 @_ParentOf(FunctionColumn.class)
 @_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
+@_ChildOfNone
 public class Function
         extends AbstractMetadataType {
 
