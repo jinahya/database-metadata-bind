@@ -1,0 +1,35 @@
+# Jakarta XML Binding (JAXB) index for this package.
+#
+# Lets consumers bootstrap a context by package name rather than by listing
+# every class:
+#
+#     JAXBContext.newInstance("com.github.jinahya.database.metadata.bind")
+#
+# Each non-blank, non-comment line is the simple name of a bound class in THIS
+# package. Keep in sync with the @XmlRootElement binding types.
+MetadataTypeWrapper
+Attribute
+BestRowIdentifier
+Catalog
+ClientInfoProperty
+Column
+ColumnPrivilege
+CrossReference
+ExportedKey
+Function
+FunctionColumn
+ImportedKey
+IndexInfo
+PrimaryKey
+Procedure
+ProcedureColumn
+PseudoColumn
+Schema
+SuperTable
+SuperType
+Table
+TablePrivilege
+TableType
+TypeInfo
+UDT
+VersionColumn
