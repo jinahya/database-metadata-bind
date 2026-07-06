@@ -282,7 +282,15 @@ public class Context {
         );
     }
 
-    void forEachAttribute(final Consumer<? super Attribute> consumer) throws SQLException {
+    /**
+     * Accepts all Attribute rows across the database, to the specified consumer, via a non-narrowing match-all
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
+     * pattern parameters.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void forEachAttribute(final Consumer<? super Attribute> consumer) throws SQLException {
         getAttributesAndAcceptEach(
                 null,
                 null,
@@ -292,7 +300,15 @@ public class Context {
         );
     }
 
-    List<Attribute> getAllAttributes() throws SQLException {
+    /**
+     * Returns a list of all Attribute rows across the database, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
+     *
+     * @return a list of all bound Attribute rows.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<Attribute> getAllAttributes() throws SQLException {
         return getAttributes(
                 null,
                 null,
@@ -796,11 +812,27 @@ public class Context {
         return getColumnsAndAddAll(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
     }
 
-    void forEachColumn(final Consumer<? super Column> consumer) throws SQLException {
+    /**
+     * Accepts all Column rows across the database, to the specified consumer, via a non-narrowing match-all
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
+     * pattern parameters.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void forEachColumn(final Consumer<? super Column> consumer) throws SQLException {
         getColumnsAndAcceptEach(null, null, "%", "%", consumer);
     }
 
-    List<Column> getAllColumns() throws SQLException {
+    /**
+     * Returns a list of all Column rows across the database, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
+     *
+     * @return a list of all bound Column rows.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<Column> getAllColumns() throws SQLException {
         return getColumns(null, null, "%", "%");
     }
 
@@ -1265,7 +1297,15 @@ public class Context {
      * @see DatabaseMetaData#getFunctions(String, String, String)
      * @see #forEachFunction(String, String, String, Consumer)
      */
-    void forEachFunction(final Consumer<? super Function> consumer) throws SQLException {
+    /**
+     * Accepts all Function rows across the database, to the specified consumer, via a non-narrowing match-all
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
+     * pattern parameters.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void forEachFunction(final Consumer<? super Function> consumer) throws SQLException {
         getFunctionsAndAcceptEach(null, null, "%", consumer);
     }
 
@@ -1278,7 +1318,15 @@ public class Context {
      * @see DatabaseMetaData#getFunctions(String, String, String)
      * @see #getFunctions(String, String, String)
      */
-    List<Function> getAllFunctions() throws SQLException {
+    /**
+     * Returns a list of all Function rows across the database, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
+     *
+     * @return a list of all bound Function rows.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<Function> getAllFunctions() throws SQLException {
         return getFunctions(null, null, "%");
     }
 
@@ -1378,11 +1426,27 @@ public class Context {
         );
     }
 
-    void forEachFunctionColumn(final Consumer<? super FunctionColumn> consumer) throws SQLException {
+    /**
+     * Accepts all FunctionColumn rows across the database, to the specified consumer, via a non-narrowing match-all
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
+     * pattern parameters.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void forEachFunctionColumn(final Consumer<? super FunctionColumn> consumer) throws SQLException {
         getFunctionColumnsAndAcceptEach(null, null, "%", "%", consumer);
     }
 
-    List<FunctionColumn> getAllFunctionColumns() throws SQLException {
+    /**
+     * Returns a list of all FunctionColumn rows across the database, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
+     *
+     * @return a list of all bound FunctionColumn rows.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<FunctionColumn> getAllFunctionColumns() throws SQLException {
         return getFunctionColumns(null, null, "%", "%");
     }
 
@@ -1886,11 +1950,27 @@ public class Context {
         );
     }
 
-    void forEachProcedureColumn(final Consumer<? super ProcedureColumn> consumer) throws SQLException {
+    /**
+     * Accepts all ProcedureColumn rows across the database, to the specified consumer, via a non-narrowing match-all
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
+     * pattern parameters.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void forEachProcedureColumn(final Consumer<? super ProcedureColumn> consumer) throws SQLException {
         getProcedureColumnsAndAcceptEach(null, null, "%", "%", consumer);
     }
 
-    List<ProcedureColumn> getAllProcedureColumns() throws SQLException {
+    /**
+     * Returns a list of all ProcedureColumn rows across the database, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
+     *
+     * @return a list of all bound ProcedureColumn rows.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<ProcedureColumn> getAllProcedureColumns() throws SQLException {
         return getProcedureColumns(null, null, "%", "%");
     }
 
@@ -2014,11 +2094,27 @@ public class Context {
         );
     }
 
-    void forEachProcedure(final Consumer<? super Procedure> consumer) throws SQLException {
+    /**
+     * Accepts all Procedure rows across the database, to the specified consumer, via a non-narrowing match-all
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
+     * pattern parameters.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void forEachProcedure(final Consumer<? super Procedure> consumer) throws SQLException {
         getProceduresAndAcceptEach(null, null, "%", consumer);
     }
 
-    List<Procedure> getAllProcedures() throws SQLException {
+    /**
+     * Returns a list of all Procedure rows across the database, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
+     *
+     * @return a list of all bound Procedure rows.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<Procedure> getAllProcedures() throws SQLException {
         return getProcedures(null, null, "%");
     }
 
@@ -2187,11 +2283,27 @@ public class Context {
         );
     }
 
-    void forEachPseudoColumn(final Consumer<? super PseudoColumn> consumer) throws SQLException {
+    /**
+     * Accepts all PseudoColumn rows across the database, to the specified consumer, via a non-narrowing match-all
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
+     * pattern parameters.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void forEachPseudoColumn(final Consumer<? super PseudoColumn> consumer) throws SQLException {
         getPseudoColumnsAndAcceptEach(null, null, "%", "%", consumer);
     }
 
-    List<PseudoColumn> getAllPseudoColumns() throws SQLException {
+    /**
+     * Returns a list of all PseudoColumn rows across the database, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
+     *
+     * @return a list of all bound PseudoColumn rows.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<PseudoColumn> getAllPseudoColumns() throws SQLException {
         return getPseudoColumns(null, null, "%", "%");
     }
 
@@ -2449,6 +2561,30 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSuperTables(String, String, String)
      */
+    /**
+     * Accepts all SuperTable rows across the database, to the specified consumer, via a non-narrowing match-all
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
+     * pattern parameters. Because {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the driver may be excluded.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void forEachSuperTable(final Consumer<? super SuperTable> consumer) throws SQLException {
+        getSuperTablesAndAcceptEach(null, "%", "%", consumer);
+    }
+
+    /**
+     * Returns a list of all SuperTable rows across the database, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters. Because {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the driver may be excluded.
+     *
+     * @return a list of all bound SuperTable rows.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<SuperTable> getAllSuperTables() throws SQLException {
+        return getSuperTables(null, "%", "%");
+    }
+
     public void forEachSuperTable(@Nullable final String catalog, final String schemaPattern,
                                   final String tableNamePattern, final Consumer<? super SuperTable> consumer)
             throws SQLException {
@@ -2626,6 +2762,30 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSuperTypes(String, String, String)
      */
+    /**
+     * Accepts all SuperType rows across the database, to the specified consumer, via a non-narrowing match-all
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
+     * pattern parameters. Because {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the driver may be excluded.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void forEachSuperType(final Consumer<? super SuperType> consumer) throws SQLException {
+        getSuperTypesAndAcceptEach(null, "%", "%", consumer);
+    }
+
+    /**
+     * Returns a list of all SuperType rows across the database, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters. Because {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the driver may be excluded.
+     *
+     * @return a list of all bound SuperType rows.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<SuperType> getAllSuperTypes() throws SQLException {
+        return getSuperTypes(null, "%", "%");
+    }
+
     public void forEachSuperType(@Nullable final String catalog, final String schemaPattern,
                                  final String typeNamePattern, final Consumer<? super SuperType> consumer)
             throws SQLException {
@@ -2836,11 +2996,27 @@ public class Context {
         );
     }
 
-    void forEachTablePrivilege(final Consumer<? super TablePrivilege> consumer) throws SQLException {
+    /**
+     * Accepts all TablePrivilege rows across the database, to the specified consumer, via a non-narrowing match-all
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
+     * pattern parameters.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void forEachTablePrivilege(final Consumer<? super TablePrivilege> consumer) throws SQLException {
         getTablePrivilegesAndAcceptEach(null, null, "%", consumer);
     }
 
-    List<TablePrivilege> getAllTablePrivileges() throws SQLException {
+    /**
+     * Returns a list of all TablePrivilege rows across the database, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
+     *
+     * @return a list of all bound TablePrivilege rows.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<TablePrivilege> getAllTablePrivileges() throws SQLException {
         return getTablePrivileges(null, null, "%");
     }
 
@@ -3106,11 +3282,27 @@ public class Context {
         );
     }
 
-    void forEachTable(final Consumer<? super Table> consumer) throws SQLException {
+    /**
+     * Accepts all Table rows across the database, to the specified consumer, via a non-narrowing match-all
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
+     * pattern parameters.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void forEachTable(final Consumer<? super Table> consumer) throws SQLException {
         getTablesAndAcceptEach(null, null, "%", null, consumer);
     }
 
-    List<Table> getAllTables() throws SQLException {
+    /**
+     * Returns a list of all Table rows across the database, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
+     *
+     * @return a list of all bound Table rows.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<Table> getAllTables() throws SQLException {
         return getTables(null, null, "%", null);
     }
 
@@ -3354,11 +3546,27 @@ public class Context {
         );
     }
 
-    void forEachUDT(final Consumer<? super UDT> consumer) throws SQLException {
+    /**
+     * Accepts all UDT rows across the database, to the specified consumer, via a non-narrowing match-all
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
+     * pattern parameters.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void forEachUDT(final Consumer<? super UDT> consumer) throws SQLException {
         getUDTsAndAcceptEach(null, null, "%", null, consumer);
     }
 
-    List<UDT> getAllUDTs() throws SQLException {
+    /**
+     * Returns a list of all UDT rows across the database, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
+     *
+     * @return a list of all bound UDT rows.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<UDT> getAllUDTs() throws SQLException {
         return getUDTs(null, null, "%", null);
     }
 

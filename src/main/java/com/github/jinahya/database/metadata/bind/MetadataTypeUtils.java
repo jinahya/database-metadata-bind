@@ -20,9 +20,18 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+/**
+ * A class for utility methods for metadata type bindings.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
 final class MetadataTypeUtils {
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance, which is not allowed.
+     */
     private MetadataTypeUtils() {
         throw new AssertionError("instantiation is not allowed");
     }

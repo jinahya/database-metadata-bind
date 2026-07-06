@@ -228,6 +228,11 @@ public class Attribute
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -350,6 +355,12 @@ public class Attribute
         this.typeCat = typeCat;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_TYPE_CAT} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
     String getEffectiveTypeCat() {
         return typeCat == null ? "" : typeCat;
     }
@@ -376,6 +387,12 @@ public class Attribute
         this.typeSchem = typeSchem;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_TYPE_SCHEM} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
     String getEffectiveTypeSchem() {
         return typeSchem == null ? "" : typeSchem;
     }
@@ -706,6 +723,12 @@ public class Attribute
         this.scopeCatalog = scopeCatalog;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_SCOPE_CATALOG} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_SCOPE_CATALOG} column.
+     */
     String getEffectiveScopeCatalog() {
         return scopeCatalog == null ? "" : scopeCatalog;
     }
@@ -731,6 +754,12 @@ public class Attribute
         this.scopeSchema = scopeSchema;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_SCOPE_SCHEMA} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_SCOPE_SCHEMA} column.
+     */
     String getEffectiveScopeSchema() {
         return scopeSchema == null ? "" : scopeSchema;
     }

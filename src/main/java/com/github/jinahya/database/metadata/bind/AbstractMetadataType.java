@@ -52,6 +52,12 @@ abstract class AbstractMetadataType
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +

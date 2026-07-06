@@ -192,6 +192,11 @@ public class PseudoColumn
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -231,6 +236,12 @@ public class PseudoColumn
         this.tableCat = tableCat;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_TABLE_CAT} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     String getEffectiveTableCat() {
         return tableCat == null ? "" : tableCat;
     }
@@ -256,6 +267,12 @@ public class PseudoColumn
         this.tableSchem = tableSchem;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     String getEffectiveTableSchem() {
         return tableSchem == null ? "" : tableSchem;
     }

@@ -94,6 +94,12 @@ public class SuperType
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -127,6 +133,12 @@ public class SuperType
         this.typeCat = typeCat;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_TYPE_CAT} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
     String getEffectiveTypeCat() {
         return typeCat == null ? "" : typeCat;
     }
@@ -152,6 +164,12 @@ public class SuperType
         this.typeSchem = typeSchem;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_TYPE_SCHEM} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
     String getEffectiveTypeSchem() {
         return typeSchem == null ? "" : typeSchem;
     }
@@ -197,6 +215,12 @@ public class SuperType
         this.supertypeCat = supertypeCat;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     */
     String getEffectiveSupertypeCat() {
         return supertypeCat == null ? "" : supertypeCat;
     }
@@ -222,6 +246,12 @@ public class SuperType
         this.supertypeSchem = supertypeSchem;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     */
     String getEffectiveSupertypeSchem() {
         return supertypeSchem == null ? "" : supertypeSchem;
     }

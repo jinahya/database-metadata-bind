@@ -164,6 +164,11 @@ public class UDT
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -198,6 +203,12 @@ public class UDT
         this.typeCat = typeCat;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_TYPE_CAT} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
     String getEffectiveTypeCat() {
         return typeCat == null ? "" : typeCat;
     }
@@ -223,6 +234,12 @@ public class UDT
         this.typeSchem = typeSchem;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_TYPE_SCHEM} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
     String getEffectiveTypeSchem() {
         return typeSchem == null ? "" : typeSchem;
     }

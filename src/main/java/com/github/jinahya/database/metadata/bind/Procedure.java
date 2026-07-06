@@ -156,6 +156,11 @@ public class Procedure
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -189,6 +194,12 @@ public class Procedure
         this.procedureCat = procedureCat;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
+     */
     String getEffectiveProcedureCat() {
         return procedureCat == null ? "" : procedureCat;
     }
@@ -214,6 +225,12 @@ public class Procedure
         this.procedureSchem = procedureSchem;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
+     */
     String getEffectiveProcedureSchem() {
         return procedureSchem == null ? "" : procedureSchem;
     }

@@ -162,6 +162,12 @@ public class Function
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -195,6 +201,12 @@ public class Function
         this.functionCat = functionCat;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_FUNCTION_CAT} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     */
     String getEffectiveFunctionCat() {
         return functionCat == null ? "" : functionCat;
     }
@@ -220,6 +232,12 @@ public class Function
         this.functionSchem = functionSchem;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     */
     String getEffectiveFunctionSchem() {
         return functionSchem == null ? "" : functionSchem;
     }

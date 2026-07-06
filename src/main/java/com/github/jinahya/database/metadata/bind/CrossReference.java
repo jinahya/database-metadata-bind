@@ -288,6 +288,11 @@ public class CrossReference
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -329,6 +334,12 @@ public class CrossReference
         this.pktableCat = pktableCat;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_PKTABLE_CAT} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
+     */
     String getEffectivePktableCat() {
         return pktableCat == null ? "" : pktableCat;
     }
@@ -354,6 +365,12 @@ public class CrossReference
         this.pktableSchem = pktableSchem;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
+     */
     String getEffectivePktableSchem() {
         return pktableSchem == null ? "" : pktableSchem;
     }
@@ -419,6 +436,12 @@ public class CrossReference
         this.fktableCat = fktableCat;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_FKTABLE_CAT} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
+     */
     String getEffectiveFktableCat() {
         return fktableCat == null ? "" : fktableCat;
     }
@@ -444,6 +467,12 @@ public class CrossReference
         this.fktableSchem = fktableSchem;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
+     */
     String getEffectiveFktableSchem() {
         return fktableSchem == null ? "" : fktableSchem;
     }

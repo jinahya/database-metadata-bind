@@ -184,6 +184,12 @@ public class Table
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -220,6 +226,12 @@ public class Table
         this.tableCat = tableCat;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_TABLE_CAT} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     String getEffectiveTableCat() {
         return tableCat == null ? "" : tableCat;
     }
@@ -245,6 +257,12 @@ public class Table
         this.tableSchem = tableSchem;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     String getEffectiveTableSchem() {
         return tableSchem == null ? "" : tableSchem;
     }
@@ -331,6 +349,12 @@ public class Table
         this.typeCat = typeCat;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_TYPE_CAT} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
     String getEffectiveTypeCat() {
         return typeCat == null ? "" : typeCat;
     }
@@ -356,6 +380,12 @@ public class Table
         this.typeSchem = typeSchem;
     }
 
+    /**
+     * Returns the effective value of {@value #COLUMN_LABEL_TYPE_SCHEM} column, with {@code null} normalized to an empty
+     * string.
+     *
+     * @return the effective value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
     String getEffectiveTypeSchem() {
         return typeSchem == null ? "" : typeSchem;
     }
