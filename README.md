@@ -1,12 +1,24 @@
 # database-metadata-bind
 
-[![Java CI with Maven](https://github.com/jinahya/database-metadata-bind/actions/workflows/maven.yml/badge.svg)](https://github.com/jinahya/database-metadata-bind/actions/workflows/maven.yml)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=jinahya_database-metadata-bind&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jinahya_database-metadata-bind)
+[![Java CI with Maven](https://github.com/jinahya/database-metadata-bind/actions/workflows/maven.yml/badge.svg?branch=develop)](https://github.com/jinahya/database-metadata-bind/actions/workflows/maven.yml?query=branch%3Adevelop)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jinahya_database-metadata-bind&metric=alert_status&branch=develop)](https://sonarcloud.io/summary/new_code?id=jinahya_database-metadata-bind&branch=develop)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.jinahya/database-metadata-bind.svg)](https://central.sonatype.com/artifact/io.github.jinahya/database-metadata-bind)
 [![Javadoc](https://javadoc.io/badge2/io.github.jinahya/database-metadata-bind/javadoc.svg)](https://javadoc.io/doc/io.github.jinahya/database-metadata-bind)
 
 A library for binding results of methods defined
-in [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html).
+in [DatabaseMetaData](https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html).
+
+All 26 methods in `DatabaseMetaData` that return `ResultSet` are bound to type-safe Java classes.
+
+## Documentation
+
+Full documentation lives in the [project wiki](https://github.com/jinahya/database-metadata-bind/wiki):
+
+* [Home](https://github.com/jinahya/database-metadata-bind/wiki) — overview and quick start
+* [API Reference](https://github.com/jinahya/database-metadata-bind/wiki/API-Reference) — the bound methods
+* [Model Notes](https://github.com/jinahya/database-metadata-bind/wiki/Model-Notes) — binding behavior and catalog/schema/pattern handling
+* [Testing and Build](https://github.com/jinahya/database-metadata-bind/wiki/Testing-and-Build) — build requirements and running tests
+* [Known Issues](https://github.com/jinahya/database-metadata-bind/wiki/Known-Issues) — driver-specific quirks
 
 ## Coordinates
 
@@ -19,15 +31,11 @@ See [Maven Central](https://central.sonatype.com/artifact/io.github.jinahya/data
 </dependency>
 ```
 
-## Usages
-
-All 26 methods in `DatabaseMetaData` that return `ResultSet` are bound to type-safe Java classes.
-
-### Basic Usage
+## Quick start
 
 ```java
 try (var connection = dataSource.getConnection()) {
-    var context = Context.newInstance(connection.getMetaData());
+    var context = Context.newInstance(connection);
 
     // Get all catalogs
     List<Catalog> catalogs = context.getCatalogs();
@@ -40,91 +48,10 @@ try (var connection = dataSource.getConnection()) {
 }
 ```
 
-### Working with Results
+See the [wiki](https://github.com/jinahya/database-metadata-bind/wiki) for more examples, catalog/schema `null` handling, and per-driver notes.
 
-```java
-// Tables have typed accessors
-for (Table table : tables) {
-    String catalog = table.getTableCat();    // may be null
-    String schema = table.getTableSchem();   // may be null
-    String name = table.getTableName();
-    String type = table.getTableType();      // "TABLE", "VIEW", etc.
-}
+## Contributing
 
-// Get primary keys for a table
-List<PrimaryKey> pks = context.getPrimaryKeys(
-    table.getTableCat(),
-    table.getTableSchem(),
-    table.getTableName()
-);
-
-// Get foreign keys pointing to this table
-List<ExportedKey> exportedKeys = context.getExportedKeys(
-    table.getTableCat(),
-    table.getTableSchem(),
-    table.getTableName()
-);
-```
-
-### Catalog/Schema Null Handling
-
-JDBC uses `null` to mean "not applicable" in results and "don't filter" in parameters. This aligns naturally:
-
-```java
-// Get a table (catalog/schema may be null depending on database)
-Table table = tables.get(0);
-
-// Pass values directly — null means "don't filter by this"
-List<Column> columns = context.getColumns(
-    table.getTableCat(),     // null → don't filter by catalog
-    table.getTableSchem(),   // null → don't filter by schema
-    table.getTableName(),
-    "%"
-);
-```
-
-## How to contribute?
-
-A lot of classes/methods defined in this module need to be tested with various kinds of real databases.
-
-### Add your JDBC driver as a test-scoped dependency.
-
-```xml
-<dependency>
-  ...
-  <scope>test</scope>
-</dependency>
-```
-
-### Run the `ExternalIT` class with `url`, `user`, and `password` parameter.
-
-```commandline
-$ mvn \
-  -Pfailsafe \
-  -Dit.test=ExternalIT \
-  -Durl='<your-jdbc-url>' \
-  -Duser='<your-own-user>' \
-  -Dpassword='<your-own-password>' \
-  clean test-compile failsafe:integration-test
-```
-
-----
-
-## Links
-
-### Docker
-* [Running Oracle XE with Testcontainers on Apple Silicon](https://blog.jdriven.com/2022/07/running-oracle-xe-with-testcontainers-on-apple-silicon/)
-
-### MariaDB
-* [getTables should be ordered as expected](https://jira.mariadb.org/browse/CONJ-1156)
-* [DatabaseMetaData#getFunctions's result not properly ordered](https://jira.mariadb.org/browse/CONJ-1158)
-* [DatabaseMetaData#getClientInfoProperties not ordered correctly](https://jira.mariadb.org/browse/CONJ-1159)
-
-### MySQL
-* [DatabaseMetaData#getTables produces duplicates](https://bugs.mysql.com/bug.php?id=113970&thanks=4)
-
-### PostgreSQL
-* [DatabaseMetaData#getFunctionColumns's result has duplicate](https://github.com/pgjdbc/pgjdbc/issues/3127)
-
-### SQL Server
-* [DatabaseMetaData#getProcedures not ordered as specified](https://github.com/microsoft/mssql-jdbc/issues/2321)
+Many bindings need testing against real databases. See
+[Testing and Build](https://github.com/jinahya/database-metadata-bind/wiki/Testing-and-Build) for how to run the
+integration tests (e.g. `ExternalIT`) with your own JDBC driver, URL, and credentials.
