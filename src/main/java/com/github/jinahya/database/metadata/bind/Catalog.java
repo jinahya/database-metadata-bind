@@ -1,6 +1,9 @@
 package com.github.jinahya.database.metadata.bind;
 
-import org.jspecify.annotations.Nullable;
+import java.io.Serial;
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.Objects;
 
 /*-
  * #%L
@@ -22,11 +25,6 @@ import org.jspecify.annotations.Nullable;
  * #L%
  */
 
-import java.io.Serial;
-import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.Objects;
-
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getCatalogs()} method.
  *
@@ -40,6 +38,9 @@ import java.util.Objects;
 @_ParentOf(Function.class)
 @_ParentOf(UDT.class)
 @_ChildOfNone
+@SuppressWarnings({
+        "java:S2637"
+})
 public class Catalog
         extends AbstractMetadataType {
 
