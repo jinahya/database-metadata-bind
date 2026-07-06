@@ -204,46 +204,6 @@ public final class ContextUtils {
     }
 
     /**
-     * Returns a null-safe variant of the specified ascending comparator whose handling of {@code null} elements
-     * reflects how the underlying database sorts {@code null} values.
-     * <p>
-     * This method is equivalent to invoking {@link #withDatabaseNullOrdering(Context, Comparator, SortDirection)} with
-     * {@link SortDirection#ASCENDING}.
-     *
-     * @param context    the context whose metadata determines the {@code null} ordering.
-     * @param comparator the ascending comparator to wrap.
-     * @param <T>        the type of elements compared.
-     * @return a null-safe comparator wrapping the specified comparator.
-     * @throws SQLException if a database error occurs while querying the {@code null} ordering.
-     * @deprecated use {@link #withDatabaseNullOrdering(Context, Comparator, SortDirection)} to state the comparator
-     * direction explicitly.
-     */
-    @Deprecated
-    public static <T> Comparator<@Nullable T> nullOrdered(final Context context, final Comparator<? super T> comparator)
-            throws SQLException {
-        return withDatabaseNullOrdering(context, comparator, SortDirection.ASCENDING);
-    }
-
-    /**
-     * Returns a null-safe variant of the specified comparator whose handling of {@code null} elements reflects how the
-     * underlying database sorts {@code null} values for the specified sort direction.
-     *
-     * @param context    the context whose metadata determines the {@code null} ordering.
-     * @param comparator the comparator to wrap.
-     * @param direction  the direction in which the specified comparator orders non-{@code null} values.
-     * @param <T>        the type of elements compared.
-     * @return a null-safe comparator wrapping the specified comparator.
-     * @throws SQLException if a database error occurs while querying the {@code null} ordering.
-     * @deprecated use {@link #withDatabaseNullOrdering(Context, Comparator, SortDirection)}.
-     */
-    @Deprecated
-    public static <T> Comparator<@Nullable T> nullOrdered(final Context context, final Comparator<? super T> comparator,
-                                                          final SortDirection direction)
-            throws SQLException {
-        return withDatabaseNullOrdering(context, comparator, direction);
-    }
-
-    /**
      * Returns a null-safe variant of the specified comparator whose handling of {@code null} elements reflects how the
      * underlying database sorts {@code null} values for the specified sort direction.
      * <p>

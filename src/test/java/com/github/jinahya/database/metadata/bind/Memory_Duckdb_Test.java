@@ -59,5 +59,4 @@ class Memory_Duckdb_Test
     void test() throws SQLException {
         super.test();
     }
-
 }

@@ -170,8 +170,8 @@ public class Schema
     /**
      * Returns the catalog reference identified by {@value #COLUMN_LABEL_TABLE_CATALOG}.
      *
-     * @return the catalog reference identified by this schema; {@code null} when
-     * {@value #COLUMN_LABEL_TABLE_CATALOG} is {@code null}.
+     * @return the catalog reference identified by this schema; {@code null} when {@value #COLUMN_LABEL_TABLE_CATALOG}
+     * is {@code null}.
      */
     @Nullable
     Catalog getCatalogRef() {

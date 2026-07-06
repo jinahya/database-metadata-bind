@@ -500,8 +500,8 @@ public class Table
     /**
      * Returns the catalog reference identified by {@value #COLUMN_LABEL_TABLE_CAT}.
      *
-     * @return the catalog reference identified by this table; {@code null} when
-     * {@value #COLUMN_LABEL_TABLE_CAT} is {@code null}.
+     * @return the catalog reference identified by this table; {@code null} when {@value #COLUMN_LABEL_TABLE_CAT} is
+     * {@code null}.
      */
     @Nullable
     Catalog getCatalogRef() {
@@ -517,8 +517,8 @@ public class Table
      * Returns the schema reference identified by {@value #COLUMN_LABEL_TABLE_CAT} and
      * {@value #COLUMN_LABEL_TABLE_SCHEM}.
      *
-     * @return the schema reference identified by this table; {@code null} when
-     * {@value #COLUMN_LABEL_TABLE_SCHEM} is {@code null}.
+     * @return the schema reference identified by this table; {@code null} when {@value #COLUMN_LABEL_TABLE_SCHEM} is
+     * {@code null}.
      */
     @Nullable
     Schema getSchemaRef() {

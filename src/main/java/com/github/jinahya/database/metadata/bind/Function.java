@@ -334,8 +334,8 @@ public class Function
     /**
      * Returns the catalog reference identified by {@value #COLUMN_LABEL_FUNCTION_CAT}.
      *
-     * @return the catalog reference identified by this function; {@code null} when
-     * {@value #COLUMN_LABEL_FUNCTION_CAT} is {@code null}.
+     * @return the catalog reference identified by this function; {@code null} when {@value #COLUMN_LABEL_FUNCTION_CAT}
+     * is {@code null}.
      */
     @Nullable
     Catalog getCatalogRef() {
@@ -351,8 +351,8 @@ public class Function
      * Returns the schema reference identified by {@value #COLUMN_LABEL_FUNCTION_CAT} and
      * {@value #COLUMN_LABEL_FUNCTION_SCHEM}.
      *
-     * @return the schema reference identified by this function; {@code null} when
-     * {@value #COLUMN_LABEL_FUNCTION_SCHEM} is {@code null}.
+     * @return the schema reference identified by this function; {@code null} when {@value #COLUMN_LABEL_FUNCTION_SCHEM}
+     * is {@code null}.
      */
     @Nullable
     Schema getSchemaRef() {

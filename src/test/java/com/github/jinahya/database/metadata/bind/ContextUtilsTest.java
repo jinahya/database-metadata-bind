@@ -91,27 +91,6 @@ class ContextUtilsTest {
                 context, Comparator.reverseOrder(), ContextUtils.SortDirection.DESCENDING));
     }
 
-    @SuppressWarnings("deprecation")
-    @Test
-    void nullOrdered__SameAsAscending__WhenDirectionOmitted() throws SQLException {
-        final var context = context(false, false, true, false);
-        assertThat(ContextUtils.nullOrdered(context, Comparator.<String>naturalOrder()).compare(null, "a"))
-                .isEqualTo(ContextUtils.withDatabaseNullOrdering(
-                                context, Comparator.<String>naturalOrder(), ContextUtils.SortDirection.ASCENDING)
-                                   .compare(null, "a"));
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test
-    void nullOrdered__SameAsPreferredMethod__WhenDirectionSpecified() throws SQLException {
-        final var context = context(false, false, false, true);
-        assertThat(ContextUtils.nullOrdered(
-                context, Comparator.<String>reverseOrder(), ContextUtils.SortDirection.DESCENDING).compare(null, "a"))
-                .isEqualTo(ContextUtils.withDatabaseNullOrdering(
-                                context, Comparator.<String>reverseOrder(), ContextUtils.SortDirection.DESCENDING)
-                                   .compare(null, "a"));
-    }
-
     private static Context context(final boolean atStart, final boolean atEnd, final boolean low, final boolean high)
             throws SQLException {
         final DatabaseMetaData metadata = mock(DatabaseMetaData.class);

@@ -363,8 +363,8 @@ public class UDT
     /**
      * Returns the catalog reference identified by {@value #COLUMN_LABEL_TYPE_CAT}.
      *
-     * @return the catalog reference identified by this UDT; {@code null} when
-     * {@value #COLUMN_LABEL_TYPE_CAT} is {@code null}.
+     * @return the catalog reference identified by this UDT; {@code null} when {@value #COLUMN_LABEL_TYPE_CAT} is
+     * {@code null}.
      */
     @Nullable
     Catalog getCatalogRef() {
@@ -380,8 +380,8 @@ public class UDT
      * Returns the schema reference identified by {@value #COLUMN_LABEL_TYPE_CAT} and
      * {@value #COLUMN_LABEL_TYPE_SCHEM}.
      *
-     * @return the schema reference identified by this UDT; {@code null} when
-     * {@value #COLUMN_LABEL_TYPE_SCHEM} is {@code null}.
+     * @return the schema reference identified by this UDT; {@code null} when {@value #COLUMN_LABEL_TYPE_SCHEM} is
+     * {@code null}.
      */
     @Nullable
     Schema getSchemaRef() {
