@@ -1,9 +1,9 @@
 # database-metadata-bind
 
 [![Java CI with Maven](https://github.com/jinahya/database-metadata-bind/actions/workflows/maven.yml/badge.svg)](https://github.com/jinahya/database-metadata-bind/actions/workflows/maven.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jinahya_database-metadata-bind&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jinahya_database-metadata-bind)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.jinahya/database-metadata-bind)](https://central.sonatype.com/artifact/io.github.jinahya/database-metadata-bind)
-[![javadoc](https://javadoc.io/badge2/io.github.jinahya/database-metadata-bind/javadoc.svg)](https://javadoc.io/doc/io.github.jinahya/database-metadata-bind)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=jinahya_database-metadata-bind&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jinahya_database-metadata-bind)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.jinahya/database-metadata-bind.svg)](https://central.sonatype.com/artifact/io.github.jinahya/database-metadata-bind)
+[![Javadoc](https://javadoc.io/badge2/io.github.jinahya/database-metadata-bind/javadoc.svg)](https://javadoc.io/doc/io.github.jinahya/database-metadata-bind)
 
 A library for binding results of methods defined
 in [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html).

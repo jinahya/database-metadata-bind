@@ -188,8 +188,8 @@ public class PrimaryKey
     }
 
     /**
-     * Returns the effective value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to an empty
-     * string.
+     * Returns the effective value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to an
+     * empty string.
      *
      * @return the effective value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */

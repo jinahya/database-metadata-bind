@@ -336,6 +336,15 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code Attribute} of the specified user-defined type.
+     *
+     * @param udt                  the user-defined type whose attributes are accepted.
+     * @param attributeNamePattern a value for the {@code attributeNamePattern} parameter.
+     * @param consumer             the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachAttribute(String, String, String, String, Consumer)
+     */
     void forEachAttributeOf(final UDT udt, final String attributeNamePattern,
                             final Consumer<? super Attribute> consumer)
             throws SQLException {
@@ -475,6 +484,16 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code BestRowIdentifier} of the specified table.
+     *
+     * @param table    the table whose best row identifier is accepted.
+     * @param scope    a value for the {@code scope} parameter.
+     * @param nullable a value for the {@code nullable} parameter.
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachBestRowIdentifier(String, String, String, int, boolean, Consumer)
+     */
     void forEachBestRowIdentifierOf(final Table table, final int scope, final boolean nullable,
                                     final Consumer<? super BestRowIdentifier> consumer)
             throws SQLException {
@@ -698,6 +717,15 @@ public class Context {
         return getColumnPrivilegesAndAddAll(catalog, schema, table, columnNamePattern, new ArrayList<>());
     }
 
+    /**
+     * Returns a list of bound {@code ColumnPrivilege} of the specified table.
+     *
+     * @param table             the table whose column privileges are retrieved.
+     * @param columnNamePattern a value for the {@code columnNamePattern} parameter.
+     * @return a list of bound values for the {@code table}.
+     * @throws SQLException if a database error occurs.
+     * @see #getColumnPrivileges(String, String, String, String)
+     */
     List<ColumnPrivilege> getColumnPrivilegesOf(final Table table, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
@@ -709,6 +737,15 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code ColumnPrivilege} of the specified table.
+     *
+     * @param table             the table whose column privileges are accepted.
+     * @param columnNamePattern a value for the {@code columnNamePattern} parameter.
+     * @param consumer          the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachColumnPrivilege(String, String, String, String, Consumer)
+     */
     void forEachColumnPrivilegeOf(final Table table, final String columnNamePattern,
                                   final Consumer<? super ColumnPrivilege> consumer)
             throws SQLException {
@@ -836,6 +873,15 @@ public class Context {
         return getColumns(null, null, "%", "%");
     }
 
+    /**
+     * Returns a list of bound {@code Column} of the specified table.
+     *
+     * @param table             the table whose columns are retrieved.
+     * @param columnNamePattern a value for the {@code columnNamePattern} parameter.
+     * @return a list of bound values for the {@code table}.
+     * @throws SQLException if a database error occurs.
+     * @see #getColumns(String, String, String, String)
+     */
     List<Column> getColumnsOf(final Table table, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumns(
@@ -846,6 +892,15 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code Column} of the specified table.
+     *
+     * @param table             the table whose columns are accepted.
+     * @param columnNamePattern a value for the {@code columnNamePattern} parameter.
+     * @param consumer          the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachColumn(String, String, String, String, Consumer)
+     */
     void forEachColumnOf(final Table table, final String columnNamePattern,
                          final Consumer<? super Column> consumer)
             throws SQLException {
@@ -989,6 +1044,15 @@ public class Context {
         );
     }
 
+    /**
+     * Returns a list of bound {@code CrossReference} for the specified parent table and foreign table.
+     *
+     * @param parentTable  the table whose primary key columns are referenced.
+     * @param foreignTable the table whose foreign key columns reference the {@code parentTable}.
+     * @return a list of bound values for the {@code parentTable} and the {@code foreignTable}.
+     * @throws SQLException if a database error occurs.
+     * @see #getCrossReference(String, String, String, String, String, String)
+     */
     List<CrossReference> getCrossReferenceOf(final Table parentTable, final Table foreignTable) throws SQLException {
         Objects.requireNonNull(parentTable, "parentTable is null");
         Objects.requireNonNull(foreignTable, "foreignTable is null");
@@ -1002,6 +1066,16 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code CrossReference} for the specified parent table and foreign
+     * table.
+     *
+     * @param parentTable  the table whose primary key columns are referenced.
+     * @param foreignTable the table whose foreign key columns reference the {@code parentTable}.
+     * @param consumer     the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachCrossReference(String, String, String, String, String, String, Consumer)
+     */
     void forEachCrossReferenceOf(final Table parentTable, final Table foreignTable,
                                  final Consumer<? super CrossReference> consumer)
             throws SQLException {
@@ -1124,6 +1198,14 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code ExportedKey} of the specified table.
+     *
+     * @param table    the table whose exported keys are accepted.
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachExportedKey(String, String, String, Consumer)
+     */
     void forEachExportedKeyOf(final Table table, final Consumer<? super ExportedKey> consumer) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachExportedKey(
@@ -1243,6 +1325,17 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code Function}, optionally scoped to the specified catalog.
+     *
+     * @param catalog             the catalog whose {@link Catalog#getTableCat() tableCat} is used for the
+     *                            {@code catalog} parameter.
+     * @param schemaPattern       a value for the {@code schemaPattern} parameter.
+     * @param functionNamePattern a value for the {@code functionNamePattern} parameter.
+     * @param consumer            the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachFunction(String, String, String, Consumer)
+     */
     void forEachFunctionOf(final Catalog catalog, @Nullable final String schemaPattern,
                            final String functionNamePattern, final Consumer<? super Function> consumer)
             throws SQLException {
@@ -1276,6 +1369,17 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code Function} scoped to the specified schema.
+     *
+     * @param schema              the schema whose {@link Schema#getTableCatalog() tableCatalog} and
+     *                            {@link Schema#getTableSchem() tableSchem} are used for the {@code catalog} and
+     *                            {@code schemaPattern} parameters.
+     * @param functionNamePattern a value for the {@code functionNamePattern} parameter.
+     * @param consumer            the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachFunction(String, String, String, Consumer)
+     */
     void forEachFunctionOf(final Schema schema, final String functionNamePattern,
                            final Consumer<? super Function> consumer)
             throws SQLException {
@@ -1470,6 +1574,15 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code FunctionColumn} of the specified function.
+     *
+     * @param function          the function whose columns are accepted.
+     * @param columnNamePattern a value for the {@code columnNamePattern} parameter.
+     * @param consumer          the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachFunctionColumn(String, String, String, String, Consumer)
+     */
     void forEachFunctionColumnOf(final Function function, final String columnNamePattern,
                                  final Consumer<? super FunctionColumn> consumer)
             throws SQLException {
@@ -1588,6 +1701,14 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code ImportedKey} of the specified table.
+     *
+     * @param table    the table whose imported keys are accepted.
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachImportedKey(String, String, String, Consumer)
+     */
     void forEachImportedKeyOf(final Table table, final Consumer<? super ImportedKey> consumer) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachImportedKey(
@@ -1724,6 +1845,16 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code IndexInfo} of the specified table.
+     *
+     * @param table       the table whose index info is accepted.
+     * @param unique      a value for the {@code unique} parameter.
+     * @param approximate a value for the {@code approximate} parameter.
+     * @param consumer    the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachIndexInfo(String, String, String, boolean, boolean, Consumer)
+     */
     void forEachIndexInfoOf(final Table table, final boolean unique, final boolean approximate,
                             final Consumer<? super IndexInfo> consumer)
             throws SQLException {
@@ -1843,6 +1974,14 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code PrimaryKey} of the specified table.
+     *
+     * @param table    the table whose primary keys are accepted.
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachPrimaryKey(String, String, String, Consumer)
+     */
     void forEachPrimaryKeyOf(final Table table, final Consumer<? super PrimaryKey> consumer) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachPrimaryKey(
@@ -1993,6 +2132,15 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code ProcedureColumn} of the specified procedure.
+     *
+     * @param procedure         the procedure whose columns are accepted.
+     * @param columnNamePattern a value for the {@code columnNamePattern} parameter.
+     * @param consumer          the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachProcedureColumn(String, String, String, String, Consumer)
+     */
     void forEachProcedureColumnOf(final Procedure procedure, final String columnNamePattern,
                                   final Consumer<? super ProcedureColumn> consumer)
             throws SQLException {
@@ -2140,6 +2288,17 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code Procedure}, optionally scoped to the specified catalog.
+     *
+     * @param catalog              the catalog whose {@link Catalog#getTableCat() tableCat} is used for the
+     *                             {@code catalog} parameter.
+     * @param schemaPattern        a value for the {@code schemaPattern} parameter.
+     * @param procedureNamePattern a value for the {@code procedureNamePattern} parameter.
+     * @param consumer             the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachProcedure(String, String, String, Consumer)
+     */
     void forEachProcedureOf(final Catalog catalog, @Nullable final String schemaPattern,
                             final String procedureNamePattern, final Consumer<? super Procedure> consumer)
             throws SQLException {
@@ -2173,6 +2332,17 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code Procedure} scoped to the specified schema.
+     *
+     * @param schema               the schema whose {@link Schema#getTableCatalog() tableCatalog} and
+     *                             {@link Schema#getTableSchem() tableSchem} are used for the {@code catalog} and
+     *                             {@code schemaPattern} parameters.
+     * @param procedureNamePattern a value for the {@code procedureNamePattern} parameter.
+     * @param consumer             the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachProcedure(String, String, String, Consumer)
+     */
     void forEachProcedureOf(final Schema schema, final String procedureNamePattern,
                             final Consumer<? super Procedure> consumer)
             throws SQLException {
@@ -2324,6 +2494,15 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code PseudoColumn} of the specified table.
+     *
+     * @param table             the table whose pseudo columns are accepted.
+     * @param columnNamePattern a value for the {@code columnNamePattern} parameter.
+     * @param consumer          the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachPseudoColumn(String, String, String, String, Consumer)
+     */
     void forEachPseudoColumnOf(final Table table, final String columnNamePattern,
                                final Consumer<? super PseudoColumn> consumer)
             throws SQLException {
@@ -2490,6 +2669,16 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code Schema}, optionally scoped to the specified catalog.
+     *
+     * @param catalog       the catalog whose {@link Catalog#getTableCat() tableCat} is used for the {@code catalog}
+     *                      parameter.
+     * @param schemaPattern a value for the {@code schemaPattern} parameter.
+     * @param consumer      the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachSchema(String, String, Consumer)
+     */
     void forEachSchemaOf(final Catalog catalog, @Nullable final String schemaPattern,
                          final Consumer<? super Schema> consumer)
             throws SQLException {
@@ -2585,6 +2774,17 @@ public class Context {
         return getSuperTables(null, "%", "%");
     }
 
+    /**
+     * Invokes {@link DatabaseMetaData#getSuperTables(String, String, String)} method, on the wrapped {@link #metadata},
+     * with given arguments, and accepts each bound value to the specified consumer.
+     *
+     * @param catalog          a value for the {@code catalog} parameter.
+     * @param schemaPattern    a value for the {@code schemaPattern} parameter.
+     * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
+     * @param consumer         the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSuperTables(String, String, String)
+     */
     public void forEachSuperTable(@Nullable final String catalog, final String schemaPattern,
                                   final String tableNamePattern, final Consumer<? super SuperTable> consumer)
             throws SQLException {
@@ -2633,6 +2833,17 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code SuperTable}, optionally scoped to the specified catalog.
+     *
+     * @param catalog          the catalog whose {@link Catalog#getTableCat() tableCat} is used for the {@code catalog}
+     *                         parameter.
+     * @param schemaPattern    a value for the {@code schemaPattern} parameter.
+     * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
+     * @param consumer         the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachSuperTable(String, String, String, Consumer)
+     */
     void forEachSuperTableOf(final Catalog catalog, final String schemaPattern,
                              final String tableNamePattern, final Consumer<? super SuperTable> consumer)
             throws SQLException {
@@ -2663,6 +2874,15 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code SuperTable} for the specified schema.
+     *
+     * @param schema           the schema for which super tables are accepted.
+     * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
+     * @param consumer         the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachSuperTable(String, String, String, Consumer)
+     */
     void forEachSuperTableOf(final Schema schema, final String tableNamePattern,
                              final Consumer<? super SuperTable> consumer)
             throws SQLException {
@@ -2692,6 +2912,14 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code SuperTable} of the specified table.
+     *
+     * @param table    the table whose super tables are accepted.
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachSuperTable(String, String, String, Consumer)
+     */
     void forEachSuperTableOf(final Table table, final Consumer<? super SuperTable> consumer) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachSuperTable(
@@ -2786,6 +3014,17 @@ public class Context {
         return getSuperTypes(null, "%", "%");
     }
 
+    /**
+     * Invokes {@link DatabaseMetaData#getSuperTypes(String, String, String)} method, on the wrapped {@link #metadata},
+     * with given arguments, and accepts each bound value to the specified consumer.
+     *
+     * @param catalog         a value for the {@code catalog} parameter.
+     * @param schemaPattern   a value for the {@code schemaPattern} parameter.
+     * @param typeNamePattern a value for the {@code typeNamePattern} parameter.
+     * @param consumer        the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSuperTypes(String, String, String)
+     */
     public void forEachSuperType(@Nullable final String catalog, final String schemaPattern,
                                  final String typeNamePattern, final Consumer<? super SuperType> consumer)
             throws SQLException {
@@ -2836,6 +3075,17 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code SuperType}, optionally scoped to the specified catalog.
+     *
+     * @param catalog         the catalog whose {@link Catalog#getTableCat() tableCat} is used for the {@code catalog}
+     *                        parameter.
+     * @param schemaPattern   a value for the {@code schemaPattern} parameter.
+     * @param typeNamePattern a value for the {@code typeNamePattern} parameter.
+     * @param consumer        the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachSuperType(String, String, String, Consumer)
+     */
     void forEachSuperTypeOf(final Catalog catalog, final String schemaPattern,
                             final String typeNamePattern, final Consumer<? super SuperType> consumer)
             throws SQLException {
@@ -2867,6 +3117,15 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code SuperType} for the specified schema.
+     *
+     * @param schema          the schema for which super types are accepted.
+     * @param typeNamePattern a value for the {@code typeNamePattern} parameter.
+     * @param consumer        the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachSuperType(String, String, String, Consumer)
+     */
     void forEachSuperTypeOf(final Schema schema, final String typeNamePattern,
                             final Consumer<? super SuperType> consumer)
             throws SQLException {
@@ -2896,6 +3155,14 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code SuperType} of the specified user-defined type.
+     *
+     * @param udt      the user-defined type whose super types are accepted.
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachSuperType(String, String, String, Consumer)
+     */
     void forEachSuperTypeOf(final UDT udt, final Consumer<? super SuperType> consumer) throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
         forEachSuperType(
@@ -3042,6 +3309,17 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code TablePrivilege}, optionally scoped to the specified catalog.
+     *
+     * @param catalog          the catalog whose {@link Catalog#getTableCat() tableCat} is used for the {@code catalog}
+     *                         parameter.
+     * @param schemaPattern    a value for the {@code schemaPattern} parameter.
+     * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
+     * @param consumer         the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachTablePrivilege(String, String, String, Consumer)
+     */
     void forEachTablePrivilegeOf(final Catalog catalog, @Nullable final String schemaPattern,
                                  final String tableNamePattern, final Consumer<? super TablePrivilege> consumer)
             throws SQLException {
@@ -3075,6 +3353,17 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code TablePrivilege} scoped to the specified schema.
+     *
+     * @param schema           the schema whose {@link Schema#getTableCatalog() tableCatalog} and
+     *                         {@link Schema#getTableSchem() tableSchem} are used for the {@code catalog} and
+     *                         {@code schemaPattern} parameters.
+     * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
+     * @param consumer         the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachTablePrivilege(String, String, String, Consumer)
+     */
     void forEachTablePrivilegeOf(final Schema schema, final String tableNamePattern,
                                  final Consumer<? super TablePrivilege> consumer)
             throws SQLException {
@@ -3104,6 +3393,14 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code TablePrivilege} of the specified table.
+     *
+     * @param table    the table whose privileges are accepted.
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachTablePrivilege(String, String, String, Consumer)
+     */
     void forEachTablePrivilegeOf(final Table table, final Consumer<? super TablePrivilege> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
@@ -3333,6 +3630,18 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code Table}, optionally scoped to the specified catalog.
+     *
+     * @param catalog          the catalog whose {@link Catalog#getTableCat() tableCat} is used for the {@code catalog}
+     *                         parameter.
+     * @param schemaPattern    a value for the {@code schemaPattern} parameter.
+     * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
+     * @param types            a value for the {@code types} parameter; may be {@code null}.
+     * @param consumer         the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachTable(String, String, String, String[], Consumer)
+     */
     void forEachTableOf(final Catalog catalog, @Nullable final String schemaPattern,
                         final String tableNamePattern, @Nullable final String[] types,
                         final Consumer<? super Table> consumer)
@@ -3371,6 +3680,18 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code Table} scoped to the specified schema.
+     *
+     * @param schema           the schema whose {@link Schema#getTableCatalog() tableCatalog} and
+     *                         {@link Schema#getTableSchem() tableSchem} are used for the {@code catalog} and
+     *                         {@code schemaPattern} parameters.
+     * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
+     * @param types            a value for the {@code types} parameter; may be {@code null}.
+     * @param consumer         the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachTable(String, String, String, String[], Consumer)
+     */
     void forEachTableOf(final Schema schema, final String tableNamePattern, @Nullable final String[] types,
                         final Consumer<? super Table> consumer)
             throws SQLException {
@@ -3594,6 +3915,18 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code UDT}, optionally scoped to the specified catalog.
+     *
+     * @param catalog         the catalog whose {@link Catalog#getTableCat() tableCat} is used for the {@code catalog}
+     *                        parameter.
+     * @param schemaPattern   a value for the {@code schemaPattern} parameter.
+     * @param typeNamePattern a value for the {@code typeNamePattern} parameter.
+     * @param types           a value for the {@code types} parameter; may be {@code null}.
+     * @param consumer        the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachUDT(String, String, String, int[], Consumer)
+     */
     void forEachUDTOf(final Catalog catalog, @Nullable final String schemaPattern,
                       final String typeNamePattern, @Nullable final int[] types,
                       final Consumer<? super UDT> consumer)
@@ -3631,6 +3964,18 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code UDT} scoped to the specified schema.
+     *
+     * @param schema          the schema whose {@link Schema#getTableCatalog() tableCatalog} and
+     *                        {@link Schema#getTableSchem() tableSchem} are used for the {@code catalog} and
+     *                        {@code schemaPattern} parameters.
+     * @param typeNamePattern a value for the {@code typeNamePattern} parameter.
+     * @param types           a value for the {@code types} parameter; may be {@code null}.
+     * @param consumer        the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachUDT(String, String, String, int[], Consumer)
+     */
     void forEachUDTOf(final Schema schema, final String typeNamePattern, @Nullable final int[] types,
                       final Consumer<? super UDT> consumer)
             throws SQLException {
@@ -3752,6 +4097,14 @@ public class Context {
         );
     }
 
+    /**
+     * Accepts, to the specified consumer, each bound {@code VersionColumn} of the specified table.
+     *
+     * @param table    the table whose version columns are accepted.
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     * @see #forEachVersionColumn(String, String, String, Consumer)
+     */
     void forEachVersionColumnOf(final Table table, final Consumer<? super VersionColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");

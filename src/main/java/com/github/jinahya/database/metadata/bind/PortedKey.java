@@ -283,8 +283,8 @@ abstract class PortedKey
     }
 
     /**
-     * Returns the effective value of {@value #COLUMN_LABEL_PKTABLE_CAT} column, with {@code null} normalized to an empty
-     * string.
+     * Returns the effective value of {@value #COLUMN_LABEL_PKTABLE_CAT} column, with {@code null} normalized to an
+     * empty string.
      *
      * @return the effective value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
      */
@@ -385,8 +385,8 @@ abstract class PortedKey
     }
 
     /**
-     * Returns the effective value of {@value #COLUMN_LABEL_FKTABLE_CAT} column, with {@code null} normalized to an empty
-     * string.
+     * Returns the effective value of {@value #COLUMN_LABEL_FKTABLE_CAT} column, with {@code null} normalized to an
+     * empty string.
      *
      * @return the effective value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
      */
