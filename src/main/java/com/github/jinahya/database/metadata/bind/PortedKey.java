@@ -46,27 +46,6 @@ abstract class PortedKey
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>PKTABLE_CAT</code>, <code>PKTABLE_SCHEM</code>, <code>PKTABLE_NAME</code>, and
-     * <code>KEY_SEQ</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @param <T>        the type of {@link PortedKey} to compare.
-     * @return a comparator comparing values in the specified order.
-     * @see ImportedKey#comparingInSpecifiedOrder(Comparator)
-     */
-    static <T extends PortedKey> Comparator<T> comparingPk(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .<T, String>comparing(PortedKey::getPktableCat, comparator)
-                .thenComparing(PortedKey::getPktableSchem, comparator)
-                .thenComparing(PortedKey::getPktableName, comparator)
-                .thenComparing(PortedKey::getKeySeq, Comparator.nullsFirst(Comparator.naturalOrder()));
-    }
-
-    /**
      * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
      * specified context's database sorts them.
      *
@@ -89,27 +68,6 @@ abstract class PortedKey
                 .thenComparing(PortedKey::getPktableSchem, s)
                 .thenComparing(PortedKey::getPktableName, s)
                 .thenComparing(PortedKey::getKeySeq, i);
-    }
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>FKTABLE_CAT</code>, <code>FKTABLE_SCHEM</code>, <code>FKTABLE_NAME</code>, and
-     * <code>KEY_SEQ</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @param <T>        the type of {@link PortedKey} to compare.
-     * @return a comparator comparing values in the specified order.
-     * @see ExportedKey#comparingInSpecifiedOrder(Comparator)
-     */
-    static <T extends PortedKey> Comparator<T> comparingFk(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .<T, String>comparing(PortedKey::getFktableCat, comparator)
-                .thenComparing(PortedKey::getFktableSchem, comparator)
-                .thenComparing(PortedKey::getFktableName, comparator)
-                .thenComparing(PortedKey::getKeySeq, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     /**
@@ -670,8 +628,8 @@ abstract class PortedKey
      */
     Table getPkTableRef() {
         final var table = new Table();
-        table.setTableCat(getEffectivePktableCat());
-        table.setTableSchem(getEffectivePktableSchem());
+        table.setTableCat(pktableCat);
+        table.setTableSchem(pktableSchem);
         table.setTableName(pktableName);
         return table;
     }
@@ -684,8 +642,8 @@ abstract class PortedKey
      */
     Column getPkColumnRef() {
         final var column = new Column();
-        column.setTableCat(getEffectivePktableCat());
-        column.setTableSchem(getEffectivePktableSchem());
+        column.setTableCat(pktableCat);
+        column.setTableSchem(pktableSchem);
         column.setTableName(pktableName);
         column.setColumnName(pkcolumnName);
         return column;
@@ -699,8 +657,8 @@ abstract class PortedKey
      */
     Table getFkTableRef() {
         final var table = new Table();
-        table.setTableCat(getEffectiveFktableCat());
-        table.setTableSchem(getEffectiveFktableSchem());
+        table.setTableCat(fktableCat);
+        table.setTableSchem(fktableSchem);
         table.setTableName(fktableName);
         return table;
     }
@@ -713,8 +671,8 @@ abstract class PortedKey
      */
     Column getFkColumnRef() {
         final var column = new Column();
-        column.setTableCat(getEffectiveFktableCat());
-        column.setTableSchem(getEffectiveFktableSchem());
+        column.setTableCat(fktableCat);
+        column.setTableSchem(fktableSchem);
         column.setTableName(fktableName);
         column.setColumnName(fkcolumnName);
         return column;

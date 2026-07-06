@@ -33,6 +33,7 @@ import java.util.Objects;
  * A class for binding results of the {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
  * @see Context#getPseudoColumns(String, String, String, String)
  */
 @_ChildOf(Table.class)
@@ -59,28 +60,12 @@ public class PseudoColumn
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparingInSpecifiedOrder(
-                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
-    }
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, <code>TABLE_NAME</code> and
-     * <code>COLUMN_NAME</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
-     */
-    static Comparator<PseudoColumn> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
         return Comparator
-                .<PseudoColumn, String>comparing(PseudoColumn::getTableCat, comparator)
-                .thenComparing(PseudoColumn::getTableSchem, comparator)
-                .thenComparing(PseudoColumn::getTableName, comparator)
-                .thenComparing(PseudoColumn::getColumnName, comparator);
+                .<PseudoColumn, String>comparing(PseudoColumn::getTableCat, s)
+                .thenComparing(PseudoColumn::getTableSchem, s)
+                .thenComparing(PseudoColumn::getTableName, s)
+                .thenComparing(PseudoColumn::getColumnName, s);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -536,8 +521,8 @@ public class PseudoColumn
      */
     Table getTableRef() {
         final var table = new Table();
-        table.setTableCat(getEffectiveTableCat());
-        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
         table.setTableName(tableName);
         return table;
     }

@@ -32,6 +32,7 @@ import java.util.Objects;
  * A class for binding results of the {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
  * @see Context#getPrimaryKeys(String, String, String)
  */
 @_ChildOf(Table.class)
@@ -58,23 +59,8 @@ public class PrimaryKey
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparingInSpecifiedOrder(
-                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
-    }
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>COLUMN_NAME</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
-     */
-    static Comparator<PrimaryKey> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(PrimaryKey::getColumnName, comparator);
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
+        return Comparator.comparing(PrimaryKey::getColumnName, s);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -310,8 +296,8 @@ public class PrimaryKey
      */
     Table getTableRef() {
         final var table = new Table();
-        table.setTableCat(getEffectiveTableCat());
-        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
         table.setTableName(tableName);
         return table;
     }
@@ -324,8 +310,8 @@ public class PrimaryKey
      */
     Column getColumnRef() {
         final var column = new Column();
-        column.setTableCat(getEffectiveTableCat());
-        column.setTableSchem(getEffectiveTableSchem());
+        column.setTableCat(tableCat);
+        column.setTableSchem(tableSchem);
         column.setTableName(tableName);
         column.setColumnName(columnName);
         return column;

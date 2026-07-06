@@ -34,6 +34,7 @@ import java.util.Objects;
  * {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
  * @see Context#getBestRowIdentifier(String, String, String, int, boolean)
  * @see PseudoColumn
  * @see <a
@@ -48,19 +49,6 @@ public class BestRowIdentifier
     private static final long serialVersionUID = -1512051574198028399L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>SCOPE</code>.
-     * </blockquote>
-     *
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
-     */
-    static Comparator<BestRowIdentifier> comparingInSpecifiedOrder() {
-        return Comparator.comparing(BestRowIdentifier::getScope, Comparator.nullsFirst(Comparator.naturalOrder()));
-    }
 
     /**
      * Returns a comparator comparing values in the specified order, placing {@code null} values as the specified

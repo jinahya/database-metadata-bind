@@ -29,6 +29,7 @@ import java.io.Serial;
  * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getSuperTables(String, String, String)
  * @see Context#getSuperTables(String, String, String)
  */
 @_ChildOf(Table.class)
@@ -207,8 +208,8 @@ public class SuperTable
      */
     Table getTableRef() {
         final var table = new Table();
-        table.setTableCat(getEffectiveTableCat());
-        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
         table.setTableName(tableName);
         return table;
     }
@@ -221,8 +222,8 @@ public class SuperTable
      */
     Table getSupertableRef() {
         final var table = new Table();
-        table.setTableCat(getEffectiveTableCat());
-        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
         table.setTableName(supertableName);
         return table;
     }

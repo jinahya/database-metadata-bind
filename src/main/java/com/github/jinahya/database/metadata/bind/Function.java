@@ -34,6 +34,7 @@ import java.util.Objects;
  * {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getFunctions(String, String, String)
  * @see Context#getFunctions(String, String, String)
  */
 @_ParentOf(FunctionColumn.class)
@@ -63,28 +64,12 @@ public class Function
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparingInSpecifiedOrder(
-                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
-    }
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>FUNCTION_CAT</code>, <code>FUNCTION_SCHEM</code>, <code>FUNCTION_NAME</code>, and
-     * <code>SPECIFIC_NAME</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getFunctions(String, String, String)
-     */
-    static Comparator<Function> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
         return Comparator
-                .<Function, String>comparing(Function::getFunctionCat, comparator)
-                .thenComparing(Function::getFunctionSchem, comparator)
-                .thenComparing(Function::getFunctionName, comparator)
-                .thenComparing(Function::getSpecificName, comparator);
+                .<Function, String>comparing(Function::getFunctionCat, s)
+                .thenComparing(Function::getFunctionSchem, s)
+                .thenComparing(Function::getFunctionName, s)
+                .thenComparing(Function::getSpecificName, s);
     }
 
     // ---------------------------------------------------------------------------------------------------- FUNCTION_CAT
@@ -206,7 +191,7 @@ public class Function
      *
      * @param functionCat the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
      */
-    void setFunctionCat(final String functionCat) {
+    void setFunctionCat(@Nullable final String functionCat) {
         this.functionCat = functionCat;
     }
 
@@ -231,7 +216,7 @@ public class Function
      *
      * @param functionSchem the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
      */
-    void setFunctionSchem(final String functionSchem) {
+    void setFunctionSchem(@Nullable final String functionSchem) {
         this.functionSchem = functionSchem;
     }
 
@@ -343,4 +328,40 @@ public class Function
 
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the catalog reference identified by {@value #COLUMN_LABEL_FUNCTION_CAT}.
+     *
+     * @return the catalog reference identified by this function; {@code null} when
+     * {@value #COLUMN_LABEL_FUNCTION_CAT} is {@code null}.
+     */
+    @Nullable
+    Catalog getCatalogRef() {
+        if (functionCat == null) {
+            return null;
+        }
+        final var catalog = new Catalog();
+        catalog.setTableCat(functionCat);
+        return catalog;
+    }
+
+    /**
+     * Returns the schema reference identified by {@value #COLUMN_LABEL_FUNCTION_CAT} and
+     * {@value #COLUMN_LABEL_FUNCTION_SCHEM}.
+     *
+     * @return the schema reference identified by this function; {@code null} when
+     * {@value #COLUMN_LABEL_FUNCTION_SCHEM} is {@code null}.
+     */
+    @Nullable
+    Schema getSchemaRef() {
+        if (functionSchem == null) {
+            return null;
+        }
+        final var schema = new Schema();
+        schema.setTableCatalog(functionCat);
+        schema.setTableSchem(functionSchem);
+        return schema;
+    }
 }

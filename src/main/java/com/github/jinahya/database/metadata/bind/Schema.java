@@ -32,6 +32,7 @@ import java.util.Objects;
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getSchemas(String, String)
  * @see Context#getSchemas(String, String)
  */
 @_ParentOf(Table.class)
@@ -63,27 +64,12 @@ public class Schema
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparingInSpecifiedOrder(
-                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
+        return Comparator
+                .<Schema, String>comparing(Schema::getTableCatalog, s)
+                .thenComparing(Schema::getTableSchem, s);
     }
     // The results are ordered by TABLE_CATALOG and TABLE_SCHEM.
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * The results are ordered by <code>TABLE_CATALOG</code> and <code>TABLE_SCHEM</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see java.sql.DatabaseMetaData#getSchemas(String, String)
-     */
-    static Comparator<Schema> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .<Schema, String>comparing(Schema::getTableCatalog, comparator)
-                .thenComparing(Schema::getTableSchem, comparator);
-    }
 
     // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
 
@@ -162,7 +148,7 @@ public class Schema
      *
      * @param tableCatalog the value of {@value #COLUMN_LABEL_TABLE_CATALOG} column.
      */
-    void setTableCatalog(final String tableCatalog) {
+    void setTableCatalog(@Nullable final String tableCatalog) {
         this.tableCatalog = tableCatalog;
     }
 
@@ -178,4 +164,22 @@ public class Schema
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the catalog reference identified by {@value #COLUMN_LABEL_TABLE_CATALOG}.
+     *
+     * @return the catalog reference identified by this schema; {@code null} when
+     * {@value #COLUMN_LABEL_TABLE_CATALOG} is {@code null}.
+     */
+    @Nullable
+    Catalog getCatalogRef() {
+        if (tableCatalog == null) {
+            return null;
+        }
+        final var catalog = new Catalog();
+        catalog.setTableCat(tableCatalog);
+        return catalog;
+    }
 }

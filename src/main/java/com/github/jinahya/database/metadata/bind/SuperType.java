@@ -30,6 +30,7 @@ import java.sql.DatabaseMetaData;
  * {@link DatabaseMetaData#getSuperTypes(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getSuperTypes(String, String, String)
  * @see Context#getSuperTypes(String, String, String)
  */
 @_ChildOf(UDT.class)
@@ -285,8 +286,8 @@ public class SuperType
      */
     UDT getTypeRef() {
         final var udt = new UDT();
-        udt.setTypeCat(getEffectiveTypeCat());
-        udt.setTypeSchem(getEffectiveTypeSchem());
+        udt.setTypeCat(typeCat);
+        udt.setTypeSchem(typeSchem);
         udt.setTypeName(typeName);
         return udt;
     }
@@ -299,8 +300,8 @@ public class SuperType
      */
     UDT getSupertypeRef() {
         final var udt = new UDT();
-        udt.setTypeCat(getEffectiveSupertypeCat());
-        udt.setTypeSchem(getEffectiveSupertypeSchem());
+        udt.setTypeCat(supertypeCat);
+        udt.setTypeSchem(supertypeSchem);
         udt.setTypeName(supertypeName);
         return udt;
     }

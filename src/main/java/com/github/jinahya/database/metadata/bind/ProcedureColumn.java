@@ -35,6 +35,7 @@ import java.util.Objects;
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getProcedureColumns(String, String, String, String)
  * @see Context#getProcedureColumns(String, String, String, String)
  */
 
@@ -48,29 +49,10 @@ public class ProcedureColumn
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>PROCEDURE_CAT</code>, <code>PROCEDURE_SCHEM</code>, <code>PROCEDURE_NAME</code>,
-     * <code>SPECIFIC_NAME</code>, and <code>ORDINAL_POSITION</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getProcedureColumns(String, String, String, String)
-     */
-    static Comparator<ProcedureColumn> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .<ProcedureColumn, String>comparing(ProcedureColumn::getProcedureCat, comparator)
-                .thenComparing(ProcedureColumn::getProcedureSchem, comparator)
-                .thenComparing(ProcedureColumn::getProcedureName, comparator)
-                .thenComparing(ProcedureColumn::getSpecificName, comparator)
-                .thenComparing(ProcedureColumn::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
-    }
-
-    /**
      * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
-     * specified context's database sorts them.
+     * specified context's database sorts them. The JDBC API describes the ordering within a procedure as return value,
+     * parameters in call order, and result-set columns in column-number order; this comparator represents that
+     * contextual part with the <code>ORDINAL_POSITION</code> key exposed by the result set.
      *
      * @param context    a context whose metadata determines the {@code null} ordering.
      * @param comparator a comparator for comparing (non-{@code null}) string values.
@@ -828,8 +810,8 @@ public class ProcedureColumn
      */
     Procedure getProcedureRef() {
         final var procedure = new Procedure();
-        procedure.setProcedureCat(getEffectiveProcedureCat());
-        procedure.setProcedureSchem(getEffectiveProcedureSchem());
+        procedure.setProcedureCat(procedureCat);
+        procedure.setProcedureSchem(procedureSchem);
         procedure.setProcedureName(procedureName);
         procedure.setSpecificName(specificName);
         return procedure;

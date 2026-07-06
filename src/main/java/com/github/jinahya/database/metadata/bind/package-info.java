@@ -11,17 +11,17 @@
  * }
  *}
  * <p>
- * Each binding type provides package-private {@code comparingInSpecifiedOrder(...)} factories that reproduce the order
- * specified by the corresponding {@link java.sql.DatabaseMetaData} method. Two properties of these comparators are
- * worth noting:
+ * Binding types whose corresponding {@link java.sql.DatabaseMetaData} method specifies a result order provide
+ * package-private {@code comparingInSpecifiedOrder(...)} factories that model the explicit comparison keys exposed by
+ * the result set and use the supplied {@link com.github.jinahya.database.metadata.bind.Context} for database-reported
+ * {@code null} ordering. Two properties of these comparators are worth noting:
  * <ul>
- *   <li>String key values are passed straight to the supplied {@code comparator}, including {@code null}
- *       catalog/schema values, so the {@code comparator} must be null-safe (e.g. wrap with
- *       {@link java.util.Comparator#nullsFirst(java.util.Comparator)}, or use
+ *   <li>String key values are compared with the supplied comparator after {@code null} values have been ordered with
  *       {@link com.github.jinahya.database.metadata.bind.ContextUtils#withDatabaseNullOrdering(com.github.jinahya.database.metadata.bind.Context,
- *       java.util.Comparator, com.github.jinahya.database.metadata.bind.ContextUtils.SortDirection)} to follow the
- *       database's own {@code null} ordering). The library imposes no case/collation policy of its own; callers choose it
- *       via the {@code comparator} (e.g. {@link java.text.Collator} for locale-aware ordering).</li>
+ *       java.util.Comparator, com.github.jinahya.database.metadata.bind.ContextUtils.SortDirection)}. The supplied
+ *       comparator is therefore responsible for non-{@code null} string collation only. The library imposes no
+ *       case/collation policy of its own; callers choose it via the {@code comparator} (e.g. {@link java.text.Collator}
+ *       for locale-aware ordering).</li>
  *   <li>They impose a <em>partial</em> order: distinct rows may compare equal (the JDBC-specified order does not key on
  *       every bound column). They are intended for sorting {@link java.util.List}s, not for use as
  *       {@link java.util.TreeSet}/{@link java.util.TreeMap} keys, where equal-comparing rows would be dropped.</li>

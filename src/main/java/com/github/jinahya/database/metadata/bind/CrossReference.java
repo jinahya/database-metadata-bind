@@ -34,6 +34,8 @@ import java.util.Objects;
  * {@link DatabaseMetaData#getCrossReference(String, String, String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getCrossReference(String, String, String, String, String, String)
+ * @see Context#getCrossReference(String, String, String, String, String, String)
  */
 @_ChildOf(Table.class)
 public class CrossReference
@@ -43,26 +45,6 @@ public class CrossReference
     private static final long serialVersionUID = -5343386346721125961L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>FKTABLE_CAT</code>, <code>FKTABLE_SCHEM</code>, <code>FKTABLE_NAME</code>, and
-     * <code>KEY_SEQ</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getCrossReference(String, String, String, String, String, String)
-     */
-    static Comparator<CrossReference> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .<CrossReference, String>comparing(CrossReference::getFktableCat, comparator)
-                .thenComparing(CrossReference::getFktableSchem, comparator)
-                .thenComparing(CrossReference::getFktableName, comparator)
-                .thenComparing(CrossReference::getKeySeq, Comparator.nullsFirst(Comparator.naturalOrder()));
-    }
 
     /**
      * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
@@ -700,8 +682,8 @@ public class CrossReference
      */
     Table getPkTableRef() {
         final var table = new Table();
-        table.setTableCat(getEffectivePktableCat());
-        table.setTableSchem(getEffectivePktableSchem());
+        table.setTableCat(pktableCat);
+        table.setTableSchem(pktableSchem);
         table.setTableName(pktableName);
         return table;
     }
@@ -714,8 +696,8 @@ public class CrossReference
      */
     Column getPkColumnRef() {
         final var column = new Column();
-        column.setTableCat(getEffectivePktableCat());
-        column.setTableSchem(getEffectivePktableSchem());
+        column.setTableCat(pktableCat);
+        column.setTableSchem(pktableSchem);
         column.setTableName(pktableName);
         column.setColumnName(pkcolumnName);
         return column;
@@ -729,8 +711,8 @@ public class CrossReference
      */
     Table getFkTableRef() {
         final var table = new Table();
-        table.setTableCat(getEffectiveFktableCat());
-        table.setTableSchem(getEffectiveFktableSchem());
+        table.setTableCat(fktableCat);
+        table.setTableSchem(fktableSchem);
         table.setTableName(fktableName);
         return table;
     }
@@ -743,8 +725,8 @@ public class CrossReference
      */
     Column getFkColumnRef() {
         final var column = new Column();
-        column.setTableCat(getEffectiveFktableCat());
-        column.setTableSchem(getEffectiveFktableSchem());
+        column.setTableCat(fktableCat);
+        column.setTableSchem(fktableSchem);
         column.setTableName(fktableName);
         column.setColumnName(fkcolumnName);
         return column;

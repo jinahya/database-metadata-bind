@@ -82,14 +82,14 @@ class AttributeTest
     }
 
     @Test
-    void getTypeRef_UsesEmptyStringsForNullTypeCatalogAndSchema() {
+    void getTypeRef_PreservesNullTypeCatalogAndSchema() {
         final var instance = newTypeInstance();
         instance.setTypeCat(null);
         instance.setTypeSchem(null);
         instance.setTypeName("t");
         final var result = instance.getTypeRef();
-        assertThat(result.getTypeCat()).isEmpty();
-        assertThat(result.getTypeSchem()).isEmpty();
+        assertThat(result.getTypeCat()).isNull();
+        assertThat(result.getTypeSchem()).isNull();
         assertThat(result.getTypeName()).isEqualTo("t");
     }
 
@@ -107,15 +107,15 @@ class AttributeTest
     }
 
     @Test
-    void getScopeTableRef_UsesEmptyStringsForNullScopeCatalogAndSchema() {
+    void getScopeTableRef_PreservesNullScopeCatalogAndSchema() {
         final var instance = newTypeInstance();
         instance.setDataType(java.sql.Types.REF);
         instance.setScopeCatalog(null);
         instance.setScopeSchema(null);
         instance.setScopeTable("t");
         final var result = instance.getScopeTableRef();
-        assertThat(result.getTableCat()).isEmpty();
-        assertThat(result.getTableSchem()).isEmpty();
+        assertThat(result.getTableCat()).isNull();
+        assertThat(result.getTableSchem()).isNull();
         assertThat(result.getTableName()).isEqualTo("t");
     }
 

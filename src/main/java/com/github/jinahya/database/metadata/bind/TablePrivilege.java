@@ -32,6 +32,7 @@ import java.util.Objects;
  * {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getTablePrivileges(String, String, String)
  * @see Context#getTablePrivileges(String, String, String)
  */
 @_ChildOf(Table.class)
@@ -58,28 +59,12 @@ public class TablePrivilege
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparingInSpecifiedOrder(
-                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
-    }
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, <code>TABLE_NAME</code>, and
-     * <code>PRIVILEGE</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see java.sql.DatabaseMetaData#getTablePrivileges(String, String, String)
-     */
-    static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
         return Comparator
-                .<TablePrivilege, String>comparing(TablePrivilege::getTableCat, comparator)
-                .thenComparing(TablePrivilege::getTableSchem, comparator)
-                .thenComparing(TablePrivilege::getTableName, comparator)
-                .thenComparing(TablePrivilege::getPrivilege, comparator);
+                .<TablePrivilege, String>comparing(TablePrivilege::getTableCat, s)
+                .thenComparing(TablePrivilege::getTableSchem, s)
+                .thenComparing(TablePrivilege::getTableName, s)
+                .thenComparing(TablePrivilege::getPrivilege, s);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -348,8 +333,8 @@ public class TablePrivilege
      */
     Table getTableRef() {
         final var table = new Table();
-        table.setTableCat(getEffectiveTableCat());
-        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
         table.setTableName(tableName);
         return table;
     }

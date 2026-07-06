@@ -33,6 +33,7 @@ import java.util.Objects;
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
  * @see Context#getFunctionColumns(String, String, String, String)
  */
 @_ChildOf(Function.class)
@@ -45,29 +46,10 @@ public class FunctionColumn
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>FUNCTION_CAT</code>, <code>FUNCTION_SCHEM</code>, <code>FUNCTION_NAME</code>,
-     * <code>SPECIFIC_NAME</code>, and <code>ORDINAL_POSITION</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
-     */
-    static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .<FunctionColumn, String>comparing(FunctionColumn::getFunctionCat, comparator)
-                .thenComparing(FunctionColumn::getFunctionSchem, comparator)
-                .thenComparing(FunctionColumn::getFunctionName, comparator)
-                .thenComparing(FunctionColumn::getSpecificName, comparator)
-                .thenComparing(FunctionColumn::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
-    }
-
-    /**
      * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
-     * specified context's database sorts them.
+     * specified context's database sorts them. The JDBC API describes the ordering within a function as return value,
+     * parameters in call order, and result-set columns in column-number order; this comparator represents that
+     * contextual part with the <code>ORDINAL_POSITION</code> key exposed by the result set.
      *
      * @param context    a context whose metadata determines the {@code null} ordering.
      * @param comparator a comparator for comparing (non-{@code null}) string values.
@@ -674,8 +656,8 @@ public class FunctionColumn
      */
     Function getFunctionRef() {
         final var function = new Function();
-        function.setFunctionCat(getEffectiveFunctionCat());
-        function.setFunctionSchem(getEffectiveFunctionSchem());
+        function.setFunctionCat(functionCat);
+        function.setFunctionSchem(functionSchem);
         function.setFunctionName(functionName);
         function.setSpecificName(specificName);
         return function;

@@ -30,6 +30,7 @@ import java.util.Objects;
  * A class for binding results of the {@link DatabaseMetaData#getClientInfoProperties()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getClientInfoProperties()
  * @see Context#getClientInfoProperties()
  */
 @_ChildOfNone
@@ -56,23 +57,8 @@ public class ClientInfoProperty
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparingInSpecifiedOrder(
-                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
-    }
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>NAME</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getClientInfoProperties()
-     */
-    static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(ClientInfoProperty::getName, comparator);
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
+        return Comparator.comparing(ClientInfoProperty::getName, s);
     }
 
     // ------------------------------------------------------------------------------------------------------------ NAME

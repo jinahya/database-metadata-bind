@@ -29,6 +29,7 @@ import java.util.Objects;
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getTableTypes()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getTableTypes()
  * @see Context#getTableTypes()
  */
 @_ChildOfNone
@@ -55,23 +56,8 @@ public class TableType
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparingInSpecifiedOrder(
-                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
-    }
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>TABLE_TYPE</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see java.sql.DatabaseMetaData#getTableTypes()
-     */
-    static Comparator<TableType> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(TableType::getTableType, comparator);
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
+        return Comparator.comparing(TableType::getTableType, s);
     }
 
     // ------------------------------------------------------------------------------------------------------ TABLE_TYPE

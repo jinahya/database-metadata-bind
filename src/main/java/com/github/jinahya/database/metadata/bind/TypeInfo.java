@@ -33,6 +33,7 @@ import java.util.Objects;
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getTypeInfo()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getTypeInfo()
  * @see Context#getTypeInfo()
  * @see <a
  * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html#getTypeInfo()">DatabaseMetaData#getTypeInfo</a>
@@ -47,21 +48,10 @@ public class TypeInfo
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>DATA_TYPE</code>.
-     * </blockquote>
-     *
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getTypeInfo()
-     */
-    static Comparator<TypeInfo> comparingInSpecifiedOrder() {
-        return Comparator.comparing(TypeInfo::getDataType, Comparator.nullsFirst(Comparator.naturalOrder()));
-    }
-
-    /**
      * Returns a comparator comparing values in the specified order, placing {@code null} values as the specified
-     * context's database sorts them.
+     * context's database sorts them. The JDBC API also describes a contextual ordering by how closely each data type
+     * maps to the corresponding JDBC SQL type; this comparator compares only the explicit <code>DATA_TYPE</code> key
+     * exposed by the result set.
      *
      * @param context a context whose metadata determines the {@code null} ordering.
      * @return a comparator comparing values in the specified order.

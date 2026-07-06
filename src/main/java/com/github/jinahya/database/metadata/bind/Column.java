@@ -33,6 +33,7 @@ import java.util.Objects;
  * A class for binding results of the {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getColumns(String, String, String, String)
  * @see Context#getColumns(String, String, String, String)
  */
 @_ChildOf(Table.class)
@@ -43,26 +44,6 @@ public class Column
     private static final long serialVersionUID = -409653682729081530L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, <code>TABLE_NAME</code>, and
-     * <code>ORDINAL_POSITION</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getColumns(String, String, String, String)
-     */
-    static Comparator<Column> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .<Column, String>comparing(Column::getTableCat, comparator)
-                .thenComparing(Column::getTableSchem, comparator)
-                .thenComparing(Column::getTableName, comparator)
-                .thenComparing(Column::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
-    }
 
     /**
      * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
@@ -485,7 +466,7 @@ public class Column
      *
      * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    void setTableCat(final String tableCat) {
+    void setTableCat(@Nullable final String tableCat) {
         this.tableCat = tableCat;
     }
 
@@ -510,7 +491,7 @@ public class Column
      *
      * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    void setTableSchem(final String tableSchem) {
+    void setTableSchem(@Nullable final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -1095,8 +1076,8 @@ public class Column
      */
     Table getTableRef() {
         final var table = new Table();
-        table.setTableCat(getEffectiveTableCat());
-        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
         table.setTableName(tableName);
         return table;
     }
@@ -1113,8 +1094,8 @@ public class Column
             return null;
         }
         final var table = new Table();
-        table.setTableCat(getEffectiveScopeCatalog());
-        table.setTableSchem(getEffectiveScopeSchema());
+        table.setTableCat(scopeCatalog);
+        table.setTableSchem(scopeSchema);
         table.setTableName(scopeTable);
         return table;
     }

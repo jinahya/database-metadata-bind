@@ -34,6 +34,7 @@ import java.util.Objects;
  * {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getProcedures(String, String, String)
  * @see Context#getProcedures(String, String, String)
  * @see ProcedureColumn
  */
@@ -64,28 +65,12 @@ public class Procedure
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparingInSpecifiedOrder(
-                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
-    }
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>PROCEDURE_CAT</code>, <code>PROCEDURE_SCHEM</code>, <code>PROCEDURE_NAME</code> and
-     * <code>SPECIFIC_NAME</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getProcedures(String, String, String)
-     */
-    static Comparator<Procedure> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
         return Comparator
-                .<Procedure, String>comparing(Procedure::getProcedureCat, comparator)
-                .thenComparing(Procedure::getProcedureSchem, comparator)
-                .thenComparing(Procedure::getProcedureName, comparator)
-                .thenComparing(Procedure::getSpecificName, comparator);
+                .<Procedure, String>comparing(Procedure::getProcedureCat, s)
+                .thenComparing(Procedure::getProcedureSchem, s)
+                .thenComparing(Procedure::getProcedureName, s)
+                .thenComparing(Procedure::getSpecificName, s);
     }
 
     // --------------------------------------------------------------------------------------------------- PROCEDURE_CAT
@@ -200,7 +185,7 @@ public class Procedure
      *
      * @param procedureCat the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
      */
-    void setProcedureCat(final String procedureCat) {
+    void setProcedureCat(@Nullable final String procedureCat) {
         this.procedureCat = procedureCat;
     }
 
@@ -225,7 +210,7 @@ public class Procedure
      *
      * @param procedureSchem the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
      */
-    void setProcedureSchem(final String procedureSchem) {
+    void setProcedureSchem(@Nullable final String procedureSchem) {
         this.procedureSchem = procedureSchem;
     }
 
@@ -338,4 +323,40 @@ public class Procedure
     // https://github.com/microsoft/mssql-jdbc/issues/2320
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the catalog reference identified by {@value #COLUMN_LABEL_PROCEDURE_CAT}.
+     *
+     * @return the catalog reference identified by this procedure; {@code null} when
+     * {@value #COLUMN_LABEL_PROCEDURE_CAT} is {@code null}.
+     */
+    @Nullable
+    Catalog getCatalogRef() {
+        if (procedureCat == null) {
+            return null;
+        }
+        final var catalog = new Catalog();
+        catalog.setTableCat(procedureCat);
+        return catalog;
+    }
+
+    /**
+     * Returns the schema reference identified by {@value #COLUMN_LABEL_PROCEDURE_CAT} and
+     * {@value #COLUMN_LABEL_PROCEDURE_SCHEM}.
+     *
+     * @return the schema reference identified by this procedure; {@code null} when
+     * {@value #COLUMN_LABEL_PROCEDURE_SCHEM} is {@code null}.
+     */
+    @Nullable
+    Schema getSchemaRef() {
+        if (procedureSchem == null) {
+            return null;
+        }
+        final var schema = new Schema();
+        schema.setTableCatalog(procedureCat);
+        schema.setTableSchem(procedureSchem);
+        return schema;
+    }
 }

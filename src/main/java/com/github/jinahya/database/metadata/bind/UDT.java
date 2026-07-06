@@ -34,6 +34,7 @@ import java.util.Objects;
  * A class for binding results of the {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getUDTs(String, String, String, int[])
  * @see Context#getUDTs(String, String, String, int[])
  */
 @_ChildOf(Schema.class)
@@ -50,26 +51,6 @@ public class UDT
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>DATA_TYPE</code>, <code>TYPE_CAT</code>, <code>TYPE_SCHEM</code> and
-     * <code>TYPE_NAME</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getUDTs(String, String, String, int[])
-     */
-    static Comparator<UDT> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .comparing(UDT::getDataType, Comparator.nullsFirst(Comparator.naturalOrder()))
-                .thenComparing(UDT::getTypeCat, comparator)
-                .thenComparing(UDT::getTypeSchem, comparator)
-                .thenComparing(UDT::getTypeName, comparator);
-    }
-
-    /**
      * Returns a comparator comparing values, using specified context for ordering {@code null} values, in the specified
      * order.
      * <blockquote>
@@ -78,13 +59,15 @@ public class UDT
      * </blockquote>
      *
      * @param context    a context for ordering {@code null} values.
-     * @param comparator a comparator for comparing string values.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
      * @return a comparator comparing values in the specified order.
      * @throws SQLException if a database access error occurs.
      * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
      */
     static Comparator<UDT> comparingInSpecifiedOrder(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
                 .comparing(UDT::getDataType, ContextUtils.withDatabaseNullOrdering(
                         context, Comparator.naturalOrder(), ContextUtils.SortDirection.ASCENDING))
@@ -211,7 +194,7 @@ public class UDT
      *
      * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
      */
-    void setTypeCat(final String typeCat) {
+    void setTypeCat(@Nullable final String typeCat) {
         this.typeCat = typeCat;
     }
 
@@ -236,7 +219,7 @@ public class UDT
      *
      * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
-    void setTypeSchem(final String typeSchem) {
+    void setTypeSchem(@Nullable final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
@@ -374,6 +357,42 @@ public class UDT
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_BASE_TYPE)
     private Integer baseType;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the catalog reference identified by {@value #COLUMN_LABEL_TYPE_CAT}.
+     *
+     * @return the catalog reference identified by this UDT; {@code null} when
+     * {@value #COLUMN_LABEL_TYPE_CAT} is {@code null}.
+     */
+    @Nullable
+    Catalog getCatalogRef() {
+        if (typeCat == null) {
+            return null;
+        }
+        final var catalog = new Catalog();
+        catalog.setTableCat(typeCat);
+        return catalog;
+    }
+
+    /**
+     * Returns the schema reference identified by {@value #COLUMN_LABEL_TYPE_CAT} and
+     * {@value #COLUMN_LABEL_TYPE_SCHEM}.
+     *
+     * @return the schema reference identified by this UDT; {@code null} when
+     * {@value #COLUMN_LABEL_TYPE_SCHEM} is {@code null}.
+     */
+    @Nullable
+    Schema getSchemaRef() {
+        if (typeSchem == null) {
+            return null;
+        }
+        final var schema = new Schema();
+        schema.setTableCatalog(typeCat);
+        schema.setTableSchem(typeSchem);
+        return schema;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     private transient List<Attribute> attributes_;

@@ -26,13 +26,13 @@ import java.io.Serial;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getCatalogs()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getCatalogsAndAcceptEach(Consumer)
+ * @see java.sql.DatabaseMetaData#getCatalogs()
+ * @see Context#getCatalogs()
  */
 @_ParentOf(Table.class)
 @_ParentOf(Schema.class)
@@ -49,21 +49,6 @@ public class Catalog
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * The results are ordered by catalog name.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see java.sql.DatabaseMetaData#getCatalogs()
-     */
-    static Comparator<Catalog> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(Catalog::getTableCat, comparator);
-    }
-
-    /**
      * Returns a comparator comparing values in the specified order, placing {@code null} values as the specified
      * context's database sorts them.
      *
@@ -78,8 +63,8 @@ public class Catalog
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparingInSpecifiedOrder(
-                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
+        return Comparator.comparing(Catalog::getTableCat, s);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

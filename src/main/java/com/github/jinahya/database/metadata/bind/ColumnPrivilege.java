@@ -34,6 +34,7 @@ import java.util.Objects;
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
  * @see Context#getColumnPrivileges(String, String, String, String)
  */
 @_ChildOf(Table.class)
@@ -60,25 +61,10 @@ public class ColumnPrivilege
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparingInSpecifiedOrder(
-                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
-    }
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>COLUMN_NAME</code> and <code>PRIVILEGE</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
-     */
-    static Comparator<ColumnPrivilege> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
         return Comparator
-                .<ColumnPrivilege, String>comparing(ColumnPrivilege::getColumnName, comparator)
-                .thenComparing(ColumnPrivilege::getPrivilege, comparator);
+                .<ColumnPrivilege, String>comparing(ColumnPrivilege::getColumnName, s)
+                .thenComparing(ColumnPrivilege::getPrivilege, s);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -400,8 +386,8 @@ public class ColumnPrivilege
      */
     Table getTableRef() {
         final var table = new Table();
-        table.setTableCat(getEffectiveTableCat());
-        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
         table.setTableName(tableName);
         return table;
     }
@@ -414,8 +400,8 @@ public class ColumnPrivilege
      */
     Column getColumnRef() {
         final var column = new Column();
-        column.setTableCat(getEffectiveTableCat());
-        column.setTableSchem(getEffectiveTableSchem());
+        column.setTableCat(tableCat);
+        column.setTableSchem(tableSchem);
         column.setTableName(tableName);
         column.setColumnName(columnName);
         return column;

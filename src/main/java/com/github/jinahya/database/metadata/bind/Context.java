@@ -58,7 +58,7 @@ public class Context {
      *                       specification).
      * @return an unmodifiable list of elements; empty when {@code commaSeparated} is {@code null} or blank.
      */
-    private static List<String> commaSplitToUnmodifiableList(final String commaSeparated) {
+    private static List<String> commaSplitToUnmodifiableList(@Nullable final String commaSeparated) {
         if (commaSeparated == null) {
             return List.of();
         }
@@ -240,8 +240,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getAttributes(String, String, String, String)} method and accepts each bound
-     * value to the specified consumer.
+     * Invokes {@link DatabaseMetaData#getAttributes(String, String, String, String)} method, on the wrapped
+     * {@link #metadata}, with given arguments, and accepts each bound value to the specified consumer.
      *
      * @param catalog              a value for the {@code catalog} parameter.
      * @param schemaPattern        a value for the {@code schemaPattern} parameter.
@@ -249,6 +249,7 @@ public class Context {
      * @param attributeNamePattern a value for the {@code attributeNamePattern} parameter.
      * @param consumer             the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getAttributes(String, String, String, String)
      */
     public void forEachAttribute(@Nullable final String catalog, @Nullable final String schemaPattern,
                                  final String typeNamePattern, final String attributeNamePattern,
@@ -258,9 +259,8 @@ public class Context {
     }
 
     /**
-     * Invokes
-     * {@link DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
-     * method, on the wrapped {@link #metadata}, with given arguments, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getAttributes(String, String, String, String)} method, on the wrapped
+     * {@link #metadata}, with given arguments, and returns a list of bound values.
      *
      * @param catalog              a value for the {@code catalog} parameter.
      * @param schemaPattern        a value for the {@code schemaPattern} parameter.
@@ -268,6 +268,7 @@ public class Context {
      * @param attributeNamePattern a value for the {@code attributeNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getAttributes(String, String, String, String)
      */
     public List<Attribute> getAttributes(@Nullable final String catalog, @Nullable final String schemaPattern,
                                          final String typeNamePattern, final String attributeNamePattern)
@@ -282,11 +283,22 @@ public class Context {
     }
 
     void forEachAttribute(final Consumer<? super Attribute> consumer) throws SQLException {
-        getAttributesAndAcceptEach(null, null, "%", "%", consumer);
+        getAttributesAndAcceptEach(
+                null,
+                null,
+                "%",
+                "%",
+                consumer
+        );
     }
 
     List<Attribute> getAllAttributes() throws SQLException {
-        return getAttributes(null, null, "%", "%");
+        return getAttributes(
+                null,
+                null,
+                "%",
+                "%"
+        );
     }
 
     /**
@@ -380,8 +392,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method and accepts
-     * each bound value to the specified consumer.
+     * Invokes {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method, on the
+     * wrapped {@link #metadata}, with given arguments, and accepts each bound value to the specified consumer.
      *
      * @param catalog  a value for the {@code catalog} parameter.
      * @param schema   a value for the {@code schema} parameter.
@@ -390,6 +402,7 @@ public class Context {
      * @param nullable a value for the {@code nullable} parameter.
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
      */
     public void forEachBestRowIdentifier(@Nullable final String catalog, @Nullable final String schema,
                                          final String table, final int scope, final boolean nullable,
@@ -399,9 +412,8 @@ public class Context {
     }
 
     /**
-     * Invokes
-     * {@link DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)}
-     * method, on the wrapped {@link #metadata}, with given arguments, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method, on the
+     * wrapped {@link #metadata}, with given arguments, and returns a list of bound values.
      *
      * @param catalog  a value for the {@code catalog} parameter.
      * @param schema   a value for the {@code schema} parameter.
@@ -497,21 +509,24 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getCatalogs()} method and accepts each bound value to the specified consumer.
+     * Invokes {@link DatabaseMetaData#getCatalogs()} method, on the wrapped {@link #metadata}, without arguments, and
+     * accepts each bound value to the specified consumer.
      *
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getCatalogs()
      */
     public void forEachCatalog(final Consumer<? super Catalog> consumer) throws SQLException {
         getCatalogsAndAcceptEach(consumer);
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getCatalogs()} method, on the wrapped {@link #metadata}, and returns a list of
-     * bound values.
+     * Invokes {@link DatabaseMetaData#getCatalogs()} method, on the wrapped {@link #metadata}, without arguments, and
+     * returns a list of bound values.
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getCatalogs()
      */
     public List<Catalog> getCatalogs() throws SQLException {
         return getCatalogsAndAddAll(new ArrayList<>());
@@ -554,19 +569,20 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getClientInfoProperties()} method and accepts each bound value to the specified
-     * consumer.
+     * Invokes {@link DatabaseMetaData#getClientInfoProperties()} method, on the wrapped {@link #metadata}, without
+     * arguments, and accepts each bound value to the specified consumer.
      *
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getClientInfoProperties()
      */
     public void forEachClientInfoProperty(final Consumer<? super ClientInfoProperty> consumer) throws SQLException {
         getClientInfoPropertiesAndAcceptEach(consumer);
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getClientInfoProperties() getClientInfoProperties()} method, on the wrapped
-     * {@link #metadata}, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getClientInfoProperties()} method, on the wrapped {@link #metadata}, without
+     * arguments, and returns a list of bound values.
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
@@ -630,8 +646,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)} method and accepts each
-     * bound value to the specified consumer.
+     * Invokes {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)} method, on the wrapped
+     * {@link #metadata}, with given arguments, and accepts each bound value to the specified consumer.
      *
      * @param catalog           a value for the {@code catalog} parameter.
      * @param schema            a value for the {@code schema} parameter.
@@ -639,6 +655,7 @@ public class Context {
      * @param columnNamePattern a value for the {@code columnNamePattern} parameter.
      * @param consumer          the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
      */
     public void forEachColumnPrivilege(@Nullable final String catalog, @Nullable final String schema,
                                        final String table, final String columnNamePattern,
@@ -657,6 +674,7 @@ public class Context {
      * @param columnNamePattern a value for the {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
      */
     public List<ColumnPrivilege> getColumnPrivileges(@Nullable final String catalog, @Nullable final String schema,
                                                      final String table, final String columnNamePattern)
@@ -742,8 +760,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getColumns(String, String, String, String)} method and accepts each bound value
-     * to the specified consumer.
+     * Invokes {@link DatabaseMetaData#getColumns(String, String, String, String)} method, on the wrapped
+     * {@link #metadata}, with given arguments, and accepts each bound value to the specified consumer.
      *
      * @param catalog           a value for the {@code catalog} parameter.
      * @param schemaPattern     a value for the {@code schemaPattern} parameter.
@@ -751,6 +769,7 @@ public class Context {
      * @param columnNamePattern a value for the {@code columnNamePattern} parameter.
      * @param consumer          the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getColumns(String, String, String, String)
      */
     public void forEachColumn(@Nullable final String catalog, @Nullable final String schemaPattern,
                               final String tableNamePattern, final String columnNamePattern,
@@ -769,6 +788,7 @@ public class Context {
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getColumns(String, String, String, String)
      */
     public List<Column> getColumns(@Nullable final String catalog, @Nullable final String schemaPattern,
                                    final String tableNamePattern, final String columnNamePattern)
@@ -825,8 +845,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getCrossReference(String, String, String, String, String, String)
      */
-    void getCrossReferenceAndAcceptEach(final String parentCatalog, final String parentSchema, final String parentTable,
-                                        final String foreignCatalog, final String foreignSchema,
+    void getCrossReferenceAndAcceptEach(@Nullable final String parentCatalog, @Nullable final String parentSchema,
+                                        final String parentTable,
+                                        @Nullable final String foreignCatalog, @Nullable final String foreignSchema,
                                         final String foreignTable,
                                         final Consumer<? super CrossReference> consumer)
             throws SQLException {
@@ -854,8 +875,10 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     <C extends Collection<? super CrossReference>> C
-    getCrossReferenceAndAddAll(final String parentCatalog, final String parentSchema, final String parentTable,
-                               final String foreignCatalog, final String foreignSchema, final String foreignTable,
+    getCrossReferenceAndAddAll(@Nullable final String parentCatalog, @Nullable final String parentSchema,
+                               final String parentTable,
+                               @Nullable final String foreignCatalog, @Nullable final String foreignSchema,
+                               final String foreignTable,
                                final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
@@ -883,14 +906,23 @@ public class Context {
      * @param foreignTable   a value for the {@code foreignTable} parameter.
      * @param consumer       the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getCrossReference(String, String, String, String, String, String)
      */
     public void forEachCrossReference(@Nullable final String parentCatalog, @Nullable final String parentSchema,
-                                      final String parentTable, @Nullable final String foreignCatalog,
-                                      @Nullable final String foreignSchema, final String foreignTable,
+                                      final String parentTable,
+                                      @Nullable final String foreignCatalog, @Nullable final String foreignSchema,
+                                      final String foreignTable,
                                       final Consumer<? super CrossReference> consumer)
             throws SQLException {
-        getCrossReferenceAndAcceptEach(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema,
-                                       foreignTable, consumer);
+        getCrossReferenceAndAcceptEach(
+                parentCatalog,
+                parentSchema,
+                parentTable,
+                foreignCatalog,
+                foreignSchema,
+                foreignTable,
+                consumer
+        );
     }
 
     /**
@@ -907,6 +939,7 @@ public class Context {
      * @param foreignTable   a value for the {@code foreignTable} parameter
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getCrossReference(String, String, String, String, String, String)
      */
     public List<CrossReference> getCrossReference(@Nullable final String parentCatalog,
                                                   @Nullable final String parentSchema, final String parentTable,
@@ -966,7 +999,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getExportedKeys(String, String, String)
      */
-    void getExportedKeysAndAcceptEach(final String catalog, final String schema, final String table,
+    void getExportedKeysAndAcceptEach(@Nullable final String catalog, @Nullable final String schema, final String table,
                                       final Consumer<? super ExportedKey> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
@@ -989,7 +1022,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     <C extends Collection<? super ExportedKey>> C
-    getExportedKeysAndAddAll(final String catalog, final String schema, final String table, final C collection)
+    getExportedKeysAndAddAll(@Nullable final String catalog, @Nullable final String schema, final String table,
+                             final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getExportedKeysAndAcceptEach(
@@ -1010,6 +1044,7 @@ public class Context {
      * @param table    a value for the {@code table} parameter.
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getExportedKeys(String, String, String)
      */
     public void forEachExportedKey(@Nullable final String catalog, @Nullable final String schema, final String table,
                                    final Consumer<? super ExportedKey> consumer)
@@ -1026,6 +1061,7 @@ public class Context {
      * @param table   a value for the {@code table} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getExportedKeys(String, String, String)
      */
     public List<ExportedKey> getExportedKeys(@Nullable final String catalog, @Nullable final String schema,
                                              final String table)
@@ -1079,8 +1115,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getFunctions(String, String, String)
      */
-    void getFunctionsAndAcceptEach(final String catalog, final String schemaPattern, final String functionNamePattern,
-                                   final Consumer<? super Function> consumer)
+    void getFunctionsAndAcceptEach(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                   final String functionNamePattern, final Consumer<? super Function> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (var results = metadata.getFunctions(catalog, schemaPattern, functionNamePattern)) {
@@ -1102,8 +1138,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     <C extends Collection<? super Function>>
-    C getFunctionsAndAddAll(final String catalog, final String schemaPattern, final String functionNamePattern,
-                            final C collection)
+    C getFunctionsAndAddAll(@Nullable final String catalog, @Nullable final String schemaPattern,
+                            final String functionNamePattern, final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getFunctionsAndAcceptEach(
@@ -1124,9 +1160,10 @@ public class Context {
      * @param functionNamePattern a value for the {@code functionNamePattern} parameter.
      * @param consumer            the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getFunctions(String, String, String)
      */
     public void forEachFunction(@Nullable final String catalog, @Nullable final String schemaPattern,
-                                @Nullable final String functionNamePattern,
+                                final String functionNamePattern,
                                 final Consumer<? super Function> consumer)
             throws SQLException {
         getFunctionsAndAcceptEach(catalog, schemaPattern, functionNamePattern, consumer);
@@ -1144,7 +1181,7 @@ public class Context {
      * @see DatabaseMetaData#getFunctions(String, String, String)
      */
     public List<Function> getFunctions(@Nullable final String catalog, @Nullable final String schemaPattern,
-                                       @Nullable final String functionNamePattern)
+                                       final String functionNamePattern)
             throws SQLException {
         return getFunctionsAndAddAll(
                 catalog, schemaPattern, functionNamePattern,
@@ -1164,7 +1201,7 @@ public class Context {
      * @see #getFunctions(String, String, String)
      */
     List<Function> getFunctionsOf(final Catalog catalog, @Nullable final String schemaPattern,
-                                  @Nullable final String functionNamePattern)
+                                  final String functionNamePattern)
             throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
         return getFunctions(
@@ -1175,7 +1212,7 @@ public class Context {
     }
 
     void forEachFunctionOf(final Catalog catalog, @Nullable final String schemaPattern,
-                           @Nullable final String functionNamePattern, final Consumer<? super Function> consumer)
+                           final String functionNamePattern, final Consumer<? super Function> consumer)
             throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
         forEachFunction(
@@ -1197,7 +1234,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getFunctions(String, String, String)
      */
-    List<Function> getFunctionsOf(final Schema schema, @Nullable final String functionNamePattern)
+    List<Function> getFunctionsOf(final Schema schema, final String functionNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getFunctions(
@@ -1207,7 +1244,7 @@ public class Context {
         );
     }
 
-    void forEachFunctionOf(final Schema schema, @Nullable final String functionNamePattern,
+    void forEachFunctionOf(final Schema schema, final String functionNamePattern,
                            final Consumer<? super Function> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
@@ -1259,7 +1296,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
      */
-    void getFunctionColumnsAndAcceptEach(final String catalog, final String schemaPattern,
+    void getFunctionColumnsAndAcceptEach(@Nullable final String catalog, @Nullable final String schemaPattern,
                                          final String functionNamePattern, final String columnNamePattern,
                                          final Consumer<? super FunctionColumn> consumer)
             throws SQLException {
@@ -1285,8 +1322,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     <C extends Collection<? super FunctionColumn>>
-    C getFunctionColumnsAndAddAll(final String catalog, final String schemaPattern, final String functionNamePattern,
-                                  final String columnNamePattern, final C collection)
+    C getFunctionColumnsAndAddAll(@Nullable final String catalog, @Nullable final String schemaPattern,
+                                  final String functionNamePattern, final String columnNamePattern,
+                                  final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getFunctionColumnsAndAcceptEach(
@@ -1309,6 +1347,7 @@ public class Context {
      * @param columnNamePattern   a value for the {@code columnNamePattern} parameter.
      * @param consumer            the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
      */
     public void forEachFunctionColumn(@Nullable final String catalog, @Nullable final String schemaPattern,
                                       final String functionNamePattern, final String columnNamePattern,
@@ -1416,7 +1455,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     <C extends Collection<? super ImportedKey>>
-    C getImportedKeysAndAddAll(final String catalog, final String schema, final String table, final C collection)
+    C getImportedKeysAndAddAll(@Nullable final String catalog, @Nullable final String schema, final String table,
+                               final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getImportedKeysAndAcceptEach(
@@ -1437,6 +1477,7 @@ public class Context {
      * @param table    a value for the {@code table} parameter.
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getImportedKeys(String, String, String)
      */
     public void forEachImportedKey(@Nullable final String catalog, @Nullable final String schema, final String table,
                                    final Consumer<? super ImportedKey> consumer)
@@ -1538,8 +1579,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     <C extends Collection<? super IndexInfo>>
-    C getIndexInfoAndAddAll(final String catalog, final String schema, final String table, final boolean unique,
-                            final boolean approximate, final C collection)
+    C getIndexInfoAndAddAll(@Nullable final String catalog, @Nullable final String schema, final String table,
+                            final boolean unique, final boolean approximate, final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getIndexInfoAndAcceptEach(
@@ -1564,6 +1605,7 @@ public class Context {
      * @param approximate a value for the {@code approximate} parameter.
      * @param consumer    the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
      */
     public void forEachIndexInfo(@Nullable final String catalog, @Nullable final String schema, final String table,
                                  final boolean unique, final boolean approximate,
@@ -1690,6 +1732,7 @@ public class Context {
      * @param table    a value for the {@code table} parameter.
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
      */
     public void forEachPrimaryKey(@Nullable final String catalog, @Nullable final String schema, final String table,
                                   final Consumer<? super PrimaryKey> consumer)
@@ -1706,6 +1749,7 @@ public class Context {
      * @param table   a value for the {@code table} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
      */
     public List<PrimaryKey> getPrimaryKeys(@Nullable final String catalog, @Nullable final String schema,
                                            final String table)
@@ -1810,6 +1854,7 @@ public class Context {
      * @param columnNamePattern    a value for the {@code columnNamePattern} parameter.
      * @param consumer             the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getProcedureColumns(String, String, String, String)
      */
     public void forEachProcedureColumn(@Nullable final String catalog, @Nullable final String schemaPattern,
                                        final String procedureNamePattern, final String columnNamePattern,
@@ -1828,6 +1873,7 @@ public class Context {
      * @param columnNamePattern    a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getProcedureColumns(String, String, String, String)
      */
     public List<ProcedureColumn> getProcedureColumns(@Nullable final String catalog,
                                                      @Nullable final String schemaPattern,
@@ -1938,6 +1984,7 @@ public class Context {
      * @param procedureNamePattern a value for the {@code procedureNamePattern} parameter.
      * @param consumer             the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getProcedures(String, String, String)
      */
     public void forEachProcedure(@Nullable final String catalog, @Nullable final String schemaPattern,
                                  final String procedureNamePattern, final Consumer<? super Procedure> consumer)
@@ -2109,6 +2156,7 @@ public class Context {
      * @param columnNamePattern a value for the {@code columnNamePattern} parameter.
      * @param consumer          the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
      */
     public void forEachPseudoColumn(@Nullable final String catalog, @Nullable final String schemaPattern,
                                     final String tableNamePattern, final String columnNamePattern,
@@ -2215,6 +2263,7 @@ public class Context {
      *
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSchemas()
      */
     public void forEachSchema(final Consumer<? super Schema> consumer) throws SQLException {
         getSchemasAndAcceptEach(consumer);
@@ -2226,6 +2275,7 @@ public class Context {
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSchemas()
      */
     public List<Schema> getSchemas() throws SQLException {
         return getSchemasAndAddAll(
@@ -2286,6 +2336,7 @@ public class Context {
      * @param schemaPattern a value for the {@code schemaPattern} parameter.
      * @param consumer      the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSchemas(String, String)
      */
     public void forEachSchema(@Nullable final String catalog, @Nullable final String schemaPattern,
                               final Consumer<? super Schema> consumer)
@@ -2301,6 +2352,7 @@ public class Context {
      * @param schemaPattern a value for {@code schemaPattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSchemas(String, String)
      */
     public List<Schema> getSchemas(@Nullable final String catalog, @Nullable final String schemaPattern)
             throws SQLException {
@@ -2395,6 +2447,7 @@ public class Context {
      * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
      * @param consumer         the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSuperTables(String, String, String)
      */
     public void forEachSuperTable(@Nullable final String catalog, final String schemaPattern,
                                   final String tableNamePattern, final Consumer<? super SuperTable> consumer)
@@ -2411,6 +2464,7 @@ public class Context {
      * @param tableNamePattern a value for {@code tableNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSuperTables(String, String, String)
      */
     public List<SuperTable> getSuperTables(@Nullable final String catalog, final String schemaPattern,
                                            final String tableNamePattern)
@@ -2570,6 +2624,7 @@ public class Context {
      * @param typeNamePattern a value for the {@code typeNamePattern} parameter.
      * @param consumer        the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSuperTypes(String, String, String)
      */
     public void forEachSuperType(@Nullable final String catalog, final String schemaPattern,
                                  final String typeNamePattern, final Consumer<? super SuperType> consumer)
@@ -2586,6 +2641,7 @@ public class Context {
      * @param typeNamePattern a value for {@code typeNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSuperTypes(String, String, String)
      */
     public List<SuperType> getSuperTypes(@Nullable final String catalog, final String schemaPattern,
                                          final String typeNamePattern)
@@ -2749,6 +2805,7 @@ public class Context {
      * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
      * @param consumer         the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getTablePrivileges(String, String, String)
      */
     public void forEachTablePrivilege(@Nullable final String catalog, @Nullable final String schemaPattern,
                                       final String tableNamePattern,
@@ -2925,6 +2982,7 @@ public class Context {
      *
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getTableTypes()
      */
     public void forEachTableType(final Consumer<? super TableType> consumer) throws SQLException {
         getTableTypesAndAcceptEach(consumer);
@@ -2936,6 +2994,7 @@ public class Context {
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getTableTypes()
      */
     public List<TableType> getTableTypes() throws SQLException {
         return getTableTypesAndAddAll(
@@ -3013,6 +3072,7 @@ public class Context {
      * @param types            a value for the {@code types} parameter.
      * @param consumer         the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getTables(String, String, String, String[])
      */
     public void forEachTable(@Nullable final String catalog, @Nullable final String schemaPattern,
                              final String tableNamePattern, @Nullable final String[] types,
@@ -3032,6 +3092,7 @@ public class Context {
      * @param types            a value for the {@code types} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getTables(String, String, String, String[])
      */
     public List<Table> getTables(@Nullable final String catalog, @Nullable final String schemaPattern,
                                  final String tableNamePattern, @Nullable final String[] types)
@@ -3174,6 +3235,7 @@ public class Context {
      *
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getTypeInfo()
      */
     public void forEachTypeInfo(final Consumer<? super TypeInfo> consumer) throws SQLException {
         getTypeInfoAndAcceptEach(consumer);
@@ -3185,6 +3247,7 @@ public class Context {
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getTypeInfo()
      */
     public List<TypeInfo> getTypeInfo() throws SQLException {
         return getTypeInfoAndAddAll(
@@ -3258,6 +3321,7 @@ public class Context {
      * @param types           a value for the {@code types} parameter.
      * @param consumer        the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getUDTs(String, String, String, int[])
      */
     public void forEachUDT(@Nullable final String catalog, @Nullable final String schemaPattern,
                            final String typeNamePattern, @Nullable final int[] types,
@@ -3276,6 +3340,7 @@ public class Context {
      * @param types           a value for the {@code type} parameter
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getUDTs(String, String, String, int[])
      */
     public List<UDT> getUDTs(@Nullable final String catalog, @Nullable final String schemaPattern,
                              final String typeNamePattern, @Nullable final int[] types)
@@ -3429,6 +3494,7 @@ public class Context {
      * @param table    a value for the {@code table} parameter.
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#getVersionColumns(String, String, String)
      */
     public void forEachVersionColumn(@Nullable final String catalog, @Nullable final String schema, final String table,
                                      final Consumer<? super VersionColumn> consumer)

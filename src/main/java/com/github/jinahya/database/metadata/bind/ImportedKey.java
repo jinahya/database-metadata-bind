@@ -29,6 +29,7 @@ import java.util.Comparator;
  * A class for binding results of the {@link DatabaseMetaData#getImportedKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getImportedKeys(String, String, String)
  * @see Context#getImportedKeys(String, String, String)
  * @see ExportedKey
  */
@@ -40,21 +41,6 @@ public class ImportedKey
     private static final long serialVersionUID = -1900794151555506751L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>PKTABLE_CAT</code>, <code>PKTABLE_SCHEM</code>, <code>PKTABLE_NAME</code>, and
-     * <code>KEY_SEQ</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see PortedKey#comparingPk(Comparator)
-     */
-    static Comparator<ImportedKey> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return PortedKey.comparingPk(comparator);
-    }
 
     /**
      * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the

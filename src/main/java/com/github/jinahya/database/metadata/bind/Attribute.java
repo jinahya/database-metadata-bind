@@ -47,26 +47,6 @@ public class Attribute
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>TYPE_CAT</code>, <code>TYPE_SCHEM</code>, <code>TYPE_NAME</code> and
-     * <code>ORDINAL_POSITION</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing attributes.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getAttributes(String, String, String, String)
-     */
-    static Comparator<Attribute> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .<Attribute, String>comparing(Attribute::getTypeCat, comparator)
-                .thenComparing(Attribute::getTypeSchem, comparator)
-                .thenComparing(Attribute::getTypeName, comparator)
-                .thenComparing(Attribute::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
-    }
-
-    /**
      * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
      * specified context's database sorts them.
      *
@@ -894,8 +874,8 @@ public class Attribute
      */
     UDT getTypeRef() {
         final var udt = new UDT();
-        udt.setTypeCat(getEffectiveTypeCat());
-        udt.setTypeSchem(getEffectiveTypeSchem());
+        udt.setTypeCat(typeCat);
+        udt.setTypeSchem(typeSchem);
         udt.setTypeName(typeName);
         return udt;
     }
@@ -913,8 +893,8 @@ public class Attribute
             return null;
         }
         final var table = new Table();
-        table.setTableCat(getEffectiveScopeCatalog());
-        table.setTableSchem(getEffectiveScopeSchema());
+        table.setTableCat(scopeCatalog);
+        table.setTableSchem(scopeSchema);
         table.setTableName(scopeTable);
         return table;
     }

@@ -35,6 +35,7 @@ import java.util.Optional;
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
  * @see Context#getIndexInfo(String, String, String, boolean, boolean)
  */
 @_ChildOf(Table.class)
@@ -45,26 +46,6 @@ public class IndexInfo
     private static final long serialVersionUID = 924040226611181424L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>NON_UNIQUE</code>, <code>TYPE</code>, <code>INDEX_NAME</code>, and
-     * <code>ORDINAL_POSITION</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
-     */
-    static Comparator<IndexInfo> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .comparing(IndexInfo::getNonUnique, Comparator.nullsFirst(Comparator.naturalOrder()))
-                .thenComparing(IndexInfo::getType, Comparator.nullsFirst(Comparator.naturalOrder()))
-                .thenComparing(IndexInfo::getIndexName, comparator)
-                .thenComparing(IndexInfo::getOrdinalPosition, Comparator.nullsFirst(Comparator.naturalOrder()));
-    }
 
     /**
      * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
@@ -787,8 +768,8 @@ public class IndexInfo
      */
     Table getTableRef() {
         final var table = new Table();
-        table.setTableCat(getEffectiveTableCat());
-        table.setTableSchem(getEffectiveTableSchem());
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
         table.setTableName(tableName);
         return table;
     }
@@ -806,8 +787,8 @@ public class IndexInfo
             return null;
         }
         final var column = new Column();
-        column.setTableCat(getEffectiveTableCat());
-        column.setTableSchem(getEffectiveTableSchem());
+        column.setTableCat(tableCat);
+        column.setTableSchem(tableSchem);
         column.setTableName(tableName);
         column.setColumnName(columnName);
         return column;

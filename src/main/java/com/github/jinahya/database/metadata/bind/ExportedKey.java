@@ -29,6 +29,7 @@ import java.util.Comparator;
  * A class for binding results of the {@link DatabaseMetaData#getExportedKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getExportedKeys(String, String, String)
  * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
@@ -40,21 +41,6 @@ public class ExportedKey
     private static final long serialVersionUID = -6561660015694928357L;
 
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>FKTABLE_CAT</code>, <code>FKTABLE_SCHEM</code>, <code>FKTABLE_NAME</code>, and
-     * <code>KEY_SEQ</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see PortedKey#comparingFk(Comparator)
-     */
-    static Comparator<ExportedKey> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return PortedKey.comparingFk(comparator);
-    }
 
     /**
      * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the

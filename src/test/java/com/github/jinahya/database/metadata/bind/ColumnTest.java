@@ -97,7 +97,7 @@ class ColumnTest
     }
 
     @Test
-    void getScopeTableRef_UsesEmptyStringsForNullScopeCatalogAndSchema() {
+    void getScopeTableRef_PreservesNullScopeCatalogAndSchema() {
         final var instance = newTypeInstance();
         instance.setDataType(java.sql.Types.REF);
         instance.setScopeCatalog(null);
@@ -105,8 +105,8 @@ class ColumnTest
         instance.setScopeTable("t");
         final var result = instance.getScopeTableRef();
         assertThat(result).isNotNull();
-        assertThat(result.getTableCat()).isEmpty();
-        assertThat(result.getTableSchem()).isEmpty();
+        assertThat(result.getTableCat()).isNull();
+        assertThat(result.getTableSchem()).isNull();
         assertThat(result.getTableName()).isEqualTo("t");
     }
 

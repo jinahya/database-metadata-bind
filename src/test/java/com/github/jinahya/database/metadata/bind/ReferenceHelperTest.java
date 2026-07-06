@@ -24,11 +24,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.withSettings;
 
 class ReferenceHelperTest {
@@ -43,9 +40,7 @@ class ReferenceHelperTest {
         instance.setTypeSchem(null);
         instance.setTypeName("t");
 
-        assertUdt(instance.getTypeRef(), "", "", "t");
-        verify(instance).getEffectiveTypeCat();
-        verify(instance).getEffectiveTypeSchem();
+        assertUdt(instance.getTypeRef(), null, null, "t");
     }
 
     @Test
@@ -59,8 +54,6 @@ class ReferenceHelperTest {
         instance.setTypeName(null);
 
         assertThat(instance.getTypeRef()).isNull();
-        verify(instance, never()).getEffectiveTypeCat();
-        verify(instance, never()).getEffectiveTypeSchem();
     }
 
     @Test
@@ -70,9 +63,7 @@ class ReferenceHelperTest {
         instance.setTableSchem(null);
         instance.setTableName("t");
 
-        assertTable(instance.getTableRef(), "", "", "t");
-        verify(instance).getEffectiveTableCat();
-        verify(instance).getEffectiveTableSchem();
+        assertTable(instance.getTableRef(), null, null, "t");
     }
 
     @Test
@@ -83,10 +74,8 @@ class ReferenceHelperTest {
         instance.setTableName("t");
         instance.setColumnName("c");
 
-        assertTable(instance.getTableRef(), "", "", "t");
-        assertColumn(instance.getColumnRef(), "", "", "t", "c");
-        verify(instance, atLeastOnce()).getEffectiveTableCat();
-        verify(instance, atLeastOnce()).getEffectiveTableSchem();
+        assertTable(instance.getTableRef(), null, null, "t");
+        assertColumn(instance.getColumnRef(), null, null, "t", "c");
     }
 
     @Test
@@ -96,9 +85,7 @@ class ReferenceHelperTest {
         instance.setTableSchem(null);
         instance.setTableName("t");
 
-        assertTable(instance.getTableRef(), "", "", "t");
-        verify(instance).getEffectiveTableCat();
-        verify(instance).getEffectiveTableSchem();
+        assertTable(instance.getTableRef(), null, null, "t");
     }
 
     @Test
@@ -109,10 +96,8 @@ class ReferenceHelperTest {
         instance.setTableName("t");
         instance.setColumnName("c");
 
-        assertTable(instance.getTableRef(), "", "", "t");
-        assertColumn(instance.getColumnRef(), "", "", "t", "c");
-        verify(instance, atLeastOnce()).getEffectiveTableCat();
-        verify(instance, atLeastOnce()).getEffectiveTableSchem();
+        assertTable(instance.getTableRef(), null, null, "t");
+        assertColumn(instance.getColumnRef(), null, null, "t", "c");
     }
 
     @Test
@@ -127,14 +112,10 @@ class ReferenceHelperTest {
         instance.setFktableName("ft");
         instance.setFkcolumnName("fc");
 
-        assertTable(instance.getPkTableRef(), "", "", "pt");
-        assertColumn(instance.getPkColumnRef(), "", "", "pt", "pc");
-        assertTable(instance.getFkTableRef(), "", "", "ft");
-        assertColumn(instance.getFkColumnRef(), "", "", "ft", "fc");
-        verify(instance, atLeastOnce()).getEffectivePktableCat();
-        verify(instance, atLeastOnce()).getEffectivePktableSchem();
-        verify(instance, atLeastOnce()).getEffectiveFktableCat();
-        verify(instance, atLeastOnce()).getEffectiveFktableSchem();
+        assertTable(instance.getPkTableRef(), null, null, "pt");
+        assertColumn(instance.getPkColumnRef(), null, null, "pt", "pc");
+        assertTable(instance.getFkTableRef(), null, null, "ft");
+        assertColumn(instance.getFkColumnRef(), null, null, "ft", "fc");
     }
 
     @Test
@@ -149,14 +130,10 @@ class ReferenceHelperTest {
         instance.setFktableName("ft");
         instance.setFkcolumnName("fc");
 
-        assertTable(instance.getPkTableRef(), "", "", "pt");
-        assertColumn(instance.getPkColumnRef(), "", "", "pt", "pc");
-        assertTable(instance.getFkTableRef(), "", "", "ft");
-        assertColumn(instance.getFkColumnRef(), "", "", "ft", "fc");
-        verify(instance, atLeastOnce()).getEffectivePktableCat();
-        verify(instance, atLeastOnce()).getEffectivePktableSchem();
-        verify(instance, atLeastOnce()).getEffectiveFktableCat();
-        verify(instance, atLeastOnce()).getEffectiveFktableSchem();
+        assertTable(instance.getPkTableRef(), null, null, "pt");
+        assertColumn(instance.getPkColumnRef(), null, null, "pt", "pc");
+        assertTable(instance.getFkTableRef(), null, null, "ft");
+        assertColumn(instance.getFkColumnRef(), null, null, "ft", "fc");
     }
 
     @Test
@@ -167,13 +144,11 @@ class ReferenceHelperTest {
         instance.setTableName("t");
         instance.setColumnName("c");
 
-        assertTable(instance.getTableRef(), "", "", "t");
-        assertColumn(instance.getColumnRef(), "", "", "t", "c");
+        assertTable(instance.getTableRef(), null, null, "t");
+        assertColumn(instance.getColumnRef(), null, null, "t", "c");
 
         instance.setColumnName(null);
         assertThat(instance.getColumnRef()).isNull();
-        verify(instance, atLeastOnce()).getEffectiveTableCat();
-        verify(instance, atLeastOnce()).getEffectiveTableSchem();
     }
 
     @Test
@@ -183,9 +158,7 @@ class ReferenceHelperTest {
         instance.setTableSchem(null);
         instance.setTableName("t");
 
-        assertTable(instance.getTableRef(), "", "", "t");
-        verify(instance).getEffectiveTableCat();
-        verify(instance).getEffectiveTableSchem();
+        assertTable(instance.getTableRef(), null, null, "t");
     }
 
     @Test
@@ -198,12 +171,8 @@ class ReferenceHelperTest {
         instance.setSupertypeSchem(null);
         instance.setSupertypeName("st");
 
-        assertUdt(instance.getTypeRef(), "", "", "t");
-        assertUdt(instance.getSupertypeRef(), "", "", "st");
-        verify(instance).getEffectiveTypeCat();
-        verify(instance).getEffectiveTypeSchem();
-        verify(instance).getEffectiveSupertypeCat();
-        verify(instance).getEffectiveSupertypeSchem();
+        assertUdt(instance.getTypeRef(), null, null, "t");
+        assertUdt(instance.getSupertypeRef(), null, null, "st");
     }
 
     @Test
@@ -214,10 +183,8 @@ class ReferenceHelperTest {
         instance.setTableName("t");
         instance.setSupertableName("st");
 
-        assertTable(instance.getTableRef(), "", "", "t");
-        assertTable(instance.getSupertableRef(), "", "", "st");
-        verify(instance, atLeastOnce()).getEffectiveTableCat();
-        verify(instance, atLeastOnce()).getEffectiveTableSchem();
+        assertTable(instance.getTableRef(), null, null, "t");
+        assertTable(instance.getSupertableRef(), null, null, "st");
     }
 
     @Test
@@ -229,12 +196,10 @@ class ReferenceHelperTest {
         instance.setSpecificName("sp");
 
         final var result = instance.getProcedureRef();
-        assertThat(result.getProcedureCat()).isEmpty();
-        assertThat(result.getProcedureSchem()).isEmpty();
+        assertThat(result.getProcedureCat()).isNull();
+        assertThat(result.getProcedureSchem()).isNull();
         assertThat(result.getProcedureName()).isEqualTo("p");
         assertThat(result.getSpecificName()).isEqualTo("sp");
-        verify(instance).getEffectiveProcedureCat();
-        verify(instance).getEffectiveProcedureSchem();
     }
 
     @Test
@@ -246,12 +211,95 @@ class ReferenceHelperTest {
         instance.setSpecificName("sf");
 
         final var result = instance.getFunctionRef();
-        assertThat(result.getFunctionCat()).isEmpty();
-        assertThat(result.getFunctionSchem()).isEmpty();
+        assertThat(result.getFunctionCat()).isNull();
+        assertThat(result.getFunctionSchem()).isNull();
         assertThat(result.getFunctionName()).isEqualTo("f");
         assertThat(result.getSpecificName()).isEqualTo("sf");
-        verify(instance).getEffectiveFunctionCat();
-        verify(instance).getEffectiveFunctionSchem();
+    }
+
+    @Test
+    void tableNamespaceRefs_MapCatalogAndSchema() {
+        final var instance = new Table();
+        instance.setTableCat("c");
+        instance.setTableSchem("s");
+        final var catalog = instance.getCatalogRef();
+        assertThat(catalog).isNotNull();
+        assertThat(catalog.getTableCat()).isEqualTo("c");
+        final var schema = instance.getSchemaRef();
+        assertThat(schema).isNotNull();
+        assertThat(schema.getTableCatalog()).isEqualTo("c");
+        assertThat(schema.getTableSchem()).isEqualTo("s");
+
+        instance.setTableCat(null);
+        instance.setTableSchem(null);
+        assertThat(instance.getCatalogRef()).isNull();
+        assertThat(instance.getSchemaRef()).isNull();
+    }
+
+    @Test
+    void udtNamespaceRefs_MapCatalogAndSchema() {
+        final var instance = new UDT();
+        instance.setTypeCat("c");
+        instance.setTypeSchem("s");
+        assertThat(instance.getCatalogRef()).isNotNull()
+                .satisfies(x -> assertThat(x.getTableCat()).isEqualTo("c"));
+        assertThat(instance.getSchemaRef()).isNotNull().satisfies(x -> {
+            assertThat(x.getTableCatalog()).isEqualTo("c");
+            assertThat(x.getTableSchem()).isEqualTo("s");
+        });
+
+        instance.setTypeCat(null);
+        instance.setTypeSchem(null);
+        assertThat(instance.getCatalogRef()).isNull();
+        assertThat(instance.getSchemaRef()).isNull();
+    }
+
+    @Test
+    void procedureNamespaceRefs_MapCatalogAndSchema() {
+        final var instance = new Procedure();
+        instance.setProcedureCat("c");
+        instance.setProcedureSchem("s");
+        assertThat(instance.getCatalogRef()).isNotNull()
+                .satisfies(x -> assertThat(x.getTableCat()).isEqualTo("c"));
+        assertThat(instance.getSchemaRef()).isNotNull().satisfies(x -> {
+            assertThat(x.getTableCatalog()).isEqualTo("c");
+            assertThat(x.getTableSchem()).isEqualTo("s");
+        });
+
+        instance.setProcedureCat(null);
+        instance.setProcedureSchem(null);
+        assertThat(instance.getCatalogRef()).isNull();
+        assertThat(instance.getSchemaRef()).isNull();
+    }
+
+    @Test
+    void functionNamespaceRefs_MapCatalogAndSchema() {
+        final var instance = new Function();
+        instance.setFunctionCat("c");
+        instance.setFunctionSchem("s");
+        assertThat(instance.getCatalogRef()).isNotNull()
+                .satisfies(x -> assertThat(x.getTableCat()).isEqualTo("c"));
+        assertThat(instance.getSchemaRef()).isNotNull().satisfies(x -> {
+            assertThat(x.getTableCatalog()).isEqualTo("c");
+            assertThat(x.getTableSchem()).isEqualTo("s");
+        });
+
+        instance.setFunctionCat(null);
+        instance.setFunctionSchem(null);
+        assertThat(instance.getCatalogRef()).isNull();
+        assertThat(instance.getSchemaRef()).isNull();
+    }
+
+    @Test
+    void schemaGetCatalogRef_MapsCatalog() {
+        final var instance = new Schema();
+        instance.setTableCatalog("c");
+        instance.setTableSchem("s");
+        assertThat(instance.getCatalogRef()).isNotNull()
+                .satisfies(x -> assertThat(x.getTableCat()).isEqualTo("c"));
+
+        instance.setTableCatalog(null);
+        assertThat(instance.getCatalogRef()).isNull();
     }
 
     private static void assertTable(final Table actual, final String cat, final String schem, final String name) {

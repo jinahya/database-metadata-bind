@@ -34,6 +34,7 @@ import java.util.Objects;
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getTables(String, String, String, String[])
  * @see Context#getTables(String, String, String, String[])
  */
 @_ParentOf(VersionColumn.class)
@@ -74,28 +75,12 @@ public class Table
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparingInSpecifiedOrder(
-                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING));
-    }
-
-    /**
-     * Returns a comparator comparing values in the specified order.
-     * <blockquote>
-     * They are ordered by <code>TABLE_TYPE</code>, <code>TABLE_CAT</code>, <code>TABLE_SCHEM</code>, and
-     * <code>TABLE_NAME</code>.
-     * </blockquote>
-     *
-     * @param comparator a null-safe string comparator for comparing values.
-     * @return a comparator comparing values in the specified order.
-     * @see java.sql.DatabaseMetaData#getTables(String, String, String, String[])
-     */
-    static Comparator<Table> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
         return Comparator
-                .<Table, String>comparing(Table::getTableType, comparator)
-                .thenComparing(Table::getTableCat, comparator)
-                .thenComparing(Table::getTableSchem, comparator)
-                .thenComparing(Table::getTableName, comparator);
+                .<Table, String>comparing(Table::getTableType, s)
+                .thenComparing(Table::getTableCat, s)
+                .thenComparing(Table::getTableSchem, s)
+                .thenComparing(Table::getTableName, s);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -231,7 +216,7 @@ public class Table
      *
      * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    void setTableCat(final String tableCat) {
+    void setTableCat(@Nullable final String tableCat) {
         this.tableCat = tableCat;
     }
 
@@ -256,7 +241,7 @@ public class Table
      *
      * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    void setTableSchem(final String tableSchem) {
+    void setTableSchem(@Nullable final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -506,9 +491,43 @@ public class Table
             return null;
         }
         final var udt = new UDT();
-        udt.setTypeCat(getEffectiveTypeCat());
-        udt.setTypeSchem(getEffectiveTypeSchem());
+        udt.setTypeCat(typeCat);
+        udt.setTypeSchem(typeSchem);
         udt.setTypeName(typeName);
         return udt;
+    }
+
+    /**
+     * Returns the catalog reference identified by {@value #COLUMN_LABEL_TABLE_CAT}.
+     *
+     * @return the catalog reference identified by this table; {@code null} when
+     * {@value #COLUMN_LABEL_TABLE_CAT} is {@code null}.
+     */
+    @Nullable
+    Catalog getCatalogRef() {
+        if (tableCat == null) {
+            return null;
+        }
+        final var catalog = new Catalog();
+        catalog.setTableCat(tableCat);
+        return catalog;
+    }
+
+    /**
+     * Returns the schema reference identified by {@value #COLUMN_LABEL_TABLE_CAT} and
+     * {@value #COLUMN_LABEL_TABLE_SCHEM}.
+     *
+     * @return the schema reference identified by this table; {@code null} when
+     * {@value #COLUMN_LABEL_TABLE_SCHEM} is {@code null}.
+     */
+    @Nullable
+    Schema getSchemaRef() {
+        if (tableSchem == null) {
+            return null;
+        }
+        final var schema = new Schema();
+        schema.setTableCatalog(tableCat);
+        schema.setTableSchem(tableSchem);
+        return schema;
     }
 }

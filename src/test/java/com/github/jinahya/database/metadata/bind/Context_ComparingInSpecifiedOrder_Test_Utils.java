@@ -55,72 +55,72 @@ final class Context_ComparingInSpecifiedOrder_Test_Utils {
         Objects.requireNonNull(name, "name is null");
         final var failures = new ArrayList<Throwable>();
         assertEach(context, failures, "getAttributes",
-                   c -> Attribute.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> Attribute.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getAttributes(null, null, "%", "%"));
         assertEach(context, failures, "getBestRowIdentifier",
                    BestRowIdentifier::comparingInSpecifiedOrder,
                    c -> c.getBestRowIdentifier(null, null, tableName(c, "DMB_CHILD"),
                                                BestRowIdentifier.COLUMN_VALUE_SCOPE_BEST_ROW_SESSION, true));
         assertEach(context, failures, "getCatalogs",
-                   c -> Catalog.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> Catalog.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    Context::getCatalogs);
         assertEach(context, failures, "getClientInfoProperties",
-                   c -> ClientInfoProperty.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> ClientInfoProperty.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    Context::getClientInfoProperties);
         assertEach(context, failures, "getColumnPrivileges",
-                   c -> ColumnPrivilege.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> ColumnPrivilege.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getColumnPrivileges(null, null, tableName(c, "DMB_CHILD"), "%"));
         assertEach(context, failures, "getColumns",
-                   c -> Column.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> Column.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getColumns(null, null, tableName(c, "DMB_%"), "%"));
         assertEach(context, failures, "getCrossReference",
-                   c -> CrossReference.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> CrossReference.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getCrossReference(null, null, tableName(c, "DMB_PARENT"),
                                             null, null, tableName(c, "DMB_CHILD")));
         assertEach(context, failures, "getExportedKeys",
-                   c -> ExportedKey.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> ExportedKey.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getExportedKeys(null, null, tableName(c, "DMB_PARENT")));
         assertEach(context, failures, "getFunctions",
-                   c -> Function.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> Function.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getFunctions(null, null, "%"));
         assertEach(context, failures, "getFunctionColumns",
-                   c -> FunctionColumn.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> FunctionColumn.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getFunctionColumns(null, null, "%", "%"));
         assertEach(context, failures, "getImportedKeys",
-                   c -> ImportedKey.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> ImportedKey.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getImportedKeys(null, null, tableName(c, "DMB_CHILD")));
         assertEach(context, failures, "getIndexInfo",
-                   c -> IndexInfo.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> IndexInfo.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getIndexInfo(null, null, tableName(c, "DMB_CHILD"), false, false));
         assertEach(context, failures, "getPrimaryKeys",
-                   c -> PrimaryKey.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> PrimaryKey.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getPrimaryKeys(null, null, tableName(c, "DMB_CHILD")));
         assertEach(context, failures, "getProcedureColumns",
-                   c -> ProcedureColumn.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> ProcedureColumn.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getProcedureColumns(null, null, "%", "%"));
         assertEach(context, failures, "getProcedures",
-                   c -> Procedure.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> Procedure.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getProcedures(null, null, "%"));
         assertEach(context, failures, "getPseudoColumns",
-                   c -> PseudoColumn.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> PseudoColumn.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getPseudoColumns(null, null, tableName(c, "DMB_CHILD"), "%"));
         assertEach(context, failures, "getSchemas",
-                   c -> Schema.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> Schema.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getSchemas(null, null));
         assertEach(context, failures, "getTablePrivileges",
-                   c -> TablePrivilege.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> TablePrivilege.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getTablePrivileges(null, null, tableName(c, "DMB_%")));
         assertEach(context, failures, "getTableTypes",
-                   c -> TableType.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> TableType.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    Context::getTableTypes);
         assertEach(context, failures, "getTables",
-                   c -> Table.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> Table.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getTables(null, null, tableName(c, "DMB_%"), (String[]) null));
         assertEach(context, failures, "getTypeInfo",
                    TypeInfo::comparingInSpecifiedOrder,
                    Context::getTypeInfo);
         assertEach(context, failures, "getUDTs",
-                   c -> UDT.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> UDT.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getUDTs(null, null, "%", (int[]) null));
         assertNoFailures(failures);
     }
@@ -134,21 +134,16 @@ final class Context_ComparingInSpecifiedOrder_Test_Utils {
         Objects.requireNonNull(name, "name is null");
         final var failures = new ArrayList<Throwable>();
         assertEach(context, failures, "getImportedKeys",
-                   c -> ImportedKey.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> ImportedKey.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getImportedKeys(null, null, tableName(c, "DMB_CHILD")));
         assertEach(context, failures, "getExportedKeys",
-                   c -> ExportedKey.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> ExportedKey.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getExportedKeys(null, null, tableName(c, "DMB_PARENT")));
         assertEach(context, failures, "getCrossReference",
-                   c -> CrossReference.comparingInSpecifiedOrder(stringComparator(c)),
+                   c -> CrossReference.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getCrossReference(null, null, tableName(c, "DMB_PARENT"),
                                             null, null, tableName(c, "DMB_CHILD")));
         assertNoFailures(failures);
-    }
-
-    private static Comparator<String> stringComparator(final Context context) throws SQLException {
-        return ContextUtils.withDatabaseNullOrdering(
-                context, String.CASE_INSENSITIVE_ORDER, ContextUtils.SortDirection.ASCENDING);
     }
 
     private static <T> void assertEach(final Context context, final List<? super Throwable> failures,

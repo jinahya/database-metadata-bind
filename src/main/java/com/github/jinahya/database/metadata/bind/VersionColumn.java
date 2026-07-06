@@ -30,6 +30,7 @@ import java.util.List;
  * A class for binding results of the {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getVersionColumns(String, String, String)
  * @see Context#getVersionColumns(String, String, String)
  * @see <a
  * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html#getVersionColumns(java.lang.String,java.lang.String,java.lang.String)">DatabaseMetaData#getVersionColumns(catalog,
