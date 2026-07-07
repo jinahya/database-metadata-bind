@@ -95,6 +95,14 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency><!-- manages jakarta.xml.bind-api + jaxb-runtime (JAXB dropped from jakartaee-bom 11) -->
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-bom</artifactId>
+        <!-- https://central.sonatype.com/artifact/org.glassfish.jaxb/jaxb-bom/versions -->
+        <version>4.0.5</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
@@ -152,6 +160,21 @@
     <!--      <artifactId>jakarta.annotation-api</artifactId>-->
     <!--      <scope>provided</scope>-->
     <!--    </dependency>-->
+    <dependency><!-- version managed by jakarta.platform:jakarta.jakartaee-bom -->
+      <groupId>jakarta.json.bind</groupId>
+      <artifactId>jakarta.json.bind-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency><!-- version managed by jakarta.platform:jakarta.jakartaee-bom -->
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency><!-- version managed by jakarta.platform:jakarta.jakartaee-bom -->
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier-nodep</artifactId>
@@ -176,6 +199,32 @@
       <artifactId>duckdb_jdbc</artifactId>
       <!-- https://central.sonatype.com/artifact/org.duckdb/duckdb_jdbc/versions -->
       <version>1.5.4.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency><!-- Jakarta JSON-B implementation (jakarta.json.bind-api) -->
+      <groupId>org.eclipse</groupId>
+      <artifactId>yasson</artifactId>
+      <!-- https://central.sonatype.com/artifact/org.eclipse/yasson/versions -->
+      <version>3.0.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency><!-- Jakarta Expression Language implementation (for Hibernate Validator) -->
+      <groupId>org.glassfish.expressly</groupId>
+      <artifactId>expressly</artifactId>
+      <!-- https://central.sonatype.com/artifact/org.glassfish.expressly/expressly/versions -->
+      <version>6.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency><!-- Jakarta XML Binding implementation (jakarta.xml.bind-api); version managed by jaxb-bom -->
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency><!-- Jakarta Validation implementation (jakarta.validation-api) -->
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <!-- https://central.sonatype.com/artifact/org.hibernate.validator/hibernate-validator/versions -->
+      <version>9.0.0.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
