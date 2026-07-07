@@ -20,7 +20,24 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
+
 final class __JakartaXmlBinding_Test_Utils {
+
+    static JAXBContext newContext() throws JAXBException {
+        return JAXBContext.newInstance(AbstractMetadataType.class);
+    }
+
+    static Marshaller createMarshaller() throws JAXBException {
+        return newContext().createMarshaller();
+    }
+
+    static Unmarshaller createUnmarshaller() throws JAXBException {
+        return newContext().createUnmarshaller();
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     private __JakartaXmlBinding_Test_Utils() {
