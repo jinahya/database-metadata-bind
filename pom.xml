@@ -50,7 +50,6 @@
     <version.com.oracle.ojdbc>23.3.0.23.09</version.com.oracle.ojdbc>
     <version.com.google.errorprone>2.45.0</version.com.google.errorprone>
     <version.com.uber.nullaway>0.12.15</version.com.uber.nullaway>
-    <version.jakarta.xml.bind>4.1.0-M1</version.jakarta.xml.bind>
     <version.lombok>1.18.46</version.lombok>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <!-- https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-surefire-plugin/versions -->
@@ -62,7 +61,6 @@
     <version.ojdbc8>21.8.0.0</version.ojdbc8>
     <version.ojdbc10>19.17.0.0</version.ojdbc10>
     <version.ojdbc11>21.8.0.0</version.ojdbc11>
-    <version.org.hibernate.validator>8.0.1.Final</version.org.hibernate.validator>
   </properties>
 
   <dependencyManagement>
@@ -162,38 +160,21 @@
     <!--      <artifactId>jakarta.annotation-api</artifactId>-->
     <!--      <scope>provided</scope>-->
     <!--    </dependency>-->
-    <dependency><!-- version managed by jakarta.platform:jakarta.jakartaee-bom -->
-      <groupId>jakarta.json.bind</groupId>
-      <artifactId>jakarta.json.bind-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency><!-- version managed by jakarta.platform:jakarta.jakartaee-bom -->
-      <groupId>jakarta.validation</groupId>
-      <artifactId>jakarta.validation-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency><!-- version managed by jakarta.platform:jakarta.jakartaee-bom -->
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
+    <dependency><!-- provided: used by main code; version managed by jakarta.platform:jakarta.jakartaee-bom -->
       <groupId>jakarta.json.bind</groupId>
       <artifactId>jakarta.json.bind-api</artifactId>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
-    <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
-      <!-- https://central.sonatype.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api/versions -->
-      <version>${version.jakarta.xml.bind}</version>
+    <dependency><!-- provided: used by main code; version managed by jakarta.platform:jakarta.jakartaee-bom -->
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
-    <dependency>
-      <groupId>jakarta.validation</groupId>
-      <artifactId>jakarta.validation-api</artifactId>
+    <dependency><!-- provided: used by main code; version managed by org.glassfish.jaxb:jaxb-bom -->
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -250,32 +231,6 @@
       <scope>test</scope>
     </dependency>
     <dependency><!-- Jakarta Validation implementation (jakarta.validation-api) -->
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <!-- https://central.sonatype.com/artifact/org.hibernate.validator/hibernate-validator/versions -->
-      <version>9.0.0.Final</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse</groupId>
-      <artifactId>yasson</artifactId>
-      <version>3.0.4</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.expressly</groupId>
-      <artifactId>expressly</artifactId>
-      <!-- https://central.sonatype.com/artifact/org.glassfish.expressly/expressly/versions -->
-      <version>6.0.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.jaxb</groupId>
-      <artifactId>jaxb-runtime</artifactId>
-      <version>4.0.5</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
       <!-- https://central.sonatype.com/artifact/org.hibernate.validator/hibernate-validator/versions -->
