@@ -49,9 +49,3 @@ try (var connection = dataSource.getConnection()) {
 ```
 
 See the [wiki](https://github.com/jinahya/database-metadata-bind/wiki) for more examples, catalog/schema `null` handling, and per-driver notes.
-
-## Contributing
-
-Many bindings need testing against real databases. See
-[Testing and Build](https://github.com/jinahya/database-metadata-bind/wiki/Testing-and-Build) for how to run the
-integration tests (e.g. `ExternalIT`) with your own JDBC driver, URL, and credentials.

@@ -51,6 +51,7 @@
     <version.com.google.errorprone>2.45.0</version.com.google.errorprone>
     <version.com.uber.nullaway>0.12.15</version.com.uber.nullaway>
     <version.lombok>1.18.46</version.lombok>
+    <version.mariadb-java-client>3.3.3</version.mariadb-java-client>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <!-- https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-surefire-plugin/versions -->
     <version.maven-surefire>3.5.6</version.maven-surefire>
@@ -61,6 +62,7 @@
     <version.ojdbc8>21.8.0.0</version.ojdbc8>
     <version.ojdbc10>19.17.0.0</version.ojdbc10>
     <version.ojdbc11>21.8.0.0</version.ojdbc11>
+    <version.postgresql>42.7.6</version.postgresql>
   </properties>
 
   <dependencyManagement>
@@ -568,11 +570,11 @@
 
   <profiles>
     <profile>
-      <id>external-mysql5</id>
+      <id>external-mariadb</id>
       <properties>
-        <driver.groupId>mysql</driver.groupId>
-        <driver.artifactId>mysql-connector-java</driver.artifactId>
-        <driver.version>8.0.33</driver.version>
+        <driver.groupId>org.mariadb.jdbc</driver.groupId>
+        <driver.artifactId>mariadb-java-client</driver.artifactId>
+        <driver.version>${version.mariadb-java-client}</driver.version>
       </properties>
       <dependencies>
         <dependency>
@@ -589,29 +591,129 @@
             <artifactId>build-helper-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>add-test-source-external-mysql5</id>
+                <id>add-test-source-external-mariadb</id>
                 <phase>generate-sources</phase>
                 <goals>
                   <goal>add-test-source</goal>
                 </goals>
                 <configuration>
                   <sources>
-                    <source>${project.basedir}/src/test/java-external-mysql5</source>
+                    <source>${project.basedir}/src/test/java-external-mariadb</source>
                   </sources>
                 </configuration>
               </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>external-mysql</id>
+      <properties>
+        <driver.groupId>com.mysql</driver.groupId>
+        <driver.artifactId>mysql-connector-j</driver.artifactId>
+        <driver.version>${version.mysql-connector-j}</driver.version>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>${driver.groupId}</groupId>
+          <artifactId>${driver.artifactId}</artifactId>
+          <version>${driver.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
               <execution>
-                <id>add-test-resource-external-mysql5</id>
-                <phase>generate-test-resources</phase>
+                <id>add-test-source-external-mysql</id>
+                <phase>generate-sources</phase>
                 <goals>
-                  <goal>add-test-resource</goal>
+                  <goal>add-test-source</goal>
                 </goals>
                 <configuration>
-                  <resources>
-                    <resource>
-                      <directory>${project.basedir}/src/test/resources-external-mysql5</directory>
-                    </resource>
-                  </resources>
+                  <sources>
+                    <source>${project.basedir}/src/test/java-external-mysql</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>external-oracle</id>
+      <properties>
+        <driver.groupId>com.oracle.database.jdbc</driver.groupId>
+        <driver.artifactId>ojdbc11</driver.artifactId>
+        <driver.version>${version.com.oracle.ojdbc}</driver.version>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>${driver.groupId}</groupId>
+          <artifactId>${driver.artifactId}</artifactId>
+          <version>${driver.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>add-test-source-external-oracle</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>add-test-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>${project.basedir}/src/test/java-external-oracle</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>external-postgresql</id>
+      <properties>
+        <driver.groupId>org.postgresql</driver.groupId>
+        <driver.artifactId>postgresql</driver.artifactId>
+        <driver.version>${version.postgresql}</driver.version>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>${driver.groupId}</groupId>
+          <artifactId>${driver.artifactId}</artifactId>
+          <version>${driver.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>add-test-source-external-postgresql</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>add-test-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>${project.basedir}/src/test/java-external-postgresql</source>
+                  </sources>
                 </configuration>
               </execution>
             </executions>
@@ -753,7 +855,7 @@
         <dependency>
           <groupId>org.mariadb.jdbc</groupId>
           <artifactId>mariadb-java-client</artifactId>
-          <version>3.3.3</version>
+          <version>${version.mariadb-java-client}</version>
           <scope>test</scope>
         </dependency>
         <dependency>
@@ -978,7 +1080,7 @@
         <dependency>
           <groupId>org.postgresql</groupId>
           <artifactId>postgresql</artifactId>
-          <version>42.7.6</version>
+          <version>${version.postgresql}</version>
           <scope>test</scope>
         </dependency>
         <dependency>

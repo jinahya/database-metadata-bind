@@ -53,8 +53,6 @@ public abstract class AbstractExternalIT {
 
     static final String PROPERTY_EXPRESSION_NON_BLANK = ".*\\S.*";
 
-    private static final String PROPERTY_NAME_CATALOG = "catalog";
-
     // -----------------------------------------------------------------------------------------------------------------
     String url() {
         return System.getProperty(PROPERTY_NAME_URL);
@@ -68,73 +66,15 @@ public abstract class AbstractExternalIT {
         return System.getProperty(PROPERTY_NAME_PASSWORD);
     }
 
-    String catalog() {
-        return System.getProperty(PROPERTY_NAME_CATALOG);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Test
-    void catalogs() throws SQLException {
+    private void withContext(final ContextConsumer action) throws SQLException {
         __JavaSqlTestUtils.applyConnection(url(), user(), password(), connection -> {
             try {
                 return Context_Test_Utils.applyContext(connection, context -> {
-                    try {
-                        final var catalogs = context.getCatalogs();
-                        write(context, "catalogs", "catalog", catalogs);
-                    } catch (final SQLException sqle) {
-                        throw new RuntimeException(sqle);
-                    }
+                    action.accept(context);
                     return null;
                 });
-            } catch (final SQLException sqlie) {
-                throw new RuntimeException(sqlie);
-            }
-        });
-    }
-
-    @Test
-    void schemas() throws SQLException {
-        __JavaSqlTestUtils.applyConnection(url(), user(), password(), connection -> {
-            try {
-                return Context_Test_Utils.applyContext(connection, context -> {
-                    try {
-                        final var catalog = catalog();
-                        final var schemas = catalog == null || catalog.isBlank()
-                                            ? context.getSchemas()
-                                            : context.getSchemas(catalog, null);
-                        write(context, "schemas", "schema", schemas);
-                    } catch (final SQLException sqle) {
-                        throw new RuntimeException(sqle);
-                    }
-                    return null;
-                });
-            } catch (final SQLException sqlie) {
-                throw new RuntimeException(sqlie);
-            }
-        });
-    }
-
-    @Test
-    void tables() throws SQLException {
-        __JavaSqlTestUtils.applyConnection(url(), user(), password(), connection -> {
-            try {
-                return Context_Test_Utils.applyContext(connection, context -> {
-                    try {
-                        final var catalog = catalog();
-                        final var tables = context.getTables(
-                                catalog == null || catalog.isBlank() ? null : catalog,
-                                null,
-                                "%",
-                                (String[]) null
-                        );
-                        write(context, "tables", "table", tables);
-                    } catch (final SQLException sqle) {
-                        throw new RuntimeException(sqle);
-                    }
-                    return null;
-                });
-            } catch (final SQLException sqlie) {
-                throw new RuntimeException(sqlie);
+            } catch (final SQLException sqle) {
+                throw new RuntimeException(sqle);
             }
         });
     }
@@ -148,5 +88,145 @@ public abstract class AbstractExternalIT {
         __JakartaXmlBinding_Test_Utils.write(rootElementName, itemElementName, values, xml);
         __JakartaJsonBinding_Test_Utils.write(values, json);
         log.info("wrote {} {} to {} and {}", values.size(), rootElementName, xml, json);
+    }
+
+    private static void writeOrLog(final Context context, final String rootElementName, final String itemElementName,
+                                   final ContextListSupplier supplier) {
+        try {
+            write(context, rootElementName, itemElementName, supplier.get(context));
+        } catch (final SQLException sqle) {
+            log.warn("failed to retrieve {}", rootElementName, sqle);
+        }
+    }
+
+    @FunctionalInterface
+    private interface ContextConsumer {
+
+        void accept(Context context);
+    }
+
+    @FunctionalInterface
+    private interface ContextListSupplier {
+
+        List<?> get(Context context) throws SQLException;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Test
+    void catalogs() throws SQLException {
+        withContext(context -> writeOrLog(context, "catalogs", "catalog", Context::getCatalogs));
+    }
+
+    @Test
+    void attributes() throws SQLException {
+        withContext(context -> writeOrLog(context, "attributes", "attribute", Context::getAllAttributes));
+    }
+
+    @Test
+    void clientInfoProperties() throws SQLException {
+        withContext(context -> writeOrLog(context, "clientInfoProperties", "clientInfoProperty",
+                                          Context::getClientInfoProperties));
+    }
+
+    @Test
+    void columns() throws SQLException {
+        withContext(context -> writeOrLog(context, "columns", "column", Context::getAllColumns));
+    }
+
+    @Test
+    void functions() throws SQLException {
+        withContext(context -> writeOrLog(context, "functions", "function", Context::getAllFunctions));
+    }
+
+    @Test
+    void functionColumns() throws SQLException {
+        withContext(context -> writeOrLog(context, "functionColumns", "functionColumn",
+                                          Context::getAllFunctionColumns));
+    }
+
+    @Test
+    void numericFunctions() throws SQLException {
+        withContext(context -> writeOrLog(context, "numericFunctions", "numericFunction",
+                                          Context::getNumericFunctions));
+    }
+
+    @Test
+    void procedures() throws SQLException {
+        withContext(context -> writeOrLog(context, "procedures", "procedure", Context::getAllProcedures));
+    }
+
+    @Test
+    void procedureColumns() throws SQLException {
+        withContext(context -> writeOrLog(context, "procedureColumns", "procedureColumn",
+                                          Context::getAllProcedureColumns));
+    }
+
+    @Test
+    void pseudoColumns() throws SQLException {
+        withContext(context -> writeOrLog(context, "pseudoColumns", "pseudoColumn", Context::getAllPseudoColumns));
+    }
+
+    @Test
+    void schemas() throws SQLException {
+        withContext(context -> writeOrLog(context, "schemas", "schema", Context::getSchemas));
+    }
+
+    @Test
+    void sqlKeywords() throws SQLException {
+        withContext(context -> writeOrLog(context, "sqlKeywords", "sqlKeyword", Context::getSQLKeywords));
+    }
+
+    @Test
+    void stringFunctions() throws SQLException {
+        withContext(context -> writeOrLog(context, "stringFunctions", "stringFunction",
+                                          Context::getStringFunctions));
+    }
+
+    @Test
+    void superTables() throws SQLException {
+        withContext(context -> writeOrLog(context, "superTables", "superTable", Context::getAllSuperTables));
+    }
+
+    @Test
+    void superTypes() throws SQLException {
+        withContext(context -> writeOrLog(context, "superTypes", "superType", Context::getAllSuperTypes));
+    }
+
+    @Test
+    void systemFunctions() throws SQLException {
+        withContext(context -> writeOrLog(context, "systemFunctions", "systemFunction",
+                                          Context::getSystemFunctions));
+    }
+
+    @Test
+    void tables() throws SQLException {
+        withContext(context -> writeOrLog(context, "tables", "table", Context::getAllTables));
+    }
+
+    @Test
+    void tablePrivileges() throws SQLException {
+        withContext(context -> writeOrLog(context, "tablePrivileges", "tablePrivilege",
+                                          Context::getAllTablePrivileges));
+    }
+
+    @Test
+    void tableTypes() throws SQLException {
+        withContext(context -> writeOrLog(context, "tableTypes", "tableType", Context::getTableTypes));
+    }
+
+    @Test
+    void timeDateFunctions() throws SQLException {
+        withContext(context -> writeOrLog(context, "timeDateFunctions", "timeDateFunction",
+                                          Context::getTimeDateFunctions));
+    }
+
+    @Test
+    void typeInfo() throws SQLException {
+        withContext(context -> writeOrLog(context, "typeInfo", "typeInfo", Context::getTypeInfo));
+    }
+
+    @Test
+    void udts() throws SQLException {
+        withContext(context -> writeOrLog(context, "udts", "udt", Context::getAllUDTs));
     }
 }
