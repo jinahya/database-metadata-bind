@@ -1,5 +1,11 @@
 package com.github.jinahya.database.metadata.bind;
 
+import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbConfig;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 /*-
  * #%L
  * database-metadata-bind
@@ -21,6 +27,22 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 final class __JakartaJsonBinding_Test_Utils {
+
+    static void write(final Object object, final Path path) {
+        try {
+            final var parent = path.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
+            final var config = new JsonbConfig().withFormatting(true);
+            try (var jsonb = JsonbBuilder.create(config);
+                 var writer = Files.newBufferedWriter(path)) {
+                jsonb.toJson(object, writer);
+            }
+        } catch (final Exception e) {
+            throw new RuntimeException("failed to write json to " + path, e);
+        }
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     private __JakartaJsonBinding_Test_Utils() {

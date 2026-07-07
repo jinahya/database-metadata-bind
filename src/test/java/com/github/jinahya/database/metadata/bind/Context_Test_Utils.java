@@ -22,10 +22,12 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.sql.Connection;
 import java.sql.JDBCType;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -41,6 +43,38 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
  */
 @Slf4j
 final class Context_Test_Utils {
+
+    static <R> R applyContext(final Connection connection,
+                              final java.util.function.Function<? super Context, ? extends R> function)
+            throws SQLException {
+        return function.apply(Context.newInstance(connection));
+    }
+
+    static String artifactFileNamePrefix(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        final var metadata = context.metadata;
+        final var value = String.join(
+                "-",
+                normalizeFileNamePart(metadata.getDatabaseProductName()),
+                normalizeFileNamePart(metadata.getDatabaseProductVersion()),
+                normalizeFileNamePart(metadata.getDriverName()),
+                normalizeFileNamePart(metadata.getDriverVersion())
+        );
+        if (!value.matches("[a-z0-9][a-z0-9-]*")) {
+            throw new IllegalStateException("invalid artifact file name prefix: " + value);
+        }
+        return value;
+    }
+
+    private static String normalizeFileNamePart(final String value) {
+        if (value == null) {
+            return "unknown";
+        }
+        final var normalized = value.toLowerCase(Locale.ROOT)
+                .replaceAll("[^a-z0-9]+", "-")
+                .replaceAll("(^-+|-+$)", "");
+        return normalized.isBlank() ? "unknown" : normalized;
+    }
 
     private static String databaseProductName(final Context context) throws SQLException {
         return context.metadata.getDatabaseProductName();

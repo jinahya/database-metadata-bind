@@ -208,6 +208,13 @@
       <version>3.0.4</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.owasp.esapi</groupId>
+      <artifactId>esapi</artifactId>
+      <!-- https://central.sonatype.com/artifact/org.owasp.esapi/esapi/versions -->
+      <version>2.7.0.1-RC1</version>
+      <scope>test</scope>
+    </dependency>
     <dependency><!-- Jakarta Expression Language implementation (for Hibernate Validator) -->
       <groupId>org.glassfish.expressly</groupId>
       <artifactId>expressly</artifactId>
@@ -556,6 +563,58 @@
   </reporting>
 
   <profiles>
+    <profile>
+      <id>external-mysql5</id>
+      <properties>
+        <driver.groupId>mysql</driver.groupId>
+        <driver.artifactId>mysql-connector-java</driver.artifactId>
+        <driver.version>8.0.33</driver.version>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>${driver.groupId}</groupId>
+          <artifactId>${driver.artifactId}</artifactId>
+          <version>${driver.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>add-test-source-external-mysql5</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>add-test-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>${project.basedir}/src/test/java-external-mysql5</source>
+                  </sources>
+                </configuration>
+              </execution>
+              <execution>
+                <id>add-test-resource-external-mysql5</id>
+                <phase>generate-test-resources</phase>
+                <goals>
+                  <goal>add-test-resource</goal>
+                </goals>
+                <configuration>
+                  <resources>
+                    <resource>
+                      <directory>${project.basedir}/src/test/resources-external-mysql5</directory>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>failsafe</id>
       <build>
