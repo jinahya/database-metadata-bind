@@ -591,11 +591,6 @@
         </dependencies>
       </dependencyManagement>
       <dependencies>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>testcontainers-junit-jupiter</artifactId>
-          <scope>test</scope>
-        </dependency>
         <dependency><!-- https://search.maven.org/search?q=a:mssql-jdbc -->
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
@@ -607,12 +602,17 @@
         </dependency>
         <dependency>
           <groupId>org.testcontainers</groupId>
-          <artifactId>testcontainers-mssqlserver</artifactId>
+          <artifactId>testcontainers</artifactId>
           <scope>test</scope>
         </dependency>
         <dependency>
           <groupId>org.testcontainers</groupId>
-          <artifactId>testcontainers</artifactId>
+          <artifactId>testcontainers-junit-jupiter</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>testcontainers-mssqlserver</artifactId>
           <scope>test</scope>
         </dependency>
         <dependency>
