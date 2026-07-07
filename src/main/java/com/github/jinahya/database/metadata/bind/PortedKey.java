@@ -20,6 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import org.jspecify.annotations.Nullable;
 
@@ -296,6 +300,8 @@ abstract class PortedKey
      *
      * @return the effective value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectivePktableCat() {
         return pktableCat == null ? "" : pktableCat;
     }
@@ -327,6 +333,8 @@ abstract class PortedKey
      *
      * @return the effective value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectivePktableSchem() {
         return pktableSchem == null ? "" : pktableSchem;
     }
@@ -398,6 +406,8 @@ abstract class PortedKey
      *
      * @return the effective value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveFktableCat() {
         return fktableCat == null ? "" : fktableCat;
     }
@@ -429,6 +439,8 @@ abstract class PortedKey
      *
      * @return the effective value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveFktableSchem() {
         return fktableSchem == null ? "" : fktableSchem;
     }
@@ -596,11 +608,15 @@ abstract class PortedKey
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_CAT)
     String pktableCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_SCHEM)
@@ -613,11 +629,15 @@ abstract class PortedKey
     String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_CAT)
     String fktableCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_SCHEM)
@@ -641,11 +661,15 @@ abstract class PortedKey
     private Integer deleteRule;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FK_NAME)
     private String fkName;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)

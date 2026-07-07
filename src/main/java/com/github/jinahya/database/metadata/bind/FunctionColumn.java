@@ -20,6 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
@@ -266,6 +270,8 @@ public class FunctionColumn
      *
      * @return the effective value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveFunctionCat() {
         return functionCat == null ? "" : functionCat;
     }
@@ -297,6 +303,8 @@ public class FunctionColumn
      *
      * @return the effective value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveFunctionSchem() {
         return functionSchem == null ? "" : functionSchem;
     }
@@ -606,11 +614,15 @@ public class FunctionColumn
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
@@ -632,6 +644,8 @@ public class FunctionColumn
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
@@ -640,6 +654,8 @@ public class FunctionColumn
     @_ColumnLabel(COLUMN_LABEL_LENGTH)
     private Integer length;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCALE)
@@ -654,6 +670,8 @@ public class FunctionColumn
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)

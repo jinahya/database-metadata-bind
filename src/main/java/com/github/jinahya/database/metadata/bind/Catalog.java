@@ -1,5 +1,7 @@
 package com.github.jinahya.database.metadata.bind;
 
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import java.io.Serial;
@@ -132,6 +134,8 @@ public class Catalog
      *
      * @return the effective value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveTableCat() {
         return tableCat == null ? "" : tableCat;
     }

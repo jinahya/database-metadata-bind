@@ -20,6 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
@@ -238,6 +242,8 @@ public class Table
      *
      * @return the effective value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveTableCat() {
         return tableCat == null ? "" : tableCat;
     }
@@ -269,6 +275,8 @@ public class Table
      *
      * @return the effective value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveTableSchem() {
         return tableSchem == null ? "" : tableSchem;
     }
@@ -361,6 +369,8 @@ public class Table
      *
      * @return the effective value of {@value #COLUMN_LABEL_TYPE_CAT} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveTypeCat() {
         return typeCat == null ? "" : typeCat;
     }
@@ -392,6 +402,8 @@ public class Table
      *
      * @return the effective value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveTypeSchem() {
         return typeSchem == null ? "" : typeSchem;
     }
@@ -461,11 +473,15 @@ public class Table
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
@@ -479,22 +495,30 @@ public class Table
     private String tableType;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
@@ -502,11 +526,15 @@ public class Table
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SELF_REFERENCING_COL_NAME)
     private String selfReferencingColName;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REF_GENERATION)

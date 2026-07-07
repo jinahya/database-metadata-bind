@@ -20,6 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
@@ -144,6 +148,8 @@ public class Schema
      *
      * @return the effective value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveTableSchem() {
         return tableSchem == null ? "" : tableSchem;
     }
@@ -175,6 +181,8 @@ public class Schema
      *
      * @return the effective value of {@value #COLUMN_LABEL_TABLE_CATALOG} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveTableCatalog() {
         return tableCatalog == null ? "" : tableCatalog;
     }
@@ -183,6 +191,8 @@ public class Schema
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)

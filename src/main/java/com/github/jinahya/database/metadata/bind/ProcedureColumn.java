@@ -20,6 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
@@ -341,6 +345,8 @@ public class ProcedureColumn
      *
      * @return the effective value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveProcedureCat() {
         return procedureCat == null ? "" : procedureCat;
     }
@@ -372,6 +378,8 @@ public class ProcedureColumn
      *
      * @return the effective value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveProcedureSchem() {
         return procedureSchem == null ? "" : procedureSchem;
     }
@@ -743,11 +751,15 @@ public class ProcedureColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_CAT)
     private String procedureCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_SCHEM)
@@ -769,6 +781,8 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
@@ -777,6 +791,8 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_LENGTH)
     private Integer length;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCALE)
@@ -793,21 +809,29 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_DEF)
     private String columnDef;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_ReservedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_ReservedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)

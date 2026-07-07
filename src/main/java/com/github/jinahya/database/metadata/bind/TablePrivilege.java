@@ -20,6 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
@@ -177,6 +181,8 @@ public class TablePrivilege
      *
      * @return the effective value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveTableCat() {
         return tableCat == null ? "" : tableCat;
     }
@@ -208,6 +214,8 @@ public class TablePrivilege
      *
      * @return the effective value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveTableSchem() {
         return tableSchem == null ? "" : tableSchem;
     }
@@ -316,11 +324,15 @@ public class TablePrivilege
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
@@ -331,6 +343,8 @@ public class TablePrivilege
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_GRANTOR)
@@ -342,6 +356,8 @@ public class TablePrivilege
     @_ColumnLabel(COLUMN_LABEL_PRIVILEGE)
     private String privilege;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)

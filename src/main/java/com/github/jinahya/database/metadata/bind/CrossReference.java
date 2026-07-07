@@ -20,6 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
@@ -346,6 +350,8 @@ public class CrossReference
      *
      * @return the effective value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectivePktableCat() {
         return pktableCat == null ? "" : pktableCat;
     }
@@ -377,6 +383,8 @@ public class CrossReference
      *
      * @return the effective value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectivePktableSchem() {
         return pktableSchem == null ? "" : pktableSchem;
     }
@@ -448,6 +456,8 @@ public class CrossReference
      *
      * @return the effective value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveFktableCat() {
         return fktableCat == null ? "" : fktableCat;
     }
@@ -479,6 +489,8 @@ public class CrossReference
      *
      * @return the effective value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
      */
+    @JsonbProperty
+    @XmlAttribute
     String getEffectiveFktableSchem() {
         return fktableSchem == null ? "" : fktableSchem;
     }
@@ -647,11 +659,15 @@ public class CrossReference
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_CAT)
     private String pktableCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_SCHEM)
@@ -665,11 +681,15 @@ public class CrossReference
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_CAT)
     private String fktableCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_SCHEM)
@@ -693,11 +713,15 @@ public class CrossReference
     private Integer deleteRule;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FK_NAME)
     private String fkName;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)

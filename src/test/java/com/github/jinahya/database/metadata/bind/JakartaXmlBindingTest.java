@@ -53,7 +53,7 @@ class JakartaXmlBindingTest {
         final var xml = marshal(JAXBContext.newInstance(PACKAGE), wrapper);
         assertThat(xml)
                 .contains('<' + MetadataTypeWrapper.ROOT_ELEMENT_NAME + '>')
-                .contains("<schema>")
+                .contains("<schema")
                 .contains("PUBLIC")
                 .contains("SYS")
                 // "unwrapped": no intermediate <elements> wrapper element
@@ -68,7 +68,7 @@ class JakartaXmlBindingTest {
         // same wrapper class, T = Table this time; child self-names via its own @XmlRootElement
         assertThat(xml)
                 .contains('<' + MetadataTypeWrapper.ROOT_ELEMENT_NAME + '>')
-                .contains("<table>")
+                .contains("<table")
                 .contains("<tableName>EMP</tableName>");
     }
 

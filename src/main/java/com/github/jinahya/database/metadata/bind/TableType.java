@@ -119,9 +119,9 @@ public class TableType
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     @SuppressWarnings({
             "java:S1700"
     })
+    @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 }
