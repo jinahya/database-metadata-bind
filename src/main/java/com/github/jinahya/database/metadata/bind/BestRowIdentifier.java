@@ -51,15 +51,17 @@ public class BestRowIdentifier
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * Returns a comparator comparing values in the specified order, placing {@code null} values as the specified
-     * context's database sorts them.
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)}, placing
+     * {@code null} values as the specified context's database sorts them.
      *
      * @param context a context whose metadata determines the {@code null} ordering.
-     * @return a comparator comparing values in the specified order.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)}.
      * @throws SQLException if a database access error occurs.
      * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
      */
-    static Comparator<BestRowIdentifier> comparingInSpecifiedOrder(final Context context) throws SQLException {
+    static Comparator<BestRowIdentifier> comparingInJdbcOrder(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         return Comparator.comparing(BestRowIdentifier::getScope, ContextUtils.withDatabaseNullOrdering(
                 context, Comparator.<Integer>naturalOrder(), ContextUtils.SortDirection.ASCENDING));

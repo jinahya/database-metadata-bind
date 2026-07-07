@@ -45,17 +45,19 @@ public class TablePrivilege
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * Returns a comparator comparing values in the specified order, placing {@code null} values as the specified
-     * context's database sorts them.
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getTablePrivileges(String, String, String)}, placing {@code null} values as the
+     * specified context's database sorts them.
      *
      * @param context    a context whose metadata determines the {@code null} ordering.
      * @param comparator a comparator for comparing (non-{@code null}) string values.
-     * @return a comparator comparing values in the specified order.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getTablePrivileges(String, String, String)}.
      * @throws SQLException if a database access error occurs.
      * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
      */
-    static Comparator<TablePrivilege> comparingInSpecifiedOrder(final Context context,
-                                                                final Comparator<? super String> comparator)
+    static Comparator<TablePrivilege> comparingInJdbcOrder(final Context context,
+                                                           final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");

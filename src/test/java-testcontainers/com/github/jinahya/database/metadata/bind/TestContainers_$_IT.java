@@ -115,11 +115,11 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
-    void comparingInSpecifiedOrder() {
+    void comparingInJdbcOrder() {
         applyConnection(c -> {
             try (var statement = c.createStatement()) {
-                Context_ComparingInSpecifiedOrder_Test_Utils.preparePortedKeyTables(statement);
-                Context_ComparingInSpecifiedOrder_Test_Utils.assertComparingInSpecifiedOrder(
+                Context_ComparingInJdbcOrder_Test_Utils.preparePortedKeyTables(statement);
+                Context_ComparingInJdbcOrder_Test_Utils.assertComparingInJdbcOrder(
                         Context.newInstance(c),
                         getClass().getSimpleName()
                 );

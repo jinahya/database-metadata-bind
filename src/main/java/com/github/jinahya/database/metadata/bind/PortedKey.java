@@ -46,13 +46,16 @@ abstract class PortedKey
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
+     * Returns a comparator ordering elements in the primary-key-table order documented by
+     * {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)} ({@code PKTABLE_CAT},
+     * {@code PKTABLE_SCHEM}, {@code PKTABLE_NAME}, {@code KEY_SEQ}), placing {@code null} values (of all keys) as the
      * specified context's database sorts them.
      *
      * @param context    a context whose metadata determines the {@code null} ordering.
      * @param comparator a comparator for comparing (non-{@code null}) string values.
      * @param <T>        the type of {@link PortedKey} to compare.
-     * @return a comparator comparing values in the specified order.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)}.
      * @throws SQLException if a database access error occurs.
      */
     static <T extends PortedKey> Comparator<T> comparingPk(final Context context,
@@ -71,13 +74,16 @@ abstract class PortedKey
     }
 
     /**
-     * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
+     * Returns a comparator ordering elements in the foreign-key-table order documented by
+     * {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)} ({@code FKTABLE_CAT},
+     * {@code FKTABLE_SCHEM}, {@code FKTABLE_NAME}, {@code KEY_SEQ}), placing {@code null} values (of all keys) as the
      * specified context's database sorts them.
      *
      * @param context    a context whose metadata determines the {@code null} ordering.
      * @param comparator a comparator for comparing (non-{@code null}) string values.
      * @param <T>        the type of {@link PortedKey} to compare.
-     * @return a comparator comparing values in the specified order.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}.
      * @throws SQLException if a database access error occurs.
      */
     static <T extends PortedKey> Comparator<T> comparingFk(final Context context,

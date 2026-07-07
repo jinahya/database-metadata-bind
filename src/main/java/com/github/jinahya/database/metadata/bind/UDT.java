@@ -64,7 +64,7 @@ public class UDT
      * @throws SQLException if a database access error occurs.
      * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
      */
-    static Comparator<UDT> comparingInSpecifiedOrder(final Context context, final Comparator<? super String> comparator)
+    static Comparator<UDT> comparingInJdbcOrder(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");

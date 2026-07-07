@@ -25,9 +25,12 @@ import org.jspecify.annotations.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -244,6 +247,39 @@ public final class ContextUtils {
                    : Comparator.nullsFirst(comparator);
         }
         return Comparator.nullsLast(comparator);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns all public static final {@code int} values declared in {@link Types}.
+     *
+     * @return all public static final {@code int} values declared in {@link Types}.
+     */
+    static int[] javaSqlTypesValues() {
+        final Field[] fields = Types.class.getFields();
+        final int[] values = new int[fields.length];
+        int count = 0;
+        for (final Field field : fields) {
+            if (field.getDeclaringClass() != Types.class) {
+                continue;
+            }
+            if (field.getType() != int.class) {
+                continue;
+            }
+            final int modifiers = field.getModifiers();
+            if (!Modifier.isPublic(modifiers) || !Modifier.isStatic(modifiers) || !Modifier.isFinal(modifiers)) {
+                continue;
+            }
+            try {
+                values[count++] = field.getInt(null);
+            } catch (final IllegalAccessException iae) {
+                throw new AssertionError("failed to read " + field, iae);
+            }
+        }
+        final int[] result = Arrays.copyOf(values, count);
+        Arrays.sort(result);
+        return result;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

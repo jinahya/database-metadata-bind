@@ -12,8 +12,8 @@
  *}
  * <p>
  * Binding types whose corresponding {@link java.sql.DatabaseMetaData} method specifies a result order provide
- * package-private {@code comparingInSpecifiedOrder(...)} factories that model the explicit comparison keys exposed by
- * the result set and use the supplied {@link com.github.jinahya.database.metadata.bind.Context} for database-reported
+ * package-private {@code comparingInJdbcOrder(...)} factories that model the explicit comparison keys exposed by the
+ * result set and use the supplied {@link com.github.jinahya.database.metadata.bind.Context} for database-reported
  * {@code null} ordering. Two properties of these comparators are worth noting:
  * <ul>
  *   <li>String key values are compared with the supplied comparator after {@code null} values have been ordered with

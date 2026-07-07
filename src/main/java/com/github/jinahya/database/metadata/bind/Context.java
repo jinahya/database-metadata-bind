@@ -283,9 +283,9 @@ public class Context {
     }
 
     /**
-     * Accepts all Attribute rows across the database, to the specified consumer, via a non-narrowing match-all
-     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
-     * pattern parameters.
+     * Accepts all Attribute rows across the database, to the specified consumer, via a non-narrowing match-all sweep.
+     * May be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
@@ -301,9 +301,8 @@ public class Context {
     }
 
     /**
-     * Returns a list of all Attribute rows across the database, via a non-narrowing match-all sweep. May be
-     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
-     * parameters.
+     * Returns a list of all Attribute rows across the database, via a non-narrowing match-all sweep. May be expensive
+     * on large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @return a list of all bound Attribute rows.
      * @throws SQLException if a database error occurs.
@@ -850,9 +849,8 @@ public class Context {
     }
 
     /**
-     * Accepts all Column rows across the database, to the specified consumer, via a non-narrowing match-all
-     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
-     * pattern parameters.
+     * Accepts all Column rows across the database, to the specified consumer, via a non-narrowing match-all sweep. May
+     * be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
@@ -862,9 +860,8 @@ public class Context {
     }
 
     /**
-     * Returns a list of all Column rows across the database, via a non-narrowing match-all sweep. May be
-     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
-     * parameters.
+     * Returns a list of all Column rows across the database, via a non-narrowing match-all sweep. May be expensive on
+     * large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @return a list of all bound Column rows.
      * @throws SQLException if a database error occurs.
@@ -1402,9 +1399,9 @@ public class Context {
      * @see #forEachFunction(String, String, String, Consumer)
      */
     /**
-     * Accepts all Function rows across the database, to the specified consumer, via a non-narrowing match-all
-     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
-     * pattern parameters.
+     * Accepts all Function rows across the database, to the specified consumer, via a non-narrowing match-all sweep.
+     * May be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
@@ -1423,9 +1420,8 @@ public class Context {
      * @see #getFunctions(String, String, String)
      */
     /**
-     * Returns a list of all Function rows across the database, via a non-narrowing match-all sweep. May be
-     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
-     * parameters.
+     * Returns a list of all Function rows across the database, via a non-narrowing match-all sweep. May be expensive on
+     * large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @return a list of all bound Function rows.
      * @throws SQLException if a database error occurs.
@@ -1532,8 +1528,8 @@ public class Context {
 
     /**
      * Accepts all FunctionColumn rows across the database, to the specified consumer, via a non-narrowing match-all
-     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
-     * pattern parameters.
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
@@ -1544,8 +1540,7 @@ public class Context {
 
     /**
      * Returns a list of all FunctionColumn rows across the database, via a non-narrowing match-all sweep. May be
-     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
-     * parameters.
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @return a list of all bound FunctionColumn rows.
      * @throws SQLException if a database error occurs.
@@ -2091,8 +2086,8 @@ public class Context {
 
     /**
      * Accepts all ProcedureColumn rows across the database, to the specified consumer, via a non-narrowing match-all
-     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
-     * pattern parameters.
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
@@ -2103,8 +2098,7 @@ public class Context {
 
     /**
      * Returns a list of all ProcedureColumn rows across the database, via a non-narrowing match-all sweep. May be
-     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
-     * parameters.
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @return a list of all bound ProcedureColumn rows.
      * @throws SQLException if a database error occurs.
@@ -2243,9 +2237,9 @@ public class Context {
     }
 
     /**
-     * Accepts all Procedure rows across the database, to the specified consumer, via a non-narrowing match-all
-     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
-     * pattern parameters.
+     * Accepts all Procedure rows across the database, to the specified consumer, via a non-narrowing match-all sweep.
+     * May be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
@@ -2255,9 +2249,8 @@ public class Context {
     }
 
     /**
-     * Returns a list of all Procedure rows across the database, via a non-narrowing match-all sweep. May be
-     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
-     * parameters.
+     * Returns a list of all Procedure rows across the database, via a non-narrowing match-all sweep. May be expensive
+     * on large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @return a list of all bound Procedure rows.
      * @throws SQLException if a database error occurs.
@@ -2455,8 +2448,8 @@ public class Context {
 
     /**
      * Accepts all PseudoColumn rows across the database, to the specified consumer, via a non-narrowing match-all
-     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
-     * pattern parameters.
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
@@ -2467,8 +2460,7 @@ public class Context {
 
     /**
      * Returns a list of all PseudoColumn rows across the database, via a non-narrowing match-all sweep. May be
-     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
-     * parameters.
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @return a list of all bound PseudoColumn rows.
      * @throws SQLException if a database error occurs.
@@ -2751,9 +2743,10 @@ public class Context {
      * @see DatabaseMetaData#getSuperTables(String, String, String)
      */
     /**
-     * Accepts all SuperTable rows across the database, to the specified consumer, via a non-narrowing match-all
-     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
-     * pattern parameters. Because {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the driver may be excluded.
+     * Accepts all SuperTable rows across the database, to the specified consumer, via a non-narrowing match-all sweep.
+     * May be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters. Because {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the
+     * driver may be excluded.
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
@@ -2763,9 +2756,10 @@ public class Context {
     }
 
     /**
-     * Returns a list of all SuperTable rows across the database, via a non-narrowing match-all sweep. May be
-     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
-     * parameters. Because {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the driver may be excluded.
+     * Returns a list of all SuperTable rows across the database, via a non-narrowing match-all sweep. May be expensive
+     * on large databases, and results depend on the driver's interpretation of JDBC pattern parameters. Because
+     * {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the driver may be
+     * excluded.
      *
      * @return a list of all bound SuperTable rows.
      * @throws SQLException if a database error occurs.
@@ -2991,9 +2985,10 @@ public class Context {
      * @see DatabaseMetaData#getSuperTypes(String, String, String)
      */
     /**
-     * Accepts all SuperType rows across the database, to the specified consumer, via a non-narrowing match-all
-     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
-     * pattern parameters. Because {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the driver may be excluded.
+     * Accepts all SuperType rows across the database, to the specified consumer, via a non-narrowing match-all sweep.
+     * May be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters. Because {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the
+     * driver may be excluded.
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
@@ -3003,9 +2998,10 @@ public class Context {
     }
 
     /**
-     * Returns a list of all SuperType rows across the database, via a non-narrowing match-all sweep. May be
-     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
-     * parameters. Because {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the driver may be excluded.
+     * Returns a list of all SuperType rows across the database, via a non-narrowing match-all sweep. May be expensive
+     * on large databases, and results depend on the driver's interpretation of JDBC pattern parameters. Because
+     * {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the driver may be
+     * excluded.
      *
      * @return a list of all bound SuperType rows.
      * @throws SQLException if a database error occurs.
@@ -3265,8 +3261,8 @@ public class Context {
 
     /**
      * Accepts all TablePrivilege rows across the database, to the specified consumer, via a non-narrowing match-all
-     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
-     * pattern parameters.
+     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
+     * parameters.
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
@@ -3277,8 +3273,7 @@ public class Context {
 
     /**
      * Returns a list of all TablePrivilege rows across the database, via a non-narrowing match-all sweep. May be
-     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
-     * parameters.
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @return a list of all bound TablePrivilege rows.
      * @throws SQLException if a database error occurs.
@@ -3310,7 +3305,8 @@ public class Context {
     }
 
     /**
-     * Accepts, to the specified consumer, each bound {@code TablePrivilege}, optionally scoped to the specified catalog.
+     * Accepts, to the specified consumer, each bound {@code TablePrivilege}, optionally scoped to the specified
+     * catalog.
      *
      * @param catalog          the catalog whose {@link Catalog#getTableCat() tableCat} is used for the {@code catalog}
      *                         parameter.
@@ -3580,9 +3576,8 @@ public class Context {
     }
 
     /**
-     * Accepts all Table rows across the database, to the specified consumer, via a non-narrowing match-all
-     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
-     * pattern parameters.
+     * Accepts all Table rows across the database, to the specified consumer, via a non-narrowing match-all sweep. May
+     * be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
@@ -3592,9 +3587,8 @@ public class Context {
     }
 
     /**
-     * Returns a list of all Table rows across the database, via a non-narrowing match-all sweep. May be
-     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
-     * parameters.
+     * Returns a list of all Table rows across the database, via a non-narrowing match-all sweep. May be expensive on
+     * large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @return a list of all bound Table rows.
      * @throws SQLException if a database error occurs.
@@ -3868,9 +3862,8 @@ public class Context {
     }
 
     /**
-     * Accepts all UDT rows across the database, to the specified consumer, via a non-narrowing match-all
-     * sweep. May be expensive on large databases, and results depend on the driver's interpretation of JDBC
-     * pattern parameters.
+     * Accepts all UDT rows across the database, to the specified consumer, via a non-narrowing match-all sweep. May be
+     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
@@ -3880,9 +3873,8 @@ public class Context {
     }
 
     /**
-     * Returns a list of all UDT rows across the database, via a non-narrowing match-all sweep. May be
-     * expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
-     * parameters.
+     * Returns a list of all UDT rows across the database, via a non-narrowing match-all sweep. May be expensive on
+     * large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
      *
      * @return a list of all bound UDT rows.
      * @throws SQLException if a database error occurs.

@@ -30,7 +30,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-final class Context_ComparingInSpecifiedOrder_Test_Utils {
+final class Context_ComparingInJdbcOrder_Test_Utils {
 
     static void preparePortedKeyTables(final Statement statement) throws SQLException {
         Objects.requireNonNull(statement, "statement is null");
@@ -46,81 +46,81 @@ final class Context_ComparingInSpecifiedOrder_Test_Utils {
         );
     }
 
-    static void assertComparingInSpecifiedOrder(final Context context) throws SQLException {
-        assertComparingInSpecifiedOrder(context, "comparingInSpecifiedOrder");
+    static void assertComparingInJdbcOrder(final Context context) throws SQLException {
+        assertComparingInJdbcOrder(context, "comparingInJdbcOrder");
     }
 
-    static void assertComparingInSpecifiedOrder(final Context context, final String name) throws SQLException {
+    static void assertComparingInJdbcOrder(final Context context, final String name) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(name, "name is null");
         final var failures = new ArrayList<Throwable>();
         assertEach(context, failures, "getAttributes",
-                   c -> Attribute.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> Attribute.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getAttributes(null, null, "%", "%"));
         assertEach(context, failures, "getBestRowIdentifier",
-                   BestRowIdentifier::comparingInSpecifiedOrder,
+                   BestRowIdentifier::comparingInJdbcOrder,
                    c -> c.getBestRowIdentifier(null, null, tableName(c, "DMB_CHILD"),
                                                BestRowIdentifier.COLUMN_VALUE_SCOPE_BEST_ROW_SESSION, true));
         assertEach(context, failures, "getCatalogs",
-                   c -> Catalog.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> Catalog.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    Context::getCatalogs);
         assertEach(context, failures, "getClientInfoProperties",
-                   c -> ClientInfoProperty.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> ClientInfoProperty.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    Context::getClientInfoProperties);
         assertEach(context, failures, "getColumnPrivileges",
-                   c -> ColumnPrivilege.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> ColumnPrivilege.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getColumnPrivileges(null, null, tableName(c, "DMB_CHILD"), "%"));
         assertEach(context, failures, "getColumns",
-                   c -> Column.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> Column.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getColumns(null, null, tableName(c, "DMB_%"), "%"));
         assertEach(context, failures, "getCrossReference",
-                   c -> CrossReference.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> CrossReference.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getCrossReference(null, null, tableName(c, "DMB_PARENT"),
                                             null, null, tableName(c, "DMB_CHILD")));
         assertEach(context, failures, "getExportedKeys",
-                   c -> ExportedKey.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> ExportedKey.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getExportedKeys(null, null, tableName(c, "DMB_PARENT")));
         assertEach(context, failures, "getFunctions",
-                   c -> Function.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> Function.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getFunctions(null, null, "%"));
         assertEach(context, failures, "getFunctionColumns",
-                   c -> FunctionColumn.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> FunctionColumn.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getFunctionColumns(null, null, "%", "%"));
         assertEach(context, failures, "getImportedKeys",
-                   c -> ImportedKey.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> ImportedKey.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getImportedKeys(null, null, tableName(c, "DMB_CHILD")));
         assertEach(context, failures, "getIndexInfo",
-                   c -> IndexInfo.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> IndexInfo.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getIndexInfo(null, null, tableName(c, "DMB_CHILD"), false, false));
         assertEach(context, failures, "getPrimaryKeys",
-                   c -> PrimaryKey.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> PrimaryKey.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getPrimaryKeys(null, null, tableName(c, "DMB_CHILD")));
         assertEach(context, failures, "getProcedureColumns",
-                   c -> ProcedureColumn.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> ProcedureColumn.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getProcedureColumns(null, null, "%", "%"));
         assertEach(context, failures, "getProcedures",
-                   c -> Procedure.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> Procedure.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getProcedures(null, null, "%"));
         assertEach(context, failures, "getPseudoColumns",
-                   c -> PseudoColumn.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> PseudoColumn.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getPseudoColumns(null, null, tableName(c, "DMB_CHILD"), "%"));
         assertEach(context, failures, "getSchemas",
-                   c -> Schema.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> Schema.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getSchemas(null, null));
         assertEach(context, failures, "getTablePrivileges",
-                   c -> TablePrivilege.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> TablePrivilege.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getTablePrivileges(null, null, tableName(c, "DMB_%")));
         assertEach(context, failures, "getTableTypes",
-                   c -> TableType.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> TableType.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    Context::getTableTypes);
         assertEach(context, failures, "getTables",
-                   c -> Table.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> Table.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getTables(null, null, tableName(c, "DMB_%"), (String[]) null));
         assertEach(context, failures, "getTypeInfo",
-                   TypeInfo::comparingInSpecifiedOrder,
+                   TypeInfo::comparingInJdbcOrder,
                    Context::getTypeInfo);
         assertEach(context, failures, "getUDTs",
-                   c -> UDT.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> UDT.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getUDTs(null, null, "%", (int[]) null));
         assertNoFailures(failures);
     }
@@ -134,13 +134,13 @@ final class Context_ComparingInSpecifiedOrder_Test_Utils {
         Objects.requireNonNull(name, "name is null");
         final var failures = new ArrayList<Throwable>();
         assertEach(context, failures, "getImportedKeys",
-                   c -> ImportedKey.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> ImportedKey.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getImportedKeys(null, null, tableName(c, "DMB_CHILD")));
         assertEach(context, failures, "getExportedKeys",
-                   c -> ExportedKey.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> ExportedKey.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getExportedKeys(null, null, tableName(c, "DMB_PARENT")));
         assertEach(context, failures, "getCrossReference",
-                   c -> CrossReference.comparingInSpecifiedOrder(c, String.CASE_INSENSITIVE_ORDER),
+                   c -> CrossReference.comparingInJdbcOrder(c, String.CASE_INSENSITIVE_ORDER),
                    c -> c.getCrossReference(null, null, tableName(c, "DMB_PARENT"),
                                             null, null, tableName(c, "DMB_CHILD")));
         assertNoFailures(failures);
@@ -199,7 +199,7 @@ final class Context_ComparingInSpecifiedOrder_Test_Utils {
         if (failures.isEmpty()) {
             return;
         }
-        final var failure = new AssertionError("failed to verify comparingInSpecifiedOrder");
+        final var failure = new AssertionError("failed to verify comparingInJdbcOrder");
         failures.forEach(failure::addSuppressed);
         throw failure;
     }
@@ -216,7 +216,7 @@ final class Context_ComparingInSpecifiedOrder_Test_Utils {
         List<T> get(Context context) throws SQLException;
     }
 
-    private Context_ComparingInSpecifiedOrder_Test_Utils() {
+    private Context_ComparingInJdbcOrder_Test_Utils() {
         throw new AssertionError("instantiation is not allowed");
     }
 }

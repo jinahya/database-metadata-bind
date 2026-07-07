@@ -24,14 +24,14 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.DriverManager;
 
-class Context_ComparingInSpecifiedOrder_Test {
+class Context_ComparingInJdbcOrder_Test {
 
     @Test
     void acceptEachEmitsValuesInSpecifiedOrder() throws Exception {
         try (var connection = DriverManager.getConnection("jdbc:h2:mem:comparing;DB_CLOSE_DELAY=-1");
              var statement = connection.createStatement()) {
-            Context_ComparingInSpecifiedOrder_Test_Utils.preparePortedKeyTables(statement);
-            Context_ComparingInSpecifiedOrder_Test_Utils.assertComparingInSpecifiedOrder(
+            Context_ComparingInJdbcOrder_Test_Utils.preparePortedKeyTables(statement);
+            Context_ComparingInJdbcOrder_Test_Utils.assertComparingInJdbcOrder(
                     Context.newInstance(connection),
                     getClass().getSimpleName()
             );

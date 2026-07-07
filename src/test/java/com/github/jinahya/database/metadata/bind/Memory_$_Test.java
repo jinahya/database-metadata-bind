@@ -169,17 +169,17 @@ abstract class Memory_$_Test {
     }
 
     @Test
-    void comparingInSpecifiedOrder_failFree() throws SQLException {
+    void comparingInJdbcOrder_failFree() throws SQLException {
         try (var connection = connect();
              var statement = connection.createStatement()) {
             try {
-                Context_ComparingInSpecifiedOrder_Test_Utils.preparePortedKeyTables(statement);
-                Context_ComparingInSpecifiedOrder_Test_Utils.assertComparingInSpecifiedOrder(
+                Context_ComparingInJdbcOrder_Test_Utils.preparePortedKeyTables(statement);
+                Context_ComparingInJdbcOrder_Test_Utils.assertComparingInJdbcOrder(
                         Context.newInstance(connection),
                         getClass().getSimpleName()
                 );
             } catch (final Throwable t) {
-                log.warn("failed to verify comparingInSpecifiedOrder; test={}", getClass().getSimpleName(), t);
+                log.warn("failed to verify comparingInJdbcOrder; test={}", getClass().getSimpleName(), t);
             }
         }
     }

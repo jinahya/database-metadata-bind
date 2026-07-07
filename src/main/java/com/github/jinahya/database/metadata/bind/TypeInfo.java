@@ -48,20 +48,28 @@ public class TypeInfo
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * Returns a comparator comparing values in the specified order, placing {@code null} values as the specified
-     * context's database sorts them. The JDBC API also describes a contextual ordering by how closely each data type
-     * maps to the corresponding JDBC SQL type; this comparator compares only the explicit <code>DATA_TYPE</code> key
-     * exposed by the result set.
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getTypeInfo()}, placing {@code null} values as the specified context's database
+     * sorts them. The JDBC API also describes a contextual ordering by how closely each data type maps to the
+     * corresponding JDBC SQL type; this comparator compares only the explicit <code>DATA_TYPE</code> key exposed by the
+     * result set.
      *
      * @param context a context whose metadata determines the {@code null} ordering.
-     * @return a comparator comparing values in the specified order.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getTypeInfo()}.
      * @throws SQLException if a database access error occurs.
      * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
      */
-    static Comparator<TypeInfo> comparingInSpecifiedOrder(final Context context) throws SQLException {
+    static Comparator<TypeInfo> comparingInJdbcOrder(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return Comparator.comparing(TypeInfo::getDataType, ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.<Integer>naturalOrder(), ContextUtils.SortDirection.ASCENDING));
+        return Comparator.comparing(
+                TypeInfo::getDataType,
+                ContextUtils.withDatabaseNullOrdering(
+                        context,
+                        Comparator.<Integer>naturalOrder(),
+                        ContextUtils.SortDirection.ASCENDING
+                )
+        );
     }
 
     // ------------------------------------------------------------------------------------------------------- TYPE_NAME

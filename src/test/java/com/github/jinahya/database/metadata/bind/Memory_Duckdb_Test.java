@@ -50,8 +50,8 @@ class Memory_Duckdb_Test
      * Disabled for DuckDB: its {@link java.sql.DatabaseMetaData#getTypeInfo()} does <em>not</em> return rows ordered by
      * {@code DATA_TYPE}, contrary to the JDBC specification. DuckDB emits them in an internal type order
      * ({@code BOOLEAN(-7)}, {@code TINYINT(-6)}, {@code SMALLINT(5)}, {@code INTEGER(4)}, {@code BIGINT(-5)},
-     * &hellip;), so the shared {@code isSortedAccordingTo(TypeInfo.comparingInSpecifiedOrder(context))} assertion
-     * fails. This is a genuine driver deviation, not a binding defect.
+     * &hellip;), so the shared {@code isSortedAccordingTo(TypeInfo.comparingInJdbcOrder(context))} assertion fails.
+     * This is a genuine driver deviation, not a binding defect.
      */
     @Disabled("DuckDB getTypeInfo() is not ordered by DATA_TYPE (JDBC spec deviation)")
     @Test

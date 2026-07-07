@@ -43,17 +43,19 @@ public class ExportedKey
     // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * Returns a comparator comparing values in the specified order, placing {@code null} values (of all keys) as the
-     * specified context's database sorts them.
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}, placing {@code null} values (of all
+     * keys) as the specified context's database sorts them.
      *
      * @param context    a context whose metadata determines the {@code null} ordering.
      * @param comparator a comparator for comparing (non-{@code null}) string values.
-     * @return a comparator comparing values in the specified order.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}.
      * @throws SQLException if a database access error occurs.
      * @see PortedKey#comparingFk(Context, Comparator)
      */
-    static Comparator<ExportedKey> comparingInSpecifiedOrder(final Context context,
-                                                             final Comparator<? super String> comparator)
+    static Comparator<ExportedKey> comparingInJdbcOrder(final Context context,
+                                                        final Comparator<? super String> comparator)
             throws SQLException {
         return PortedKey.comparingFk(context, comparator);
     }
@@ -67,32 +69,5 @@ public class ExportedKey
      */
     ExportedKey() {
         super();
-    }
-
-    // ------------------------------------------------------------------------------------------------ java.lang.Object
-
-    /**
-     * Returns a string representation of this object.
-     *
-     * @return a string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "pktableCat=" + getPktableCat() +
-               ",pktableSchem=" + getPktableSchem() +
-               ",pktableName=" + getPktableName() +
-               ",pkcolumnName=" + getPkcolumnName() +
-               ",fktableCat=" + getFktableCat() +
-               ",fktableSchem=" + getFktableSchem() +
-               ",fktableName=" + getFktableName() +
-               ",fkcolumnName=" + getFkcolumnName() +
-               ",keySeq=" + keySeq +
-               ",updateRule=" + getUpdateRule() +
-               ",deleteRule=" + getDeleteRule() +
-               ",fkName=" + getFkName() +
-               ",pkName=" + getPkName() +
-               ",deferrability=" + getDeferrability() +
-               '}';
     }
 }
