@@ -4,6 +4,7 @@ import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+
 import java.io.Serial;
 import java.sql.SQLException;
 import java.util.Comparator;

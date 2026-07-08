@@ -84,7 +84,7 @@ abstract class TestContainers_$_IT {
         applyConnection(c -> {
             try {
                 final var context = Context.newInstance(c);
-                Context_Test_Utils.test(context);
+                ContextMetadataWalkthrough.walk(context);
             } catch (final SQLException sqle) {
                 if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
                     log.warn("not supported", sqlfnse);

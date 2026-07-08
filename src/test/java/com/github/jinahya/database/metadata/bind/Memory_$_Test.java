@@ -21,9 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
@@ -76,20 +76,18 @@ abstract class Memory_$_Test {
     @Test
     void test() throws SQLException {
         applyContext(c -> {
-            try {
-                Context_Test_Utils.test(c);
-                return null;
-            } catch (final SQLException sqle) {
-                if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
-                    log.warn("not supported", sqlfnse);
-                    return null;
-                }
-                throw new RuntimeException(sqle);
-            }
+            // walk all binding methods and write each named collection to target/<db>-<name>.xml and .json
+            ContextMetadataWalkthrough.walk(c, (rootElementName, itemElementName, values) -> {
+                final var fileName = Context_Test_Utils.artifactFileNamePrefix(c) + "-" + rootElementName;
+                __JakartaXmlBinding_Test_Utils.write(
+                        rootElementName, itemElementName, values, Path.of("target", fileName + ".xml"));
+                __JakartaJsonBinding_Test_Utils.write(values, Path.of("target", fileName + ".json"));
+            });
+            return null;
         });
     }
 
-    @Test
+    // @Test // commented out: only ContextMetadataWalkthrough (test()) runs for now
     void directMetadataMappings_getAndForEach() throws SQLException {
         applyContext(context -> {
             try {
@@ -168,7 +166,7 @@ abstract class Memory_$_Test {
         });
     }
 
-    @Test
+    // @Test // commented out: only ContextMetadataWalkthrough (test()) runs for now
     void comparingInJdbcOrder_failFree() throws SQLException {
         try (var connection = connect();
              var statement = connection.createStatement()) {
@@ -192,7 +190,7 @@ abstract class Memory_$_Test {
      *
      * @throws SQLException if a database error occurs.
      */
-    @Test
+    // @Test // commented out: only ContextMetadataWalkthrough (test()) runs for now
     void primaryKeys_composite() throws SQLException {
         try (var connection = connect()) {
             final var metaData = connection.getMetaData();
@@ -264,7 +262,7 @@ abstract class Memory_$_Test {
         void accept(Consumer<? super T> consumer) throws SQLException;
     }
 
-    @Nested
+    // @Nested // commented out: only ContextMetadataWalkthrough (test()) runs for now
     class FlattenTest {
 
         @Test

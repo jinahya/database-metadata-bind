@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+
 import java.io.Serial;
 import java.sql.SQLException;
 import java.util.Comparator;

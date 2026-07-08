@@ -21,10 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
-import jakarta.validation.constraints.AssertTrue;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;

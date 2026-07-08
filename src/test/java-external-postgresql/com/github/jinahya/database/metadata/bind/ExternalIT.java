@@ -30,4 +30,5 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
                          matches = AbstractExternalIT.PROPERTY_EXPRESSION_NON_BLANK)
 class ExternalIT
         extends AbstractExternalIT {
+
 }

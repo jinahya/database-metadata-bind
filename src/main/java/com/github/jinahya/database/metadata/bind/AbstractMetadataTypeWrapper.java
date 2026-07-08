@@ -1,5 +1,25 @@
 package com.github.jinahya.database.metadata.bind;
 
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import jakarta.xml.bind.annotation.XmlAnyElement;
 
 import java.util.ArrayList;
@@ -13,16 +33,14 @@ import java.util.List;
  * serializes a {@link java.util.List} directly to a JSON array &mdash; so these wrappers exist purely for the XML
  * binding.) Concrete subclasses supply the root element, which lets them carry a per-type name:
  * {@snippet lang = "java":
- * @XmlRootElement(name = "functions")
- * class FunctionWrapper extends AbstractMetadataTypeWrapper<Function> {
- * }
- *}
+ *
+ * @param <T> the bound {@link MetadataType} type.
+ * @XmlRootElement(name = "functions") class FunctionWrapper extends AbstractMetadataTypeWrapper<Function> {}}
  * <p>
  * Each element is marshalled under its own {@code @XmlRootElement} name via {@link XmlAnyElement}{@code (lax = true)},
  * with no intermediate wrapper element (i.e. the list is <em>unwrapped</em>). The element types must be known to the
- * {@link jakarta.xml.bind.JAXBContext} &mdash; e.g. by bootstrapping it with the package name (see {@code jaxb.index}).
- *
- * @param <T> the bound {@link MetadataType} type.
+ * {@link jakarta.xml.bind.JAXBContext} &mdash; e.g. by bootstrapping it with the package name (see
+ * {@code jaxb.index}).
  */
 public abstract class AbstractMetadataTypeWrapper<T extends MetadataType> {
 
