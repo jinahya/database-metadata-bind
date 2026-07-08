@@ -22,18 +22,14 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.Connection;
 import java.sql.JDBCType;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static com.github.jinahya.database.metadata.bind._Assertions.assertType;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
@@ -43,12 +39,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
  */
 @Slf4j
 final class Context_Test_Utils {
-
-    static <R> R applyContext(final Connection connection,
-                              final java.util.function.Function<? super Context, ? extends R> function)
-            throws SQLException {
-        return function.apply(Context.newInstance(connection));
-    }
 
     static String artifactFileNamePrefix(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -80,219 +70,6 @@ final class Context_Test_Utils {
         return context.metadata.getDatabaseProductName();
     }
 
-    private static Catalog catalogOf(final String tableCat) {
-        final var instance = new Catalog();
-        instance.setTableCat(tableCat);
-        return instance;
-    }
-
-    private static Schema schemaOf(final String tableCatalog, final String tableSchem) {
-        final var instance = new Schema();
-        instance.setTableCatalog(tableCatalog);
-        instance.setTableSchem(tableSchem);
-        return instance;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static void test(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        // ---------------------------------------------------------------------------------------------------- catalogs
-        {
-            final var catalogs = context.getCatalogs();
-            if (catalogs.isEmpty()) {
-                catalogs.add(catalogOf(null));
-            }
-            catalogs(context, catalogs);
-        }
-        // -------------------------------------------------------------------------------------------- clientProperties
-        try {
-            final var values = context.getClientInfoProperties();
-            clientInfoProperties(context, values);
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // ---------------------------------------------------------------------------------------------- crossReference
-        try {
-            final var crossReference = context.getCrossReference(
-                    null,
-                    null,
-                    "%",
-                    null,
-                    null,
-                    "%"
-            );
-            crossReference(context, crossReference);
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // ----------------------------------------------------------------------------------- functions/functionColumns
-        try {
-            final var functions = context.getFunctions((String) null, null, "%");
-            functions(context, functions);
-            functions.stream()
-                    .filter(e1 -> e1.getFunctionCat() != null)
-                    .collect(Collectors.groupingBy(Function::getFunctionCat)).forEach((fc, l1) -> {
-                        try {
-                            functions(context, l1);
-                        } catch (final SQLException e) {
-                            // empty
-                        }
-                        l1.stream()
-                                .filter(e2 -> e2.getFunctionSchem() != null)
-                                .collect(Collectors.groupingBy(Function::getFunctionSchem)).forEach((fs, l2) -> {
-                                    assertThat(l2).doesNotHaveDuplicates();
-                                    try {
-                                        functions(context, l1);
-                                    } catch (final SQLException e) {
-                                        // empty
-                                    }
-                                });
-                    });
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // --------------------------------------------------------------------------------- procedures/procedureColumns
-        try {
-            final var procedures = context.getProcedures(null, null, "%");
-            procedures(context, procedures);
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // ----------------------------------------------------------------------------------------------------- schemas
-        try {
-            final var schemas = context.getSchemas();
-            schemas(context, schemas);
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // ----------------------------------------------------------------------------------------------------- schemas
-        try {
-            final var schemas = context.getSchemas((String) null, null);
-            if (schemas.isEmpty()) {
-                schemas.add(schemaOf(null, null));
-            }
-            schemas(context, schemas);
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // -------------------------------------------------------------------------------------------------- tableTypes
-        try {
-            final var tableTypes = context.getTableTypes();
-            tableTypes(context, tableTypes);
-        } catch (final SQLException sqle) {
-            log.error("failed to getTableTypes()", sqle);
-        }
-        // ------------------------------------------------------------------------------------------------------ tables
-        {
-            final String catalog = null;
-            final String schemaPattern = null;
-            final String tableNamePattern = "%";
-            final String[] types = null;
-            try {
-                final var tables = context.getTables(catalog, schemaPattern, tableNamePattern, types);
-                tables(context, tables);
-            } catch (final SQLException sqle) {
-                log.error("failed to getTables({}, {}, {}, {})", catalog, schemaPattern, tableNamePattern, types, sqle);
-            }
-        }
-        // ---------------------------------------------------------------------------------------------------- typeInfo
-        try {
-            final var typeInfo = context.getTypeInfo();
-            assertThat(typeInfo)
-                    .doesNotHaveDuplicates()
-                    .isSortedAccordingTo(TypeInfo.comparingInJdbcOrder(context))
-                    .allSatisfy(v -> {
-                        assertThat(v.getNullable()).isIn(TypeInfo.COLUMN_VALUE_NULLABLE_TYPE_NO_NULLS,
-                                                         TypeInfo.COLUMN_VALUE_NULLABLE_TYPE_NULLABLE,
-                                                         TypeInfo.COLUMN_VALUE_NULLABLE_TYPE_NULLABLE_UNKNOWN);
-                    })
-            ;
-            typeInfo(context, typeInfo);
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // -------------------------------------------------------------------------------------------------------- udts
-        try {
-            final var udts = context.getUDTs((String) null, (String) null, "%", null);
-            udts(context, udts);
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // -------------------------------------------------------------------------------------------- numericFunctions
-        try {
-            final var numericFunctions = context.getNumericFunctions();
-            assertThat(numericFunctions).isNotNull().doesNotContainNull().allSatisfy(v -> {
-                assertThat(v).isNotBlank();
-            });
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // ---------------------------------------------------------------------------------------------- getSQLKeywords
-        try {
-            final var SQLKeywords = context.getSQLKeywords();
-            assertThat(SQLKeywords).isNotNull().doesNotContainNull().allSatisfy(v -> {
-                assertThat(v).isNotBlank();
-            });
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // ------------------------------------------------------------------------------------------ getStringFunctions
-        try {
-            final var stringFunctions = context.getStringFunctions();
-            assertThat(stringFunctions).isNotNull().doesNotContainNull().allSatisfy(v -> {
-                assertThat(v).isNotBlank();
-            });
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // ------------------------------------------------------------------------------------------ getSystemFunctions
-        try {
-            final var systemFunctions = context.getSystemFunctions();
-            assertThat(systemFunctions).isNotNull().doesNotContainNull().allSatisfy(v -> {
-                assertThat(v).isNotBlank();
-            });
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // ---------------------------------------------------------------------------------------- getTimeDateFunctions
-        try {
-            final var timeDateFunction = context.getTimeDateFunctions();
-            assertThat(timeDateFunction).isNotNull().doesNotContainNull().allSatisfy(v -> {
-                assertThat(v).isNotBlank();
-            });
-        } catch (final SQLException sqle) {
-            // empty
-        }
-    }
-
-    // ------------------------------------------------------------------------------------------------------ attributes
-    private static void attributes(final Context context, final List<? extends Attribute> attributes)
-            throws SQLException {
-        assertThat(attributes)
-                .isNotNull()
-                .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                .isSortedAccordingTo(Attribute.comparingInJdbcOrder(context, String.CASE_INSENSITIVE_ORDER))
-                .allSatisfy(v -> {
-                });
-        for (final var attribute : attributes) {
-            attribute(context, attribute);
-        }
-    }
-
-    private static void attribute(final Context context, final Attribute attribute) throws SQLException {
-        MetadataType_Test_Utils.verify(attribute);
-        {
-            assertThat(attribute.getTypeName()).isNotNull();
-            assertThat(attribute.getAttrName()).isNotNull();
-            final var dataType = attribute.getDataType();
-            assertDoesNotThrow(() -> JDBCType.valueOf(dataType));
-            assertThat(attribute.getAttrTypeName()).isNotNull();
-//            assertDoesNotThrow(() -> Attribute.Nullable.valueOfFieldValue(attribute.getNullable()));
-            assertThat(attribute.getIsNullable()).isNotNull();
-        }
-    }
-
     // ----------------------------------------------------------------------------------------------- bestRowIdentifier
     private static void bestRowIdentifier(final Context context, final List<? extends BestRowIdentifier> values)
             throws SQLException {
@@ -320,114 +97,6 @@ final class Context_Test_Utils {
             final int pseudoColumn = value.getPseudoColumn();
 //            assertDoesNotThrow(() -> BestRowIdentifier.PseudoColumn.valueOfFieldValue(pseudoColumn));
         }
-    }
-
-    // -------------------------------------------------------------------------------------------------------- catalogs
-    private static void catalogs(final Context context, final List<? extends Catalog> values) throws SQLException {
-        assertThat(values)
-                .isNotNull()
-                .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                .isSortedAccordingTo(Catalog.comparingInJdbcOrder(context, String.CASE_INSENSITIVE_ORDER))
-                .allSatisfy(v -> {
-                })
-        ;
-        for (final var value : values) {
-            catalog(context, value);
-        }
-    }
-
-    private static void catalog(final Context context, final Catalog value) throws SQLException {
-        MetadataType_Test_Utils.verify(value);
-        // -------------------------------------------------------------------------------------------------- procedures
-        {
-            final var schemaPattern = "%";
-            final var procedureNamePattern = "%";
-            try {
-                final var procedures = context.getProceduresOf(value, schemaPattern, procedureNamePattern);
-                procedures(context, procedures);
-            } catch (final SQLException sqle) {
-                log.error("failed to getProceduresOf({}, {}, {})", value, schemaPattern, procedureNamePattern, sqle);
-            }
-        }
-        // ----------------------------------------------------------------------------------------------------- schemas
-        {
-            final var schemaPattern = "%";
-            try {
-                final var schemas = context.getSchemasOf(value, schemaPattern);
-                if (schemas.isEmpty()) {
-                    schemas.add(schemaOf(null, null));
-                }
-                schemas(context, schemas);
-            } catch (final SQLException sqle) {
-                log.error("failed to getSchemasOf({}, {})", value, schemaPattern, sqle);
-            }
-        }
-        // ------------------------------------------------------------------------------------------------- superTables
-        try {
-            final var superTables = context.getSuperTables(value.getTableCat(), "%", "%");
-            superTables(context, superTables);
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // -------------------------------------------------------------------------------------------------- superTypes
-        try {
-            final var superTypes = context.getSuperTypes(value.getTableCat(), "%", "%");
-            superTypes(context, superTypes);
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // ------------------------------------------------------------------------------------------------------ tables
-        try {
-            final var values = context.getTables(value.getTableCat(), null, "%", (String[]) null);
-            if (!databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)) {
-                values.forEach(t -> {
-                    assertType(t).isOf(value);
-                });
-            }
-            tables(context, values);
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // --------------------------------------------------------------------------------------------- tablePrivileges
-        try {
-            final var values = context.getTablePrivileges(value.getTableCat(), "%", "%");
-            if (!databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)) {
-                assertThat(values).allSatisfy(tp -> {
-                    assertThat(tp.getTableCat()).isEqualTo(value.getTableCat());
-                });
-            }
-            tablePrivileges(context, values);
-        } catch (final SQLException sqle) {
-            // empty
-        }
-    }
-
-    // -------------------------------------------------------------------------------------------- clientInfoProperties
-    private static void clientInfoProperties(final Context context, final List<? extends ClientInfoProperty> values)
-            throws SQLException {
-        assertThat(values)
-                .isNotNull()
-                .doesNotContainNull()
-                .doesNotHaveDuplicates()
-//                .isSortedAccordingTo(ClientInfoProperty.comparingInJdbcOrder(
-//                        UnaryOperator.identity(),
-//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER.thenComparing(
-//                                Comparator.naturalOrder()))))
-                .allSatisfy(c -> {
-                });
-//        if (!databaseProductName(context).equals(DatabaseProductNames.MARIA_DB)) {
-//            // https://jira.mariadb.org/browse/CONJ-1159
-//            assertThat(values).isSortedAccordingTo(
-//                    ClientInfoProperty.comparingInJdbcOrder(context));
-//        }
-        for (final var value : values) {
-            clientInfoProperty(context, value);
-        }
-    }
-
-    private static void clientInfoProperty(final Context context, final ClientInfoProperty value) throws SQLException {
-        MetadataType_Test_Utils.verify(value);
     }
 
     // --------------------------------------------------------------------------------------------------------- columns
@@ -468,21 +137,11 @@ final class Context_Test_Utils {
         {
             assertThat(value.getTableName()).isNotNull();
             assertThat(value.getColumnName()).isNotNull();
-//            assertDoesNotThrow(() -> JDBCType.valueOf(column.getDataType()));
             assertThat(value.getOrdinalPosition()).isPositive();
             assertThat(value.getIsNullable()).isNotNull();
             assertThat(value.getIsAutoincrement()).isNotNull();
             assertThat(value.getIsGeneratedcolumn()).isNotNull();
         }
-//        assertThatCode(() -> {
-//            final var value = Column.Nullable.valueOfFieldValue(column.getNullable());
-//        }).doesNotThrowAnyException();
-//        assertThatCode(() -> {
-//            final var isAutoincrementAsEnum = column.getIsAutoincrementAsEnum();
-//        }).doesNotThrowAnyException();
-//        assertThatCode(() -> {
-//            final var isGeneratedcolumnAsEnum = column.getIsGeneratedcolumnAsEnum();
-//        }).doesNotThrowAnyException();
 
         // -------------------------------------------------------------------------------------------- columnPrivileges
         try {
@@ -518,24 +177,6 @@ final class Context_Test_Utils {
     private static void columnPrivilege(final Context context, final ColumnPrivilege value) throws SQLException {
         MetadataType_Test_Utils.verify(value);
 //        final var isGrantableAsEnum = columnPrivilege.getIsGrantableAsEnum();
-    }
-
-    // -------------------------------------------------------------------------------------------------- crossReference
-    private static void crossReference(final Context context, final List<CrossReference> values)
-            throws SQLException {
-        assertThat(values)
-                .isNotNull()
-                .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                .allSatisfy(c -> {
-                });
-        for (final var value : values) {
-            crossReference(context, value);
-        }
-    }
-
-    private static void crossReference(final Context context, final CrossReference value) throws SQLException {
-        MetadataType_Test_Utils.verify(value);
     }
 
     // ---------------------------------------------------------------------------------------------------- exportedKeys
@@ -619,12 +260,6 @@ final class Context_Test_Utils {
 
     private static void importedKey(final Context context, final ImportedKey value) throws SQLException {
         MetadataType_Test_Utils.verify(value);
-        assertThatCode(() -> {
-            final var string = value.toString();
-        }).doesNotThrowAnyException();
-        assertThatCode(() -> {
-            final var hashCode = value.hashCode();
-        }).doesNotThrowAnyException();
     }
 
     // ------------------------------------------------------------------------------------------------------- indexInfo
@@ -693,9 +328,6 @@ final class Context_Test_Utils {
 
     private static void procedureColumn(final Context context, final ProcedureColumn value) throws SQLException {
         MetadataType_Test_Utils.verify(value);
-        assertThatCode(() -> {
-            final var isNullable = value.getIsNullable();
-        }).doesNotThrowAnyException();
     }
 
     // --------------------------------------------------------------------------------------------------------- schemas
@@ -986,116 +618,6 @@ final class Context_Test_Utils {
 
     private static void tablePrivilege(final Context context, final TablePrivilege value) throws SQLException {
         MetadataType_Test_Utils.verify(value);
-    }
-
-    // ------------------------------------------------------------------------------------------------------ tableTypes
-    static void tableTypes(final Context context, final List<? extends TableType> values) throws SQLException {
-        assertThat(values)
-                .isNotNull()
-                .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                .isSortedAccordingTo(TableType.comparingInJdbcOrder(context, String.CASE_INSENSITIVE_ORDER))
-                .allSatisfy(t -> {
-                });
-        for (final var value : values) {
-            tableType(context, value);
-        }
-    }
-
-    private static void tableType(final Context context, final TableType value) throws SQLException {
-        MetadataType_Test_Utils.verify(value);
-        {
-            assertThat(value.getTableType())
-                    .isNotBlank()
-                    .doesNotStartWithWhitespaces()
-                    .doesNotEndWithWhitespaces();
-        }
-    }
-
-    // -------------------------------------------------------------------------------------------------------- typeInfo
-    private static void typeInfo(final Context context, final List<? extends TypeInfo> values) throws SQLException {
-        assertThat(values)
-                .isNotNull()
-                .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                .isSortedAccordingTo(TypeInfo.comparingInJdbcOrder(context))
-                .allSatisfy(t -> {
-                });
-        if (!databaseProductName(context).equals(DatabaseProductNames.MY_SQL) &&
-            !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
-            assertThat(values).isSortedAccordingTo(TypeInfo.comparingInJdbcOrder(context));
-        }
-        for (final var value : values) {
-            typeInfo(context, value);
-        }
-    }
-
-    private static void typeInfo(final Context context, final TypeInfo value) throws SQLException {
-        MetadataType_Test_Utils.verify(value);
-        {
-            assertThat(value.getTypeName()).isNotNull();
-            //assertDoesNotThrow(() -> JDBCType.valueOf(typeInfo.getDataType())); // mssqlserver
-//            assertDoesNotThrow(() -> TypeInfo.Nullable.valueOfFieldValue(typeInfo.getNullable()));
-//            assertDoesNotThrow(() -> TypeInfo.Searchable.valueOfFieldValue(typeInfo.getSearchable()));
-        }
-        {
-//            final var value = TypeInfo.Nullable.valueOfFieldValue(typeInfo.getNullable());
-        }
-        {
-//            final var value = TypeInfo.Searchable.valueOfFieldValue(typeInfo.getSearchable());
-        }
-    }
-
-    // ------------------------------------------------------------------------------------------------------------ UDTs
-    private static void udts(final Context context, final List<? extends UDT> values) throws SQLException {
-        assertThat(values)
-                .isNotNull()
-                .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                .isSortedAccordingTo(UDT.comparingInJdbcOrder(context, String.CASE_INSENSITIVE_ORDER))
-                .allSatisfy(u -> {
-                });
-        for (final var value : values) {
-            udt(context, value);
-        }
-    }
-
-    private static void udt(final Context context, final UDT value) throws SQLException {
-        MetadataType_Test_Utils.verify(value);
-        {
-            assertThat(value.getTypeName()).isNotNull();
-            assertThat(value.getDataType()).isIn(Types.JAVA_OBJECT, Types.STRUCT, Types.DISTINCT);
-            assertDoesNotThrow(() -> JDBCType.valueOf(value.getDataType()));
-        }
-        // ------------------------------------------------------------------------------------------------- .attributes
-//        udt.getAttributes(context, "%").forEach(a -> {
-//            log.debug("attribute: {}", a);
-//        });
-        // ------------------------------------------------------------------------------------------------- .superTypes
-//        udt.getSuperTypes(context).forEach(st -> {
-//            log.debug("superType: {}", st);
-//        });
-        // -------------------------------------------------------------------------------------------------- .superUDTs
-//        udt.getSuperUDTs(context, null).forEach(sudt -> {
-//            log.debug("superUDT: {}", sudt);
-//        });
-        // -------------------------------------------------------------------------------------------------- attributes
-        try {
-            final var attributes = context.getAttributes(value.getTypeCat(), value.getTypeSchem(), "%", "%");
-            attributes(context, attributes);
-        } catch (final SQLException sqle) {
-            // empty
-        }
-        // -------------------------------------------------------------------------------------------------- superTypes
-        try {
-            final var superTypes = context.getSuperTypesOf(value);
-            assertThat(superTypes).allSatisfy(st -> {
-                assertType(st).isOf(value);
-            });
-            superTypes(context, superTypes);
-        } catch (final SQLException sqle) {
-            // empty
-        }
     }
 
     // -------------------------------------------------------------------------------------------------- versionColumns

@@ -10,6 +10,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,6 +35,29 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 class __JakartaXmlBinding_Test {
+
+    @Test
+    void marshal() throws Exception {
+        final var path = Path.of("target", "dmb-metadata-types.xml");
+        final var parent = path.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+        final var schema = new Schema();
+        schema.setTableSchem("PUBLIC");
+        __JakartaXmlBinding_Test_Utils.marshal(List.of(schema), path);
+        assertThat(path)
+                .exists()
+                .isRegularFile();
+        assertThat(Files.readString(path))
+                .contains("<metadataTypes>")
+                .contains("<schema")
+                .contains("<tableSchem>PUBLIC</tableSchem>")
+                .doesNotContain("<elements>");
+        assertThat(__JakartaXmlBinding_Test_Utils.<Schema>unmarshal(path))
+                .singleElement()
+                .satisfies(v -> assertThat(v.getTableSchem()).isEqualTo("PUBLIC"));
+    }
 
     @Test
     void schema() throws Exception {

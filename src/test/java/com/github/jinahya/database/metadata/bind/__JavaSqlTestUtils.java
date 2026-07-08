@@ -29,14 +29,6 @@ import java.sql.SQLException;
 @Slf4j
 final class __JavaSqlTestUtils {
 
-    static final String PROPERTY_NAME_URL = "url";
-
-    static final String PROPERTY_NAME_USER = "user";
-
-    static final String PROPERTY_NAME_PASSWORD = "password";
-
-    private static final String PROPERTY_NAME_CATALOG = "catalog";
-
     // -----------------------------------------------------------------------------------------------------------------
     static <R> R applyConnection(final String url, final String user, final String password,
                                  final java.util.function.Function<? super Connection, ? extends R> function)

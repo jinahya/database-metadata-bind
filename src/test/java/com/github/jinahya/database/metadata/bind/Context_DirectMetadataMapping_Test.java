@@ -24,14 +24,10 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.github.jinahya.database.metadata.bind.Context_DirectMetadataMapping_Test_Utils.assertDirect;
 
-class Context_DirectMetadataMapping_IT {
+class Context_DirectMetadataMapping_Test {
 
     @Test
     void directMappings_GetAndForEachReturnSameCounts() throws SQLException {
@@ -110,32 +106,4 @@ class Context_DirectMetadataMapping_IT {
         }
     }
 
-    private static <T> void assertDirect(final String name, final Query<T> query, final Iteration<T> iteration)
-            throws SQLException {
-        final List<T> values;
-        try {
-            values = query.get();
-        } catch (final SQLFeatureNotSupportedException ignored) {
-            return;
-        }
-        final var accepted = new ArrayList<T>();
-        try {
-            iteration.accept(accepted::add);
-        } catch (final SQLFeatureNotSupportedException ignored) {
-            return;
-        }
-        assertThat(accepted).as(name).hasSameSizeAs(values);
-    }
-
-    @FunctionalInterface
-    private interface Query<T> {
-
-        List<T> get() throws SQLException;
-    }
-
-    @FunctionalInterface
-    private interface Iteration<T> {
-
-        void accept(Consumer<? super T> consumer) throws SQLException;
-    }
 }

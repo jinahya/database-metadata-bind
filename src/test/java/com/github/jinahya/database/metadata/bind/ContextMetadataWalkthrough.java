@@ -47,12 +47,13 @@ final class ContextMetadataWalkthrough {
     interface Sink {
 
         static Sink noop() {
-            return (rootElementName, itemElementName, values) -> {
+            return (rootElementName, itemElementName, values, metadata) -> {
                 // empty
             };
         }
 
-        void accept(String rootElementName, String itemElementName, List<?> values) throws Exception;
+        void accept(String rootElementName, String itemElementName, List<?> values, boolean metadata)
+                throws Exception;
     }
 
     @FunctionalInterface
@@ -157,11 +158,11 @@ final class ContextMetadataWalkthrough {
         pair("allTablePrivileges", context::getAllTablePrivileges, c -> context.forEachTablePrivilege(c));
         pair("allUDTs", context::getAllUDTs, c -> context.forEachUDT(c));
 
-        list("numericFunctions", "numericFunctions", "numericFunction", context::getNumericFunctions);
-        list("sqlKeywords", "sqlKeywords", "sqlKeyword", context::getSQLKeywords);
-        list("stringFunctions", "stringFunctions", "stringFunction", context::getStringFunctions);
-        list("systemFunctions", "systemFunctions", "systemFunction", context::getSystemFunctions);
-        list("timeDateFunctions", "timeDateFunctions", "timeDateFunction", context::getTimeDateFunctions);
+        list("numericFunctions", "numericFunctions", "numericFunction", false, context::getNumericFunctions);
+        list("sqlKeywords", "sqlKeywords", "sqlKeyword", false, context::getSQLKeywords);
+        list("stringFunctions", "stringFunctions", "stringFunction", false, context::getStringFunctions);
+        list("systemFunctions", "systemFunctions", "systemFunction", false, context::getSystemFunctions);
+        list("timeDateFunctions", "timeDateFunctions", "timeDateFunction", false, context::getTimeDateFunctions);
 
         final var result = new Result(attempted, succeeded, failed);
         log.info("context metadata walkthrough completed: {}", result);
@@ -276,12 +277,17 @@ final class ContextMetadataWalkthrough {
             if (values.stream().anyMatch(Objects::isNull)) {
                 throw new NullPointerException(name + " contains null");
             }
+            verifyBoundInstances(name, values);
             succeeded++;
             verifyComparator(name, values);
             return values;
         } catch (final SQLException sqle) {
             failed++;
             log.error("failed to get {}", name, sqle);
+            return List.of();
+        } catch (final AssertionError ae) {
+            failed++;
+            log.error("failed to verify {}", name, ae);
             return List.of();
         } catch (final RuntimeException re) {
             failed++;
@@ -292,16 +298,22 @@ final class ContextMetadataWalkthrough {
 
     private <T> List<T> list(final String name, final String rootElementName, final String itemElementName,
                              final Query<T> query) {
+        return list(name, rootElementName, itemElementName, true, query);
+    }
+
+    private <T> List<T> list(final String name, final String rootElementName, final String itemElementName,
+                             final boolean metadata, final Query<T> query) {
         attempted++;
         try {
             final var values = new ArrayList<>(Objects.requireNonNull(query.get(), name + " is null"));
             if (values.stream().anyMatch(Objects::isNull)) {
                 throw new NullPointerException(name + " contains null");
             }
+            verifyBoundInstances(name, values);
             succeeded++;
             verifyComparator(name, values);
             try {
-                sink.accept(rootElementName, itemElementName, values);
+                sink.accept(rootElementName, itemElementName, values, metadata);
             } catch (final Exception e) {
                 failed++;
                 log.error("failed to sink {}", name, e);
@@ -310,6 +322,10 @@ final class ContextMetadataWalkthrough {
         } catch (final SQLException sqle) {
             failed++;
             log.error("failed to get {}", name, sqle);
+            return List.of();
+        } catch (final AssertionError ae) {
+            failed++;
+            log.error("failed to verify {}", name, ae);
             return List.of();
         } catch (final RuntimeException re) {
             failed++;
@@ -326,13 +342,27 @@ final class ContextMetadataWalkthrough {
             if (values.stream().anyMatch(Objects::isNull)) {
                 throw new NullPointerException(name + " iteration contains null");
             }
+            verifyBoundInstances(name, values);
             succeeded++;
         } catch (final SQLException sqle) {
             failed++;
             log.error("failed to iterate {}", name, sqle);
+        } catch (final AssertionError ae) {
+            failed++;
+            log.error("failed to verify iteration of {}", name, ae);
         } catch (final RuntimeException re) {
             failed++;
             log.error("failed to verify iteration of {}", name, re);
+        }
+    }
+
+    private void verifyBoundInstances(final String name, final List<?> values) {
+        for (final var value : values) {
+            if (value instanceof MetadataType metadataType) {
+                MetadataType_Test_Utils.verify(metadataType);
+            } else if (!(value instanceof String)) {
+                log.debug("skipping non-metadata value from {}: {}", name, value);
+            }
         }
     }
 

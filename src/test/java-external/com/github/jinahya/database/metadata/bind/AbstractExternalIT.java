@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.List;
@@ -69,10 +70,8 @@ public abstract class AbstractExternalIT {
     private void withContext(final ContextConsumer action) throws SQLException {
         __JavaSqlTestUtils.applyConnection(url(), user(), password(), connection -> {
             try {
-                return Context_Test_Utils.applyContext(connection, context -> {
-                    action.accept(context);
-                    return null;
-                });
+                action.accept(Context.newInstance(connection));
+                return null;
             } catch (final SQLException sqle) {
                 throw new RuntimeException(sqle);
             }
@@ -80,23 +79,26 @@ public abstract class AbstractExternalIT {
     }
 
     private static void write(final Context context, final String rootElementName, final String itemElementName,
-                              final List<?> values)
-            throws SQLException {
+                              final List<?> values, final boolean metadata)
+            throws Exception {
         final var fileName = Context_Test_Utils.artifactFileNamePrefix(context) + "-" + rootElementName;
         final var xml = Path.of("target", fileName + ".xml");
         final var json = Path.of("target", fileName + ".json");
-        __JakartaXmlBinding_Test_Utils.write(rootElementName, itemElementName, values, xml);
+        if (metadata) {
+            final var parent = xml.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
+            __JakartaXmlBinding_Test_Utils.marshal(values.stream()
+                                                    .map(MetadataType.class::cast)
+                                                    .toList(), xml);
+        } else {
+            __JakartaXmlBinding_Test_Utils.writeStrings(rootElementName, itemElementName, values.stream()
+                    .map(String.class::cast)
+                    .toList(), xml);
+        }
         __JakartaJsonBinding_Test_Utils.write(values, json);
         log.info("wrote {} {} to {} and {}", values.size(), rootElementName, xml, json);
-    }
-
-    private static void writeOrLog(final Context context, final String rootElementName, final String itemElementName,
-                                   final ContextListSupplier supplier) {
-        try {
-            write(context, rootElementName, itemElementName, supplier.get(context));
-        } catch (final SQLException sqle) {
-            log.warn("failed to retrieve {}", rootElementName, sqle);
-        }
     }
 
     @FunctionalInterface
@@ -105,135 +107,11 @@ public abstract class AbstractExternalIT {
         void accept(Context context);
     }
 
-    @FunctionalInterface
-    private interface ContextListSupplier {
-
-        List<?> get(Context context) throws SQLException;
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     @Test
     void walkthrough() throws SQLException {
-        withContext(c -> ContextMetadataWalkthrough.walk(c, (rootElementName, itemElementName, values) -> {
-            write(c, rootElementName, itemElementName, values);
+        withContext(c -> ContextMetadataWalkthrough.walk(c, (rootElementName, itemElementName, values, metadata) -> {
+            write(c, rootElementName, itemElementName, values, metadata);
         }));
     }
-
-//    @Test
-//    void catalogs() throws SQLException {
-//        withContext(c -> writeOrLog(c, "catalogs", "catalog", Context::getCatalogs));
-//    }
-//
-//    @Test
-//    void attributes() throws SQLException {
-//        withContext(c -> writeOrLog(c, "attributes", "attribute", Context::getAllAttributes));
-//    }
-//
-//    @Test
-//    void clientInfoProperties() throws SQLException {
-//        withContext(c -> writeOrLog(c, "clientInfoProperties", "clientInfoProperty",
-//                                    Context::getClientInfoProperties));
-//    }
-//
-//    @Test
-//    void columns() throws SQLException {
-//        withContext(c -> writeOrLog(c, "columns", "column", Context::getAllColumns));
-//    }
-//
-//    @Test
-//    void functions() throws SQLException {
-//        withContext(c -> writeOrLog(c, "functions", "function", Context::getAllFunctions));
-//    }
-//
-//    @Test
-//    void functionColumns() throws SQLException {
-//        withContext(c -> writeOrLog(c, "functionColumns", "functionColumn",
-//                                    Context::getAllFunctionColumns));
-//    }
-//
-//    @Test
-//    void numericFunctions() throws SQLException {
-//        withContext(c -> writeOrLog(c, "numericFunctions", "numericFunction",
-//                                    Context::getNumericFunctions));
-//    }
-//
-//    @Test
-//    void procedures() throws SQLException {
-//        withContext(c -> writeOrLog(c, "procedures", "procedure", Context::getAllProcedures));
-//    }
-//
-//    @Test
-//    void procedureColumns() throws SQLException {
-//        withContext(c -> writeOrLog(c, "procedureColumns", "procedureColumn",
-//                                    Context::getAllProcedureColumns));
-//    }
-//
-//    @Test
-//    void pseudoColumns() throws SQLException {
-//        withContext(c -> writeOrLog(c, "pseudoColumns", "pseudoColumn", Context::getAllPseudoColumns));
-//    }
-//
-//    @Test
-//    void schemas() throws SQLException {
-//        withContext(c -> writeOrLog(c, "schemas", "schema", Context::getSchemas));
-//    }
-//
-//    @Test
-//    void sqlKeywords() throws SQLException {
-//        withContext(c -> writeOrLog(c, "sqlKeywords", "sqlKeyword", Context::getSQLKeywords));
-//    }
-//
-//    @Test
-//    void stringFunctions() throws SQLException {
-//        withContext(c -> writeOrLog(c, "stringFunctions", "stringFunction",
-//                                    Context::getStringFunctions));
-//    }
-//
-//    @Test
-//    void superTables() throws SQLException {
-//        withContext(c -> writeOrLog(c, "superTables", "superTable", Context::getAllSuperTables));
-//    }
-//
-//    @Test
-//    void superTypes() throws SQLException {
-//        withContext(c -> writeOrLog(c, "superTypes", "superType", Context::getAllSuperTypes));
-//    }
-//
-//    @Test
-//    void systemFunctions() throws SQLException {
-//        withContext(c -> writeOrLog(c, "systemFunctions", "systemFunction",
-//                                    Context::getSystemFunctions));
-//    }
-//
-//    @Test
-//    void tables() throws SQLException {
-//        withContext(c -> writeOrLog(c, "tables", "table", Context::getAllTables));
-//    }
-//
-//    @Test
-//    void tablePrivileges() throws SQLException {
-//        withContext(c -> writeOrLog(c, "tablePrivileges", "tablePrivilege",
-//                                    Context::getAllTablePrivileges));
-//    }
-//
-//    @Test
-//    void tableTypes() throws SQLException {
-//        withContext(c -> writeOrLog(c, "tableTypes", "tableType", Context::getTableTypes));
-//    }
-//
-//    @Test
-//    void timeDateFunctions() throws SQLException {
-//        withContext(c -> writeOrLog(c, "timeDateFunctions", "timeDateFunction",
-//                                    Context::getTimeDateFunctions));
-//    }
-//
-//    @Test
-//    void typeInfo() throws SQLException {
-//        withContext(c -> writeOrLog(c, "typeInfo", "typeInfo", Context::getTypeInfo));
-//    }
-//
-//    @Test
-//    void udts() throws SQLException {
-//        withContext(c -> writeOrLog(c, "udts", "udt", Context::getAllUDTs));
-//    }
 }
