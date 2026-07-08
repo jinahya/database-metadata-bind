@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import static com.github.jinahya.database.metadata.bind._Assertions.assertType;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 

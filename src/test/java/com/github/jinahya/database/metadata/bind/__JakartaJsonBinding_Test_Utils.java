@@ -5,6 +5,8 @@ import jakarta.json.bind.JsonbConfig;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Objects;
 
 /*-
  * #%L
@@ -28,20 +30,21 @@ import java.nio.file.Path;
 
 final class __JakartaJsonBinding_Test_Utils {
 
-    static void write(final Object object, final Path path) {
-        try {
-            final var parent = path.getParent();
-            if (parent != null) {
-                Files.createDirectories(parent);
-            }
-            final var config = new JsonbConfig().withFormatting(true);
-            try (var jsonb = JsonbBuilder.create(config);
-                 var writer = Files.newBufferedWriter(path)) {
-                jsonb.toJson(object, writer);
-            }
-        } catch (final Exception e) {
-            throw new RuntimeException("failed to write json to " + path, e);
+    static <T extends MetadataType> void write(final List<T> values, final Path path) throws Exception {
+        Objects.requireNonNull(values, "values is null");
+        Objects.requireNonNull(path, "path is null");
+        assert path.getParent() == null || Files.isDirectory(path.getParent());
+        try (var jsonb = JsonbBuilder.create(new JsonbConfig().withFormatting(true));
+             var writer = Files.newBufferedWriter(path)) {
+            jsonb.toJson(values, writer);
         }
+    }
+
+    static <T extends MetadataType> List<T> read(final Path path) {
+        Objects.requireNonNull(path, "path is null");
+        // Unsupported: JSON-B cannot instantiate the binding types (their constructors are package-private), and the
+        // element type of List<T> is erased at runtime; metadata bindings are write-only for JSON.
+        throw new UnsupportedOperationException("reading metadata bindings from JSON is not supported");
     }
 
     // -----------------------------------------------------------------------------------------------------------------

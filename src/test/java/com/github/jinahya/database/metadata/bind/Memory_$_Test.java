@@ -23,11 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -72,32 +70,14 @@ abstract class Memory_$_Test {
     @Test
     void test() throws SQLException {
         applyContext(c -> {
-            // walk all binding methods and write each named collection to target/<db>-<name>.xml and .json
-            ContextMetadataWalkthrough.walk(c, (rootElementName, itemElementName, values, metadata) -> {
+            // walk all binding methods and write each metadata collection to target/<db>-<name>.xml and .json
+            ContextMetadataWalkthrough.walk(c, (rootElementName, itemElementName, values) -> {
+                final var types = values.stream().map(MetadataType.class::cast).toList();
                 final var fileName = Context_Test_Utils.artifactFileNamePrefix(c) + "-" + rootElementName;
-                writeXml(rootElementName, itemElementName, values, metadata, Path.of("target", fileName + ".xml"));
-                __JakartaJsonBinding_Test_Utils.write(values, Path.of("target", fileName + ".json"));
+                __JakartaXmlBinding_Test_Utils.marshal(types, Path.of("target", fileName + ".xml"));
+                __JakartaJsonBinding_Test_Utils.write(types, Path.of("target", fileName + ".json"));
             });
             return null;
         });
     }
-
-    private static void writeXml(final String rootElementName, final String itemElementName, final List<?> values,
-                                 final boolean metadata, final Path path)
-            throws Exception {
-        if (metadata) {
-            final var parent = path.getParent();
-            if (parent != null) {
-                Files.createDirectories(parent);
-            }
-            __JakartaXmlBinding_Test_Utils.marshal(values.stream()
-                                                    .map(MetadataType.class::cast)
-                                                    .toList(), path);
-            return;
-        }
-        __JakartaXmlBinding_Test_Utils.writeStrings(rootElementName, itemElementName, values.stream()
-                .map(String.class::cast)
-                .toList(), path);
-    }
-
 }

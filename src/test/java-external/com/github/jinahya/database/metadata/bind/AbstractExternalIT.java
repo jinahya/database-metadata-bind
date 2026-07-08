@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.List;
@@ -78,26 +77,14 @@ public abstract class AbstractExternalIT {
         });
     }
 
-    private static void write(final Context context, final String rootElementName, final String itemElementName,
-                              final List<?> values, final boolean metadata)
+    private static void write(final Context context, final String rootElementName, final List<?> values)
             throws Exception {
         final var fileName = Context_Test_Utils.artifactFileNamePrefix(context) + "-" + rootElementName;
         final var xml = Path.of("target", fileName + ".xml");
         final var json = Path.of("target", fileName + ".json");
-        if (metadata) {
-            final var parent = xml.getParent();
-            if (parent != null) {
-                Files.createDirectories(parent);
-            }
-            __JakartaXmlBinding_Test_Utils.marshal(values.stream()
-                                                    .map(MetadataType.class::cast)
-                                                    .toList(), xml);
-        } else {
-            __JakartaXmlBinding_Test_Utils.writeStrings(rootElementName, itemElementName, values.stream()
-                    .map(String.class::cast)
-                    .toList(), xml);
-        }
-        __JakartaJsonBinding_Test_Utils.write(values, json);
+        final var types = values.stream().map(MetadataType.class::cast).toList();
+        __JakartaXmlBinding_Test_Utils.marshal(types, xml);
+        __JakartaJsonBinding_Test_Utils.write(types, json);
         log.info("wrote {} {} to {} and {}", values.size(), rootElementName, xml, json);
     }
 
@@ -110,8 +97,8 @@ public abstract class AbstractExternalIT {
     // -----------------------------------------------------------------------------------------------------------------
     @Test
     void walkthrough() throws SQLException {
-        withContext(c -> ContextMetadataWalkthrough.walk(c, (rootElementName, itemElementName, values, metadata) -> {
-            write(c, rootElementName, itemElementName, values, metadata);
+        withContext(c -> ContextMetadataWalkthrough.walk(c, (rootElementName, itemElementName, values) -> {
+            write(c, rootElementName, values);
         }));
     }
 }

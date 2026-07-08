@@ -105,5 +105,4 @@ class Context_DirectMetadataMapping_Test {
                          c -> context.forEachVersionColumn(null, null, "DIRECT_PARENT", c));
         }
     }
-
 }

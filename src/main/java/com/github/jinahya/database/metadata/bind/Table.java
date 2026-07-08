@@ -21,10 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.json.bind.annotation.JsonbNillable;
-import jakarta.json.bind.annotation.JsonbProperty;
-import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
@@ -237,14 +237,14 @@ public class Table
     }
 
     /**
-     * Returns the effective value of {@value #COLUMN_LABEL_TABLE_CAT} column, with {@code null} normalized to an empty
-     * string.
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column, with {@code null} normalized to an
+     * empty string.
      *
-     * @return the effective value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    @JsonbProperty
-    @XmlAttribute
-    String getEffectiveTableCat() {
+    @JsonbTransient
+    @XmlTransient
+    String getTableCatForMetadataLookup() {
         return tableCat == null ? "" : tableCat;
     }
 
@@ -270,14 +270,14 @@ public class Table
     }
 
     /**
-     * Returns the effective value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to an
-     * empty string.
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to
+     * an empty string.
      *
-     * @return the effective value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    @JsonbProperty
-    @XmlAttribute
-    String getEffectiveTableSchem() {
+    @JsonbTransient
+    @XmlTransient
+    String getTableSchemForMetadataLookup() {
         return tableSchem == null ? "" : tableSchem;
     }
 
@@ -364,14 +364,14 @@ public class Table
     }
 
     /**
-     * Returns the effective value of {@value #COLUMN_LABEL_TYPE_CAT} column, with {@code null} normalized to an empty
-     * string.
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TYPE_CAT} column, with {@code null} normalized to an
+     * empty string.
      *
-     * @return the effective value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TYPE_CAT} column.
      */
-    @JsonbProperty
-    @XmlAttribute
-    String getEffectiveTypeCat() {
+    @JsonbTransient
+    @XmlTransient
+    String getTypeCatForMetadataLookup() {
         return typeCat == null ? "" : typeCat;
     }
 
@@ -397,14 +397,14 @@ public class Table
     }
 
     /**
-     * Returns the effective value of {@value #COLUMN_LABEL_TYPE_SCHEM} column, with {@code null} normalized to an empty
-     * string.
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TYPE_SCHEM} column, with {@code null} normalized to an
+     * empty string.
      *
-     * @return the effective value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
-    @JsonbProperty
-    @XmlAttribute
-    String getEffectiveTypeSchem() {
+    @JsonbTransient
+    @XmlTransient
+    String getTypeSchemForMetadataLookup() {
         return typeSchem == null ? "" : typeSchem;
     }
 

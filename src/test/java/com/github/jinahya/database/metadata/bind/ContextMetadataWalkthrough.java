@@ -47,13 +47,12 @@ final class ContextMetadataWalkthrough {
     interface Sink {
 
         static Sink noop() {
-            return (rootElementName, itemElementName, values, metadata) -> {
+            return (rootElementName, itemElementName, values) -> {
                 // empty
             };
         }
 
-        void accept(String rootElementName, String itemElementName, List<?> values, boolean metadata)
-                throws Exception;
+        void accept(String rootElementName, String itemElementName, List<?> values) throws Exception;
     }
 
     @FunctionalInterface
@@ -158,11 +157,11 @@ final class ContextMetadataWalkthrough {
         pair("allTablePrivileges", context::getAllTablePrivileges, c -> context.forEachTablePrivilege(c));
         pair("allUDTs", context::getAllUDTs, c -> context.forEachUDT(c));
 
-        list("numericFunctions", "numericFunctions", "numericFunction", false, context::getNumericFunctions);
-        list("sqlKeywords", "sqlKeywords", "sqlKeyword", false, context::getSQLKeywords);
-        list("stringFunctions", "stringFunctions", "stringFunction", false, context::getStringFunctions);
-        list("systemFunctions", "systemFunctions", "systemFunction", false, context::getSystemFunctions);
-        list("timeDateFunctions", "timeDateFunctions", "timeDateFunction", false, context::getTimeDateFunctions);
+        list("numericFunctions", context::getNumericFunctions);
+        list("sqlKeywords", context::getSQLKeywords);
+        list("stringFunctions", context::getStringFunctions);
+        list("systemFunctions", context::getSystemFunctions);
+        list("timeDateFunctions", context::getTimeDateFunctions);
 
         final var result = new Result(attempted, succeeded, failed);
         log.info("context metadata walkthrough completed: {}", result);
@@ -298,11 +297,6 @@ final class ContextMetadataWalkthrough {
 
     private <T> List<T> list(final String name, final String rootElementName, final String itemElementName,
                              final Query<T> query) {
-        return list(name, rootElementName, itemElementName, true, query);
-    }
-
-    private <T> List<T> list(final String name, final String rootElementName, final String itemElementName,
-                             final boolean metadata, final Query<T> query) {
         attempted++;
         try {
             final var values = new ArrayList<>(Objects.requireNonNull(query.get(), name + " is null"));
@@ -313,7 +307,7 @@ final class ContextMetadataWalkthrough {
             succeeded++;
             verifyComparator(name, values);
             try {
-                sink.accept(rootElementName, itemElementName, values, metadata);
+                sink.accept(rootElementName, itemElementName, values);
             } catch (final Exception e) {
                 failed++;
                 log.error("failed to sink {}", name, e);

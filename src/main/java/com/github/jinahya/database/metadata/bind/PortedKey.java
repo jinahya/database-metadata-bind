@@ -21,8 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.json.bind.annotation.JsonbNillable;
-import jakarta.json.bind.annotation.JsonbProperty;
-import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import org.jspecify.annotations.Nullable;
@@ -295,14 +294,14 @@ abstract class PortedKey
     }
 
     /**
-     * Returns the effective value of {@value #COLUMN_LABEL_PKTABLE_CAT} column, with {@code null} normalized to an
-     * empty string.
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_PKTABLE_CAT} column, with {@code null} normalized to
+     * an empty string.
      *
-     * @return the effective value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
      */
-    @JsonbProperty
-    @XmlAttribute
-    String getEffectivePktableCat() {
+    @JsonbTransient
+    @XmlTransient
+    String getPktableCatForMetadataLookup() {
         return pktableCat == null ? "" : pktableCat;
     }
 
@@ -328,14 +327,14 @@ abstract class PortedKey
     }
 
     /**
-     * Returns the effective value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column, with {@code null} normalized to an
-     * empty string.
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column, with {@code null} normalized to
+     * an empty string.
      *
-     * @return the effective value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
      */
-    @JsonbProperty
-    @XmlAttribute
-    String getEffectivePktableSchem() {
+    @JsonbTransient
+    @XmlTransient
+    String getPktableSchemForMetadataLookup() {
         return pktableSchem == null ? "" : pktableSchem;
     }
 
@@ -401,14 +400,14 @@ abstract class PortedKey
     }
 
     /**
-     * Returns the effective value of {@value #COLUMN_LABEL_FKTABLE_CAT} column, with {@code null} normalized to an
-     * empty string.
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_FKTABLE_CAT} column, with {@code null} normalized to
+     * an empty string.
      *
-     * @return the effective value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
      */
-    @JsonbProperty
-    @XmlAttribute
-    String getEffectiveFktableCat() {
+    @JsonbTransient
+    @XmlTransient
+    String getFktableCatForMetadataLookup() {
         return fktableCat == null ? "" : fktableCat;
     }
 
@@ -434,14 +433,14 @@ abstract class PortedKey
     }
 
     /**
-     * Returns the effective value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column, with {@code null} normalized to an
-     * empty string.
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column, with {@code null} normalized to
+     * an empty string.
      *
-     * @return the effective value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
      */
-    @JsonbProperty
-    @XmlAttribute
-    String getEffectiveFktableSchem() {
+    @JsonbTransient
+    @XmlTransient
+    String getFktableSchemForMetadataLookup() {
         return fktableSchem == null ? "" : fktableSchem;
     }
 
