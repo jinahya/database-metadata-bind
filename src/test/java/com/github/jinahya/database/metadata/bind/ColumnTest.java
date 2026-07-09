@@ -152,7 +152,7 @@ class ColumnTest
     Column newTypeInstance() {
         final var instance = super.newTypeInstance();
         instance.setTableName("");
-        instance.setColumnName("");
+        instance.setColumnName("COLUMN_NAME");
         instance.setOrdinalPosition(1);
         return instance;
     }
