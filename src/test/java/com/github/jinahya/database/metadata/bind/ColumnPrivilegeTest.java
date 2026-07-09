@@ -27,5 +27,15 @@ class ColumnPrivilegeTest
         super(ColumnPrivilege.class);
     }
 
+    @Override
+    ColumnPrivilege newTypeInstance() {
+        final var instance = super.newTypeInstance();
+        instance.setTableName("TABLE_NAME");
+        instance.setColumnName("COLUMN_NAME");
+        instance.setGrantee("GRANTEE");
+        instance.setPrivilege("SELECT");
+        return instance;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 }

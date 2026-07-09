@@ -151,8 +151,9 @@ class ColumnTest
     @Override
     Column newTypeInstance() {
         final var instance = super.newTypeInstance();
-        instance.setTableName("");
+        instance.setTableName("TABLE_NAME");
         instance.setColumnName("COLUMN_NAME");
+        instance.setTypeName("VARCHAR");
         instance.setOrdinalPosition(1);
         return instance;
     }

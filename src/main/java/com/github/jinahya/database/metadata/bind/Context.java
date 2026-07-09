@@ -76,10 +76,24 @@ public class Context {
      * @param connection the connection.
      * @return a new instance.
      * @throws SQLException if a database error occurs.
+     * @see #from(Connection)
+     * @deprecated Use {@link #from(Connection)}.
+     */
+    @Deprecated(since = "4.5.1", forRemoval = true)
+    public static Context newInstance(final Connection connection) throws SQLException {
+        return from(connection);
+    }
+
+    /**
+     * Creates a new instance from the specified connection's {@linkplain Connection#getMetaData() database metadata}.
+     *
+     * @param connection the connection.
+     * @return a new instance.
+     * @throws SQLException if a database access error occurs while retrieving the connection's metadata.
      * @see Connection#getMetaData()
      * @see #Context(DatabaseMetaData)
      */
-    public static Context newInstance(final Connection connection) throws SQLException {
+    public static Context from(final Connection connection) throws SQLException {
         Objects.requireNonNull(connection, "connection is null");
         return new Context(connection.getMetaData());
     }

@@ -493,6 +493,7 @@ public class Table
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 

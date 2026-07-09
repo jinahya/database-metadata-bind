@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.json.bind.annotation.JsonbNillable;
 import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
@@ -338,6 +339,7 @@ public class TablePrivilege
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
@@ -350,9 +352,11 @@ public class TablePrivilege
     @_ColumnLabel(COLUMN_LABEL_GRANTOR)
     private String grantor;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_GRANTEE)
     private String grantee;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_PRIVILEGE)
     private String privilege;
 

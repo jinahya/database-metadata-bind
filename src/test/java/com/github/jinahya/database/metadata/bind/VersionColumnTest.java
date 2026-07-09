@@ -31,6 +31,14 @@ class VersionColumnTest
         super(VersionColumn.class);
     }
 
+    @Override
+    VersionColumn newTypeInstance() {
+        final var instance = super.newTypeInstance();
+        instance.setColumnName("COLUMN_NAME");
+        instance.setTypeName("TYPE_NAME");
+        return instance;
+    }
+
     // ---------------------------------------------------------------------------------------------- Jakarta-Validation
     // Note: these assert the (Bean-Validation-free) predicate logic ported from the 'jakarta' branch. This branch does
     //       NOT depend on Jakarta Bean Validation; the predicates are plain methods, exercised here directly.

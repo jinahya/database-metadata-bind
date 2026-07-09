@@ -35,5 +35,13 @@ class BestRowIdentifierTest
         super(BestRowIdentifier.class);
     }
 
+    @Override
+    BestRowIdentifier newTypeInstance() {
+        final var instance = super.newTypeInstance();
+        instance.setColumnName("COLUMN_NAME");
+        instance.setTypeName("VARCHAR");
+        return instance;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 }

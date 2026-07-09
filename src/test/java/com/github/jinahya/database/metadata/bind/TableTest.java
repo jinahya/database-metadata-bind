@@ -32,6 +32,7 @@ class TableTest
     Table newTypeInstance() {
         final Table instance = super.newTypeInstance();
         instance.setTableName("TABLE_NAME");
+        instance.setTableType("TABLE");
         return instance;
     }
 }

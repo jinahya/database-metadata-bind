@@ -27,5 +27,13 @@ class SuperTypeTest
         super(SuperType.class);
     }
 
+    @Override
+    SuperType newTypeInstance() {
+        final var instance = super.newTypeInstance();
+        instance.setTypeName("TYPE_NAME");
+        instance.setSupertypeName("SUPERTYPE_NAME");
+        return instance;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 }

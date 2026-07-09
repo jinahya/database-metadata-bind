@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.json.bind.annotation.JsonbNillable;
 import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
@@ -359,12 +360,14 @@ public class VersionColumn
     @_ColumnLabel(COLUMN_LABEL_SCOPE)
     private Integer scope;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 

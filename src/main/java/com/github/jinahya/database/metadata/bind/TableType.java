@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
@@ -123,6 +124,7 @@ public class TableType
     @SuppressWarnings({
             "java:S1700"
     })
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 }

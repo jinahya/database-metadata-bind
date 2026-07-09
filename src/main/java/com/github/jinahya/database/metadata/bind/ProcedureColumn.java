@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.json.bind.annotation.JsonbNillable;
 import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
@@ -765,6 +766,7 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_SCHEM)
     private String procedureSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_NAME)
     private String procedureName;
 
@@ -778,6 +780,7 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
@@ -844,6 +847,7 @@ public class ProcedureColumn
     private String isNullable;
 
     // https://github.com/microsoft/mssql-jdbc/issues/2320
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
 

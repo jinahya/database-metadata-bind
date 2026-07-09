@@ -164,8 +164,9 @@ class AttributeTest
     @Override
     Attribute newTypeInstance() {
         final Attribute instance = super.newTypeInstance();
-        instance.setAttrName("");
-        instance.setTypeName("");
+        instance.setAttrName("ATTR_NAME");
+        instance.setTypeName("TYPE_NAME");
+        instance.setAttrTypeName("ATTR_TYPE_NAME");
         instance.setOrdinalPosition(1);
         return instance;
     }

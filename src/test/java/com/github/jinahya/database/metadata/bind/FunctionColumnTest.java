@@ -30,9 +30,10 @@ class FunctionColumnTest
     @Override
     FunctionColumn newTypeInstance() {
         final FunctionColumn instance = super.newTypeInstance();
-        instance.setFunctionName("");
+        instance.setFunctionName("FUNCTION_NAME");
         instance.setColumnName("");
-        instance.setSpecificName("");
+        instance.setTypeName("VARCHAR");
+        instance.setSpecificName("FUNCTION_SPECIFIC");
         return instance;
     }
 }

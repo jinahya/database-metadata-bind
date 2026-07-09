@@ -27,6 +27,13 @@ class IndexInfoTest
         super(IndexInfo.class);
     }
 
+    @Override
+    IndexInfo newTypeInstance() {
+        final var instance = super.newTypeInstance();
+        instance.setTableName("TABLE_NAME");
+        return instance;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     @org.junit.jupiter.api.Test
     void isAscending_And_isDescending_AreDerivedFromAscOrDesc_AsSpecified() {

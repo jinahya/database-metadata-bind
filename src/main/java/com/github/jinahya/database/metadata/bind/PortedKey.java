@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.json.bind.annotation.JsonbNillable;
 import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import org.jspecify.annotations.Nullable;
@@ -621,9 +622,11 @@ abstract class PortedKey
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_SCHEM)
     String pktableSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_NAME)
     String pktableName;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_PKCOLUMN_NAME)
     String pkcolumnName;
 
@@ -642,9 +645,11 @@ abstract class PortedKey
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_SCHEM)
     String fktableSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_NAME)
     String fktableName;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_FKCOLUMN_NAME)
     String fkcolumnName;
 

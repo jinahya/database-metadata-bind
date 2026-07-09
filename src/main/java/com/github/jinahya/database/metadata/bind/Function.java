@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.json.bind.annotation.JsonbNillable;
 import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
@@ -352,6 +353,7 @@ public class Function
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_NAME)
     private String functionName;
 
@@ -362,6 +364,7 @@ public class Function
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_TYPE)
     private Integer functionType;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
 

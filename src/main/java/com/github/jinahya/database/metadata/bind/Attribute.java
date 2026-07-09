@@ -23,6 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.json.bind.annotation.JsonbNillable;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -844,9 +845,11 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_ATTR_NAME)
     private String attrName;
 
@@ -854,6 +857,7 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_ATTR_TYPE_NAME)
     private String attrTypeName;
 

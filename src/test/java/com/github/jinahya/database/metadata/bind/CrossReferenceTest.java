@@ -27,5 +27,15 @@ class CrossReferenceTest
         super(CrossReference.class);
     }
 
+    @Override
+    CrossReference newTypeInstance() {
+        final var instance = super.newTypeInstance();
+        instance.setPktableName("PKTABLE_NAME");
+        instance.setPkcolumnName("PKCOLUMN_NAME");
+        instance.setFktableName("FKTABLE_NAME");
+        instance.setFkcolumnName("FKCOLUMN_NAME");
+        return instance;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 }

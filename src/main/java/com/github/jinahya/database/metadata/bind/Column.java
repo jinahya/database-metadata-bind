@@ -1030,6 +1030,7 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
@@ -1041,6 +1042,7 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 

@@ -30,8 +30,8 @@ class PrimaryKeyTest
     @Override
     PrimaryKey newTypeInstance() {
         final var instance = super.newTypeInstance();
-        instance.setTableName("");
-        instance.setColumnName("");
+        instance.setTableName("TABLE_NAME");
+        instance.setColumnName("COLUMN_NAME");
         return instance;
     }
 }

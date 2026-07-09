@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.json.bind.annotation.JsonbNillable;
 import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
@@ -308,6 +309,7 @@ public class SuperType
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
@@ -327,6 +329,7 @@ public class SuperType
     @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_SCHEM)
     private String supertypeSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_NAME)
     private String supertypeName;
 

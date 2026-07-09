@@ -26,4 +26,13 @@ class TablePrivilegeTest
     TablePrivilegeTest() {
         super(TablePrivilege.class);
     }
+
+    @Override
+    TablePrivilege newTypeInstance() {
+        final var instance = super.newTypeInstance();
+        instance.setTableName("TABLE_NAME");
+        instance.setGrantee("GRANTEE");
+        instance.setPrivilege("SELECT");
+        return instance;
+    }
 }

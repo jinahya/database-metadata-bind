@@ -31,4 +31,14 @@ abstract class PortedKeyTest<T extends PortedKey>
     PortedKeyTest(final Class<T> typeClass) {
         super(typeClass);
     }
+
+    @Override
+    T newTypeInstance() {
+        final T instance = super.newTypeInstance();
+        instance.setPktableName("PKTABLE_NAME");
+        instance.setPkcolumnName("PKCOLUMN_NAME");
+        instance.setFktableName("FKTABLE_NAME");
+        instance.setFkcolumnName("FKCOLUMN_NAME");
+        return instance;
+    }
 }

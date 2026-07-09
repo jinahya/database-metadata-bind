@@ -26,4 +26,13 @@ class UDTTest
     UDTTest() {
         super(UDT.class);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    UDT newTypeInstance() {
+        final UDT instance = super.newTypeInstance();
+        instance.setTypeName("MY_TYPE");
+        instance.setClassName("com.example.MyType");
+        return instance;
+    }
 }

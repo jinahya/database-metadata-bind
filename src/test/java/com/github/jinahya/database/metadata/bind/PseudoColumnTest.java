@@ -26,4 +26,12 @@ class PseudoColumnTest
     PseudoColumnTest() {
         super(PseudoColumn.class);
     }
+
+    @Override
+    PseudoColumn newTypeInstance() {
+        final var instance = super.newTypeInstance();
+        instance.setTableName("TABLE_NAME");
+        instance.setColumnName("COLUMN_NAME");
+        return instance;
+    }
 }

@@ -27,5 +27,13 @@ class SuperTableTest
         super(SuperTable.class);
     }
 
+    @Override
+    SuperTable newTypeInstance() {
+        final var instance = super.newTypeInstance();
+        instance.setTableName("TABLE_NAME");
+        instance.setSupertableName("SUPERTABLE_NAME");
+        return instance;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 }
