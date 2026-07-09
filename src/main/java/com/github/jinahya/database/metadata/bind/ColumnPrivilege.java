@@ -158,7 +158,7 @@ public class ColumnPrivilege
     /**
      * Creates a new instance.
      */
-    ColumnPrivilege() {
+    protected ColumnPrivilege() {
         super();
     }
 

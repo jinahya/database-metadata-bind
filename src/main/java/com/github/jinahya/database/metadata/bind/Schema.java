@@ -103,7 +103,7 @@ public class Schema
     @SuppressWarnings({
             "java:S2637" // "@NonNull" values should not be set to null
     })
-    Schema() {
+    protected Schema() {
         super();
     }
 

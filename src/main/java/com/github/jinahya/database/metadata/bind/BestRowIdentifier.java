@@ -161,7 +161,7 @@ public class BestRowIdentifier
     /**
      * Creates a new instance.
      */
-    BestRowIdentifier() {
+    protected BestRowIdentifier() {
         super();
     }
 

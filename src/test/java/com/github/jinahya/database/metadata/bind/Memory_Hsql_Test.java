@@ -25,8 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static java.sql.DriverManager.getConnection;
-
 /**
  * Tests for HyperSQL.
  *
@@ -55,6 +53,6 @@ class Memory_Hsql_Test
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     protected Connection connect() throws SQLException {
-        return getConnection(CONNECTION_URL);
+        return __JavaSqlTestUtils.connection(CONNECTION_URL);
     }
 }

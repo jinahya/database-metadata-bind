@@ -22,16 +22,13 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.junit.jupiter.api.Test;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 import static com.github.jinahya.database.metadata.bind.Context_DirectMetadataMapping_Test_Utils.assertDirect;
 
 class Context_DirectMetadataMapping_Test {
 
     @Test
-    void directMappings_GetAndForEachReturnSameCounts() throws SQLException {
-        try (var connection = DriverManager.getConnection("jdbc:h2:mem:context_direct_metadata_mapping")) {
+    void directMappings_GetAndForEachReturnSameCounts() throws Throwable {
+        __JavaSqlTestUtils.acceptConnection("jdbc:h2:mem:context_direct_metadata_mapping", connection -> {
             try (var statement = connection.createStatement()) {
                 statement.execute("""
                                           CREATE TABLE DIRECT_PARENT (
@@ -103,6 +100,6 @@ class Context_DirectMetadataMapping_Test {
                          c -> context.forEachUDT(null, null, "%", null, c));
             assertDirect("versionColumns", () -> context.getVersionColumns(null, null, "DIRECT_PARENT"),
                          c -> context.forEachVersionColumn(null, null, "DIRECT_PARENT", c));
-        }
+        });
     }
 }

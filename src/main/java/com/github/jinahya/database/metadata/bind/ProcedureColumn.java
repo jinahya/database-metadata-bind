@@ -281,7 +281,7 @@ public class ProcedureColumn
     /**
      * Creates a new instance.
      */
-    ProcedureColumn() {
+    protected ProcedureColumn() {
         super();
     }
 

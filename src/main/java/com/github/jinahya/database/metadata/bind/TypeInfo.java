@@ -266,7 +266,7 @@ public class TypeInfo
     /**
      * Creates a new instance.
      */
-    TypeInfo() {
+    protected TypeInfo() {
         super();
     }
 

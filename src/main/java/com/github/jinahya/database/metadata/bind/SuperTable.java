@@ -82,7 +82,7 @@ public class SuperTable
     /**
      * Creates a new instance.
      */
-    SuperTable() {
+    protected SuperTable() {
         super();
     }
 

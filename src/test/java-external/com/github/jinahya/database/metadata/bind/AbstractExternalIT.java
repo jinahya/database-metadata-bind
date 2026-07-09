@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import io.vavr.CheckedConsumer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,14 +67,10 @@ public abstract class AbstractExternalIT {
         return System.getProperty(PROPERTY_NAME_PASSWORD);
     }
 
-    private void withContext(final ContextConsumer action) throws SQLException {
+    private void withContext(final CheckedConsumer<? super Context> action) throws Throwable {
         __JavaSqlTestUtils.applyConnection(url(), user(), password(), connection -> {
-            try {
-                action.accept(Context.newInstance(connection));
-                return null;
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
+            action.accept(Context.newInstance(connection));
+            return null;
         });
     }
 
@@ -88,15 +85,9 @@ public abstract class AbstractExternalIT {
         log.info("wrote {} {} to {} and {}", values.size(), rootElementName, xml, json);
     }
 
-    @FunctionalInterface
-    private interface ContextConsumer {
-
-        void accept(Context context);
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void walkthrough() throws SQLException {
+    void walkthrough() throws Throwable {
         withContext(c -> ContextMetadataWalkthrough.walk(c, (rootElementName, itemElementName, values) -> {
             write(c, rootElementName, values);
         }));

@@ -166,7 +166,7 @@ public class UDT
     /**
      * Creates a new instance.
      */
-    UDT() {
+    protected UDT() {
         super();
     }
 

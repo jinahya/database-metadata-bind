@@ -167,7 +167,7 @@ public class Function
     /**
      * Creates a new instance.
      */
-    Function() {
+    protected Function() {
         super();
     }
 

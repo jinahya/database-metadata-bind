@@ -292,7 +292,7 @@ public class CrossReference
     /**
      * Creates a new instance.
      */
-    CrossReference() {
+    protected CrossReference() {
         super();
     }
 

@@ -72,7 +72,7 @@ public class ExportedKey
     /**
      * Creates a new instance.
      */
-    ExportedKey() {
+    protected ExportedKey() {
         super();
     }
 }

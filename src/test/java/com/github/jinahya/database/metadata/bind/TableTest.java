@@ -27,10 +27,11 @@ class TableTest
         super(Table.class);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     Table newTypeInstance() {
         final Table instance = super.newTypeInstance();
-        instance.setTableName("");
+        instance.setTableName("TABLE_NAME");
         return instance;
     }
 }

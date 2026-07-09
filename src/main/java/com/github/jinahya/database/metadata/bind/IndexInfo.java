@@ -229,7 +229,7 @@ public class IndexInfo
     /**
      * Creates a new instance.
      */
-    IndexInfo() {
+    protected IndexInfo() {
         super();
     }
 

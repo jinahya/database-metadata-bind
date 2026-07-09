@@ -234,7 +234,7 @@ public class Attribute
     /**
      * Creates a new instance.
      */
-    Attribute() {
+    protected Attribute() {
         super();
     }
 

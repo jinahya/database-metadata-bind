@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+/**
+ * Package-private utilities for Jakarta XML Binding.
+ */
 final class JakartaXmlBindingUtils {
 
     private JakartaXmlBindingUtils() {

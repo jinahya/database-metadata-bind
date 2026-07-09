@@ -146,7 +146,7 @@ public class VersionColumn
     /**
      * Creates a new instance.
      */
-    VersionColumn() {
+    protected VersionColumn() {
         super();
     }
 

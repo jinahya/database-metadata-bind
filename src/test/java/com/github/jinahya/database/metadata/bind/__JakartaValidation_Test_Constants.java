@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2026 Jinahya, Inc.
+ * Copyright (C) 2011 - 2024 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-/**
- * Constants for Jakarta XML Binding.
- *
- * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
- */
-public final class JakartaXmlBindingConstants {
+final class __JakartaValidation_Test_Constants {
 
-    /**
-     * The XML namespace URI used by this package.
-     */
-    public static final String NAMESPACE_URI = "https://github.com/jinahya/database-metadata-bind";
-
-    static final String NAMESPACE_PREFIX = "dmb";
-
-    private JakartaXmlBindingConstants() {
+    // -----------------------------------------------------------------------------------------------------------------
+    private __JakartaValidation_Test_Constants() {
         throw new AssertionError("instantiation is not allowed");
     }
 }

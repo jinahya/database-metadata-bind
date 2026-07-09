@@ -37,7 +37,8 @@ import java.util.function.Consumer;
 @Slf4j
 final class ContextMetadataWalkthrough {
 
-    private static final Comparator<String> STRING_COMPARATOR = Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER);
+    private static final Comparator<String> DIAGNOSTIC_STRING_COMPARATOR =
+            Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER);
 
     record Result(int attempted, int succeeded, int failed) {
 
@@ -364,102 +365,103 @@ final class ContextMetadataWalkthrough {
         if (values.size() < 2) {
             return;
         }
+        // Diagnostic only: JDBC documents metadata ordering keys, not the string collation used by drivers.
+        // String.CASE_INSENSITIVE_ORDER is a sample Java-side policy, not a portable verifier of driver order.
         final Comparator<? super T> comparator;
         try {
             comparator = comparatorFor(values.get(0));
         } catch (final SQLException sqle) {
-            failed++;
-            log.error("failed to create comparator for {}", name, sqle);
+            log.warn("failed to create diagnostic comparator for {}", name, sqle);
             return;
         } catch (final RuntimeException re) {
-            failed++;
-            log.error("failed to select comparator for {}", name, re);
+            log.warn("failed to select diagnostic comparator for {}", name, re);
             return;
         }
         if (comparator == null) {
             return;
         }
-        attempted++;
-        try {
-            for (int i = 1; i < values.size(); i++) {
-                if (comparator.compare(values.get(i - 1), values.get(i)) > 0) {
-                    throw new IllegalStateException(name + " is not sorted at index " + i);
-                }
+        for (int i = 1; i < values.size(); i++) {
+            final var previous = values.get(i - 1);
+            final var current = values.get(i);
+            final var comparison = comparator.compare(previous, current);
+            if (comparison > 0) {
+                log.warn(
+                        "driver metadata order differs from diagnostic comparator for {} at index {}: " +
+                        "comparison={}, previous={}, current={}",
+                        name, i, comparison, previous, current
+                );
+                return;
             }
-            succeeded++;
-        } catch (final RuntimeException re) {
-            failed++;
-            log.error("failed to verify comparator for {}", name, re);
         }
     }
 
     @SuppressWarnings("unchecked")
     private <T> Comparator<? super T> comparatorFor(final T value) throws SQLException {
         if (value instanceof Attribute) {
-            return (Comparator<T>) Attribute.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) Attribute.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof BestRowIdentifier) {
             return (Comparator<T>) BestRowIdentifier.comparingInJdbcOrder(context);
         }
         if (value instanceof Catalog) {
-            return (Comparator<T>) Catalog.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) Catalog.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof ClientInfoProperty) {
-            return (Comparator<T>) ClientInfoProperty.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) ClientInfoProperty.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof Column) {
-            return (Comparator<T>) Column.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) Column.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof ColumnPrivilege) {
-            return (Comparator<T>) ColumnPrivilege.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) ColumnPrivilege.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof CrossReference) {
-            return (Comparator<T>) CrossReference.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) CrossReference.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof ExportedKey) {
-            return (Comparator<T>) ExportedKey.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) ExportedKey.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof Function) {
-            return (Comparator<T>) Function.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) Function.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof FunctionColumn) {
-            return (Comparator<T>) FunctionColumn.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) FunctionColumn.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof ImportedKey) {
-            return (Comparator<T>) ImportedKey.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) ImportedKey.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof IndexInfo) {
-            return (Comparator<T>) IndexInfo.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) IndexInfo.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof PrimaryKey) {
-            return (Comparator<T>) PrimaryKey.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) PrimaryKey.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof Procedure) {
-            return (Comparator<T>) Procedure.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) Procedure.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof ProcedureColumn) {
-            return (Comparator<T>) ProcedureColumn.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) ProcedureColumn.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof PseudoColumn) {
-            return (Comparator<T>) PseudoColumn.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) PseudoColumn.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof Schema) {
-            return (Comparator<T>) Schema.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) Schema.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof Table) {
-            return (Comparator<T>) Table.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) Table.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof TablePrivilege) {
-            return (Comparator<T>) TablePrivilege.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) TablePrivilege.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof TableType) {
-            return (Comparator<T>) TableType.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) TableType.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         if (value instanceof TypeInfo) {
             return (Comparator<T>) TypeInfo.comparingInJdbcOrder(context);
         }
         if (value instanceof UDT) {
-            return (Comparator<T>) UDT.comparingInJdbcOrder(context, STRING_COMPARATOR);
+            return (Comparator<T>) UDT.comparingInJdbcOrder(context, DIAGNOSTIC_STRING_COMPARATOR);
         }
         return null;
     }

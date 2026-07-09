@@ -20,13 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import io.vavr.CheckedFunction1;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Objects;
 
 /**
  * An abstract test class for in-memory databases.
@@ -45,30 +45,20 @@ abstract class Memory_$_Test {
     abstract Connection connect() throws SQLException;
 
     // ------------------------------------------------------------------------------------------------------ connection
-    <R> R applyConnection(final java.util.function.Function<? super Connection, ? extends R> function) {
-        Objects.requireNonNull(function, "function is null");
-        try (var connection = connect()) {
-            return function.apply(connection);
-        } catch (final SQLException sqle) {
-            throw new RuntimeException(sqle);
-        }
+    <R> R applyConnection(final CheckedFunction1<? super Connection, ? extends R> function) throws Throwable {
+        return __JavaSqlTestUtils.applyConnection(this::connect, function);
     }
 
     // --------------------------------------------------------------------------------------------------------- context
-    <R> R applyContext(final java.util.function.Function<? super Context, ? extends R> function) {
-        Objects.requireNonNull(function, "function is null");
+    <R> R applyContext(final CheckedFunction1<? super Context, ? extends R> function) throws Throwable {
         return applyConnection(c -> {
-            try {
-                return function.apply(Context.newInstance(c));
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
+            return function.apply(Context.newInstance(c));
         });
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void test() throws SQLException {
+    void test() throws Throwable {
         applyContext(c -> {
             // walk all binding methods and write each metadata collection to target/<db>-<name>.xml and .json
             ContextMetadataWalkthrough.walk(c, (rootElementName, itemElementName, values) -> {

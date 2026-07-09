@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
@@ -41,7 +40,7 @@ class Memory_Duckdb_Test
 
     @Override
     protected Connection connect() throws SQLException {
-        return DriverManager.getConnection(CONNECTION_URL);
+        return __JavaSqlTestUtils.connection(CONNECTION_URL);
     }
 
     /**
@@ -56,7 +55,7 @@ class Memory_Duckdb_Test
     @Disabled("DuckDB getTypeInfo() is not ordered by DATA_TYPE (JDBC spec deviation)")
     @Test
     @Override
-    void test() throws SQLException {
+    void test() throws Throwable {
         super.test();
     }
 }

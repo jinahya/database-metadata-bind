@@ -99,8 +99,20 @@ abstract class AbstractMetadataType
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The map holding result-set columns, by label, that have no field of this type mapped to them. This map is
-     * {@code transient} and is therefore not serialized.
+     * The map holding result-set columns, by label, that have no field of this type mapped to them.
+     * <p>
+     * The exclusion of this field from both bindings is deliberately asymmetric:
+     * <ul>
+     *   <li><strong>XML (JAXB):</strong> excluded by the {@code transient} modifier alone. JAXB rejects a
+     *       {@code transient} field that carries <em>any</em> JAXB annotation ("Transient field cannot have any JAXB
+     *       annotations"), so {@link XmlTransient} <em>must not</em> be added here.</li>
+     *   <li><strong>JSON (JSON-B):</strong> {@link JsonbTransient} is applied explicitly. Yasson also honors the
+     *       {@code transient} modifier under the field-access strategy, but that is not guaranteed by the JSON-B
+     *       specification; the annotation makes the exclusion portable and is invisible to JAXB.</li>
+     * </ul>
+     * The {@code @XmlTransient} / {@code @JsonbTransient} pair on {@link #getUnknownColumns()} covers accessor-based
+     * configurations; those annotations are not consulted once binding is field-based.
      */
+    @JsonbTransient
     final transient Map<String, Object> unknownColumns = new HashMap<>();
 }

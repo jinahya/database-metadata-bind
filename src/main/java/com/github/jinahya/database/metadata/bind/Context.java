@@ -2752,7 +2752,12 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public void forEachSuperTable(final Consumer<? super SuperTable> consumer) throws SQLException {
-        getSuperTablesAndAcceptEach(null, "%", "%", consumer);
+        getSuperTablesAndAcceptEach(
+                null,
+                "%",
+                "%",
+                consumer
+        );
     }
 
     /**
@@ -2765,7 +2770,11 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public List<SuperTable> getAllSuperTables() throws SQLException {
-        return getSuperTables(null, "%", "%");
+        return getSuperTables(
+                null,
+                "%",
+                "%"
+        );
     }
 
     /**
@@ -2782,7 +2791,12 @@ public class Context {
     public void forEachSuperTable(@Nullable final String catalog, final String schemaPattern,
                                   final String tableNamePattern, final Consumer<? super SuperTable> consumer)
             throws SQLException {
-        getSuperTablesAndAcceptEach(catalog, schemaPattern, tableNamePattern, consumer);
+        getSuperTablesAndAcceptEach(
+                catalog,
+                schemaPattern,
+                tableNamePattern,
+                consumer
+        );
     }
 
     /**

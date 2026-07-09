@@ -35,6 +35,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 abstract class AbstractMetadataType_Test<T extends AbstractMetadataType>
         extends MetadataType_Test<T> {
 
+    private static final Pattern FIELD_NAME_IN_TO_STRING_PATTERN = Pattern.compile("\\b([A-Za-z][A-Za-z0-9_]*)=");
+
     AbstractMetadataType_Test(final Class<T> typeClass) {
         super(typeClass);
     }
@@ -85,6 +87,4 @@ abstract class AbstractMetadataType_Test<T extends AbstractMetadataType>
         }
         return actual;
     }
-
-    private static final Pattern FIELD_NAME_IN_TO_STRING_PATTERN = Pattern.compile("\\b([A-Za-z][A-Za-z0-9_]*)=");
 }

@@ -70,7 +70,7 @@ public class ImportedKey
     /**
      * Creates a new instance.
      */
-    ImportedKey() {
+    protected ImportedKey() {
         super();
     }
 

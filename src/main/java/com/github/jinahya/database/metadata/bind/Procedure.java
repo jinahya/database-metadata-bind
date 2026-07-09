@@ -160,7 +160,7 @@ public class Procedure
     /**
      * Creates a new instance.
      */
-    Procedure() {
+    protected Procedure() {
         super();
     }
 

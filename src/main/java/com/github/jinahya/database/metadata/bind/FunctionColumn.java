@@ -209,7 +209,7 @@ public class FunctionColumn
     /**
      * Creates a new instance.
      */
-    FunctionColumn() {
+    protected FunctionColumn() {
         super();
     }
 

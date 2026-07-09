@@ -20,23 +20,71 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import io.vavr.CheckedConsumer;
+import io.vavr.CheckedFunction0;
+import io.vavr.CheckedFunction1;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Objects;
 
 @Slf4j
 final class __JavaSqlTestUtils {
 
     // -----------------------------------------------------------------------------------------------------------------
-    static <R> R applyConnection(final String url, final String user, final String password,
-                                 final java.util.function.Function<? super Connection, ? extends R> function)
-            throws SQLException {
-        try (var connection = DriverManager.getConnection(url, user, password)) {
-            log.debug("connected: {}", connection);
+    static Connection connection(final String url) throws SQLException {
+        final var connection = DriverManager.getConnection(url);
+        log.debug("connected: {}", connection);
+        return connection;
+    }
+
+    static Connection connection(final String url, final String user, final String password) throws SQLException {
+        final var connection = DriverManager.getConnection(url, user, password);
+        log.debug("connected: {}", connection);
+        return connection;
+    }
+
+    static <R> R applyConnection(final CheckedFunction0<? extends Connection> supplier,
+                                 final CheckedFunction1<? super Connection, ? extends R> function)
+            throws Throwable {
+        Objects.requireNonNull(supplier, "supplier is null");
+        Objects.requireNonNull(function, "function is null");
+        try (var connection = supplier.apply()) {
             return function.apply(connection);
         }
+    }
+
+    static <R> R applyConnection(final String url, final CheckedFunction1<? super Connection, ? extends R> function)
+            throws Throwable {
+        return applyConnection(() -> connection(url), function);
+    }
+
+    static <R> R applyConnection(final String url, final String user, final String password,
+                                 final CheckedFunction1<? super Connection, ? extends R> function)
+            throws Throwable {
+        return applyConnection(() -> connection(url, user, password), function);
+    }
+
+    static void acceptConnection(final CheckedFunction0<? extends Connection> supplier,
+                                 final CheckedConsumer<? super Connection> consumer)
+            throws Throwable {
+        applyConnection(supplier, c -> {
+            consumer.accept(c);
+            return null;
+        });
+    }
+
+    static void acceptConnection(final String url, final CheckedConsumer<? super Connection> consumer)
+            throws Throwable {
+        acceptConnection(() -> connection(url), consumer);
+    }
+
+    static void acceptConnection(final String url, final String user, final String password,
+                                 final CheckedConsumer<? super Connection> consumer)
+            throws Throwable {
+        acceptConnection(() -> connection(url, user, password), consumer);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -28,4 +28,10 @@ class ClientInfoPropertyTest
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    ClientInfoProperty newTypeInstance() {
+        final ClientInfoProperty instance = super.newTypeInstance();
+        instance.setName("NAME");
+        return instance;
+    }
 }

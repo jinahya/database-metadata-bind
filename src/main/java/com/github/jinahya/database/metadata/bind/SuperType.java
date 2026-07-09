@@ -97,7 +97,7 @@ public class SuperType
     /**
      * Creates a new instance.
      */
-    SuperType() {
+    protected SuperType() {
         super();
     }
 

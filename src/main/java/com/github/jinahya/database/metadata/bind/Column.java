@@ -339,7 +339,7 @@ public class Column
     /**
      * Creates a new instance.
      */
-    Column() {
+    protected Column() {
         super();
     }
 

@@ -20,6 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-final class JakartaXmlBindingTestConstants {
+/**
+ * Test-only constants holder for Jakarta XML Binding tests.
+ * <p>
+ * This class currently declares no constants; it exists only as a reserved sibling of
+ * {@link __JakartaXmlBinding_Test_Utils}.
+ */
+final class __JakartaXmlBinding_Test_Constants {
 
+    private __JakartaXmlBinding_Test_Constants() {
+        throw new AssertionError("instantiation is not allowed");
+    }
 }

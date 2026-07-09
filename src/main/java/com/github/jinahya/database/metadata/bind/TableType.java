@@ -81,7 +81,7 @@ public class TableType
     /**
      * Creates a new instance.
      */
-    TableType() {
+    protected TableType() {
         super();
     }
 

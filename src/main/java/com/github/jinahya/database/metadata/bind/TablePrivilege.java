@@ -131,7 +131,7 @@ public class TablePrivilege
     /**
      * Creates a new instance.
      */
-    TablePrivilege() {
+    protected TablePrivilege() {
         super();
     }
 

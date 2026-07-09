@@ -20,7 +20,39 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-final class JakartaJsonBindingUtils {
+import jakarta.json.bind.config.PropertyVisibilityStrategy;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+/**
+ * Utilities for Jakarta JSON Binding.
+ */
+public final class JakartaJsonBindingUtils {
+
+    /**
+     * A {@link PropertyVisibilityStrategy} that makes all fields visible and all methods invisible, so JSON-B binds
+     * directly to fields. The binding types apply this package-wide through
+     * {@link jakarta.json.bind.annotation.JsonbVisibility @JsonbVisibility} declared in {@code package-info}, so an
+     * ordinary {@link jakarta.json.bind.JsonbBuilder#create()} instance both serializes and deserializes them correctly
+     * despite their private fields, non-public setters, and {@code protected} constructors.
+     *
+     * @apiNote This type is {@code public} so a Jakarta JSON Binding provider can instantiate it reflectively from the
+     * {@code @JsonbVisibility} annotation. Application code normally does not need to reference this type directly.
+     */
+    public static final class FieldAccessVisibilityStrategy
+            implements PropertyVisibilityStrategy {
+
+        @Override
+        public boolean isVisible(final Field field) {
+            return true;
+        }
+
+        @Override
+        public boolean isVisible(final Method method) {
+            return false;
+        }
+    }
 
     private JakartaJsonBindingUtils() {
         throw new AssertionError("instantiation is not allowed");

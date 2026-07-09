@@ -196,7 +196,7 @@ public class PseudoColumn
     @SuppressWarnings({
             "java:S2637" // "@NonNull" values should not be set to null
     })
-    PseudoColumn() {
+    protected PseudoColumn() {
         super();
     }
 

@@ -122,7 +122,7 @@ public class PrimaryKey
     /**
      * Creates a new instance.
      */
-    PrimaryKey() {
+    protected PrimaryKey() {
         super();
     }
 

@@ -22,19 +22,18 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.junit.jupiter.api.Test;
 
-import java.sql.DriverManager;
-
 class Context_ComparingInJdbcOrder_Test {
 
     @Test
-    void acceptEachEmitsValuesInSpecifiedOrder() throws Exception {
-        try (var connection = DriverManager.getConnection("jdbc:h2:mem:comparing;DB_CLOSE_DELAY=-1");
-             var statement = connection.createStatement()) {
-            Context_ComparingInJdbcOrder_Test_Utils.preparePortedKeyTables(statement);
+    void acceptEachEmitsValuesInSpecifiedOrder() throws Throwable {
+        __JavaSqlTestUtils.acceptConnection("jdbc:h2:mem:comparing;DB_CLOSE_DELAY=-1", connection -> {
+            try (var statement = connection.createStatement()) {
+                Context_ComparingInJdbcOrder_Test_Utils.preparePortedKeyTables(statement);
+            }
             Context_ComparingInJdbcOrder_Test_Utils.assertComparingInJdbcOrder(
                     Context.newInstance(connection),
                     getClass().getSimpleName()
             );
-        }
+        });
     }
 }

@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serial;
 import java.sql.DatabaseMetaData;
@@ -103,7 +104,7 @@ public class ClientInfoProperty
     /**
      * Creates a new instance.
      */
-    ClientInfoProperty() {
+    protected ClientInfoProperty() {
         super();
     }
 
@@ -206,6 +207,7 @@ public class ClientInfoProperty
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_NAME)
+    @NotBlank
     private String name;
 
     // -----------------------------------------------------------------------------------------------------------------

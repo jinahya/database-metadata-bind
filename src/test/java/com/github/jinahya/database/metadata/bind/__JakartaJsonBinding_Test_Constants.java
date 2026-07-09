@@ -20,6 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-final class JakartaJsonBindingTestConstants {
+/**
+ * Test-only constants holder for Jakarta JSON Binding tests.
+ * <p>
+ * This class currently declares no constants; it exists only as a reserved sibling of
+ * {@link __JakartaJsonBinding_Test_Utils}.
+ */
+final class __JakartaJsonBinding_Test_Constants {
 
+    private __JakartaJsonBinding_Test_Constants() {
+        throw new AssertionError("instantiation is not allowed");
+    }
 }

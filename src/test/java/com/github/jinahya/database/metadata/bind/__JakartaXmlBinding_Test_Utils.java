@@ -22,62 +22,72 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Test utilities for reading/writing metadata bindings as XML via Jakarta XML Binding (JAXB).
- *
- * @author Jin Kwon &lt;onacit at gmail.com&gt;
+ * Test-only file helpers for Jakarta XML Binding snapshots.
+ * <p>
+ * These helpers intentionally live in the test tree. They wrap metadata lists in {@link MetadataTypeWrapper}, bootstrap
+ * {@link JAXBContext} by this package name through {@code jaxb.index}, and keep a cached context because
+ * {@link JAXBContext} is thread-safe after construction. They do not configure formatted XML output; tests that need a
+ * specific {@link jakarta.xml.bind.Marshaller} policy should create their own marshaller.
  */
 final class __JakartaXmlBinding_Test_Utils {
 
-    private static JAXBContext context;
+    private static volatile JAXBContext context;
 
     /**
-     * Returns a shared context, bootstrapped by package name (see {@code jaxb.index}), which binds every metadata type
-     * and {@link MetadataTypeWrapper}. A {@link JAXBContext} is immutable and thread-safe, so it is cached; a
-     * {@link Marshaller}/{@link jakarta.xml.bind.Unmarshaller} is not, so a fresh one is created per call.
+     * Returns a shared {@link JAXBContext} for this package.
+     * <p>
+     * The context is bootstrapped by package name, so the test uses the production {@code jaxb.index} resource and does
+     * not list every metadata type manually.
      *
      * @return a shared {@link JAXBContext}.
-     * @throws JAXBException if failed to create.
+     * @throws JAXBException if the context cannot be created.
      */
-    private static synchronized JAXBContext context() throws JAXBException {
-        if (context == null) {
-            context = JAXBContext.newInstance(MetadataType.class.getPackageName());
+    private static JAXBContext context() throws JAXBException {
+        var result = context;
+        if (result == null) {
+            synchronized (__JakartaXmlBinding_Test_Utils.class) {
+                result = context;
+                if (result == null) {
+                    context = result = JAXBContext.newInstance(MetadataType.class.getPackageName());
+                }
+            }
         }
-        return context;
+        return result;
     }
 
     /**
-     * Marshals the specified metadata values&mdash;wrapped in a {@link MetadataTypeWrapper}&mdash;to the specified
-     * file, creating parent directories as needed.
+     * Marshals the specified metadata values to the specified path.
+     * <p>
+     * The values are wrapped in {@link MetadataTypeWrapper} so the list can be written as a single XML document.
      *
      * @param values the values to marshal.
-     * @param path   the file to write to (whose parent directory is assumed to exist).
+     * @param path   the path to write to.
      * @param <T>    the metadata type.
-     * @throws JAXBException if failed to marshal.
+     * @throws JAXBException if the values cannot be marshalled.
      */
     static <T extends MetadataType> void marshal(final List<T> values, final Path path) throws JAXBException {
         Objects.requireNonNull(values, "values is null");
         Objects.requireNonNull(path, "path is null");
-        assert path.getParent() == null || Files.isDirectory(path.getParent());
         final var marshaller = context().createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.marshal(MetadataTypeWrapper.of(values), path.toFile());
     }
 
     /**
-     * Unmarshals a {@link MetadataTypeWrapper} from the specified file and returns its elements.
+     * Unmarshals metadata values from the specified path.
+     * <p>
+     * The file is expected to contain a {@link MetadataTypeWrapper}; its elements are returned as the requested
+     * metadata type.
      *
-     * @param path the file to read from.
+     * @param path the path to read from.
      * @param <T>  the metadata type.
-     * @return the list of unmarshalled elements.
-     * @throws JAXBException if failed to unmarshal.
+     * @return unmarshalled metadata values.
+     * @throws JAXBException if values cannot be unmarshalled.
      */
     static <T extends MetadataType> List<T> unmarshal(final Path path) throws JAXBException {
         Objects.requireNonNull(path, "path is null");
@@ -89,8 +99,6 @@ final class __JakartaXmlBinding_Test_Utils {
         final var elements = (List<T>) wrapper.getElements();
         return elements;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     private __JakartaXmlBinding_Test_Utils() {
         throw new AssertionError("instantiation is not allowed");

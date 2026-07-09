@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import io.vavr.CheckedFunction1;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.Objects;
 
 import static com.github.jinahya.database.metadata.bind.Context_DirectMetadataMapping_Test_Utils.assertDirect;
 import static com.github.jinahya.database.metadata.bind.Context_DirectMetadataMapping_Test_Utils.unsupportedAsEmpty;
@@ -55,30 +55,18 @@ abstract class TestContainers_$_IT {
     abstract Connection connect() throws SQLException;
 
     // ------------------------------------------------------------------------------------------------------ connection
-    <R> R applyConnection(final java.util.function.Function<? super Connection, ? extends R> function) {
-        Objects.requireNonNull(function, "function is null");
-        try (var connection = connect()) {
-            return function.apply(connection);
-        } catch (final SQLException sqle) {
-            throw new RuntimeException(sqle);
-        }
+    <R> R applyConnection(final CheckedFunction1<? super Connection, ? extends R> function) throws Throwable {
+        return __JavaSqlTestUtils.applyConnection(this::connect, function);
     }
 
     // --------------------------------------------------------------------------------------------------------- context
-    <R> R applyContext(final java.util.function.Function<? super Context, ? extends R> function) {
-        Objects.requireNonNull(function, "function is null");
-        return applyConnection(c -> {
-            try {
-                return function.apply(Context.newInstance(c));
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
-        });
+    <R> R applyContext(final CheckedFunction1<? super Context, ? extends R> function) throws Throwable {
+        return applyConnection(c -> function.apply(Context.newInstance(c)));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void test() {
+    void test() throws Throwable {
         applyConnection(c -> {
             try {
                 final var context = Context.newInstance(c);
@@ -96,7 +84,7 @@ abstract class TestContainers_$_IT {
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void functions() {
+    void functions() throws Throwable {
         applyContext(c -> {
             try {
                 final var functions = c.getFunctions(null, null, "%");
@@ -113,7 +101,7 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
-    void comparingInJdbcOrder() {
+    void comparingInJdbcOrder() throws Throwable {
         applyConnection(c -> {
             try (var statement = c.createStatement()) {
                 Context_ComparingInJdbcOrder_Test_Utils.preparePortedKeyTables(statement);
@@ -133,7 +121,7 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
-    void schemas() {
+    void schemas() throws Throwable {
         applyContext(c -> {
             try {
                 final var schemas = c.getSchemas((String) null, "%");
@@ -150,7 +138,7 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
-    void tables() {
+    void tables() throws Throwable {
         applyContext(c -> {
 //            try {
 //                Context_Test_Utils.info(c);
@@ -172,7 +160,7 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
-    void directMetadataMappings() {
+    void directMetadataMappings() throws Throwable {
         applyContext(context -> {
             try {
                 final var tables = unsupportedAsEmpty(() -> context.getTables(null, null, "%", null));
