@@ -31,6 +31,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -596,5 +597,30 @@ public class Table
         schema.setTableCatalog(tableCat);
         schema.setTableSchem(tableSchem);
         return schema;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @JsonbTransient
+    transient List<ImportedKey> importedKeys;
+
+    @JsonbTransient
+    @XmlTransient
+    List<ImportedKey> getImportedKeys() {
+        if (importedKeys == null) {
+            importedKeys = new ArrayList<>();
+        }
+        return importedKeys;
+    }
+
+    @JsonbTransient
+    transient List<ExportedKey> exportedKeys;
+
+    @JsonbTransient
+    @XmlTransient
+    List<ExportedKey> getExportedKeys() {
+        if (exportedKeys == null) {
+            exportedKeys = new ArrayList<>();
+        }
+        return exportedKeys;
     }
 }

@@ -52,6 +52,28 @@ public class Context {
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
+     * A cache mapping each class to its map of {@link _ColumnLabel}-annotated fields.
+     */
+    private static final Map<Class<?>, Map<Field, _ColumnLabel>> CLASSES_AND_FIELDS = new ConcurrentHashMap<>();
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the cached map of {@link _ColumnLabel}-annotated fields of the specified class, computing and caching it
+     * on the first request.
+     *
+     * @param clazz the class whose labeled fields are returned.
+     * @return an unmodifiable map of labeled fields of the {@code clazz}.
+     */
+    private static Map<Field, _ColumnLabel> getLabeledFields(final Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz is null");
+        return CLASSES_AND_FIELDS.computeIfAbsent(
+                clazz,
+                c -> Collections.unmodifiableMap(ContextUtils.getFieldsAnnotatedWith(c, _ColumnLabel.class))
+        );
+    }
+
+    /**
      * Splits a comma-separated string into an unmodifiable list of non-blank, stripped elements.
      *
      * @param commaSeparated a comma-separated string; may be {@code null} (some drivers return {@code null} despite the
@@ -122,7 +144,7 @@ public class Context {
      * @return given {@code value}.
      * @throws SQLException if a database error occurs.
      */
-    private <T extends MetadataType> T bind(final ResultSet results, final Class<T> type, final T instance)
+    private static <T extends MetadataType> T bind(final ResultSet results, final Class<T> type, final T instance)
             throws SQLException {
         final var resultLabels = ContextUtils.getLabels(results);
         final var fieldLabels = new HashMap<>(getLabeledFields(type));
@@ -4138,34 +4160,12 @@ public class Context {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    /**
-     * Returns the cached map of {@link _ColumnLabel}-annotated fields of the specified class, computing and caching it
-     * on the first request.
-     *
-     * @param clazz the class whose labeled fields are returned.
-     * @return an unmodifiable map of labeled fields of the {@code clazz}.
-     */
-    private Map<Field, _ColumnLabel> getLabeledFields(final Class<?> clazz) {
-        Objects.requireNonNull(clazz, "clazz is null");
-        return classesAndLabeledFields.computeIfAbsent(
-                clazz,
-                c -> Collections.unmodifiableMap(ContextUtils.getFieldsAnnotatedWith(c, _ColumnLabel.class))
-        );
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * The wrapped instance of {@link DatabaseMetaData}.
      */
     protected final DatabaseMetaData metadata;
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * A cache mapping each class to its map of {@link _ColumnLabel}-annotated fields.
-     */
-    private final Map<Class<?>, Map<Field, _ColumnLabel>> classesAndLabeledFields = new ConcurrentHashMap<>();
 
     // -----------------------------------------------------------------------------------------------------------------
 

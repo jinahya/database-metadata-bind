@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.jinahya</groupId>
     <artifactId>jinahya-parent</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.9</version>
   </parent>
 
   <artifactId>database-metadata-bind</artifactId>
@@ -128,16 +128,16 @@
       <artifactId>logback-classic</artifactId>
       <!-- https://central.sonatype.com/artifact/ch.qos.logback/logback-classic/versions -->
       <!-- https://central.sonatype.com/artifact/ch.qos.logback/logback-parent/versions -->
-      <version>1.5.37</version>
+      <version>1.5.38</version>
       <!-- slf4j.version: 2.0.17 -->
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>com.diffplug.durian</groupId>
-      <artifactId>durian</artifactId>
-      <version>3.4.0</version>
-      <scope>test</scope>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.diffplug.durian</groupId>-->
+<!--      <artifactId>durian</artifactId>-->
+<!--      <version>3.4.0</version>-->
+<!--      <scope>test</scope>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
@@ -147,13 +147,14 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <!--      <version>2.3.232</version>-->
+      <!-- https://central.sonatype.com/artifact/com.h2database/h2/versions -->
       <version>2.4.240</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.vavr</groupId>
       <artifactId>vavr</artifactId>
+      <!-- https://central.sonatype.com/artifact/io.vavr/vavr/versions -->
       <version>1.0.1</version>
       <scope>test</scope>
     </dependency>
@@ -502,34 +503,34 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok-maven-plugin</artifactId>
-        <version>1.18.20.0</version>
-        <executions>
-          <execution>
-            <configuration>
-              <addOutputDirectory>false</addOutputDirectory>
-              <!-- https://stackoverflow.com/a/45382576/330457 -->
-              <!-- IntelliJ 에서 중복된 코드라고 나오는 문제가 있어서... -->
-              <outputDirectory>${project.build.directory}/generated-sources-noduplicate/delombok</outputDirectory>
-              <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-            </configuration>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>delombok</goal>
-            </goals>
-          </execution>
-        </executions>
-        <dependencies>
-          <!-- https://github.com/awhitford/lombok.maven/issues/181 -->
-          <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${version.lombok}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.projectlombok</groupId>-->
+<!--        <artifactId>lombok-maven-plugin</artifactId>-->
+<!--        <version>1.18.20.0</version>-->
+<!--        <executions>-->
+<!--&lt;!&ndash;          <execution>&ndash;&gt;-->
+<!--&lt;!&ndash;            <configuration>&ndash;&gt;-->
+<!--&lt;!&ndash;              <addOutputDirectory>false</addOutputDirectory>&ndash;&gt;-->
+<!--&lt;!&ndash;              &lt;!&ndash; https://stackoverflow.com/a/45382576/330457 &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;              &lt;!&ndash; IntelliJ 에서 중복된 코드라고 나오는 문제가 있어서... &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;              <outputDirectory>${project.build.directory}/generated-sources-noduplicate/delombok</outputDirectory>&ndash;&gt;-->
+<!--&lt;!&ndash;              <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>&ndash;&gt;-->
+<!--&lt;!&ndash;            </configuration>&ndash;&gt;-->
+<!--&lt;!&ndash;            <phase>generate-sources</phase>&ndash;&gt;-->
+<!--&lt;!&ndash;            <goals>&ndash;&gt;-->
+<!--&lt;!&ndash;              <goal>delombok</goal>&ndash;&gt;-->
+<!--&lt;!&ndash;            </goals>&ndash;&gt;-->
+<!--&lt;!&ndash;          </execution>&ndash;&gt;-->
+<!--        </executions>-->
+<!--        <dependencies>-->
+<!--          &lt;!&ndash; https://github.com/awhitford/lombok.maven/issues/181 &ndash;&gt;-->
+<!--          <dependency>-->
+<!--            <groupId>org.projectlombok</groupId>-->
+<!--            <artifactId>lombok</artifactId>-->
+<!--            <version>${version.lombok}</version>-->
+<!--          </dependency>-->
+<!--        </dependencies>-->
+<!--      </plugin>-->
     </plugins>
   </build>
 
