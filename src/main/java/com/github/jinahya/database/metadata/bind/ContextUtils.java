@@ -41,6 +41,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * A class of utilities for binding {@link java.sql.DatabaseMetaData} result sets to metadata types.
@@ -105,6 +108,13 @@ public final class ContextUtils {
     })
     private static <T extends Annotation> Map<Field, T> getFieldsAnnotatedWith(
             final Class<?> c, final Class<T> a, final Map<Field, T> m) {
+//        if (ThreadLocalRandom.current().nextBoolean()) {
+        if (false) {
+            return getFieldListAnnotatedWith(c, a).stream().collect(Collectors.toMap(
+                    Function.identity(),
+                    f -> f.getAnnotation(a)
+            ));
+        }
         for (final Field field : c.getDeclaredFields()) {
             final T value = field.getAnnotation(a);
             if (value == null) {
@@ -113,7 +123,8 @@ public final class ContextUtils {
             if (!field.isEnumConstant()) {
                 field.setAccessible(true);
             }
-            m.put(field, value);
+            final var previous = m.put(field, value);
+            assert previous != null;
         }
         final Class<?> superclass = c.getSuperclass();
         return superclass == null ? m : getFieldsAnnotatedWith(superclass, a, m);
