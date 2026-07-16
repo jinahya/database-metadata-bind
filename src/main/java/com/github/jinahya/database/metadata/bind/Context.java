@@ -107,6 +107,19 @@ public class Context {
     }
 
     /**
+     * Creates a new instance with the specified instance of {@link DatabaseMetaData}.
+     *
+     * @param metadata the instance of {@link DatabaseMetaData} to proxy.
+     * @return a new instance.
+     * @throws SQLException if a database access error occurs.
+     * @see #Context(DatabaseMetaData)
+     */
+    public static Context of(final DatabaseMetaData metadata) throws SQLException {
+        Objects.requireNonNull(metadata, "metadata is null");
+        return new Context(metadata);
+    }
+
+    /**
      * Creates a new instance from the specified connection's {@linkplain Connection#getMetaData() database metadata}.
      *
      * @param connection the connection.
@@ -117,7 +130,7 @@ public class Context {
      */
     public static Context from(final Connection connection) throws SQLException {
         Objects.requireNonNull(connection, "connection is null");
-        return new Context(connection.getMetaData());
+        return of(connection.getMetaData());
     }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -127,7 +140,7 @@ public class Context {
      *
      * @param metadata the instance of {@link DatabaseMetaData} to proxy.
      */
-    public Context(final DatabaseMetaData metadata) {
+    protected Context(final DatabaseMetaData metadata) {
         super();
         this.metadata = Objects.requireNonNull(metadata, "metadata is null");
     }
