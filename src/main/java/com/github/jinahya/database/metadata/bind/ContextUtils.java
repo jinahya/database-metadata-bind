@@ -30,10 +30,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -62,6 +65,26 @@ public final class ContextUtils {
          * A direction for descending order.
          */
         DESCENDING
+    }
+
+    private static <T extends Annotation, C extends Collection<? super Field>> C getFieldListAnnotatedWith(
+            final Class<?> c, final Class<T> a, final C collection) {
+        for (final Field field : c.getDeclaredFields()) {
+            final T value = field.getAnnotation(a);
+            if (value == null) {
+                continue;
+            }
+            if (!field.isEnumConstant()) {
+                field.setAccessible(true);
+            }
+            collection.add(field);
+        }
+        final Class<?> superclass = c.getSuperclass();
+        return superclass == null ? collection : getFieldListAnnotatedWith(superclass, a, collection);
+    }
+
+    static <T extends Annotation> List<Field> getFieldListAnnotatedWith(final Class<?> c, final Class<T> a) {
+        return getFieldListAnnotatedWith(c, a, new ArrayList<>());
     }
 
     /**
