@@ -36,15 +36,15 @@ public interface MetadataType
     /**
      * Returns the value bound to the column of the specified label, of the specified type.
      * <p>
-     * The value is first looked up among the {@link _ColumnLabel}-annotated fields of this instance's runtime class (and
-     * its superclasses); if no field is mapped to the specified label, the value is looked up in
+     * The value is first looked up among the {@link _ColumnLabel}-annotated fields of this instance's runtime class
+     * (and its superclasses); if no field is mapped to the specified label, the value is looked up in
      * {@link #getUnknownColumns() unknown columns}.
      *
      * @param type  the type of the value.
      * @param label the column label whose bound value is returned.
      * @param <T>   value type parameter.
-     * @return an {@link Optional} of the value bound to the {@code label}; an {@link Optional#empty() empty} optional if
-     * no value is mapped to the {@code label}, or the mapped value is {@code null}.
+     * @return an {@link Optional} of the value bound to the {@code label}; an {@link Optional#empty() empty} optional
+     * if no value is mapped to the {@code label}, or the mapped value is {@code null}.
      * @throws ClassCastException if the mapped value is not assignable to the specified {@code type}.
      */
     default <T> Optional<T> getValue(final Class<T> type, final String label) {
