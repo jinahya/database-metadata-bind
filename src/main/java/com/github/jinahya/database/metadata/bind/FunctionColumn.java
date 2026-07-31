@@ -66,16 +66,16 @@ public class FunctionColumn
      * @return a comparator ordering elements in the order documented by
      * {@link java.sql.DatabaseMetaData#getFunctionColumns(String, String, String, String)}.
      * @throws SQLException if a database access error occurs.
-     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
      */
     static Comparator<FunctionColumn> comparingInJdbcOrder(final Context context,
                                                            final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         final var i = ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.<Integer>naturalOrder(), ContextUtils.SortDirection.ASCENDING);
+                context, Comparator.<Integer>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
         return Comparator
                 .<FunctionColumn, String>comparing(FunctionColumn::getFunctionCat, s)
                 .thenComparing(FunctionColumn::getFunctionSchem, s)

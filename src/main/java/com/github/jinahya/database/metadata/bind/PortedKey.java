@@ -69,9 +69,9 @@ abstract class PortedKey
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         final var i = ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.<Integer>naturalOrder(), ContextUtils.SortDirection.ASCENDING);
+                context, Comparator.<Integer>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
         return Comparator
                 .<T, String>comparing(PortedKey::getPktableCat, s)
                 .thenComparing(PortedKey::getPktableSchem, s)
@@ -97,9 +97,9 @@ abstract class PortedKey
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextUtils.SortDirection.ASCENDING);
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         final var i = ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.<Integer>naturalOrder(), ContextUtils.SortDirection.ASCENDING);
+                context, Comparator.<Integer>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
         return Comparator
                 .<T, String>comparing(PortedKey::getFktableCat, s)
                 .thenComparing(PortedKey::getFktableSchem, s)

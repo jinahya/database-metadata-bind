@@ -22,125 +22,62 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.jspecify.annotations.Nullable;
 
-import java.lang.annotation.Annotation;
-import java.lang.invoke.MethodHandles;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * A class of utilities for binding {@link java.sql.DatabaseMetaData} result sets to metadata types.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-public final class ContextUtils {
-
-    private static final System.Logger logger = System.getLogger(MethodHandles.lookup().lookupClass().getName());
+final class ContextUtils {
 
     /**
-     * An enum for sort directions.
-     */
-    public enum SortDirection {
-
-        /**
-         * A direction for ascending order.
-         */
-        ASCENDING,
-
-        /**
-         * A direction for descending order.
-         */
-        DESCENDING
-    }
-
-    private static <T extends Annotation, C extends Collection<? super Field>> C getFieldListAnnotatedWith(
-            final Class<?> c, final Class<T> a, final C collection) {
-        for (final Field field : c.getDeclaredFields()) {
-            final T value = field.getAnnotation(a);
-            if (value == null) {
-                continue;
-            }
-            if (!field.isEnumConstant()) {
-                field.setAccessible(true);
-            }
-            collection.add(field);
-        }
-        final Class<?> superclass = c.getSuperclass();
-        return superclass == null ? collection : getFieldListAnnotatedWith(superclass, a, collection);
-    }
-
-    static <T extends Annotation> List<Field> getFieldListAnnotatedWith(final Class<?> c, final Class<T> a) {
-        return getFieldListAnnotatedWith(c, a, new ArrayList<>());
-    }
-
-    /**
-     * Collects, into the specified map, all declared fields of the specified class (and its superclasses) annotated
-     * with the specified annotation type, mapping each field to its annotation value.
+     * Returns a map of all declared fields of the specified class (and its superclasses) that are annotated with
+     * {@link _ColumnLabel}, each mapped to its annotation.
      * <p>
      * Each matching non-enum-constant field is made {@linkplain Field#setAccessible(boolean) accessible} so that its
-     * value can later be read or written reflectively. The search recurses into superclasses.
+     * value can later be read or written reflectively. The search walks up through superclasses.
      *
-     * @param c   the class whose declared fields, along with those of its superclasses, are inspected.
-     * @param a   the annotation type to look for.
-     * @param m   the map into which matching fields and their annotation values are put.
-     * @param <T> annotation type parameter
-     * @return the specified map, with matching fields added.
+     * @param c the class whose declared fields, along with those of its superclasses, are inspected.
+     * @return a new map of matching fields and their {@link _ColumnLabel} annotations; may be empty but never
+     * {@code null}.
      */
     @SuppressWarnings({
             "java:S3011" // setAccessible
     })
-    private static <T extends Annotation> Map<Field, T> getFieldsAnnotatedWith(
-            final Class<?> c, final Class<T> a, final Map<Field, T> m) {
-//        if (ThreadLocalRandom.current().nextBoolean()) {
-        if (false) {
-            return getFieldListAnnotatedWith(c, a).stream().collect(Collectors.toMap(
-                    Function.identity(),
-                    f -> f.getAnnotation(a)
-            ));
+    static Map<Field, _ColumnLabel> getBindingFields(final Class<?> c) {
+        {
+            final var elementTypes = _ColumnLabel.class.getAnnotation(Target.class).value();
+            assert elementTypes.length == 1 && elementTypes[0] == ElementType.FIELD;
         }
-        for (final Field field : c.getDeclaredFields()) {
-            final T value = field.getAnnotation(a);
-            if (value == null) {
-                continue;
-            }
-            if (!field.isEnumConstant()) {
+        final Map<Field, _ColumnLabel> fields = new HashMap<>();
+        for (Class<?> k = c; k != null; k = k.getSuperclass()) {
+            for (final Field field : k.getDeclaredFields()) {
+                final _ColumnLabel label = field.getAnnotation(_ColumnLabel.class);
+                if (label == null) {
+                    continue;
+                }
                 field.setAccessible(true);
+                final var previous = fields.put(field, label);
+                assert previous == null;
             }
-            final var previous = m.put(field, value);
-            assert previous != null;
         }
-        final Class<?> superclass = c.getSuperclass();
-        return superclass == null ? m : getFieldsAnnotatedWith(superclass, a, m);
-    }
-
-    /**
-     * Returns a map of all declared fields of the specified class (and its superclasses) annotated with the specified
-     * annotation type, each mapped to its annotation value.
-     *
-     * @param c   the class whose declared fields, along with those of its superclasses, are inspected.
-     * @param a   the annotation type to look for.
-     * @param <T> annotation type parameter
-     * @return a new map of matching fields and their annotation values; may be empty but never {@code null}.
-     */
-    static <T extends Annotation> Map<Field, T> getFieldsAnnotatedWith(final Class<?> c, final Class<T> a) {
-        return getFieldsAnnotatedWith(c, a, new HashMap<>());
+        return fields;
     }
 
     /**
@@ -187,10 +124,14 @@ public final class ContextUtils {
     })
     static void setFieldValue(final Field field, final Object obj, final ResultSet results, final String label)
             throws SQLException, ReflectiveOperationException {
-        Objects.requireNonNull(field, "field is null");
-        Objects.requireNonNull(obj, "obj is null");
-        Objects.requireNonNull(results, "results is null");
-        Objects.requireNonNull(label, "label is null");
+        assert field != null;
+        assert obj != null;
+        assert results != null;
+        assert label != null;
+//        Objects.requireNonNull(field, "field is null");
+//        Objects.requireNonNull(obj, "obj is null");
+//        Objects.requireNonNull(results, "results is null");
+//        Objects.requireNonNull(label, "label is null");
         assert field.canAccess(obj);
         final Class<?> fieldType = field.getType();
         assert !fieldType.isPrimitive();
@@ -227,17 +168,15 @@ public final class ContextUtils {
         // As a last resort, try the modern getObject(label, type) method.
         try {
             field.set(obj, results.getObject(label, fieldType));
-            return;
         } catch (final Exception e) {
-            // empty
+            // All attempts have failed; wrap as a coercion failure with the underlying cause preserved.
+            // Note: getObject(label, type) reports an unsupported conversion as an SQLException, so any
+            // SQLException here is treated as a coercion failure rather than propagated.
+            throw new RuntimeException(
+                    String.format("failed to set; label: %s, value: %s (%s), field: %s",
+                                  label, value, value.getClass().getName(), field),
+                    e);
         }
-        // If we've reached this point, all attempts have failed.
-        logger.log(
-                System.Logger.Level.ERROR,
-                () -> String.format("failed to set; label: %s, value: %s (%s), field: %s",
-                                    label, value, value.getClass().getName(), field)
-        );
-        throw new RuntimeException("failed to set " + value + " for " + field);
     }
 
     /**
@@ -257,9 +196,9 @@ public final class ContextUtils {
      * @return a null-safe comparator wrapping the specified comparator.
      * @throws SQLException if a database error occurs while querying the {@code null} ordering.
      */
-    public static <T> Comparator<@Nullable T> withDatabaseNullOrdering(final Context context,
+    static <T> Comparator<@Nullable T> withDatabaseNullOrdering(final Context context,
                                                                        final Comparator<? super T> comparator,
-                                                                       final SortDirection direction)
+                                                                       final ContextConstants.SortDirection direction)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
@@ -271,12 +210,12 @@ public final class ContextUtils {
             return Comparator.nullsLast(comparator);
         }
         if (context.metadata.nullsAreSortedLow()) {
-            return direction == SortDirection.ASCENDING
+            return direction == ContextConstants.SortDirection.ASCENDING
                    ? Comparator.nullsFirst(comparator)
                    : Comparator.nullsLast(comparator);
         }
         if (context.metadata.nullsAreSortedHigh()) {
-            return direction == SortDirection.ASCENDING
+            return direction == ContextConstants.SortDirection.ASCENDING
                    ? Comparator.nullsLast(comparator)
                    : Comparator.nullsFirst(comparator);
         }

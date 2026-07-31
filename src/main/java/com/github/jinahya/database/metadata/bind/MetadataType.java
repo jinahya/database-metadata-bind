@@ -50,7 +50,7 @@ public interface MetadataType
     default <T> Optional<T> getValue(final Class<T> type, final String label) {
         Objects.requireNonNull(type, "type is null");
         Objects.requireNonNull(label, "label is null");
-        for (final var entry : ContextUtils.getFieldsAnnotatedWith(getClass(), _ColumnLabel.class).entrySet()) {
+        for (final var entry : ContextUtils.getBindingFields(getClass()).entrySet()) {
             if (!entry.getValue().value().equals(label)) {
                 continue;
             }

@@ -41,54 +41,54 @@ class ContextUtilsTest {
     void withDatabaseNullOrdering__NullsFirst__WhenAtStartRegardlessOfDirection() throws SQLException {
         final var context = context(true, false, false, false);
         assertNullsFirst(ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.naturalOrder(), ContextUtils.SortDirection.ASCENDING));
+                context, Comparator.naturalOrder(), ContextConstants.SortDirection.ASCENDING));
         assertNullsFirst(ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.reverseOrder(), ContextUtils.SortDirection.DESCENDING));
+                context, Comparator.reverseOrder(), ContextConstants.SortDirection.DESCENDING));
     }
 
     @Test
     void withDatabaseNullOrdering__NullsLast__WhenAtEndRegardlessOfDirection() throws SQLException {
         final var context = context(false, true, false, false);
         assertNullsLast(ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.naturalOrder(), ContextUtils.SortDirection.ASCENDING));
+                context, Comparator.naturalOrder(), ContextConstants.SortDirection.ASCENDING));
         assertNullsLast(ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.reverseOrder(), ContextUtils.SortDirection.DESCENDING));
+                context, Comparator.reverseOrder(), ContextConstants.SortDirection.DESCENDING));
     }
 
     @Test
     void withDatabaseNullOrdering__DirectionAware__WhenLow() throws SQLException {
         final var context = context(false, false, true, false);
         assertNullsFirst(ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.naturalOrder(), ContextUtils.SortDirection.ASCENDING));
+                context, Comparator.naturalOrder(), ContextConstants.SortDirection.ASCENDING));
         assertNullsLast(ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.reverseOrder(), ContextUtils.SortDirection.DESCENDING));
+                context, Comparator.reverseOrder(), ContextConstants.SortDirection.DESCENDING));
     }
 
     @Test
     void withDatabaseNullOrdering__DirectionAware__WhenHigh() throws SQLException {
         final var context = context(false, false, false, true);
         assertNullsLast(ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.naturalOrder(), ContextUtils.SortDirection.ASCENDING));
+                context, Comparator.naturalOrder(), ContextConstants.SortDirection.ASCENDING));
         assertNullsFirst(ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.reverseOrder(), ContextUtils.SortDirection.DESCENDING));
+                context, Comparator.reverseOrder(), ContextConstants.SortDirection.DESCENDING));
     }
 
     @Test
     void withDatabaseNullOrdering__NullsLast__WhenUnknown() throws SQLException {
         final var context = context(false, false, false, false);
         assertNullsLast(ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.naturalOrder(), ContextUtils.SortDirection.ASCENDING));
+                context, Comparator.naturalOrder(), ContextConstants.SortDirection.ASCENDING));
         assertNullsLast(ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.reverseOrder(), ContextUtils.SortDirection.DESCENDING));
+                context, Comparator.reverseOrder(), ContextConstants.SortDirection.DESCENDING));
     }
 
     @Test
     void withDatabaseNullOrdering__AbsolutePositionPrecedesDomainPosition__WhenInconsistent() throws SQLException {
         final var context = context(false, true, true, false);
         assertNullsLast(ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.naturalOrder(), ContextUtils.SortDirection.ASCENDING));
+                context, Comparator.naturalOrder(), ContextConstants.SortDirection.ASCENDING));
         assertNullsLast(ContextUtils.withDatabaseNullOrdering(
-                context, Comparator.reverseOrder(), ContextUtils.SortDirection.DESCENDING));
+                context, Comparator.reverseOrder(), ContextConstants.SortDirection.DESCENDING));
     }
 
     private static Context context(final boolean atStart, final boolean atEnd, final boolean low, final boolean high)

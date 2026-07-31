@@ -79,8 +79,8 @@ abstract class AbstractMetadataType
     @Override
     @XmlTransient
     @JsonbTransient
-    public Map<String, Object> getUnknownColumns() {
-        return Collections.unmodifiableMap(unknownColumns);
+    public final Map<String, Object> getUnknownColumns() {
+        return Collections.unmodifiableMap(unknownColumns());
     }
 
     /**
@@ -93,7 +93,20 @@ abstract class AbstractMetadataType
      */
     @Nullable
     Object putUnknownColumn(final String label, final Object value) {
-        return unknownColumns.put(label, value);
+        return unknownColumns().put(label, value);
+    }
+
+    /**
+     * Returns the backing {@link #unknownColumns} map, lazily creating it when absent (e.g. after Java
+     * deserialization, which does not restore the {@code transient} field).
+     *
+     * @return the backing map; never {@code null}.
+     */
+    private Map<String, Object> unknownColumns() {
+        if (unknownColumns == null) {
+            unknownColumns = new HashMap<>();
+        }
+        return unknownColumns;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -114,5 +127,5 @@ abstract class AbstractMetadataType
      * configurations; those annotations are not consulted once binding is field-based.
      */
     @JsonbTransient
-    final transient Map<String, Object> unknownColumns = new HashMap<>();
+    transient Map<String, Object> unknownColumns;
 }

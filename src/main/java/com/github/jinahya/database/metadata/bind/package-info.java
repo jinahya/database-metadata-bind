@@ -18,7 +18,7 @@
  * <ul>
  *   <li>String key values are compared with the supplied comparator after {@code null} values have been ordered with
  *       {@link com.github.jinahya.database.metadata.bind.ContextUtils#withDatabaseNullOrdering(com.github.jinahya.database.metadata.bind.Context,
- *       java.util.Comparator, com.github.jinahya.database.metadata.bind.ContextUtils.SortDirection)}. The supplied
+ *       java.util.Comparator, com.github.jinahya.database.metadata.bind.ContextConstants.SortDirection)}. The supplied
  *       comparator is therefore responsible for non-{@code null} string collation only. The library imposes no
  *       case/collation policy of its own; callers choose it via the {@code comparator} (e.g. {@link java.text.Collator}
  *       for locale-aware ordering).</li>

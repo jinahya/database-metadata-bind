@@ -69,7 +69,7 @@ public class Context {
         Objects.requireNonNull(clazz, "clazz is null");
         return CLASSES_AND_FIELDS.computeIfAbsent(
                 clazz,
-                c -> Collections.unmodifiableMap(ContextUtils.getFieldsAnnotatedWith(c, _ColumnLabel.class))
+                c -> Collections.unmodifiableMap(ContextUtils.getBindingFields(c))
         );
     }
 

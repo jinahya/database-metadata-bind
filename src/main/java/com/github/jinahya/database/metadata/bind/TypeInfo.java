@@ -65,7 +65,7 @@ public class TypeInfo
      * @return a comparator ordering elements in the order documented by
      * {@link java.sql.DatabaseMetaData#getTypeInfo()}.
      * @throws SQLException if a database access error occurs.
-     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
      */
     static Comparator<TypeInfo> comparingInJdbcOrder(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -74,7 +74,7 @@ public class TypeInfo
                 ContextUtils.withDatabaseNullOrdering(
                         context,
                         Comparator.<Integer>naturalOrder(),
-                        ContextUtils.SortDirection.ASCENDING
+                        ContextConstants.SortDirection.ASCENDING
                 )
         );
     }

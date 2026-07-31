@@ -71,7 +71,7 @@ public class UDT
      * @param comparator a comparator for comparing (non-{@code null}) string values.
      * @return a comparator comparing values in the specified order.
      * @throws SQLException if a database access error occurs.
-     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextUtils.SortDirection)
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
      */
     static Comparator<UDT> comparingInJdbcOrder(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
@@ -79,13 +79,13 @@ public class UDT
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
                 .comparing(UDT::getDataType, ContextUtils.withDatabaseNullOrdering(
-                        context, Comparator.naturalOrder(), ContextUtils.SortDirection.ASCENDING))
+                        context, Comparator.naturalOrder(), ContextConstants.SortDirection.ASCENDING))
                 .thenComparing(UDT::getTypeCat, ContextUtils.withDatabaseNullOrdering(
-                        context, comparator, ContextUtils.SortDirection.ASCENDING))
+                        context, comparator, ContextConstants.SortDirection.ASCENDING))
                 .thenComparing(UDT::getTypeSchem, ContextUtils.withDatabaseNullOrdering(
-                        context, comparator, ContextUtils.SortDirection.ASCENDING))
+                        context, comparator, ContextConstants.SortDirection.ASCENDING))
                 .thenComparing(UDT::getTypeName, ContextUtils.withDatabaseNullOrdering(
-                        context, comparator, ContextUtils.SortDirection.ASCENDING));
+                        context, comparator, ContextConstants.SortDirection.ASCENDING));
     }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
