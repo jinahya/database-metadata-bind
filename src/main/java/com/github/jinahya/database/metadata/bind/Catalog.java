@@ -37,6 +37,8 @@ import java.util.Objects;
  * @see java.sql.DatabaseMetaData#getCatalogs()
  * @see Context#getCatalogs()
  */
+@XmlRootElement(name = "catalog")
+@XmlType(name = "catalog")
 @_ParentOf(Table.class)
 @_ParentOf(Schema.class)
 @_ParentOf(Procedure.class)
@@ -46,8 +48,6 @@ import java.util.Objects;
 @SuppressWarnings({
         "java:S2637"
 })
-@XmlRootElement(name = "catalog")
-@XmlType(name = "catalog")
 public class Catalog
         extends AbstractMetadataType {
 
@@ -73,7 +73,11 @@ public class Catalog
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        final var s = ContextUtils.withDatabaseNullOrdering(
+                context,
+                comparator,
+                ContextConstants.SortDirection.ASCENDING
+        );
         return Comparator.comparing(Catalog::getTableCat, s);
     }
 
