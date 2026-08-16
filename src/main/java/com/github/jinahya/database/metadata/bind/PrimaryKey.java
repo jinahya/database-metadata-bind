@@ -334,7 +334,9 @@ public class PrimaryKey
      * and {@value #COLUMN_LABEL_TABLE_NAME}.
      *
      * @return the table reference identified by this primary-key row.
+     * @deprecated use {@link #getColumnRef()}'s {@link Column#getTableRef()}.
      */
+    @Deprecated(since = "4.5.1", forRemoval = true)
     Table getTableRef() {
         final var table = new Table();
         table.setTableCat(tableCat);

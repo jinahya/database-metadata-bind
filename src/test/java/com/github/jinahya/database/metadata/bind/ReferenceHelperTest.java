@@ -67,15 +67,15 @@ class ReferenceHelperTest {
     }
 
     @Test
-    void columnPrivilegeRefs_MapTableAndColumnColumns() {
+    void columnPrivilegeGetColumnRef_MapsTableAndColumnColumns() {
         final var instance = spy(new ColumnPrivilege());
         instance.setTableCat(null);
         instance.setTableSchem(null);
         instance.setTableName("t");
         instance.setColumnName("c");
 
-        assertTable(instance.getTableRef(), null, null, "t");
         assertColumn(instance.getColumnRef(), null, null, "t", "c");
+        assertTable(instance.getColumnRef().getTableRef(), null, null, "t");
     }
 
     @Test
@@ -89,15 +89,15 @@ class ReferenceHelperTest {
     }
 
     @Test
-    void primaryKeyRefs_MapTableAndColumnColumns() {
+    void primaryKeyGetColumnRef_MapsTableAndColumnColumns() {
         final var instance = spy(new PrimaryKey());
         instance.setTableCat(null);
         instance.setTableSchem(null);
         instance.setTableName("t");
         instance.setColumnName("c");
 
-        assertTable(instance.getTableRef(), null, null, "t");
         assertColumn(instance.getColumnRef(), null, null, "t", "c");
+        assertTable(instance.getColumnRef().getTableRef(), null, null, "t");
     }
 
     @Test
@@ -112,10 +112,10 @@ class ReferenceHelperTest {
         instance.setFktableName("ft");
         instance.setFkcolumnName("fc");
 
-        assertTable(instance.getPkTableRef(), null, null, "pt");
         assertColumn(instance.getPkColumnRef(), null, null, "pt", "pc");
-        assertTable(instance.getFkTableRef(), null, null, "ft");
+        assertTable(instance.getPkColumnRef().getTableRef(), null, null, "pt");
         assertColumn(instance.getFkColumnRef(), null, null, "ft", "fc");
+        assertTable(instance.getFkColumnRef().getTableRef(), null, null, "ft");
     }
 
     @Test
@@ -130,10 +130,10 @@ class ReferenceHelperTest {
         instance.setFktableName("ft");
         instance.setFkcolumnName("fc");
 
-        assertTable(instance.getPkTableRef(), null, null, "pt");
         assertColumn(instance.getPkColumnRef(), null, null, "pt", "pc");
-        assertTable(instance.getFkTableRef(), null, null, "ft");
+        assertTable(instance.getPkColumnRef().getTableRef(), null, null, "pt");
         assertColumn(instance.getFkColumnRef(), null, null, "ft", "fc");
+        assertTable(instance.getFkColumnRef().getTableRef(), null, null, "ft");
     }
 
     @Test

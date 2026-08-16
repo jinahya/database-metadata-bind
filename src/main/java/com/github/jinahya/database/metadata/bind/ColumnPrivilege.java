@@ -72,7 +72,8 @@ public class ColumnPrivilege
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        final var s =
+                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         return Comparator
                 .<ColumnPrivilege, String>comparing(ColumnPrivilege::getColumnName, s)
                 .thenComparing(ColumnPrivilege::getPrivilege, s);
@@ -427,7 +428,9 @@ public class ColumnPrivilege
      * and {@value #COLUMN_LABEL_TABLE_NAME}.
      *
      * @return the table reference identified by this column privilege.
+     * @deprecated use {@link #getColumnRef()}'s {@link Column#getTableRef()}.
      */
+    @Deprecated(since = "4.5.1", forRemoval = true)
     Table getTableRef() {
         final var table = new Table();
         table.setTableCat(tableCat);

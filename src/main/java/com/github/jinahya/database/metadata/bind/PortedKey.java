@@ -690,7 +690,9 @@ abstract class PortedKey
      * {@value #COLUMN_LABEL_PKTABLE_SCHEM}, and {@value #COLUMN_LABEL_PKTABLE_NAME}.
      *
      * @return the primary-key table reference identified by this key row.
+     * @deprecated use {@link #getPkColumnRef()}'s {@link Column#getTableRef()}.
      */
+    @Deprecated(since = "4.5.1", forRemoval = true)
     Table getPkTableRef() {
         final var table = new Table();
         table.setTableCat(pktableCat);
@@ -719,7 +721,9 @@ abstract class PortedKey
      * {@value #COLUMN_LABEL_FKTABLE_SCHEM}, and {@value #COLUMN_LABEL_FKTABLE_NAME}.
      *
      * @return the foreign-key table reference identified by this key row.
+     * @deprecated use {@link #getFkColumnRef()}'s {@link Column#getTableRef()}.
      */
+    @Deprecated(since = "4.5.1", forRemoval = true)
     Table getFkTableRef() {
         final var table = new Table();
         table.setTableCat(fktableCat);
