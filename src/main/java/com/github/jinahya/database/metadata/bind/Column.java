@@ -470,6 +470,32 @@ public class Column
         return true;
     }
 
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column, when present, is one of the values
+     * defined for the column.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    protected boolean isIsAutoincrementValid() {
+        if (isAutoincrement == null) {
+            return true;
+        }
+        return COLUMN_VALUES_IS_AUTOINCREMENT.contains(isAutoincrement);
+    }
+
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column, when present, is one of the values
+     * defined for the column.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    protected boolean isIsGeneratedcolumnValid() {
+        if (isGeneratedcolumn == null) {
+            return true;
+        }
+        return COLUMN_VALUES_IS_GENERATEDCOLUMN.contains(isGeneratedcolumn);
+    }
+
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**

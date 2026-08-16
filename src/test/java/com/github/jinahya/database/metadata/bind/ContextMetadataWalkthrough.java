@@ -40,6 +40,18 @@ final class ContextMetadataWalkthrough {
     private static final Comparator<String> DIAGNOSTIC_STRING_COMPARATOR =
             Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER);
 
+    /**
+     * The maximum number of distinct constraint violations reported by {@link #assertNoConstraintViolations()}.
+     */
+    private static final int VIOLATIONS_TO_REPORT = 20;
+
+    /**
+     * The maximum number of constraint violation descriptions retained. Violations keep being counted past this
+     * point; only their (long) descriptions are dropped, so that a driver emitting a violation on every row of a
+     * large catalog can't exhaust the heap.
+     */
+    private static final int VIOLATIONS_TO_RETAIN = 1024;
+
     record Result(int attempted, int succeeded, int failed) {
 
     }
@@ -166,6 +178,7 @@ final class ContextMetadataWalkthrough {
 
         final var result = new Result(attempted, succeeded, failed);
         log.info("context metadata walkthrough completed: {}", result);
+        assertNoConstraintViolations();
         return result;
     }
 
@@ -354,11 +367,58 @@ final class ContextMetadataWalkthrough {
     private void verifyBoundInstances(final String name, final List<?> values) {
         for (final var value : values) {
             if (value instanceof MetadataType metadataType) {
+                recordConstraintViolations(name, metadataType);
                 MetadataType_Test_Utils.verify(metadataType);
             } else if (!(value instanceof String)) {
                 log.debug("skipping non-metadata value from {}: {}", name, value);
             }
         }
+    }
+
+    /**
+     * Records, rather than throws, Bean Validation constraint violations of the specified bound instance, so the
+     * walkthrough keeps visiting the remaining metadata methods and still fails, in {@link #walk()}, when a driver
+     * returned a row which the shipped model declares invalid.
+     *
+     * @param name  the name of the metadata method which bound the specified instance.
+     * @param value the bound instance to validate.
+     */
+    private void recordConstraintViolations(final String name, final MetadataType value) {
+        for (final var violation : __JakartaValidation_Test_Utils.validate(value)) {
+            constraintViolationCount++;
+            if (constraintViolations.size() < VIOLATIONS_TO_RETAIN) {
+                constraintViolations.add(
+                        name + ": " + value.getClass().getSimpleName() + '.' + violation.getPropertyPath() + ' '
+                        + violation.getMessage() + "; value=" + value
+                );
+            }
+        }
+    }
+
+    /**
+     * Fails when any bound instance violated a constraint. Unlike an unsupported metadata method, which is tolerated
+     * as a {@link SQLException} and merely counted as {@code failed}, a constraint violation means the shipped model
+     * and the driver's output disagree, and is not fail-safe.
+     */
+    private void assertNoConstraintViolations() {
+        if (constraintViolationCount == 0) {
+            return;
+        }
+        final var distinct = constraintViolations.stream().distinct().toList();
+        final var builder = new StringBuilder()
+                .append(constraintViolationCount)
+                .append(" bean validation constraint violation(s) on bound metadata instances; ")
+                .append(distinct.size())
+                .append(" distinct among the first ")
+                .append(constraintViolations.size())
+                .append(" retained");
+        distinct.stream().limit(VIOLATIONS_TO_REPORT).forEach(v -> builder.append("\n\t").append(v));
+        if (distinct.size() > VIOLATIONS_TO_REPORT) {
+            builder.append("\n\t... and ")
+                    .append(distinct.size() - VIOLATIONS_TO_REPORT)
+                    .append(" more distinct violation(s)");
+        }
+        throw new AssertionError(builder.toString());
     }
 
     private <T> void verifyComparator(final String name, final List<T> values) {
@@ -470,6 +530,10 @@ final class ContextMetadataWalkthrough {
     private final Context context;
 
     private final Sink sink;
+
+    private final List<String> constraintViolations = new ArrayList<>();
+
+    private int constraintViolationCount;
 
     private int attempted;
 

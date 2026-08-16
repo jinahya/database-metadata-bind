@@ -38,8 +38,9 @@ import java.time.Duration;
 class TestContainers_MySQL_IT
         extends TestContainers_$_IT {
 
+    // mysql:latest points to an innovation release (short support); mysql:lts tracks the latest LTS.
     //    private static final String FULL_IMAGE_NAME = "mysql:latest";
-    private static final String FULL_IMAGE_NAME = "mysql:8";
+    private static final String FULL_IMAGE_NAME = "mysql:lts";
 
     @Container
     private static final JdbcDatabaseContainer<?> CONTAINER =

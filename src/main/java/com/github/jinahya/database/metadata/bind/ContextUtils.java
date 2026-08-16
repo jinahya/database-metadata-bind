@@ -147,6 +147,9 @@ final class ContextUtils {
         if (value == null) {
             return;
         }
+        // Past this point getObject() proved the column is non-NULL, so the primitive accessors below
+        // (getBoolean/getShort/getInt/getLong) cannot return a NULL-coerced default; wasNull() is unnecessary.
+        // Keep this guard before any primitive read to avoid the classic NULL-as-0/false ambiguity.
         // The initial assignment failed, so let's try to coerce the type
         // by asking the JDBC driver to do the conversion for us.
         if (fieldType == Boolean.class) {

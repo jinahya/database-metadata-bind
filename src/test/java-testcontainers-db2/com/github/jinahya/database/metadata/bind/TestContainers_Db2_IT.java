@@ -39,7 +39,8 @@ import java.time.Duration;
 class TestContainers_Db2_IT
         extends TestContainers_$_IT {
 
-    private static final String FULL_IMAGE_NAME = "ibmcom/db2:latest";
+    // ibmcom/db2 is being retired from Docker Hub; Db2 Community now lives in IBM Container Registry (icr.io).
+    private static final String FULL_IMAGE_NAME = "icr.io/db2_community/db2:latest";
 
     @Container
     private static final Db2Container CONTAINER = new Db2Container(DockerImageName.parse(FULL_IMAGE_NAME))

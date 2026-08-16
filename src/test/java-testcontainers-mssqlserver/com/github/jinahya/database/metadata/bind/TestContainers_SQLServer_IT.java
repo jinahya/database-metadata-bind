@@ -41,7 +41,7 @@ import java.time.Duration;
 class TestContainers_SQLServer_IT
         extends TestContainers_$_IT {
 
-    private static final String FULL_IMAGE_NAME = "mcr.microsoft.com/mssql/server:2022-latest";
+    private static final String FULL_IMAGE_NAME = "mcr.microsoft.com/mssql/server:2025-latest";
 
     @Container
     private static final MSSQLServerContainer<?> CONTAINER =
