@@ -38,6 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A class of utilities for binding {@link java.sql.DatabaseMetaData} result sets to metadata types.
@@ -45,6 +46,11 @@ import java.util.Set;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 final class ContextUtils {
+
+    /**
+     * A cache mapping each class to its {@link #getLabeledFields(Class) labeled fields}.
+     */
+    private static final Map<Class<?>, Map<String, Field>> CLASSES_AND_LABELED_FIELDS = new ConcurrentHashMap<>();
 
     /**
      * Returns a map of all declared fields of the specified class (and its superclasses) that are annotated with
@@ -78,6 +84,31 @@ final class ContextUtils {
             }
         }
         return fields;
+    }
+
+    /**
+     * Returns the {@link _ColumnLabel}-annotated fields of the specified class (and its superclasses), indexed by
+     * column label, computing and caching the index on the first request for each class.
+     * <p>
+     * Labels are {@linkplain String#toUpperCase(Locale) upper-cased} with {@link Locale#ROOT}, exactly as
+     * {@link #getLabels(ResultSet)} normalizes the labels a driver reports, so that a field is looked up here by the
+     * same key under which its column arrives.
+     *
+     * @param c the class whose labeled fields are returned.
+     * @return an unmodifiable map of upper-cased column labels and their
+     * {@linkplain Field#setAccessible(boolean) accessible} fields; may be empty but never {@code null}.
+     * @see #getBindingFields(Class)
+     */
+    static Map<String, Field> getLabeledFields(final Class<?> c) {
+        Objects.requireNonNull(c, "c is null");
+        return CLASSES_AND_LABELED_FIELDS.computeIfAbsent(c, k -> {
+            final Map<String, Field> labeledFields = new HashMap<>();
+            getBindingFields(k).forEach((field, label) -> {
+                final var previous = labeledFields.put(label.value().toUpperCase(Locale.ROOT), field);
+                assert previous == null : "duplicate label: " + label.value() + "; " + field + "; " + previous;
+            });
+            return Map.copyOf(labeledFields);
+        });
     }
 
     /**
@@ -200,8 +231,8 @@ final class ContextUtils {
      * @throws SQLException if a database error occurs while querying the {@code null} ordering.
      */
     static <T> Comparator<@Nullable T> withDatabaseNullOrdering(final Context context,
-                                                                       final Comparator<? super T> comparator,
-                                                                       final ContextConstants.SortDirection direction)
+                                                                final Comparator<? super T> comparator,
+                                                                final ContextConstants.SortDirection direction)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");

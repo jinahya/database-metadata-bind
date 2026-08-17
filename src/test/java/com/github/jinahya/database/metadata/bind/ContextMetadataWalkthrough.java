@@ -202,9 +202,15 @@ final class ContextMetadataWalkthrough {
         pair("exportedKeys(" + table + ")", () -> context.getExportedKeys(
                      table.getTableCat(), table.getTableSchem(), table.getTableName()),
              c -> context.forEachExportedKey(table.getTableCat(), table.getTableSchem(), table.getTableName(), c));
-        pair("importedKeys(" + table + ")", () -> context.getImportedKeys(
-                     table.getTableCat(), table.getTableSchem(), table.getTableName()),
-             c -> context.forEachImportedKey(table.getTableCat(), table.getTableSchem(), table.getTableName(), c));
+        final var importedKeys = pair("importedKeys(" + table + ")", () -> context.getImportedKeys(
+                                              table.getTableCat(), table.getTableSchem(), table.getTableName()),
+                                      c -> context.forEachImportedKey(table.getTableCat(), table.getTableSchem(),
+                                                                      table.getTableName(), c));
+        if (firstImportedKey == null && !importedKeys.isEmpty()) {
+            // Remember a relationship that genuinely exists, so crossReferences(...) can ask about a
+            // pair of tables that actually relate. See _TODOS.asciidoc P-038.
+            firstImportedKey = importedKeys.get(0);
+        }
         for (final var unique : new boolean[] {true, false}) {
             for (final var approximate : new boolean[] {true, false}) {
                 pair("indexInfo(" + table + ", " + unique + ", " + approximate + ")",
@@ -230,7 +236,38 @@ final class ContextMetadataWalkthrough {
              c -> context.forEachVersionColumn(table.getTableCat(), table.getTableSchem(), table.getTableName(), c));
     }
 
+    /**
+     * Exercises {@link Context#getCrossReference(String, String, String, String, String, String)}.
+     * <p>
+     * Prefers a parent/foreign pair taken from a foreign key the driver actually reported, so the call returns rows and
+     * the binding, the column mapping, the comparator, and the field constraints are all exercised. Asking about two
+     * arbitrary tables - which is what this method used to do - is almost never a real relationship, so it returned
+     * nothing and verified only that the call does not throw.
+     */
     private void crossReferences(final List<? extends Table> tables) {
+        if (firstImportedKey != null) {
+            final var key = firstImportedKey;
+            final var rows = pair(
+                    "crossReference(" + key.getPktableName() + " <- " + key.getFktableName() + ")",
+                    () -> context.getCrossReference(
+                            key.getPktableCat(), key.getPktableSchem(), key.getPktableName(),
+                            key.getFktableCat(), key.getFktableSchem(), key.getFktableName()),
+                    c -> context.forEachCrossReference(
+                            key.getPktableCat(), key.getPktableSchem(), key.getPktableName(),
+                            key.getFktableCat(), key.getFktableSchem(), key.getFktableName(), c));
+            if (rows.isEmpty()) {
+                // The driver reported an imported key for this pair but no cross-reference for it. Log the exact
+                // arguments: the distinction between null and "" for catalog/schema is the usual cause, and without
+                // the values the warning is not actionable.
+                log.warn("crossReference returned no row, although getImportedKeys reported one;"
+                         + " pk=({}, {}, {}) fk=({}, {}, {})",
+                         quoted(key.getPktableCat()), quoted(key.getPktableSchem()), quoted(key.getPktableName()),
+                         quoted(key.getFktableCat()), quoted(key.getFktableSchem()), quoted(key.getFktableName()));
+            }
+            return;
+        }
+        log.warn("no foreign key reported by this database;"
+                 + " crossReference is exercised only for the empty case, and its row binding is unverified");
         if (tables.size() < 2) {
             return;
         }
@@ -532,6 +569,19 @@ final class ContextMetadataWalkthrough {
     private final Sink sink;
 
     private final List<String> constraintViolations = new ArrayList<>();
+
+    /**
+     * The first foreign key the driver reported while walking tables, or {@code null} if this database has none. Used
+     * to give {@link #crossReferences(List)} a pair of tables that genuinely relate.
+     */
+    private ImportedKey firstImportedKey;
+
+    /**
+     * Renders a value so that {@code null} and the empty string are distinguishable in a log line.
+     */
+    private static String quoted(final String value) {
+        return value == null ? "null" : '"' + value + '"';
+    }
 
     private int constraintViolationCount;
 

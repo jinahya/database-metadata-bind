@@ -59,7 +59,15 @@ abstract class Memory_$_Test {
     // -----------------------------------------------------------------------------------------------------------------
     @Test
     void test() throws Throwable {
-        applyContext(c -> {
+        applyConnection(connection -> {
+            // Give the walkthrough a real foreign key to find. Without one, getCrossReference is exercised only for
+            // the empty case and its row binding stays unverified. See _TODOS.asciidoc P-038.
+            try (var statement = connection.createStatement()) {
+                Context_ComparingInJdbcOrder_Test_Utils.preparePortedKeyTables(statement);
+            } catch (final SQLException sqle) {
+                log.warn("failed to prepare foreign-key tables; crossReference rows will not be exercised", sqle);
+            }
+            final var c = Context.from(connection);
             // walk all binding methods and write each metadata collection to target/<db>-<name>.xml and .json
             ContextMetadataWalkthrough.walk(c, (rootElementName, itemElementName, values) -> {
                 final var types = values.stream().map(MetadataType.class::cast).toList();

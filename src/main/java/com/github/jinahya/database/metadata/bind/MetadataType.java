@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -43,6 +44,11 @@ public interface MetadataType
      * The value is first looked up among the {@link _ColumnLabel}-annotated fields of this instance's runtime class
      * (and its superclasses); if no field is mapped to the specified label, the value is looked up in
      * {@link #getUnknownColumns() unknown columns}.
+     * <p>
+     * The {@code label} is matched <em>case-insensitively</em>, by
+     * {@linkplain String#toUpperCase(Locale) upper-casing} it with {@link Locale#ROOT}, which is
+     * how the labels a driver reports are normalized while binding. Both lookups apply that same normalization, so
+     * {@code getValue(String.class, "table_cat")} and {@code getValue(String.class, "TABLE_CAT")} are equivalent.
      *
      * @param type  the type of the value.
      * @param label the column label whose bound value is returned.
@@ -54,11 +60,9 @@ public interface MetadataType
     default <T> Optional<T> getValue(final Class<T> type, final String label) {
         Objects.requireNonNull(type, "type is null");
         Objects.requireNonNull(label, "label is null");
-        for (final var entry : ContextUtils.getBindingFields(getClass()).entrySet()) {
-            if (!entry.getValue().value().equals(label)) {
-                continue;
-            }
-            final var field = entry.getKey();
+        final var normalized = label.toUpperCase(Locale.ROOT);
+        final var field = ContextUtils.getLabeledFields(getClass()).get(normalized);
+        if (field != null) {
             final Object value;
             try {
                 value = field.get(this);
@@ -67,7 +71,7 @@ public interface MetadataType
             }
             return Optional.ofNullable(value).map(type::cast);
         }
-        return Optional.ofNullable(getUnknownColumns().get(label)).map(type::cast);
+        return Optional.ofNullable(getUnknownColumns().get(normalized)).map(type::cast);
     }
 
     /**

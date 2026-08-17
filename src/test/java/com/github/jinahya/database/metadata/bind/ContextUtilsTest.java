@@ -20,11 +20,18 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import com.google.common.reflect.ClassPath;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -37,6 +44,76 @@ import static org.mockito.Mockito.when;
  */
 class ContextUtilsTest {
 
+    // -------------------------------------------------------------------------------------------- getLabeledFields(c)
+    @DisplayName("getLabeledFields(c) is computed once and reused")
+    @Test
+    void getLabeledFields__Cached() {
+        assertThat(ContextUtils.getLabeledFields(Table.class))
+                .isSameAs(ContextUtils.getLabeledFields(Table.class));
+    }
+
+    @DisplayName("getLabeledFields(c) is indexed by the upper-cased column label")
+    @Test
+    void getLabeledFields__IndexedByUpperCasedLabel() {
+        final var labeledFields = ContextUtils.getLabeledFields(Table.class);
+        final var bindingFields = ContextUtils.getBindingFields(Table.class);
+        assertThat(labeledFields).hasSameSizeAs(bindingFields);
+        bindingFields.forEach((field, label) -> {
+            assertThat(labeledFields)
+                    .as("field of %1$s", label.value())
+                    .containsEntry(label.value().toUpperCase(Locale.ROOT), field);
+        });
+        assertThat(labeledFields.keySet()).allSatisfy(l -> assertThat(l).isEqualTo(l.toUpperCase(Locale.ROOT)));
+    }
+
+    @DisplayName("getLabeledFields(c) matches the labels the binder reads from a result set")
+    @Test
+    void getLabeledFields__KeyedAsGetLabels() throws SQLException {
+        final var labeledFields = ContextUtils.getLabeledFields(Table.class);
+        final var metadata = mock(ResultSetMetaData.class);
+        final var labels = List.copyOf(labeledFields.keySet());
+        when(metadata.getColumnCount()).thenReturn(labels.size());
+        for (int i = 0; i < labels.size(); i++) {
+            // a driver reporting the labels in a different case must still resolve to the same fields
+            when(metadata.getColumnLabel(i + 1)).thenReturn(labels.get(i).toLowerCase(Locale.ROOT));
+        }
+        final var results = mock(ResultSet.class);
+        when(results.getMetaData()).thenReturn(metadata);
+        assertThat(ContextUtils.getLabels(results)).isEqualTo(labeledFields.keySet());
+    }
+
+    @DisplayName("getLabeledFields(c) loses no field, for any metadata type")
+    @Test
+    void getLabeledFields__NoLabelCollision() throws IOException {
+        final var types = ClassPath.from(ContextUtilsTest.class.getClassLoader())
+                .getAllClasses()
+                .stream()
+                .filter(ci -> !ci.getName().equals("module-info"))
+                .filter(ci -> ci.getName().startsWith(ContextUtilsTest.class.getPackageName()))
+                .map(ClassPath.ClassInfo::load)
+                .filter(MetadataType.class::isAssignableFrom)
+                .filter(c -> !c.isInterface())
+                .toList();
+        assertThat(types).isNotEmpty();
+        for (final var type : types) {
+            // indexing by label must not merge two fields; the assertion inside getLabeledFields guards the
+            // same invariant, but only for classes some other test happens to bind
+            assertThat(ContextUtils.getLabeledFields(type))
+                    .as("labeled fields of %1$s", type.getSimpleName())
+                    .hasSameSizeAs(ContextUtils.getBindingFields(type));
+        }
+    }
+
+    @DisplayName("getLabeledFields(c) fields are accessible")
+    @Test
+    void getLabeledFields__AccessibleFields() {
+        final var instance = new Table();
+        assertThat(ContextUtils.getLabeledFields(Table.class).values())
+                .isNotEmpty()
+                .allSatisfy(f -> assertThat(f.canAccess(instance)).isTrue());
+    }
+
+    // ------------------------------------------------------------------------------------- withDatabaseNullOrdering()
     @Test
     void withDatabaseNullOrdering__NullsFirst__WhenAtStartRegardlessOfDirection() throws SQLException {
         final var context = context(true, false, false, false);

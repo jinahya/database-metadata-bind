@@ -24,7 +24,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -32,12 +31,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 /**
@@ -50,28 +46,6 @@ public class Context {
     private static final System.Logger logger = System.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * A cache mapping each class to its map of {@link _ColumnLabel}-annotated fields.
-     */
-    private static final Map<Class<?>, Map<Field, _ColumnLabel>> CLASSES_AND_FIELDS = new ConcurrentHashMap<>();
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Returns the cached map of {@link _ColumnLabel}-annotated fields of the specified class, computing and caching it
-     * on the first request.
-     *
-     * @param clazz the class whose labeled fields are returned.
-     * @return an unmodifiable map of labeled fields of the {@code clazz}.
-     */
-    private static Map<Field, _ColumnLabel> getLabeledFields(final Class<?> clazz) {
-        Objects.requireNonNull(clazz, "clazz is null");
-        return CLASSES_AND_FIELDS.computeIfAbsent(
-                clazz,
-                c -> Collections.unmodifiableMap(ContextUtils.getBindingFields(c))
-        );
-    }
 
     /**
      * Splits a comma-separated string into an unmodifiable list of non-blank, stripped elements.
@@ -145,12 +119,12 @@ public class Context {
     private static <T extends MetadataType> T bind(final ResultSet results, final Class<T> type, final T instance)
             throws SQLException {
         final var resultLabels = ContextUtils.getLabels(results);
-        final var fieldLabels = new HashMap<>(getLabeledFields(type));
+        final var fieldLabels = new HashMap<>(ContextUtils.getLabeledFields(type));
         for (final var i = fieldLabels.entrySet().iterator(); i.hasNext(); ) {
             final var entry = i.next();
-            final var field = entry.getKey();
-            final _ColumnLabel fieldLabel = entry.getValue();
-            if (!resultLabels.remove(fieldLabel.value())) {
+            final var fieldLabel = entry.getKey();
+            final var field = entry.getValue();
+            if (!resultLabels.remove(fieldLabel)) {
                 logger.log(
                         System.Logger.Level.WARNING,
                         () -> String.format("unmapped field; label: %s; field: %s", fieldLabel, field)
@@ -159,7 +133,7 @@ public class Context {
                 continue;
             }
             try {
-                ContextUtils.setFieldValue(field, instance, results, fieldLabel.value());
+                ContextUtils.setFieldValue(field, instance, results, fieldLabel);
             } catch (final ReflectiveOperationException roe) {
                 throw new RuntimeException("failed to set " + field, roe);
             }

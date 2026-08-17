@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.json.bind.annotation.JsonbNillable;
 import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
@@ -673,9 +674,11 @@ public class CrossReference
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_SCHEM)
     private String pktableSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_NAME)
     private String pktableName;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_PKCOLUMN_NAME)
     private String pkcolumnName;
 
@@ -695,9 +698,11 @@ public class CrossReference
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_SCHEM)
     private String fktableSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_NAME)
     private String fktableName;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_FKCOLUMN_NAME)
     private String fkcolumnName;
 
