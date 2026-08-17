@@ -32,6 +32,15 @@ import java.util.Optional;
  * Implementations are {@link Serializable}, with one deliberate exclusion: the
  * {@link #getUnknownColumns() unknown columns} of an instance are <em>not</em> part of its serialized form. See
  * {@link #getUnknownColumns()} for why.
+ * <p>
+ * Implementations are <strong>not thread-safe</strong>, and are not intended to be. An instance is a mutable holder
+ * that the binder populates field by field after construction; only the binder writes, and it does so from the single
+ * thread that walks the result set. Publishing an instance to other threads is the caller's responsibility, and must
+ * happen after binding completes and through a safe-publication mechanism of the caller's choosing - handing the
+ * instance over via a {@code synchronized} block, a {@code volatile} field, a concurrent collection, or the
+ * happens-before edge of the executor that produced it. Once published this way an instance is effectively immutable,
+ * since nothing outside the package can mutate it: setters are package-private and
+ * {@link #getUnknownColumns()} returns an unmodifiable view.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */

@@ -24,6 +24,8 @@ import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.xml.bind.annotation.XmlTransient;
 import org.jspecify.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serial;
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,6 +52,27 @@ abstract class AbstractMetadataType
      */
     AbstractMetadataType() {
         super();
+        unknownColumns = new HashMap<>();
+    }
+
+    // ---------------------------------------------------------------------------------------------------- SERIALIZATION
+
+    /**
+     * Restores {@link #unknownColumns}, which Java deserialization leaves {@code null}.
+     * <p>
+     * Deserialization does not run the constructor, and the field is {@code transient}, so it is not restored from the
+     * stream either. Recreating it here is what lets every other member treat the field as non-{@code null} and keeps
+     * {@link #getUnknownColumns()} returning an empty map rather than throwing. The field cannot be {@code final} for
+     * exactly this reason: a {@code final} field is not assignable from this method.
+     *
+     * @param in the stream being read.
+     * @throws IOException            if an I/O error occurs.
+     * @throws ClassNotFoundException if the class of a serialized object cannot be found.
+     */
+    @Serial
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        unknownColumns = new HashMap<>();
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
@@ -69,7 +92,7 @@ abstract class AbstractMetadataType
     @XmlTransient
     @JsonbTransient
     public final Map<String, Object> getUnknownColumns() {
-        return Collections.unmodifiableMap(unknownColumns());
+        return Collections.unmodifiableMap(unknownColumns);
     }
 
     /**
@@ -82,20 +105,7 @@ abstract class AbstractMetadataType
      */
     @Nullable
     Object putUnknownColumn(final String label, final Object value) {
-        return unknownColumns().put(label, value);
-    }
-
-    /**
-     * Returns the backing {@link #unknownColumns} map, lazily creating it when absent (e.g. after Java
-     * deserialization, which does not restore the {@code transient} field).
-     *
-     * @return the backing map; never {@code null}.
-     */
-    private Map<String, Object> unknownColumns() {
-        if (unknownColumns == null) {
-            unknownColumns = new HashMap<>();
-        }
-        return unknownColumns;
+        return unknownColumns.put(label, value);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -128,6 +138,15 @@ abstract class AbstractMetadataType
      * {@code toString()} contract, may already be invalid once its result set is closed, and may render an unbounded
      * amount of text. A diagnostic string must stay cheap and must not throw, so {@link #getUnknownColumns()} is the
      * only way to reach these values.
+     * <p>
+     * The map is created eagerly - by the constructor, and by {@link #readObject(ObjectInputStream)} on the one path
+     * that skips it - so every member may treat this field as non-{@code null} without a null check. It was
+     * previously created on demand, which put a check-then-act on an unsynchronized field: two threads could each
+     * install a map, and whichever one lost took its entries with it. Eager creation costs one small
+     * {@link HashMap} per bound row and removes that race, along with the question of how the new map becomes
+     * visible to another thread. It cannot be {@code final}, because {@code transient} leaves it unrestored by
+     * deserialization and a {@code final} field is not assignable from {@code readObject}; note that this type is
+     * not thread-safe in any case, see {@link MetadataType}.
      */
     @JsonbTransient
     transient Map<String, Object> unknownColumns;

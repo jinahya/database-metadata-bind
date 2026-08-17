@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.entry;
 
 @Slf4j
 abstract class AbstractMetadataType_Test<T extends AbstractMetadataType>
@@ -47,6 +48,20 @@ abstract class AbstractMetadataType_Test<T extends AbstractMetadataType>
 
     AbstractMetadataType_Test(final Class<T> typeClass) {
         super(typeClass);
+    }
+
+    /**
+     * Verifies that {@link AbstractMetadataType#unknownColumns} is created by the constructor, rather than on first
+     * use. The eager map is what removes the check-then-act that a lazy accessor would otherwise perform on an
+     * unsynchronized field.
+     */
+    @Test
+    void unknownColumns_InitializedEagerly_() {
+        final var instance = newTypeInstance();
+        assertThat(instance.unknownColumns)
+                .as("backing unknownColumns of a freshly constructed %s", typeClass.getSimpleName())
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
@@ -100,6 +115,13 @@ abstract class AbstractMetadataType_Test<T extends AbstractMetadataType>
                 .isEmpty();
         assertThatExceptionOfType(UnsupportedOperationException.class)
                 .isThrownBy(() -> deserialized.getUnknownColumns().put("K", "V"));
+
+        // deserialization runs neither the constructor nor a transient field's restore, so the backing map exists
+        // only because readObject recreates it; without that, the write path below throws.
+        deserialized.putUnknownColumn("RESTORED", "value");
+        assertThat(deserialized.getUnknownColumns())
+                .as("unknown columns written to a deserialized %s", typeClass.getSimpleName())
+                .containsExactly(entry("RESTORED", "value"));
     }
 
     private T roundTrip(final T instance) throws IOException, ClassNotFoundException {
