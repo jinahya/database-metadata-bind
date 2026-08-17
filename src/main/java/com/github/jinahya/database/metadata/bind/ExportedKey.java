@@ -20,35 +20,49 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
 
 /**
- * An abstract class for binding results of the {@link DatabaseMetaData#getExportedKeys(String, String, String)}
- * method.
+ * A class for binding results of the {@link DatabaseMetaData#getExportedKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getExportedKeys(String, String, String)
  * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
-@EqualsAndHashCode(callSuper = true)
+@_ChildOf(Table.class)
+@XmlRootElement(name = "exportedKey")
+@XmlType(name = "exportedKey")
 public class ExportedKey
         extends PortedKey {
 
+    @Serial
     private static final long serialVersionUID = -6561660015694928357L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ExportedKey> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
-        return PortedKey.comparingFktable(comparator);
-    }
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
-    static Comparator<ExportedKey> comparingInSpecifiedOrder(final Context context,
-                                                             final Comparator<? super String> comparator)
+    /**
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}, placing {@code null} values (of all
+     * keys) as the specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}.
+     * @throws SQLException if a database access error occurs.
+     * @see PortedKey#comparingFk(Context, Comparator)
+     */
+    static Comparator<ExportedKey> comparingInJdbcOrder(final Context context,
+                                                        final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(ContextUtils.nullPrecedence(context, comparator));
+        return PortedKey.comparingFk(context, comparator);
     }
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
@@ -58,14 +72,7 @@ public class ExportedKey
     /**
      * Creates a new instance.
      */
-    public ExportedKey() {
+    protected ExportedKey() {
         super();
-    }
-
-    // ------------------------------------------------------------------------------------------------ java.lang.Object
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               '}';
     }
 }

@@ -20,6 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+
+import java.io.Serial;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -27,22 +33,45 @@ import java.util.Objects;
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getTableTypes()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getTableTypes()
  * @see Context#getTableTypes()
  */
+@_ChildOfNone
+@XmlRootElement(name = "tableType")
+@XmlType(name = "tableType")
 public class TableType
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = -7630634982776331078L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<TableType> comparing(final Context context, final Comparator<? super String> comparator) {
-        return Comparator.comparing(TableType::getTableType, comparator);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * The column label of {@value}.
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getTableTypes()}, placing {@code null} values as the specified context's
+     * database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getTableTypes()}.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
+     */
+    static Comparator<TableType> comparingInJdbcOrder(final Context context,
+                                                      final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        return Comparator.comparing(TableType::getTableType, s);
+    }
+
+    // ------------------------------------------------------------------------------------------------------ TABLE_TYPE
+
+    /**
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
@@ -53,12 +82,17 @@ public class TableType
     /**
      * Creates a new instance.
      */
-    public TableType() {
+    protected TableType() {
         super();
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -66,36 +100,31 @@ public class TableType
                '}';
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (TableType) obj;
-        return Objects.equals(tableType, that.tableType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableType);
-    }
-
     // ------------------------------------------------------------------------------------------------------- tableType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     */
     public String getTableType() {
         return tableType;
     }
 
-    public void setTableType(final String tableType) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     *
+     * @param tableType the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     */
+    void setTableType(final String tableType) {
         this.tableType = tableType;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     @SuppressWarnings({
             "java:S1700"
     })
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 }

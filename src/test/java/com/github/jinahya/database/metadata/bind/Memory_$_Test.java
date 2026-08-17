@@ -20,20 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.vavr.CheckedFunction1;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import java.beans.IntrospectionException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * An abstract test class for in-memory databases.
@@ -52,142 +45,29 @@ abstract class Memory_$_Test {
     abstract Connection connect() throws SQLException;
 
     // ------------------------------------------------------------------------------------------------------ connection
-    <R> R applyConnection(final java.util.function.Function<? super Connection, ? extends R> function) {
-        Objects.requireNonNull(function, "function is null");
-        try (var connection = connect()) {
-            return function.apply(connection);
-        } catch (final SQLException sqle) {
-            throw new RuntimeException(sqle);
-        }
+    <R> R applyConnection(final CheckedFunction1<? super Connection, ? extends R> function) throws Throwable {
+        return __JavaSqlTestUtils.applyConnection(this::connect, function);
     }
 
     // --------------------------------------------------------------------------------------------------------- context
-    <R> R applyContext(final java.util.function.Function<? super Context, ? extends R> function) {
-        Objects.requireNonNull(function, "function is null");
+    <R> R applyContext(final CheckedFunction1<? super Context, ? extends R> function) throws Throwable {
         return applyConnection(c -> {
-            try {
-                return function.apply(Context.newInstance(c));
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
+            return function.apply(Context.from(c));
         });
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void acceptProperties__() {
+    void test() throws Throwable {
         applyContext(c -> {
-            try {
-                c.acceptProperties((p, r) -> {
-                    log.debug("{}: {}", p, r);
-                });
-            } catch (final IntrospectionException ie) {
-                throw new RuntimeException(ie);
-            }
-            return null;
-        });
-    }
-
-    @Test
-    void acceptValues__() {
-        applyContext(c -> {
-            c.acceptValues((m, r) -> {
-                log.debug("{}: {}", m.getName(), r);
+            // walk all binding methods and write each metadata collection to target/<db>-<name>.xml and .json
+            ContextMetadataWalkthrough.walk(c, (rootElementName, itemElementName, values) -> {
+                final var types = values.stream().map(MetadataType.class::cast).toList();
+                final var fileName = Context_Test_Utils.artifactFileNamePrefix(c) + "-" + rootElementName;
+                __JakartaXmlBinding_Test_Utils.marshal(types, Path.of("target", fileName + ".xml"));
+                __JakartaJsonBinding_Test_Utils.write(types, Path.of("target", fileName + ".json"));
             });
             return null;
         });
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Test
-    void test() throws SQLException {
-        applyContext(c -> {
-            try {
-                Context_Test_Utils.test(c);
-                return null;
-            } catch (final SQLException sqle) {
-                if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
-                    log.warn("not supported", sqlfnse);
-                    return null;
-                }
-                throw new RuntimeException(sqle);
-            }
-        });
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    private static File prefix(final DatabaseMetaData metaData) throws SQLException {
-        final var productName = metaData.getDatabaseProductName();
-        final var productVersion = metaData.getDatabaseProductVersion();
-        return new File("target", productName + "_" + productVersion);
-    }
-
-    private static void json(final DatabaseMetaData metaData, final String name, final List<?> values)
-            throws IOException, SQLException {
-        try (var stream = new FileOutputStream(prefix(metaData) + "_" + name + ".json")) {
-            new ObjectMapper().writeValue(stream, values);
-        }
-    }
-
-    @Test
-    void columns() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = new Context(metaData);
-            final var columns = context.getColumns(null, null, "%", "%");
-            json(metaData, "columns", columns);
-        }
-    }
-
-    @Test
-    void functions() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = new Context(metaData);
-            try {
-                final var functions = context.getFunctions(null, null, "%");
-                json(metaData, "functions", functions);
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                log.warn("not supported", sqlfnse);
-            }
-        }
-    }
-
-    @Test
-    void functionColumns() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = new Context(metaData);
-            try {
-                final var functionColumns = context.getFunctionColumns(null, null, "%", "%");
-                json(metaData, "functionColumns", functionColumns);
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                log.warn("not supported", sqlfnse);
-            }
-        }
-    }
-
-    @Test
-    void tables() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = new Context(metaData);
-            final var tables = context.getTables((String) null, null, "%", null);
-            json(metaData, "tables", tables);
-            for (var table : tables) {
-                final var columnPrivileges = context.getColumnPrivileges(table, "%");
-                log.debug("{}: {}", table, columnPrivileges);
-            }
-        }
-    }
-
-    @Test
-    void tablesTypes() throws SQLException, IOException {
-        try (var connection = connect()) {
-            final var metaData = connection.getMetaData();
-            final var context = new Context(metaData);
-            final var tableTypes = context.getTableTypes();
-            json(metaData, "tableTypes", tableTypes);
-        }
     }
 }

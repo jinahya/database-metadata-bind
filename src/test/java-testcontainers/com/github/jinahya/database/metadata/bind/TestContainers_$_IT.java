@@ -20,21 +20,23 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import io.vavr.CheckedFunction1;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.Objects;
 
+import static com.github.jinahya.database.metadata.bind.Context_DirectMetadataMapping_Test_Utils.assertDirect;
+import static com.github.jinahya.database.metadata.bind.Context_DirectMetadataMapping_Test_Utils.unsupportedAsEmpty;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 // https://java.testcontainers.org/modules/databases/jdbc/
+
 @Testcontainers
 @Slf4j
 abstract class TestContainers_$_IT {
@@ -53,64 +55,22 @@ abstract class TestContainers_$_IT {
     abstract Connection connect() throws SQLException;
 
     // ------------------------------------------------------------------------------------------------------ connection
-    <R> R applyConnection(final java.util.function.Function<? super Connection, ? extends R> function) {
-        Objects.requireNonNull(function, "function is null");
-        try (var connection = connect()) {
-            return function.apply(connection);
-        } catch (final SQLException sqle) {
-            throw new RuntimeException(sqle);
-        }
+    <R> R applyConnection(final CheckedFunction1<? super Connection, ? extends R> function) throws Throwable {
+        return __JavaSqlTestUtils.applyConnection(this::connect, function);
     }
 
     // --------------------------------------------------------------------------------------------------------- context
-    <R> R applyContext(final java.util.function.Function<? super Context, ? extends R> function) {
-        Objects.requireNonNull(function, "function is null");
-        return applyConnection(c -> {
-            try {
-                return function.apply(Context.newInstance(c));
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
-        });
+    <R> R applyContext(final CheckedFunction1<? super Context, ? extends R> function) throws Throwable {
+        return applyConnection(c -> function.apply(Context.from(c)));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void acceptProperties__() {
-        applyContext(c -> {
+    void test() throws Throwable {
+        applyConnection(c -> {
             try {
-                c.acceptProperties((p, r) -> {
-                    log.debug("{}: {}", p, r);
-                });
-            } catch (final IntrospectionException ie) {
-                throw new RuntimeException(ie);
-            }
-            return null;
-        });
-    }
-
-    @Test
-    void acceptValues__() {
-        applyContext(c -> {
-            c.acceptValues((m, r) -> {
-                log.debug("{}: {}", m.getName(), r);
-            });
-            return null;
-        });
-    }
-
-    @Test
-    void test() throws SQLException {
-        applyContext(c -> {
-            c.connectionSupplier = () -> {
-                try {
-                    return connect();
-                } catch (final SQLException sqle) {
-                    throw new RuntimeException("failed to connect", sqle);
-                }
-            };
-            try {
-                Context_Test_Utils.test(c);
+                final var context = Context.from(c);
+                ContextMetadataWalkthrough.walk(context);
             } catch (final SQLException sqle) {
                 if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
                     log.warn("not supported", sqlfnse);
@@ -124,13 +84,8 @@ abstract class TestContainers_$_IT {
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void functions() {
+    void functions() throws Throwable {
         applyContext(c -> {
-            try {
-                Context_Test_Utils.info(c);
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
             try {
                 final var functions = c.getFunctions(null, null, "%");
                 Context_Test_Utils.functions(c, functions);
@@ -146,13 +101,28 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
-    void schemas() {
-        applyContext(c -> {
-            try {
-                Context_Test_Utils.info(c);
+    void comparingInJdbcOrder() throws Throwable {
+        applyConnection(c -> {
+            try (var statement = c.createStatement()) {
+                Context_ComparingInJdbcOrder_Test_Utils.preparePortedKeyTables(statement);
+                Context_ComparingInJdbcOrder_Test_Utils.assertComparingInJdbcOrder(
+                        Context.from(c),
+                        getClass().getSimpleName()
+                );
             } catch (final SQLException sqle) {
+                if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
+                    log.error("not supported", sqlfnse);
+                    return null;
+                }
                 throw new RuntimeException(sqle);
             }
+            return null;
+        });
+    }
+
+    @Test
+    void schemas() throws Throwable {
+        applyContext(c -> {
             try {
                 final var schemas = c.getSchemas((String) null, "%");
                 Context_Test_Utils.schemas(c, schemas);
@@ -168,13 +138,13 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
-    void tables() {
+    void tables() throws Throwable {
         applyContext(c -> {
-            try {
-                Context_Test_Utils.info(c);
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
+//            try {
+//                Context_Test_Utils.info(c);
+//            } catch (final SQLException sqle) {
+//                throw new RuntimeException(sqle);
+//            }
             try {
                 final var tables = c.getTables((String) null, null, "%", null);
                 Context_Test_Utils.tables(c, tables);
@@ -183,6 +153,91 @@ abstract class TestContainers_$_IT {
                     log.error("not supported", sqlfnse);
                     return null;
                 }
+                throw new RuntimeException(sqle);
+            }
+            return null;
+        });
+    }
+
+    @Test
+    void directMetadataMappings() throws Throwable {
+        applyContext(context -> {
+            try {
+                final var tables = unsupportedAsEmpty(() -> context.getTables(null, null, "%", null));
+                final var table = tables.isEmpty() ? null : tables.get(0);
+                assertDirect("attributes", () -> context.getAttributes(null, null, "%", "%"),
+                             c -> context.forEachAttribute(null, null, "%", "%", c));
+                if (table != null) {
+                    assertDirect("bestRowIdentifier", () -> context.getBestRowIdentifier(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(),
+                                         BestRowIdentifier.COLUMN_VALUE_SCOPE_BEST_ROW_SESSION, true),
+                                 c -> context.forEachBestRowIdentifier(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(),
+                                         BestRowIdentifier.COLUMN_VALUE_SCOPE_BEST_ROW_SESSION, true, c));
+                }
+                assertDirect("catalogs", context::getCatalogs, c -> context.forEachCatalog(c));
+                assertDirect("clientInfoProperties", context::getClientInfoProperties,
+                             c -> context.forEachClientInfoProperty(c));
+                if (table != null) {
+                    assertDirect("columnPrivileges", () -> context.getColumnPrivileges(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), "%"),
+                                 c -> context.forEachColumnPrivilege(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), "%", c));
+                }
+                assertDirect("columns", () -> context.getColumns(null, null, "%", "%"),
+                             c -> context.forEachColumn(null, null, "%", "%", c));
+                if (table != null) {
+                    assertDirect("exportedKeys", () -> context.getExportedKeys(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName()),
+                                 c -> context.forEachExportedKey(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), c));
+                    assertDirect("importedKeys", () -> context.getImportedKeys(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName()),
+                                 c -> context.forEachImportedKey(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), c));
+                    assertDirect("indexInfo", () -> context.getIndexInfo(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), false,
+                                         false),
+                                 c -> context.forEachIndexInfo(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), false,
+                                         false, c));
+                    assertDirect("primaryKeys", () -> context.getPrimaryKeys(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName()),
+                                 c -> context.forEachPrimaryKey(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), c));
+                }
+                assertDirect("functions", () -> context.getFunctions(null, null, "%"),
+                             c -> context.forEachFunction(null, null, "%", c));
+                assertDirect("functionColumns", () -> context.getFunctionColumns(null, null, "%", "%"),
+                             c -> context.forEachFunctionColumn(null, null, "%", "%", c));
+                assertDirect("procedureColumns", () -> context.getProcedureColumns(null, null, "%", "%"),
+                             c -> context.forEachProcedureColumn(null, null, "%", "%", c));
+                assertDirect("procedures", () -> context.getProcedures(null, null, "%"),
+                             c -> context.forEachProcedure(null, null, "%", c));
+                assertDirect("pseudoColumns", () -> context.getPseudoColumns(null, null, "%", "%"),
+                             c -> context.forEachPseudoColumn(null, null, "%", "%", c));
+                assertDirect("schemas", context::getSchemas, c -> context.forEachSchema(c));
+                assertDirect("schemasPattern", () -> context.getSchemas(null, "%"),
+                             c -> context.forEachSchema(null, "%", c));
+                assertDirect("superTables", () -> context.getSuperTables(null, "%", "%"),
+                             c -> context.forEachSuperTable(null, "%", "%", c));
+                assertDirect("superTypes", () -> context.getSuperTypes(null, "%", "%"),
+                             c -> context.forEachSuperType(null, "%", "%", c));
+                assertDirect("tablePrivileges", () -> context.getTablePrivileges(null, null, "%"),
+                             c -> context.forEachTablePrivilege(null, null, "%", c));
+                assertDirect("tableTypes", context::getTableTypes, c -> context.forEachTableType(c));
+                assertDirect("tables", () -> context.getTables(null, null, "%", null),
+                             c -> context.forEachTable(null, null, "%", null, c));
+                assertDirect("typeInfo", context::getTypeInfo, c -> context.forEachTypeInfo(c));
+                assertDirect("udts", () -> context.getUDTs(null, null, "%", null),
+                             c -> context.forEachUDT(null, null, "%", null, c));
+                if (table != null) {
+                    assertDirect("versionColumns", () -> context.getVersionColumns(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName()),
+                                 c -> context.forEachVersionColumn(
+                                         table.getTableCat(), table.getTableSchem(), table.getTableName(), c));
+                }
+            } catch (final SQLException sqle) {
                 throw new RuntimeException(sqle);
             }
             return null;

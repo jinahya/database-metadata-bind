@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,79 +20,172 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Optional;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
+ * @see Context#getPseudoColumns(String, String, String, String)
  */
-
 @_ChildOf(Table.class)
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@XmlRootElement(name = "pseudoColumn")
+@XmlType(name = "pseudoColumn")
 public class PseudoColumn
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = -5612575879670895510L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<PseudoColumn> comparing(final Comparator<? super String> comparator) {
-        return Comparator
-                .comparing(PseudoColumn::getTableCat, comparator)
-                .thenComparing(PseudoColumn::getTableSchem, comparator)
-                .thenComparing(PseudoColumn::getTableName, comparator)
-                .thenComparing(PseudoColumn::getColumnName, comparator);
-    }
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
-    static Comparator<PseudoColumn> comparing(final Context context, final Comparator<? super String> comparator)
+    /**
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getPseudoColumns(String, String, String, String)}, placing {@code null} values
+     * as the specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getPseudoColumns(String, String, String, String)}.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
+     */
+    static Comparator<PseudoColumn> comparingInJdbcOrder(final Context context,
+                                                         final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        return Comparator
+                .<PseudoColumn, String>comparing(PseudoColumn::getTableCat, s)
+                .thenComparing(PseudoColumn::getTableSchem, s)
+                .thenComparing(PseudoColumn::getTableName, s)
+                .thenComparing(PseudoColumn::getColumnName, s);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- TABLE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
+    // ------------------------------------------------------------------------------------------------------ TABLE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
+    // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
+    // ------------------------------------------------------------------------------------------------------- DATA_TYPE
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
+    // ----------------------------------------------------------------------------------------------------- COLUMN_SIZE
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_COLUMN_SIZE = "COLUMN_SIZE";
 
+    // -------------------------------------------------------------------------------------------------- DECIMAL_DIGITS
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_DECIMAL_DIGITS = "DECIMAL_DIGITS";
 
+    // -------------------------------------------------------------------------------------------------- NUM_PREC_RADIX
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_NUM_PREC_RADIX = "NUM_PREC_RADIX";
 
+    // ---------------------------------------------------------------------------------------------------- COLUMN_USAGE
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_USAGE = "COLUMN_USAGE";
 
+    // --------------------------------------------------------------------------------------------------------- REMARKS
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_REMARKS = "REMARKS";
 
+    // ----------------------------------------------------------------------------------------------- CHAR_OCTET_LENGTH
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_CHARACTER_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
 
     // ----------------------------------------------------------------------------------------------------- IS_NULLABLE
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_COLUMN_IS_NULLABLE = "IS_NULLABLE";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     */
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_YES = MetadataTypeConstants.YES;
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     */
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_NO = MetadataTypeConstants.NO;
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     */
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY = MetadataTypeConstants.EMPTY;
+
+    /**
+     * A list of values for the {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     */
+    static final List<String> COLUMN_VALUES_IS_NULLABLE = List.of(
+            COLUMN_VALUE_COLUMN_IS_NULLABLE_YES,
+            COLUMN_VALUE_COLUMN_IS_NULLABLE_NO,
+            COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY
+    );
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
@@ -110,6 +203,11 @@ public class PseudoColumn
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -128,143 +226,311 @@ public class PseudoColumn
                '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- tableCat
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     @Nullable
     public String getTableCat() {
         return tableCat;
     }
 
-    protected void setTableCat(@Nullable final String tableCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTableCatForMetadataLookup() {
+        return tableCat == null ? "" : tableCat;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
 
-    protected void setTableSchem(@Nullable final String tableSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
-    @Nonnull
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTableSchemForMetadataLookup() {
+        return tableSchem == null ? "" : tableSchem;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     public String getTableName() {
         return tableName;
     }
 
-    protected void setTableName(@Nonnull final String tableName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
-    @Nonnull
+    // ------------------------------------------------------------------------------------------------------ columnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     public String getColumnName() {
         return columnName;
     }
 
-    protected void setColumnName(@Nonnull String columnName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
+    // -------------------------------------------------------------------------------------------------------- dataType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
     public Integer getDataType() {
         return dataType;
     }
 
-    protected void setDataType(Integer dataType) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
+    void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
+    // ------------------------------------------------------------------------------------------------------ columnSize
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
+     */
     @Nullable
     public Integer getColumnSize() {
         return columnSize;
     }
 
-    protected void setColumnSize(@Nullable Integer columnSize) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
+     *
+     * @param columnSize the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
+     */
+    void setColumnSize(final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
+    // --------------------------------------------------------------------------------------------------- decimalDigits
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
+     */
     @Nullable
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
-    protected void setDecimalDigits(@Nullable Integer decimalDigits) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
+     *
+     * @param decimalDigits the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
+     */
+    void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     */
     public Integer getNumPrecRadix() {
         return numPrecRadix;
     }
 
-    protected void setNumPrecRadix(Integer numPrecRadix) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     *
+     * @param numPrecRadix the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     */
+    void setNumPrecRadix(final Integer numPrecRadix) {
         this.numPrecRadix = numPrecRadix;
     }
 
+    // ----------------------------------------------------------------------------------------------------- columnUsage
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_USAGE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_USAGE} column.
+     */
     public String getColumnUsage() {
         return columnUsage;
     }
 
-    protected void setColumnUsage(String columnUsage) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_USAGE} column.
+     *
+     * @param columnUsage the value of {@value #COLUMN_LABEL_USAGE} column.
+     */
+    void setColumnUsage(final String columnUsage) {
         this.columnUsage = columnUsage;
     }
 
+    // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     @Nullable
     public String getRemarks() {
         return remarks;
     }
 
-    protected void setRemarks(@Nullable String remarks) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
+    // -------------------------------------------------------------------------------------------- characterOctetLength
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_CHARACTER_OCTET_LENGTH} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_CHARACTER_OCTET_LENGTH} column.
+     */
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
 
-    protected void setCharOctetLength(Integer charOctetLength) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_CHARACTER_OCTET_LENGTH} column.
+     *
+     * @param charOctetLength the value of {@value #COLUMN_LABEL_CHARACTER_OCTET_LENGTH} column.
+     */
+    void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
+    // ------------------------------------------------------------------------------------------------------ isNullable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     */
     public String getIsNullable() {
         return isNullable;
     }
 
-    protected void setIsNullable(String isNullable) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     *
+     * @param isNullable the value of {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     */
+    void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-
     private String tableCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-
     private String tableSchem;
 
-    @Nonnull
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-
     private String tableName;
 
-    @Nonnull
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
-
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
@@ -276,6 +542,8 @@ public class PseudoColumn
     @_ColumnLabel(COLUMN_LABEL_USAGE)
     private String columnUsage;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
@@ -288,93 +556,18 @@ public class PseudoColumn
     private String isNullable;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @SuppressWarnings({
-            "java:S116" // Field names should comply with a naming convention
-    })
-    private Catalog tableCatalog_;
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @SuppressWarnings({
-            "java:S116" // Field names should comply with a naming convention
-    })
-    private Schema tableSchema_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @SuppressWarnings({
-            "java:S116" // Field names should comply with a naming convention
-    })
-    private Table table_;
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    Catalog getTableCatalog_() {
-        if (tableCatalog_ == null) {
-            tableCatalog_ = Catalog.of(tableCat);
-        }
-        return tableCatalog_;
-    }
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    void setTableCatalog_(final Catalog tableCatalog_) {
-        this.tableCatalog_ = tableCatalog_;
-        setTableCat(
-                Optional.ofNullable(this.tableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    Schema getTableSchema_() {
-        if (tableSchema_ == null) {
-            tableSchema_ = Schema.of(getTableCatalog_(), tableSchem);
-        }
-        return tableSchema_;
-    }
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    void setTableSchema_(final Schema tableSchema_) {
-        this.tableSchema_ = tableSchema_;
-        setTableCatalog_(
-                Optional.ofNullable(this.tableSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
-    }
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    Table getTable_() {
-        return table_;
-    }
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    void setTable_(final Table parent_) {
-        this.table_ = parent_;
-        setTableSchema_(
-                Optional.ofNullable(this.table_)
-                        .map(Table::getTableSchema_)
-                        .orElse(null)
-        );
+    /**
+     * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
+     * and {@value #COLUMN_LABEL_TABLE_NAME}.
+     *
+     * @return the table reference identified by this pseudo-column row.
+     */
+    Table getTableRef() {
+        final var table = new Table();
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
+        table.setTableName(tableName);
+        return table;
     }
 }

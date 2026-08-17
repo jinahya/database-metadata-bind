@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,38 +20,95 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
-import java.util.Optional;
 
 /**
  * A class for binding results of the
  * {@link DatabaseMetaData#getSuperTypes(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getSuperTypes(String, String, String)
  * @see Context#getSuperTypes(String, String, String)
  */
-
 @_ChildOf(UDT.class)
-@EqualsAndHashCode(callSuper = true)
+@XmlRootElement(name = "superType")
+@XmlType(name = "superType")
 public class SuperType
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 4603878785941565029L;
+
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    // -------------------------------------------------------------------------------------------------------- TYPE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
+
+    // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
+
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // ---------------------------------------------------------------------------------------------------- SUPERTYPE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SUPERTYPE_CAT = "SUPERTYPE_CAT";
+
+    // -------------------------------------------------------------------------------------------------- SUPERTYPE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SUPERTYPE_SCHEM = "SUPERTYPE_SCHEM";
+
+    // --------------------------------------------------------------------------------------------------- SUPERTYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SUPERTYPE_NAME = "SUPERTYPE_NAME";
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
      */
-    SuperType() {
+    protected SuperType() {
         super();
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -65,165 +122,244 @@ public class SuperType
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    @Nullable
     public String getTypeCat() {
         return typeCat;
     }
 
-    protected void setTypeCat(final String typeCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TYPE_CAT} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTypeCatForMetadataLookup() {
+        return typeCat == null ? "" : typeCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------- typeSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    @Nullable
     public String getTypeSchem() {
         return typeSchem;
     }
 
-    protected void setTypeSchem(final String typeSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TYPE_SCHEM} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTypeSchemForMetadataLookup() {
+        return typeSchem == null ? "" : typeSchem;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
-    protected void setTypeName(final String typeName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------- supertypeCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     */
+    @Nullable
     public String getSupertypeCat() {
         return supertypeCat;
     }
 
-    protected void setSupertypeCat(final String supertypeCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     *
+     * @param supertypeCat the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     */
+    void setSupertypeCat(final String supertypeCat) {
         this.supertypeCat = supertypeCat;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getSupertypeCatForMetadataLookup() {
+        return supertypeCat == null ? "" : supertypeCat;
+    }
+
+    // -------------------------------------------------------------------------------------------------- supertypeSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     */
+    @Nullable
     public String getSupertypeSchem() {
         return supertypeSchem;
     }
 
-    protected void setSupertypeSchem(final String supertypeSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     *
+     * @param supertypeSchem the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     */
+    void setSupertypeSchem(final String supertypeSchem) {
         this.supertypeSchem = supertypeSchem;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column, with {@code null} normalized
+     * to an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getSupertypeSchemForMetadataLookup() {
+        return supertypeSchem == null ? "" : supertypeSchem;
+    }
+
+    // --------------------------------------------------------------------------------------------------- supertypeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
+     */
     public String getSupertypeName() {
         return supertypeName;
     }
 
-    protected void setSupertypeName(final String supertypeName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
+     *
+     * @param supertypeName the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
+     */
+    void setSupertypeName(final String supertypeName) {
         this.supertypeName = supertypeName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("TYPE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("TYPE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
-    @_ColumnLabel("TYPE_NAME")
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("SUPERTYPE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_CAT)
     private String supertypeCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("SUPERTYPE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_SCHEM)
     private String supertypeSchem;
 
-    @_ColumnLabel("SUPERTYPE_NAME")
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_NAME)
     private String supertypeName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Catalog typeCatalog_;
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Schema typeSchema_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Catalog supertypeCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Schema supertypeSchema_;
-
-    Catalog getTypeCatalog_() {
-        if (typeCatalog_ == null) {
-            typeCatalog_ = Catalog.of(typeCat);
-        }
-        return typeCatalog_;
+    /**
+     * Returns the UDT reference identified by {@value #COLUMN_LABEL_TYPE_CAT}, {@value #COLUMN_LABEL_TYPE_SCHEM}, and
+     * {@value #COLUMN_LABEL_TYPE_NAME}.
+     *
+     * @return the UDT reference identified by this super-type row.
+     */
+    UDT getTypeRef() {
+        final var udt = new UDT();
+        udt.setTypeCat(typeCat);
+        udt.setTypeSchem(typeSchem);
+        udt.setTypeName(typeName);
+        return udt;
     }
 
-    void setTypeCatalog_(final Catalog typeCatalog_) {
-        this.typeCatalog_ = typeCatalog_;
-        setTypeCat(
-                Optional.ofNullable(this.typeCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getTypeSchema_() {
-        if (typeSchema_ == null) {
-            typeSchema_ = Schema.of(getTypeCatalog_(), typeSchem);
-        }
-        return typeSchema_;
-    }
-
-    void setTypeSchema_(final Schema typeSchema_) {
-        this.typeSchema_ = typeSchema_;
-        setTypeSchem(
-                Optional.ofNullable(this.typeSchema_)
-                        .map(Schema::getTableSchem)
-                        .orElse(null)
-        );
-    }
-
-    Catalog getSupertypeCatalog_() {
-        if (supertypeCatalog_ == null) {
-            supertypeCatalog_ = Catalog.of(supertypeCat);
-        }
-        return supertypeCatalog_;
-    }
-
-    void setSupertypeCatalog_(final Catalog supertypeCatalog_) {
-        this.supertypeCatalog_ = supertypeCatalog_;
-        setSupertypeCat(
-                Optional.ofNullable(this.supertypeCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getSupertypeSchema_() {
-        if (supertypeSchema_ == null) {
-            supertypeSchema_ = Schema.of(getSupertypeCatalog_(), supertypeSchem);
-        }
-        return supertypeSchema_;
-    }
-
-    void setSupertypeSchema_(final Schema supertypeSchema_) {
-        this.supertypeSchema_ = supertypeSchema_;
-        setSupertypeSchem(
-                Optional.ofNullable(this.supertypeSchema_)
-                        .map(Schema::getTableSchem)
-                        .orElse(null)
-        );
+    /**
+     * Returns the direct super UDT reference identified by {@value #COLUMN_LABEL_SUPERTYPE_CAT},
+     * {@value #COLUMN_LABEL_SUPERTYPE_SCHEM}, and {@value #COLUMN_LABEL_SUPERTYPE_NAME}.
+     *
+     * @return the direct super UDT reference identified by this super-type row.
+     */
+    UDT getSupertypeRef() {
+        final var udt = new UDT();
+        udt.setTypeCat(supertypeCat);
+        udt.setTypeSchem(supertypeSchem);
+        udt.setTypeName(supertypeName);
+        return udt;
     }
 }

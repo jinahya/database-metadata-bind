@@ -27,10 +27,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A marker annotation for unused columns.
+ * A marker annotation for reserved columns.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
+@_Reserved
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})

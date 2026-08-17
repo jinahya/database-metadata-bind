@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,16 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -35,31 +41,46 @@ import java.util.Objects;
  * {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getFunctions(String, String, String)
  * @see Context#getFunctions(String, String, String)
  */
+@_ParentOf(FunctionColumn.class)
+@_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
-@EqualsAndHashCode(callSuper = true)
+@_ChildOfNone
+@XmlRootElement(name = "function")
+@XmlType(name = "function")
 public class Function
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = -3318947900237453301L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static @Nonnull Comparator<Function> specifiedOrder(@Nonnull final Comparator<? super String> comparator) {
-        Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .comparing(Function::getFunctionCat, comparator)
-                .thenComparing(Function::getFunctionSchem, comparator)
-                .thenComparing(Function::getFunctionName, comparator)
-                .thenComparing(Function::getSpecificName, comparator);
-    }
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
-    static @Nonnull Comparator<Function> specifiedOrder(@Nonnull final Context context,
-                                                        @Nonnull final Comparator<? super String> comparator)
+    /**
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getFunctions(String, String, String)}, placing {@code null} values as the
+     * specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getFunctions(String, String, String)}.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
+     */
+    static Comparator<Function> comparingInJdbcOrder(final Context context,
+                                                     final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return specifiedOrder(ContextUtils.nullPrecedence(context, comparator));
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        return Comparator
+                .<Function, String>comparing(Function::getFunctionCat, s)
+                .thenComparing(Function::getFunctionSchem, s)
+                .thenComparing(Function::getFunctionName, s)
+                .thenComparing(Function::getSpecificName, s);
     }
 
     // ---------------------------------------------------------------------------------------------------- FUNCTION_CAT
@@ -77,9 +98,17 @@ public class Function
     public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
     // --------------------------------------------------------------------------------------------------- FUNCTION_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FUNCTION_NAME = "FUNCTION_NAME";
 
     // --------------------------------------------------------------------------------------------------------- REMARKS
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_REMARKS = "REMARKS";
 
     // --------------------------------------------------------------------------------------------------- FUNCTION_TYPE
@@ -119,20 +148,37 @@ public class Function
     public static final int COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RETURNS_TABLE =  // 2
             DatabaseMetaData.functionReturnsTable;
 
-    static final List<Integer> FUNCTION_TYPE_VALUES = List.of(
+    static final List<Integer> COLUMN_VALUES_FUNCTION_TYPE = List.of(
             COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RESULT_UNKNOWN,
             COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_NO_TABLE,
             COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RETURNS_TABLE
     );
 
     // --------------------------------------------------------------------------------------------------- SPECIFIC_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
+    /**
+     * Creates a new instance.
+     */
+    protected Function() {
+        super();
+    }
+
     // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -146,72 +192,168 @@ public class Function
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     */
     @Nullable
     public String getFunctionCat() {
         return functionCat;
     }
 
-    public void setFunctionCat(@Nullable final String functionCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     *
+     * @param functionCat the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     */
+    void setFunctionCat(@Nullable final String functionCat) {
         this.functionCat = functionCat;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_FUNCTION_CAT} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getFunctionCatForMetadataLookup() {
+        return functionCat == null ? "" : functionCat;
+    }
+
     // --------------------------------------------------------------------------------------------------- functionSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     */
     @Nullable
     public String getFunctionSchem() {
         return functionSchem;
     }
 
-    public void setFunctionSchem(@Nullable final String functionSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     *
+     * @param functionSchem the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     */
+    void setFunctionSchem(@Nullable final String functionSchem) {
         this.functionSchem = functionSchem;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column, with {@code null} normalized
+     * to an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getFunctionSchemForMetadataLookup() {
+        return functionSchem == null ? "" : functionSchem;
+    }
+
     // ---------------------------------------------------------------------------------------------------- functionName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     */
     public String getFunctionName() {
         return functionName;
     }
 
-    public void setFunctionName(final String functionName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     *
+     * @param functionName the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     */
+    void setFunctionName(final String functionName) {
         this.functionName = functionName;
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     public String getRemarks() {
         return remarks;
     }
 
-    public void setRemarks(final String remarks) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
     // ---------------------------------------------------------------------------------------------------- functionType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
+     */
     public Integer getFunctionType() {
         return functionType;
     }
 
-    public void setFunctionType(final Integer functionType) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
+     *
+     * @param functionType the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
+     */
+    void setFunctionType(final Integer functionType) {
         this.functionType = functionType;
     }
 
     // ---------------------------------------------------------------------------------------------------- specificName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     */
     public String getSpecificName() {
         return specificName;
     }
 
-    public void setSpecificName(final String specificName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     *
+     * @param specificName the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     */
+    void setSpecificName(final String specificName) {
         this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_NAME)
     private String functionName;
 
@@ -222,6 +364,43 @@ public class Function
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_TYPE)
     private Integer functionType;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the catalog reference identified by {@value #COLUMN_LABEL_FUNCTION_CAT}.
+     *
+     * @return the catalog reference identified by this function; {@code null} when {@value #COLUMN_LABEL_FUNCTION_CAT}
+     * is {@code null}.
+     */
+    @Nullable
+    Catalog getCatalogRef() {
+        if (functionCat == null) {
+            return null;
+        }
+        final var catalog = new Catalog();
+        catalog.setTableCat(functionCat);
+        return catalog;
+    }
+
+    /**
+     * Returns the schema reference identified by {@value #COLUMN_LABEL_FUNCTION_CAT} and
+     * {@value #COLUMN_LABEL_FUNCTION_SCHEM}.
+     *
+     * @return the schema reference identified by this function; {@code null} when {@value #COLUMN_LABEL_FUNCTION_SCHEM}
+     * is {@code null}.
+     */
+    @Nullable
+    Schema getSchemaRef() {
+        if (functionSchem == null) {
+            return null;
+        }
+        final var schema = new Schema();
+        schema.setTableCatalog(functionCat);
+        schema.setTableSchem(functionSchem);
+        return schema;
+    }
 }

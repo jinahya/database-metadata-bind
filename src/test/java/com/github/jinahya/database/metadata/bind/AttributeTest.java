@@ -20,6 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 class AttributeTest
         extends AbstractMetadataType_Test<Attribute> {
 
@@ -28,13 +32,142 @@ class AttributeTest
         super(Attribute.class);
     }
 
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+    // Note: these assert the (Bean-Validation-free) predicate logic ported from the 'jakarta' branch. This branch does
+    //       NOT depend on Jakarta Bean Validation; the predicates are plain methods, exercised here directly.
+
+    @Test
+    void isScopeXxxNullWhenDataTypeIsNotRef_HoldsAsSpecified() {
+        final var instance = newTypeInstance();
+        // dataType unknown -> always holds, regardless of scope values
+        instance.setDataType(null);
+        instance.setScopeCatalog("c");
+        instance.setScopeSchema("s");
+        instance.setScopeTable("t");
+        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef()).isTrue();
+        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef()).isTrue();
+        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef()).isTrue();
+        // dataType is not REF, scope values present -> violated
+        instance.setDataType(java.sql.Types.INTEGER);
+        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef()).isFalse();
+        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef()).isFalse();
+        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef()).isFalse();
+        // dataType is not REF, scope values null -> holds
+        instance.setScopeCatalog(null);
+        instance.setScopeSchema(null);
+        instance.setScopeTable(null);
+        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef()).isTrue();
+        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef()).isTrue();
+        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef()).isTrue();
+        // dataType is REF, scope values present -> holds (not constrained)
+        instance.setDataType(java.sql.Types.REF);
+        instance.setScopeCatalog("c");
+        instance.setScopeSchema("s");
+        instance.setScopeTable("t");
+        assertThat(instance.isScopeCatalogNullWhenDataTypeIsNotRef()).isTrue();
+        assertThat(instance.isScopeSchemaNullWhenDataTypeIsNotRef()).isTrue();
+        assertThat(instance.isScopeTableNullWhenDataTypeIsNotRef()).isTrue();
+    }
+
+    @Test
+    void getTypeRef_MapsTypeColumns() {
+        final var instance = newTypeInstance();
+        instance.setTypeCat("c");
+        instance.setTypeSchem("s");
+        instance.setTypeName("t");
+        final var result = instance.getTypeRef();
+        assertThat(result.getTypeCat()).isEqualTo("c");
+        assertThat(result.getTypeSchem()).isEqualTo("s");
+        assertThat(result.getTypeName()).isEqualTo("t");
+    }
+
+    @Test
+    void getTypeRef_PreservesNullTypeCatalogAndSchema() {
+        final var instance = newTypeInstance();
+        instance.setTypeCat(null);
+        instance.setTypeSchem(null);
+        instance.setTypeName("t");
+        final var result = instance.getTypeRef();
+        assertThat(result.getTypeCat()).isNull();
+        assertThat(result.getTypeSchem()).isNull();
+        assertThat(result.getTypeName()).isEqualTo("t");
+    }
+
+    @Test
+    void getScopeTableRef_MapsScopeColumns() {
+        final var instance = newTypeInstance();
+        instance.setDataType(java.sql.Types.REF);
+        instance.setScopeCatalog("c");
+        instance.setScopeSchema("s");
+        instance.setScopeTable("t");
+        final var result = instance.getScopeTableRef();
+        assertThat(result.getTableCat()).isEqualTo("c");
+        assertThat(result.getTableSchem()).isEqualTo("s");
+        assertThat(result.getTableName()).isEqualTo("t");
+    }
+
+    @Test
+    void getScopeTableRef_PreservesNullScopeCatalogAndSchema() {
+        final var instance = newTypeInstance();
+        instance.setDataType(java.sql.Types.REF);
+        instance.setScopeCatalog(null);
+        instance.setScopeSchema(null);
+        instance.setScopeTable("t");
+        final var result = instance.getScopeTableRef();
+        assertThat(result.getTableCat()).isNull();
+        assertThat(result.getTableSchem()).isNull();
+        assertThat(result.getTableName()).isEqualTo("t");
+    }
+
+    @Test
+    void getScopeTableRef_ReturnsNullWhenDataTypeIsNotRef() {
+        final var instance = newTypeInstance();
+        instance.setDataType(java.sql.Types.INTEGER);
+        instance.setScopeCatalog("c");
+        instance.setScopeSchema("s");
+        instance.setScopeTable("t");
+        assertThat(instance.getScopeTableRef()).isNull();
+    }
+
+    @Test
+    void getScopeTableRef_ReturnsNullWhenDataTypeIsNull() {
+        final var instance = newTypeInstance();
+        instance.setDataType(null);
+        instance.setScopeCatalog("c");
+        instance.setScopeSchema("s");
+        instance.setScopeTable("t");
+        assertThat(instance.getScopeTableRef()).isNull();
+    }
+
+    @Test
+    void isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef_HoldsAsSpecified() {
+        final var instance = newTypeInstance();
+        instance.setSourceDataType(java.sql.Types.INTEGER);
+        // dataType unknown -> holds
+        instance.setDataType(null);
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef()).isTrue();
+        // dataType is a plain type with a non-null source -> violated
+        instance.setDataType(java.sql.Types.VARCHAR);
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef()).isFalse();
+        // ... unless source is null
+        instance.setSourceDataType(null);
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef()).isTrue();
+        // DISTINCT or REF may carry a source type -> holds
+        instance.setSourceDataType(java.sql.Types.INTEGER);
+        instance.setDataType(java.sql.Types.DISTINCT);
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef()).isTrue();
+        instance.setDataType(java.sql.Types.REF);
+        assertThat(instance.isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef()).isTrue();
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     Attribute newTypeInstance() {
         final Attribute instance = super.newTypeInstance();
-        instance.attrName = "";
-        instance.typeName = "";
-        instance.ordinalPosition = 1;
+        instance.setAttrName("ATTR_NAME");
+        instance.setTypeName("TYPE_NAME");
+        instance.setAttrTypeName("ATTR_TYPE_NAME");
+        instance.setOrdinalPosition(1);
         return instance;
     }
 }

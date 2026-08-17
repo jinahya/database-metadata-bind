@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,179 +20,247 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Optional;
+import java.io.Serial;
 
 /**
  * A class for binding results of the
- * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
+ * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getSuperTables(String, String, String)
  * @see Context#getSuperTables(String, String, String)
  */
-
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@_ChildOf(Table.class)
+@XmlRootElement(name = "superTable")
+@XmlType(name = "superTable")
 public class SuperTable
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 3579710773784268831L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- TABLE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
+    // ------------------------------------------------------------------------------------------------------ TABLE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
+    // ------------------------------------------------------------------------------------------------- SUPERTABLE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_SUPERTABLE_NAME = "SUPERTABLE_NAME";
 
-    // ------------------------------------------------------------------------------------------ STATIC FACTORY_METHODS
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
+    /**
+     * Creates a new instance.
+     */
+    protected SuperTable() {
+        super();
+    }
+
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",supertableName=" + supertableName +
+               '}';
+    }
+
+    // -------------------------------------------------------------------------------------------------------- tableCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    @Nullable
     public String getTableCat() {
         return tableCat;
     }
 
-    protected void setTableCat(final String tableCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTableCatForMetadataLookup() {
+        return tableCat == null ? "" : tableCat;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
 
-    protected void setTableSchem(final String tableSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTableSchemForMetadataLookup() {
+        return tableSchem == null ? "" : tableSchem;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     public String getTableName() {
         return tableName;
     }
 
-    protected void setTableName(final String tableName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- supertableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
+     */
     public String getSupertableName() {
         return supertableName;
     }
 
-    protected void setSupertableName(final String supertableName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
+     *
+     * @param supertableName the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
+     */
+    void setSupertableName(final String supertableName) {
         this.supertableName = supertableName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_SUPERTABLE_NAME)
-
     private String supertableName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Catalog tableCatalog_;
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Schema tableSchema_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Catalog supertableCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Schema supertableSchema_;
-
-    Catalog getTableCatalog_() {
-        if (tableCatalog_ == null) {
-            tableCatalog_ = Catalog.of(tableCat);
-        }
-        return tableCatalog_;
+    /**
+     * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
+     * and {@value #COLUMN_LABEL_TABLE_NAME}.
+     *
+     * @return the table reference identified by this super-table row.
+     */
+    Table getTableRef() {
+        final var table = new Table();
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
+        table.setTableName(tableName);
+        return table;
     }
 
-    void setTableCatalog_(final Catalog tableCatalog_) {
-        this.tableCatalog_ = tableCatalog_;
-        setTableCat(
-                Optional.ofNullable(this.tableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getTableSchema_() {
-        if (tableSchema_ == null) {
-            tableSchema_ = Schema.of(getTableCatalog_(), tableSchem);
-        }
-        return tableSchema_;
-    }
-
-    void setTableSchema_(final Schema tableSchema_) {
-        this.tableSchema_ = tableSchema_;
-        setTableCatalog_(
-                Optional.ofNullable(this.tableSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
-    }
-
-    Catalog getSupertableCatalog_() {
-        if (supertableCatalog_ == null) {
-            supertableCatalog_ = Catalog.of(tableCat);
-        }
-        return supertableCatalog_;
-    }
-
-    void setSupertableCatalog_(final Catalog supertableCatalog_) {
-        this.supertableCatalog_ = supertableCatalog_;
-        setTableCat(
-                Optional.ofNullable(this.supertableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getSupertableSchema_() {
-        if (supertableSchema_ == null) {
-            supertableSchema_ = Schema.of(getSupertableCatalog_(), tableSchem);
-        }
-        return supertableSchema_;
-    }
-
-    void setSupertableSchema_(final Schema supertableSchema_) {
-        this.supertableSchema_ = supertableSchema_;
-        setSupertableCatalog_(
-                Optional.ofNullable(this.supertableSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
+    /**
+     * Returns the direct super table reference identified by {@value #COLUMN_LABEL_TABLE_CAT},
+     * {@value #COLUMN_LABEL_TABLE_SCHEM}, and {@value #COLUMN_LABEL_SUPERTABLE_NAME}.
+     *
+     * @return the direct super table reference identified by this super-table row.
+     */
+    Table getSupertableRef() {
+        final var table = new Table();
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
+        table.setTableName(supertableName);
+        return table;
     }
 }

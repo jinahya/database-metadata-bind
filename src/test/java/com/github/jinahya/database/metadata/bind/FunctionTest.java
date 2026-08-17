@@ -29,11 +29,13 @@ class FunctionTest
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     Function newTypeInstance() {
         final var instance = super.newTypeInstance();
-        instance.setFunctionName("");
-        instance.setSpecificName("");
+        instance.setFunctionName("FUNCTION_NAME");
+        instance.setSpecificName("FUNCTION_SPECIFIC");
         return instance;
     }
 }

@@ -26,4 +26,12 @@ class TableTypeTest
     TableTypeTest() {
         super(TableType.class);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    TableType newTypeInstance() {
+        final TableType instance = super.newTypeInstance();
+        instance.setTableType("TABLE");
+        return instance;
+    }
 }

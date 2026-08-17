@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,19 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -37,28 +41,51 @@ import java.util.Objects;
  * A class for binding results of the {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getUDTs(String, String, String, int[])
  * @see Context#getUDTs(String, String, String, int[])
  */
-@_ChildOf(Catalog.class)
 @_ChildOf(Schema.class)
+@_ChildOf(Catalog.class)
+@_ParentOf(SuperType.class)
 @_ParentOf(Attribute.class)
-@_ParentOf(UDT.class)
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true)
+@_ChildOfNone
+@XmlRootElement(name = "udt")
+@XmlType(name = "udt")
 public class UDT
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 8665246093405057553L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<UDT> comparing(final Context context, final Comparator<? super String> comparator)
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator comparing values, using specified context for ordering {@code null} values, in the specified
+     * order.
+     * <blockquote>
+     * They are ordered by <code>DATA_TYPE</code>, <code>TYPE_CAT</code>, <code>TYPE_SCHEM</code> and
+     * <code>TYPE_NAME</code>.
+     * </blockquote>
+     *
+     * @param context    a context for ordering {@code null} values.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator comparing values in the specified order.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
+     */
+    static Comparator<UDT> comparingInJdbcOrder(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
-                .comparing(UDT::getDataType, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()))
-                .thenComparing(UDT::getTypeCat, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(UDT::getTypeSchem, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(UDT::getTypeName, ContextUtils.nullPrecedence(context, comparator));
+                .comparing(UDT::getDataType, ContextUtils.withDatabaseNullOrdering(
+                        context, Comparator.naturalOrder(), ContextConstants.SortDirection.ASCENDING))
+                .thenComparing(UDT::getTypeCat, ContextUtils.withDatabaseNullOrdering(
+                        context, comparator, ContextConstants.SortDirection.ASCENDING))
+                .thenComparing(UDT::getTypeSchem, ContextUtils.withDatabaseNullOrdering(
+                        context, comparator, ContextConstants.SortDirection.ASCENDING))
+                .thenComparing(UDT::getTypeName, ContextUtils.withDatabaseNullOrdering(
+                        context, comparator, ContextConstants.SortDirection.ASCENDING));
     }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
@@ -96,18 +123,61 @@ public class UDT
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
+    /**
+     * A column value of {@link Types#JAVA_OBJECT}({@value Types#JAVA_OBJECT}) for the {@value #COLUMN_LABEL_DATA_TYPE}
+     * column.
+     */
     public static final int COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT = Types.JAVA_OBJECT; // 2000
 
-    public static final int COLUMN_VALUES_DATA_TYPE_DISTINCT = Types.DISTINCT; // 2001
+    /**
+     * A column value of {@link Types#DISTINCT}({@value Types#DISTINCT}) for the {@value #COLUMN_LABEL_DATA_TYPE}
+     * column.
+     */
+    public static final int COLUMN_VALUES_DATA_TYPE_DISTINCT = Types.DISTINCT;       // 2001
 
-    public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT; // 2002
+    /**
+     * A column value of {@link Types#STRUCT}({@value Types#STRUCT}) for the {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
+    public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT;           // 2002
+
+    static final List<Integer> COLUMN_VALUES_DATA_TYPE = List.of(
+            COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT,
+            COLUMN_VALUES_DATA_TYPE_DISTINCT,
+            COLUMN_VALUES_DATA_TYPE_STRUCT
+    );
+
+    // --------------------------------------------------------------------------------------------------------- REMARKS
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
+
+    // ------------------------------------------------------------------------------------------------------- BASE_TYPE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_BASE_TYPE = "BASE_TYPE";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
+    /**
+     * Creates a new instance.
+     */
+    protected UDT() {
+        super();
+    }
+
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -121,92 +191,247 @@ public class UDT
                '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- typeCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    @Nullable
     public String getTypeCat() {
         return typeCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    void setTypeCat(@Nullable final String typeCat) {
+        this.typeCat = typeCat;
+    }
+
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TYPE_CAT} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTypeCatForMetadataLookup() {
+        return typeCat == null ? "" : typeCat;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- typeSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    @Nullable
     public String getTypeSchem() {
         return typeSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    void setTypeSchem(@Nullable final String typeSchem) {
+        this.typeSchem = typeSchem;
+    }
+
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TYPE_SCHEM} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTypeSchemForMetadataLookup() {
+        return typeSchem == null ? "" : typeSchem;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- className
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_CLASS_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_CLASS_NAME} column.
+     */
     public String getClassName() {
         return className;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_CLASS_NAME} column.
+     *
+     * @param className the value of {@value #COLUMN_LABEL_CLASS_NAME} column.
+     */
+    void setClassName(final String className) {
+        this.className = className;
+    }
+
     // -------------------------------------------------------------------------------------------------------- dataType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
     public Integer getDataType() {
         return dataType;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
+    void setDataType(final Integer dataType) {
+        this.dataType = dataType;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     public String getRemarks() {
         return remarks;
     }
 
-    // --------------------------------------------------------------------------------------------------------- bseType
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
+    void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- baseType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_BASE_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_BASE_TYPE} column.
+     */
+    @Nullable
     public Integer getBaseType() {
         return baseType;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_BASE_TYPE} column.
+     *
+     * @param baseType the value of {@value #COLUMN_LABEL_BASE_TYPE} column.
+     */
+    void setBaseType(final Integer baseType) {
+        this.baseType = baseType;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
-
     private String typeCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
-
     private String typeSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
-
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_CLASS_NAME)
     private String className;
 
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @_ColumnLabel("REMARKS")
+    @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
+    // null if DATA_TYPE is not DISTINCT or not STRUCT with REFERENCE_GENERATION = USER_DEFINED
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("BASE_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_BASE_TYPE)
     private Integer baseType;
 
     // -----------------------------------------------------------------------------------------------------------------
-    List<Attribute> getAttributes(final Context context, final String attributeNamePattern) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getAttributes(this, attributeNamePattern);
-    }
 
-    List<SuperType> getSuperTypes(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getSuperTypes(this);
-    }
-
-    List<UDT> getSuperUDTs(final Context context, final int[] types) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        final var collection = new ArrayList<UDT>();
-        for (final var superType : getSuperTypes(context)) {
-            context.addUDTs(
-                    superType.getTypeCat(),
-                    superType.getTypeSchem(),
-                    superType.getTypeName(),
-                    types,
-                    collection
-            );
+    /**
+     * Returns the catalog reference identified by {@value #COLUMN_LABEL_TYPE_CAT}.
+     *
+     * @return the catalog reference identified by this UDT; {@code null} when {@value #COLUMN_LABEL_TYPE_CAT} is
+     * {@code null}.
+     */
+    @Nullable
+    Catalog getCatalogRef() {
+        if (typeCat == null) {
+            return null;
         }
-        return collection;
+        final var catalog = new Catalog();
+        catalog.setTableCat(typeCat);
+        return catalog;
     }
+
+    /**
+     * Returns the schema reference identified by {@value #COLUMN_LABEL_TYPE_CAT} and
+     * {@value #COLUMN_LABEL_TYPE_SCHEM}.
+     *
+     * @return the schema reference identified by this UDT; {@code null} when {@value #COLUMN_LABEL_TYPE_SCHEM} is
+     * {@code null}.
+     */
+    @Nullable
+    Schema getSchemaRef() {
+        if (typeSchem == null) {
+            return null;
+        }
+        final var schema = new Schema();
+        schema.setTableCatalog(typeCat);
+        schema.setTableSchem(typeSchem);
+        return schema;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    private transient List<Attribute> attributes_;
 }

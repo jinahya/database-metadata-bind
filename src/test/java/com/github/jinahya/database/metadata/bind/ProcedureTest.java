@@ -36,8 +36,8 @@ class ProcedureTest
     @Override
     Procedure newTypeInstance() {
         final Procedure instance = super.newTypeInstance();
-        instance.setProcedureName("");
-        instance.setSpecificName("");
+        instance.setProcedureName("PROCEDURE_NAME");
+        instance.setSpecificName("PROCEDURE_SPECIFIC");
         return instance;
     }
 

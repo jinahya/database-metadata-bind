@@ -82,8 +82,8 @@ class ReflectionTest {
     void listType() throws ReflectiveOperationException {
         final Field field = getClass().getDeclaredField("list");
         final Type type = field.getGenericType();
-        if (type instanceof ParameterizedType) {
-            final Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
+        if (type instanceof ParameterizedType parameterizedType) {
+            final Type elementType = parameterizedType.getActualTypeArguments()[0];
             final String typeName = elementType.getTypeName();
             log.debug("typeName: {}", typeName);
         }

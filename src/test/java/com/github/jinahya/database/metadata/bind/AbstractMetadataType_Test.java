@@ -21,37 +21,128 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @Slf4j
 abstract class AbstractMetadataType_Test<T extends AbstractMetadataType>
         extends MetadataType_Test<T> {
 
+    private static final Pattern FIELD_NAME_IN_TO_STRING_PATTERN = Pattern.compile("\\b([A-Za-z][A-Za-z0-9_]*)=");
+
     AbstractMetadataType_Test(final Class<T> typeClass) {
         super(typeClass);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @DisplayName("should override equals")
     @Test
-    void shouldHaveEqualsOverridden__() throws ReflectiveOperationException {
-        final var method = typeClass.getMethod("equals", Object.class);
-        final var declaringClass = method.getDeclaringClass();
-        assertThat(declaringClass)
-                .as("declaring class of the %1$s", method)
-                .isSameAs(typeClass);
+    void getUnknownColumns_ReturnsUnmodifiableView_() {
+        final var instance = newTypeInstance();
+        final var label = "UNKNOWN_COLUMN";
+        final var value = "UNKNOWN_VALUE";
+        instance.putUnknownColumn(label, value);
+        final var unknownColumns = instance.getUnknownColumns();
+        assertThat(unknownColumns).containsEntry(label, value);
+        assertThatExceptionOfType(UnsupportedOperationException.class)
+                .isThrownBy(() -> unknownColumns.clear());
+        assertThat(instance.getUnknownColumns()).containsEntry(label, value);
     }
 
-    @DisplayName("should override hashCode")
+    /**
+     * Verifies the documented serialized form: {@link _ColumnLabel}-annotated fields survive a round-trip, while
+     * {@link AbstractMetadataType#unknownColumns} is dropped because it is {@code transient}.
+     * <p>
+     * The non-serializable unknown value is the point of the test. {@link java.sql.ResultSet#getObject(String)} may
+     * return values that do not implement {@link java.io.Serializable}, and Java serialization aborts the whole
+     * object graph on the first such value; keeping the field {@code transient} is what makes serializing a metadata
+     * type independent of which driver produced it.
+     */
     @Test
-    void shouldHaveHashcodeOverridden__() throws ReflectiveOperationException {
-        final var method = typeClass.getMethod("hashCode");
-        final var declaringClass = method.getDeclaringClass();
-        assertThat(declaringClass)
-                .as("declaring class of the %1$s", method)
-                .isSameAs(typeClass);
+    void serialization_KeepsLabeledFieldsAndDropsUnknownColumns_() throws Exception {
+        final var instance = newTypeInstance();
+        final Map<Field, String> expected = new LinkedHashMap<>();
+        for (final var field : ContextUtils.getBindingFields(typeClass).keySet()) {
+            if (field.getType() != String.class) {
+                continue;
+            }
+            final var value = field.getName() + "-value";
+            field.set(instance, value);
+            expected.put(field, value);
+        }
+        instance.putUnknownColumn("UNKNOWN_SERIALIZABLE", "value");
+        instance.putUnknownColumn("UNKNOWN_NOT_SERIALIZABLE", new Object());
+        assertThat(instance.getUnknownColumns()).hasSize(2);
+
+        final var deserialized = roundTrip(instance);
+
+        for (final var entry : expected.entrySet()) {
+            assertThat(entry.getKey().get(deserialized))
+                    .as("%s.%s after deserialization", typeClass.getSimpleName(), entry.getKey().getName())
+                    .isEqualTo(entry.getValue());
+        }
+        assertThat(deserialized.getUnknownColumns())
+                .as("unknown columns of a deserialized %s", typeClass.getSimpleName())
+                .isNotNull()
+                .isEmpty();
+        assertThatExceptionOfType(UnsupportedOperationException.class)
+                .isThrownBy(() -> deserialized.getUnknownColumns().put("K", "V"));
+    }
+
+    private T roundTrip(final T instance) throws IOException, ClassNotFoundException {
+        final var baos = new ByteArrayOutputStream();
+        try (var oos = new ObjectOutputStream(baos)) {
+            oos.writeObject(instance);
+        }
+        try (var ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
+            return typeClass.cast(ois.readObject());
+        }
+    }
+
+    @Test
+    void toString_ContainsExactlyUnknownColumnsAndColumnLabeledFields_() {
+        final var actual = namesInToString(newTypeInstance().toString());
+        assertThat(actual)
+                .as("field names in %s.toString()", typeClass.getSimpleName())
+                .containsExactlyElementsOf(namesExpectedInToString());
+    }
+
+    private Set<String> namesExpectedInToString() {
+        final var expected = new LinkedHashSet<String>();
+        expected.add("unknownColumns");
+        for (Class<?> c = typeClass; c != null && c != AbstractMetadataType.class; c = c.getSuperclass()) {
+            for (final var field : c.getDeclaredFields()) {
+                if (Modifier.isStatic(field.getModifiers())) {
+                    continue;
+                }
+                if (!field.isAnnotationPresent(_ColumnLabel.class)) {
+                    continue;
+                }
+                expected.add(field.getName());
+            }
+        }
+        return expected;
+    }
+
+    private Set<String> namesInToString(final String string) {
+        final var actual = new LinkedHashSet<String>();
+        final var matcher = FIELD_NAME_IN_TO_STRING_PATTERN.matcher(string);
+        while (matcher.find()) {
+            actual.add(matcher.group(1));
+        }
+        return actual;
     }
 }

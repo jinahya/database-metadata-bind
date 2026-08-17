@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,67 +20,188 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.PositiveOrZero;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)}
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
  * @see Context#getFunctionColumns(String, String, String, String)
  */
 @_ChildOf(Function.class)
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true)
+@XmlRootElement(name = "functionColumn")
+@XmlType(name = "functionColumn")
 public class FunctionColumn
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = -7445156446214062680L;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
-    static Comparator<FunctionColumn> comparing(final Comparator<? super String> comparator) {
-        return Comparator.comparing(FunctionColumn::getFunctionCat, comparator)
-                .thenComparing(FunctionColumn::getFunctionSchem, comparator)
-                .thenComparing(FunctionColumn::getFunctionName, comparator)
-                .thenComparing(FunctionColumn::getSpecificName, comparator);
-    }
-
-    static Comparator<FunctionColumn> comparing(final Context context, final Comparator<? super String> comparator)
+    /**
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getFunctionColumns(String, String, String, String)}, placing {@code null} values
+     * (of all keys) as the specified context's database sorts them. The JDBC API describes the ordering within a
+     * function as return value, parameters in call order, and result-set columns in column-number order; this
+     * comparator represents that contextual part with the <code>ORDINAL_POSITION</code> key exposed by the result set.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getFunctionColumns(String, String, String, String)}.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
+     */
+    static Comparator<FunctionColumn> comparingInJdbcOrder(final Context context,
+                                                           final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        final var i = ContextUtils.withDatabaseNullOrdering(
+                context, Comparator.<Integer>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
+        return Comparator
+                .<FunctionColumn, String>comparing(FunctionColumn::getFunctionCat, s)
+                .thenComparing(FunctionColumn::getFunctionSchem, s)
+                .thenComparing(FunctionColumn::getFunctionName, s)
+                .thenComparing(FunctionColumn::getSpecificName, s)
+                .thenComparing(FunctionColumn::getOrdinalPosition, i);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------- FUNCTION_CAT
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- FUNCTION_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- FUNCTION_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FUNCTION_NAME = "FUNCTION_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- DATA_TYPE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
+
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // ------------------------------------------------------------------------------------------------------- PRECISION
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PRECISION = "PRECISION";
+
+    // ---------------------------------------------------------------------------------------------------------- LENGTH
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_LENGTH = "LENGTH";
+
+    // ----------------------------------------------------------------------------------------------------------- SCALE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SCALE = "SCALE";
+
+    // ----------------------------------------------------------------------------------------------------------- RADIX
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_RADIX = "RADIX";
+
+    // -------------------------------------------------------------------------------------------------------- NULLABLE
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- REMARKS
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
+
+    // ----------------------------------------------------------------------------------------------- CHAR_OCTET_LENGTH
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
+
+    // ------------------------------------------------------------------------------------------------ ORDINAL_POSITION
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_ORDINAL_POSITION = "ORDINAL_POSITION";
+
+    // ----------------------------------------------------------------------------------------------------- IS_NULLABLE
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
+
+    // --------------------------------------------------------------------------------------------------- SPECIFIC_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
@@ -89,12 +210,17 @@ public class FunctionColumn
     /**
      * Creates a new instance.
      */
-    public FunctionColumn() {
+    protected FunctionColumn() {
         super();
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -119,174 +245,391 @@ public class FunctionColumn
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     */
     @Nullable
     public String getFunctionCat() {
         return functionCat;
     }
 
-    public void setFunctionCat(@Nullable final String functionCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     *
+     * @param functionCat the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     */
+    void setFunctionCat(final String functionCat) {
         this.functionCat = functionCat;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_FUNCTION_CAT} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getFunctionCatForMetadataLookup() {
+        return functionCat == null ? "" : functionCat;
+    }
+
     // --------------------------------------------------------------------------------------------------- functionSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     */
     @Nullable
     public String getFunctionSchem() {
         return functionSchem;
     }
 
-    public void setFunctionSchem(@Nullable final String functionSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     *
+     * @param functionSchem the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     */
+    void setFunctionSchem(final String functionSchem) {
         this.functionSchem = functionSchem;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column, with {@code null} normalized
+     * to an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getFunctionSchemForMetadataLookup() {
+        return functionSchem == null ? "" : functionSchem;
+    }
+
     // ---------------------------------------------------------------------------------------------------- functionName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     */
     public String getFunctionName() {
         return functionName;
     }
 
-    public void setFunctionName(final String functionName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     *
+     * @param functionName the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     */
+    void setFunctionName(final String functionName) {
         this.functionName = functionName;
     }
 
     // ------------------------------------------------------------------------------------------------------ columnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     public String getColumnName() {
         return columnName;
     }
 
-    public void setColumnName(final String columnName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
     // ------------------------------------------------------------------------------------------------------ columnType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
     public Integer getColumnType() {
         return columnType;
     }
 
-    public void setColumnType(final Integer columnType) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     *
+     * @param columnType the value of {@value #COLUMN_LABEL_COLUMN_TYPE} column.
+     */
+    void setColumnType(final Integer columnType) {
         this.columnType = columnType;
     }
 
     // -------------------------------------------------------------------------------------------------------- dataType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
     public Integer getDataType() {
         return dataType;
     }
 
-    public void setDataType(final Integer dataType) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
+    void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
-    public void setTypeName(final String typeName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
     // ------------------------------------------------------------------------------------------------------- precision
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PRECISION} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PRECISION} column.
+     */
     @Nullable
     public Integer getPrecision() {
         return precision;
     }
 
-    public void setPrecision(@Nullable final Integer precision) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PRECISION} column.
+     *
+     * @param precision the value of {@value #COLUMN_LABEL_PRECISION} column.
+     */
+    void setPrecision(final Integer precision) {
         this.precision = precision;
     }
 
     // ---------------------------------------------------------------------------------------------------------- length
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_LENGTH} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_LENGTH} column.
+     */
     public Integer getLength() {
         return length;
     }
 
-    public void setLength(final Integer length) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_LENGTH} column.
+     *
+     * @param length the value of {@value #COLUMN_LABEL_LENGTH} column.
+     */
+    void setLength(final Integer length) {
         this.length = length;
     }
 
     // ----------------------------------------------------------------------------------------------------------- scale
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SCALE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SCALE} column.
+     */
     @Nullable
     public Integer getScale() {
         return scale;
     }
 
-    public void setScale(@Nullable final Integer scale) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SCALE} column.
+     *
+     * @param scale the value of {@value #COLUMN_LABEL_SCALE} column.
+     */
+    void setScale(final Integer scale) {
         this.scale = scale;
     }
 
     // ----------------------------------------------------------------------------------------------------------- radix
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_RADIX} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_RADIX} column.
+     */
     public Integer getRadix() {
         return radix;
     }
 
-    public void setRadix(final Integer radix) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_RADIX} column.
+     *
+     * @param radix the value of {@value #COLUMN_LABEL_RADIX} column.
+     */
+    void setRadix(final Integer radix) {
         this.radix = radix;
     }
 
     // -------------------------------------------------------------------------------------------------------- nullable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public Integer getNullable() {
         return nullable;
     }
 
-    public void setNullable(final Integer nullable) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     *
+     * @param nullable the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     */
+    void setNullable(final Integer nullable) {
         this.nullable = nullable;
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     public String getRemarks() {
         return remarks;
     }
 
-    public void setRemarks(final String remarks) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
     // ------------------------------------------------------------------------------------------------- charOctetLength
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_CHAR_OCTET_LENGTH} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_CHAR_OCTET_LENGTH} column.
+     */
     @Nullable
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
 
-    public void setCharOctetLength(@Nullable final Integer charOctetLength) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_CHAR_OCTET_LENGTH} column.
+     *
+     * @param charOctetLength the value of {@value #COLUMN_LABEL_CHAR_OCTET_LENGTH} column.
+     */
+    void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
     // ------------------------------------------------------------------------------------------------- ordinalPosition
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
+     */
     public Integer getOrdinalPosition() {
         return ordinalPosition;
     }
 
-    public void setOrdinalPosition(final Integer ordinalPosition) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
+     *
+     * @param ordinalPosition the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
+     */
+    void setOrdinalPosition(final Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
     }
 
     // ------------------------------------------------------------------------------------------------------ isNullable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     */
     public String getIsNullable() {
         return isNullable;
     }
 
-    public void setIsNullable(final String isNullable) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     *
+     * @param isNullable the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     */
+    void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }
 
     // ---------------------------------------------------------------------------------------------------- specificName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     */
     public String getSpecificName() {
         return specificName;
     }
 
-    public void setSpecificName(final String specificName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     *
+     * @param specificName the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     */
+    void setSpecificName(final String specificName) {
         this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_NAME)
     private String functionName;
 
@@ -294,51 +637,74 @@ public class FunctionColumn
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel("COLUMN_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_TYPE)
     private Integer columnType;
 
-    @_ColumnLabel("DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @_ColumnLabel("TYPE_NAME")
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("PRECISION")
+    @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
-    @_ColumnLabel("LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_LENGTH)
     private Integer length;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("SCALE")
+    @_ColumnLabel(COLUMN_LABEL_SCALE)
     private Integer scale;
 
-    @_ColumnLabel("RADIX")
+    @_ColumnLabel(COLUMN_LABEL_RADIX)
     private Integer radix;
 
-    @_ColumnLabel("NULLABLE")
+    @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @_ColumnLabel("REMARKS")
+    @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("CHAR_OCTET_LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
-    @PositiveOrZero
-    @_ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 
-    @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_NO_OR_EMPTY)
-    @_ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
     // https://github.com/microsoft/mssql-jdbc/issues/849
-    @_ColumnLabel("SPECIFIC_NAME")
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the function reference identified by {@value #COLUMN_LABEL_FUNCTION_CAT},
+     * {@value #COLUMN_LABEL_FUNCTION_SCHEM}, and {@value #COLUMN_LABEL_FUNCTION_NAME}.
+     *
+     * @return the function reference identified by this function-column row.
+     */
+    Function getFunctionRef() {
+        final var function = new Function();
+        function.setFunctionCat(functionCat);
+        function.setFunctionSchem(functionSchem);
+        function.setFunctionName(functionName);
+        function.setSpecificName(specificName);
+        return function;
+    }
 }

@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,55 +20,137 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding results of the
  * {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getFunctionColumns(String, String, String, String)
+ * @see DatabaseMetaData#getProcedures(String, String, String)
+ * @see Context#getProcedures(String, String, String)
  * @see ProcedureColumn
  */
-@EqualsAndHashCode(callSuper = true)
+@_ParentOf(ProcedureColumn.class)
+@_ChildOf(Schema.class)
+@_ChildOf(Catalog.class)
+@_ChildOfNone
+@XmlRootElement(name = "procedure")
+@XmlType(name = "procedure")
 public class Procedure
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = -6262056388403934829L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Procedure> comparing(final Comparator<? super String> comparator) {
-        return Comparator.comparing(Procedure::getProcedureCat, comparator)
-                .thenComparing(Procedure::getProcedureSchem, comparator)
-                .thenComparing(Procedure::getProcedureName, comparator)
-                .thenComparing(Procedure::getSpecificName, comparator);
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getProcedures(String, String, String)}, placing {@code null} values as the
+     * specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getProcedures(String, String, String)}.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
+     */
+    static Comparator<Procedure> comparingInJdbcOrder(final Context context,
+                                                      final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        return Comparator
+                .<Procedure, String>comparing(Procedure::getProcedureCat, s)
+                .thenComparing(Procedure::getProcedureSchem, s)
+                .thenComparing(Procedure::getProcedureName, s)
+                .thenComparing(Procedure::getSpecificName, s);
     }
 
-    static Comparator<Procedure> comparing(final Context context, final Comparator<? super String> comparator)
-            throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
-    }
+    // --------------------------------------------------------------------------------------------------- PROCEDURE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_CAT = "PROCEDURE_CAT";
+
+    // ------------------------------------------------------------------------------------------------- PROCEDURE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
+
+    // -------------------------------------------------------------------------------------------------- PROCEDURE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_NAME = "PROCEDURE_NAME";
+
+    // --------------------------------------------------------------------------------------------------------- REMARKS
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
 
     // -------------------------------------------------------------------------------------------------- PROCEDURE_TYPE
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_PROCEDURE_TYPE = "PROCEDURE_TYPE";
 
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#procedureResultUnknown}({@value DatabaseMetaData#procedureResultUnknown}) for the
+     * {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     */
     public static final int COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_RESULT_UNKNOWN =
             DatabaseMetaData.procedureResultUnknown;
 
+    /**
+     * A column value of {@link DatabaseMetaData#procedureNoResult}({@value DatabaseMetaData#procedureNoResult}) for the
+     * {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     */
     public static final int COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_NO_RESULT = DatabaseMetaData.procedureNoResult;
 
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#procedureReturnsResult}({@value DatabaseMetaData#procedureReturnsResult}) for the
+     * {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     */
     public static final int COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_RETURNS_RESULT =
             DatabaseMetaData.procedureReturnsResult;
+
+    static final List<Integer> COLUMN_VALUES_PROCEDURE_TYPE = List.of(
+            COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_RESULT_UNKNOWN, // 0
+            COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_NO_RESULT,      // 1
+            COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_RETURNS_RESULT  // 2
+    );
 
     // --------------------------------------------------------------------------------------------------- SPECIFIC_NAME
 
     /**
-     * A colum label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
@@ -85,6 +167,11 @@ public class Procedure
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -98,83 +185,216 @@ public class Procedure
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
+     */
     @Nullable
     public String getProcedureCat() {
         return procedureCat;
     }
 
-    protected void setProcedureCat(@Nullable final String procedureCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
+     *
+     * @param procedureCat the value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
+     */
+    void setProcedureCat(@Nullable final String procedureCat) {
         this.procedureCat = procedureCat;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getProcedureCatForMetadataLookup() {
+        return procedureCat == null ? "" : procedureCat;
+    }
+
     // -------------------------------------------------------------------------------------------------- procedureSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
+     */
     @Nullable
     public String getProcedureSchem() {
         return procedureSchem;
     }
 
-    protected void setProcedureSchem(@Nullable final String procedureSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
+     *
+     * @param procedureSchem the value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
+     */
+    void setProcedureSchem(@Nullable final String procedureSchem) {
         this.procedureSchem = procedureSchem;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column, with {@code null} normalized
+     * to an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getProcedureSchemForMetadataLookup() {
+        return procedureSchem == null ? "" : procedureSchem;
+    }
+
     // --------------------------------------------------------------------------------------------------- procedureName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PROCEDURE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PROCEDURE_NAME} column.
+     */
     public String getProcedureName() {
         return procedureName;
     }
 
-    protected void setProcedureName(final String procedureName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PROCEDURE_NAME} column.
+     *
+     * @param procedureName the value of {@value #COLUMN_LABEL_PROCEDURE_NAME} column.
+     */
+    void setProcedureName(final String procedureName) {
         this.procedureName = procedureName;
     }
 
     // ---------------------------------------------------------------------------------------------------------- remark
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     public String getRemarks() {
         return remarks;
     }
 
-    protected void setRemarks(final String remarks) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
     // --------------------------------------------------------------------------------------------------- procedureType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     */
     public Integer getProcedureType() {
         return procedureType;
     }
 
-    protected void setProcedureType(final Integer procedureType) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     *
+     * @param procedureType the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     */
+    void setProcedureType(final Integer procedureType) {
         this.procedureType = procedureType;
     }
 
     // ---------------------------------------------------------------------------------------------------- specificName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     */
     public String getSpecificName() {
         return specificName;
     }
 
-    protected void setSpecificName(final String specificName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     *
+     * @param specificName the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     */
+    void setSpecificName(final String specificName) {
         this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("PROCEDURE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_CAT)
     private String procedureCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("PROCEDURE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_SCHEM)
     private String procedureSchem;
 
-    @_ColumnLabel("PROCEDURE_NAME")
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_NAME)
     private String procedureName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel("REMARKS")
+    @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-    @_ColumnLabel("PROCEDURE_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_TYPE)
     private Integer procedureType;
 
     // https://github.com/microsoft/mssql-jdbc/issues/2320
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the catalog reference identified by {@value #COLUMN_LABEL_PROCEDURE_CAT}.
+     *
+     * @return the catalog reference identified by this procedure; {@code null} when
+     * {@value #COLUMN_LABEL_PROCEDURE_CAT} is {@code null}.
+     */
+    @Nullable
+    Catalog getCatalogRef() {
+        if (procedureCat == null) {
+            return null;
+        }
+        final var catalog = new Catalog();
+        catalog.setTableCat(procedureCat);
+        return catalog;
+    }
+
+    /**
+     * Returns the schema reference identified by {@value #COLUMN_LABEL_PROCEDURE_CAT} and
+     * {@value #COLUMN_LABEL_PROCEDURE_SCHEM}.
+     *
+     * @return the schema reference identified by this procedure; {@code null} when
+     * {@value #COLUMN_LABEL_PROCEDURE_SCHEM} is {@code null}.
+     */
+    @Nullable
+    Schema getSchemaRef() {
+        if (procedureSchem == null) {
+            return null;
+        }
+        final var schema = new Schema();
+        schema.setTableCatalog(procedureCat);
+        schema.setTableSchem(procedureSchem);
+        return schema;
+    }
 }

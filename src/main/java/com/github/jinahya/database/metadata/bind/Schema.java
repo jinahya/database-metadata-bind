@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,72 +20,80 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getSchemas(String, String)
  * @see Context#getSchemas(String, String)
  */
-@_ChildOf(Catalog.class)
 @_ParentOf(Table.class)
+@_ParentOf(Procedure.class)
+@_ParentOf(Function.class)
+@_ParentOf(UDT.class)
+@_ChildOf(Catalog.class)
+@_ChildOfNone
+@XmlRootElement(name = "schema")
+@XmlType(name = "schema")
 public class Schema
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 7457236468401244963L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Schema> comparing(final Comparator<? super String> comparator) {
-        return Comparator
-                .comparing(Schema::getTableCatalog, comparator)
-                .thenComparing(Schema::getTableSchem, comparator);
-    }
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
-    static Comparator<Schema> comparing(final Context context, final Comparator<? super String> comparator)
+    /**
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getSchemas(String, String)}, placing {@code null} values as the specified
+     * context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getSchemas(String, String)}.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
+     */
+    static Comparator<Schema> comparingInJdbcOrder(final Context context,
+                                                   final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        return Comparator
+                .<Schema, String>comparing(Schema::getTableCatalog, s)
+                .thenComparing(Schema::getTableSchem, s);
     }
+    // The results are ordered by TABLE_CATALOG and TABLE_SCHEM.
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- TABLE_CATALOG
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
-
-    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
-    static Schema of(final String tableCatalog, final String tableSchem) {
-        final var instance = new Schema();
-        instance.setTableCatalog(tableCatalog);
-        instance.setTableSchem(tableSchem);
-        return instance;
-    }
-
-    static Schema of(final Catalog tableCatalog, final String tableSchem) {
-        return of(
-                Optional.ofNullable(tableCatalog)
-                        .map(Catalog::getTableCat)
-                        .orElse(null),
-                tableSchem
-        );
-    }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
@@ -101,6 +109,11 @@ public class Schema
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -109,82 +122,97 @@ public class Schema
                '}';
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (Schema) obj;
-        return Objects.equals(tableSchem, that.tableSchem) &&
-               Objects.equals(tableCatalog, that.tableCatalog);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableSchem, tableCatalog);
-    }
-
     // ------------------------------------------------------------------------------------------------------ tableSchem
-    @Nonnull
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     public String getTableSchem() {
         return tableSchem;
     }
 
-    public void setTableSchem(@Nonnull final String tableSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTableSchemForMetadataLookup() {
+        return tableSchem == null ? "" : tableSchem;
+    }
+
     // ---------------------------------------------------------------------------------------------------- tableCatalog
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CATALOG} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CATALOG} column.
+     */
     @Nullable
     public String getTableCatalog() {
         return tableCatalog;
     }
 
-    protected void setTableCatalog(@Nullable final String tableCatalog) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CATALOG} column.
+     *
+     * @param tableCatalog the value of {@value #COLUMN_LABEL_TABLE_CATALOG} column.
+     */
+    void setTableCatalog(@Nullable final String tableCatalog) {
         this.tableCatalog = tableCatalog;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CATALOG} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CATALOG} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTableCatalogForMetadataLookup() {
+        return tableCatalog == null ? "" : tableCatalog;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
-    @Nonnull
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @SuppressWarnings({
-            "java:S116" // Field names should comply with a naming convention
-    })
-    private transient Catalog tableCatalog_;
 
-    @SuppressWarnings({
-            "java:S100" // Method names should comply with a naming convention
-    })
-    Catalog getTableCatalog_() {
-        if (tableCatalog_ == null) {
-            tableCatalog_ = Catalog.of(tableCatalog);
+    /**
+     * Returns the catalog reference identified by {@value #COLUMN_LABEL_TABLE_CATALOG}.
+     *
+     * @return the catalog reference identified by this schema; {@code null} when {@value #COLUMN_LABEL_TABLE_CATALOG}
+     * is {@code null}.
+     */
+    @Nullable
+    Catalog getCatalogRef() {
+        if (tableCatalog == null) {
+            return null;
         }
-        return tableCatalog_;
-    }
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    void setTableCatalog_(final Catalog tableCatalog_) {
-        this.tableCatalog_ = tableCatalog_;
-        setTableCatalog(
-                Optional.ofNullable(this.tableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
+        final var catalog = new Catalog();
+        catalog.setTableCat(tableCatalog);
+        return catalog;
     }
 }

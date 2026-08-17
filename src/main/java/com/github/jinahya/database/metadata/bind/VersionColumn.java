@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,32 +20,125 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
+import java.util.List;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getVersionColumns(String, String, String)
  * @see Context#getVersionColumns(String, String, String)
+ * @see <a
+ * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html#getVersionColumns(java.lang.String,java.lang.String,java.lang.String)">DatabaseMetaData#getVersionColumns(catalog,
+ * schema, table)</a>
  */
 @_ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
+@XmlRootElement(name = "versionColumn")
+@XmlType(name = "versionColumn")
 public class VersionColumn
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 3587959398829593292L;
 
     // ----------------------------------------------------------------------------------------------------------- SCOPE
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_SCOPE = "SCOPE";
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- DATA_TYPE
+
+    /**
+     * A column label of {@value}.
+     *
+     * @see java.sql.Types
+     */
+    public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
+
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // ----------------------------------------------------------------------------------------------------- COLUMN_SIZE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_COLUMN_SIZE = "COLUMN_SIZE";
+
+    // --------------------------------------------------------------------------------------------------- BUFFER_LENGTH
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_BUFFER_LENGTH = "BUFFER_LENGTH";
+
+    // -------------------------------------------------------------------------------------------------- DECIMAL_DIGITS
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_DECIMAL_DIGITS = "DECIMAL_DIGITS";
+
+    // --------------------------------------------------------------------------------------------------- PSEUDO_COLUMN
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
+
+    /**
+     * A column value of {@link DatabaseMetaData#versionColumnUnknown}({@value DatabaseMetaData#versionColumnUnknown})
+     * for the {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     */
+    public static final int COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_UNKNOWN =
+            DatabaseMetaData.versionColumnUnknown;   // 0
+
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#versionColumnNotPseudo}({@value DatabaseMetaData#versionColumnNotPseudo}) for the
+     * {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     */
+    public static final int COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_NOT_PSEUDO =
+            DatabaseMetaData.versionColumnNotPseudo; // 1
+
+    /**
+     * A column value of {@link DatabaseMetaData#versionColumnPseudo}({@value DatabaseMetaData#versionColumnPseudo}) for
+     * the {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     */
+    public static final int COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_PSEUDO =
+            DatabaseMetaData.versionColumnPseudo;    // 2
+
+    /**
+     * A list of values for the {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     */
+    static final List<Integer> COLUMN_VALUES_PSEUDO_COLUMN = List.of(
+            COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_UNKNOWN,    // 0
+            COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_NOT_PSEUDO, // 1
+            COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_PSEUDO      // 2
+    );
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
@@ -54,12 +147,17 @@ public class VersionColumn
     /**
      * Creates a new instance.
      */
-    VersionColumn() {
+    protected VersionColumn() {
         super();
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -74,82 +172,220 @@ public class VersionColumn
                '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+    @AssertTrue
 
     /**
-     * Returns the value of {@value COLUMN_LABEL_SCOPE} column.
+     * Asserts that the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column, when present, is one of the values defined
+     * for the column.
      *
-     * @return the value of {@value COLUMN_LABEL_SCOPE} column.
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
      */
+    protected boolean isPseudoColumnValid() {
+        if (pseudoColumn == null) {
+            return true;
+        }
+        return COLUMN_VALUES_PSEUDO_COLUMN.contains(pseudoColumn);
+    }
+
+    // ----------------------------------------------------------------------------------------------------------- scope
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SCOPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SCOPE} column.
+     */
+    @Nullable
     public Integer getScope() {
         return scope;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SCOPE} column.
+     *
+     * @param scope the value of {@value #COLUMN_LABEL_SCOPE} column.
+     */
+    void setScope(final Integer scope) {
+        this.scope = scope;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     public String getColumnName() {
         return columnName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
+    void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- dataType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     * @see java.sql.Types
+     */
     public Integer getDataType() {
         return dataType;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
+    void setDataType(final Integer dataType) {
+        this.dataType = dataType;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnSize
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
+     */
+    @Nullable
     public Integer getColumnSize() {
         return columnSize;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
+     *
+     * @param columnSize the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
+     */
+    void setColumnSize(final Integer columnSize) {
+        this.columnSize = columnSize;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- bufferLength
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_BUFFER_LENGTH} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_BUFFER_LENGTH} column.
+     */
     public Integer getBufferLength() {
         return bufferLength;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_BUFFER_LENGTH} column.
+     *
+     * @param bufferLength the value of {@value #COLUMN_LABEL_BUFFER_LENGTH} column.
+     */
+    void setBufferLength(final Integer bufferLength) {
+        this.bufferLength = bufferLength;
+    }
+
+    // --------------------------------------------------------------------------------------------------- decimalDigits
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
+     */
+    @Nullable
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
+     *
+     * @param decimalDigits the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
+     */
+    void setDecimalDigits(final Integer decimalDigits) {
+        this.decimalDigits = decimalDigits;
+    }
+
     // ---------------------------------------------------------------------------------------------------- pseudoColumn
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     */
     public Integer getPseudoColumn() {
         return pseudoColumn;
     }
 
-    public void setPseudoColumn(Integer pseudoColumn) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     *
+     * @param pseudoColumn the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     */
+    void setPseudoColumn(final Integer pseudoColumn) {
         this.pseudoColumn = pseudoColumn;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
+    @Nullable
     @_NotUsedBySpecification
-    @_ColumnLabel("SCOPE")
+    @_ColumnLabel(COLUMN_LABEL_SCOPE)
     private Integer scope;
 
-    @_ColumnLabel("COLUMN_NAME")
-
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @_ColumnLabel("DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @_ColumnLabel("TYPE_NAME")
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("COLUMN_SIZE")
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
-    @_ColumnLabel("BUFFER_LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_BUFFER_LENGTH)
     private Integer bufferLength;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("DECIMAL_DIGITS")
+    @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
 
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)

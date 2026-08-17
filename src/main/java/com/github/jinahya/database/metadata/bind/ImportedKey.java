@@ -20,9 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -31,24 +32,47 @@ import java.util.Comparator;
  * A class for binding results of the {@link DatabaseMetaData#getImportedKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getImportedKeys(String, String, String)
  * @see Context#getImportedKeys(String, String, String)
  * @see ExportedKey
  */
-
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@_ChildOf(Table.class)
+@XmlRootElement(name = "importedKey")
+@XmlType(name = "importedKey")
 public class ImportedKey
         extends PortedKey {
 
+    @Serial
     private static final long serialVersionUID = -1900794151555506751L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ImportedKey> comparing(final Comparator<? super String> comparator) {
-        return PortedKey.comparingPktable(comparator);
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)}, placing {@code null} values (of all
+     * keys) as the specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)}.
+     * @throws SQLException if a database access error occurs.
+     * @see PortedKey#comparingPk(Context, Comparator)
+     */
+    static Comparator<ImportedKey> comparingInJdbcOrder(final Context context,
+                                                        final Comparator<? super String> comparator)
+            throws SQLException {
+        return PortedKey.comparingPk(context, comparator);
     }
 
-    static Comparator<ImportedKey> comparing(final Context context, final Comparator<? super String> comparator)
-            throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    protected ImportedKey() {
+        super();
     }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
 }

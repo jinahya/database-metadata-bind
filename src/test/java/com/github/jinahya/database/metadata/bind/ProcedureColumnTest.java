@@ -29,12 +29,15 @@ class ProcedureColumnTest
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     ProcedureColumn newTypeInstance() {
         final ProcedureColumn instance = super.newTypeInstance();
-        instance.setProcedureName("");
+        instance.setProcedureName("PROCEDURE_NAME");
         instance.setColumnName("");
-        instance.setSpecificName("");
+        instance.setTypeName("VARCHAR");
+        instance.setSpecificName("PROCEDURE_SPECIFIC");
         return instance;
     }
 }

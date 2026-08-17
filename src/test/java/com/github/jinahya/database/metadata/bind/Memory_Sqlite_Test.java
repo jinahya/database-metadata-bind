@@ -23,7 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
@@ -39,6 +38,6 @@ class Memory_Sqlite_Test
 
     @Override
     protected Connection connect() throws SQLException {
-        return DriverManager.getConnection(CONNECTION_URL);
+        return __JavaSqlTestUtils.connection(CONNECTION_URL);
     }
 }

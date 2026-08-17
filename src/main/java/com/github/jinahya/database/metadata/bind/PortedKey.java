@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,19 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * An abstract class for binding results of the
@@ -36,147 +42,217 @@ import java.util.Optional;
  * @see ExportedKey
  * @see ImportedKey
  */
-@EqualsAndHashCode(callSuper = true)
+@XmlTransient
 abstract class PortedKey
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 6713872409315471232L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static <T extends PortedKey> Comparator<T> comparingPktable(final Comparator<? super String> comparator) {
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator ordering elements in the primary-key-table order documented by
+     * {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)} ({@code PKTABLE_CAT},
+     * {@code PKTABLE_SCHEM}, {@code PKTABLE_NAME}, {@code KEY_SEQ}), placing {@code null} values (of all keys) as the
+     * specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @param <T>        the type of {@link PortedKey} to compare.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)}.
+     * @throws SQLException if a database access error occurs.
+     */
+    static <T extends PortedKey> Comparator<T> comparingPk(final Context context,
+                                                           final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        final var i = ContextUtils.withDatabaseNullOrdering(
+                context, Comparator.<Integer>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<T, String>comparing(PortedKey::getPktableCat, comparator)
-                .thenComparing(PortedKey::getPktableSchem, comparator)
-                .thenComparing(PortedKey::getPktableName, comparator)
-                .thenComparing(PortedKey::getPkName, comparator)
-                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
+                .<T, String>comparing(PortedKey::getPktableCat, s)
+                .thenComparing(PortedKey::getPktableSchem, s)
+                .thenComparing(PortedKey::getPktableName, s)
+                .thenComparing(PortedKey::getKeySeq, i);
     }
 
-    static <T extends PortedKey> Comparator<T> comparingFktable(final Comparator<? super String> comparator) {
+    /**
+     * Returns a comparator ordering elements in the foreign-key-table order documented by
+     * {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)} ({@code FKTABLE_CAT},
+     * {@code FKTABLE_SCHEM}, {@code FKTABLE_NAME}, {@code KEY_SEQ}), placing {@code null} values (of all keys) as the
+     * specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @param <T>        the type of {@link PortedKey} to compare.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}.
+     * @throws SQLException if a database access error occurs.
+     */
+    static <T extends PortedKey> Comparator<T> comparingFk(final Context context,
+                                                           final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        final var i = ContextUtils.withDatabaseNullOrdering(
+                context, Comparator.<Integer>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<T, String>comparing(PortedKey::getFktableCat, comparator)
-                .thenComparing(PortedKey::getFktableSchem, comparator)
-                .thenComparing(PortedKey::getFktableName, comparator)
-                .thenComparing(PortedKey::getFkName, comparator)
-                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
+                .<T, String>comparing(PortedKey::getFktableCat, s)
+                .thenComparing(PortedKey::getFktableSchem, s)
+                .thenComparing(PortedKey::getFktableName, s)
+                .thenComparing(PortedKey::getKeySeq, i);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- PKTABLE_CAT
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_PKTABLE_CAT = "PKTABLE_CAT";
+    public static final String COLUMN_LABEL_PKTABLE_CAT = "PKTABLE_CAT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- PKTABLE_SCHEM
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_PKTABLE_SCHEM = "PKTABLE_SCHEM";
+    public static final String COLUMN_LABEL_PKTABLE_SCHEM = "PKTABLE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------- PKTABLE_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_PKTABLE_NAME = "PKTABLE_NAME";
+    public static final String COLUMN_LABEL_PKTABLE_NAME = "PKTABLE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- PKCOLUMN_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_PKCOLUMN_NAME = "PKCOLUMN_NAME";
+    public static final String COLUMN_LABEL_PKCOLUMN_NAME = "PKCOLUMN_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- FKTABLE_CAT
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_FKTABLE_CAT = "FKTABLE_CAT";
+    public static final String COLUMN_LABEL_FKTABLE_CAT = "FKTABLE_CAT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- FKTABLE_SCHEM
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_FKTABLE_SCHEM = "FKTABLE_SCHEM";
+    public static final String COLUMN_LABEL_FKTABLE_SCHEM = "FKTABLE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------- FKTABLE_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_FKTABLE_NAME = "FKTABLE_NAME";
+    public static final String COLUMN_LABEL_FKTABLE_NAME = "FKTABLE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- FKCOLUMN_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_FKCOLUMN_NAME = "FKCOLUMN_NAME";
+    public static final String COLUMN_LABEL_FKCOLUMN_NAME = "FKCOLUMN_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- KEY_SEQ
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_KEY_SEQ = "KEY_SEQ";
+    public static final String COLUMN_LABEL_KEY_SEQ = "KEY_SEQ";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- UPDATE_RULE
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
+    public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- DELETE_RULE
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_DELETE_RULE = "DELETE_RULE";
+    public static final String COLUMN_LABEL_DELETE_RULE = "DELETE_RULE";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- FK_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_FK_NAME = "FK_NAME";
+    public static final String COLUMN_LABEL_FK_NAME = "FK_NAME";
+
+    // --------------------------------------------------------------------------------------------------------- PK_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_PK_NAME = "PK_NAME";
+    public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- DEFERRABILITY
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
-    public static final String COLUMN_NAME_DEFERRABILITY = "DEFERRABILITY";
+    public static final String COLUMN_LABEL_DEFERRABILITY = "DEFERRABILITY";
 
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#importedKeyInitiallyDeferred}({@value DatabaseMetaData#importedKeyInitiallyDeferred}) for
+     * the {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     */
     public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_DEFERRED =
             DatabaseMetaData.importedKeyInitiallyDeferred;
 
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#importedKeyInitiallyImmediate}({@value DatabaseMetaData#importedKeyInitiallyImmediate})
+     * for the {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     */
     public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_IMMEDIATE =
             DatabaseMetaData.importedKeyInitiallyImmediate;
 
+    /**
+     * A column value of
+     * {@link DatabaseMetaData#importedKeyNotDeferrable}({@value DatabaseMetaData#importedKeyNotDeferrable}) for the
+     * {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     */
     public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_NOT_DEFERRABLE =
             DatabaseMetaData.importedKeyNotDeferrable;
+
+    static final List<Integer> COLUMN_VALUES_DEFERRABILITY = List.of(
+            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_DEFERRED,  // 5
+            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_IMMEDIATE, // 6
+            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_NOT_DEFERRABLE       // 7
+    );
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
     PortedKey() {
         super();
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -197,244 +273,445 @@ abstract class PortedKey
                '}';
     }
 
-    // ------------------------------------------------------------------------------------------------------ pktableCat
+    // ----------------------------------------------------------------------------------------------------- pktableCat
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
+     */
     @Nullable
     public String getPktableCat() {
         return pktableCat;
     }
 
-    protected void setPktableCat(@Nullable final String pktableCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
+     *
+     * @param pktableCat the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
+     */
+    void setPktableCat(final String pktableCat) {
         this.pktableCat = pktableCat;
     }
 
-    // ---------------------------------------------------------------------------------------------------- pktableSchem
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_PKTABLE_CAT} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getPktableCatForMetadataLookup() {
+        return pktableCat == null ? "" : pktableCat;
+    }
+
+    // --------------------------------------------------------------------------------------------------- pktableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
+     */
     @Nullable
     public String getPktableSchem() {
         return pktableSchem;
     }
 
-    protected void setPktableSchem(@Nullable final String pktableSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
+     *
+     * @param pktableSchem the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
+     */
+    void setPktableSchem(final String pktableSchem) {
         this.pktableSchem = pktableSchem;
     }
 
-    // ----------------------------------------------------------------------------------------------------- pktableName
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getPktableSchemForMetadataLookup() {
+        return pktableSchem == null ? "" : pktableSchem;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- pktableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
+     */
     public String getPktableName() {
         return pktableName;
     }
 
-    protected void setPktableName(final String pktableName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
+     *
+     * @param pktableName the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
+     */
+    void setPktableName(final String pktableName) {
         this.pktableName = pktableName;
     }
 
-    // ---------------------------------------------------------------------------------------------------- pkcolumnName
+    // --------------------------------------------------------------------------------------------------- pkcolumnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
+     */
     public String getPkcolumnName() {
         return pkcolumnName;
     }
 
-    protected void setPkcolumnName(final String pkcolumnName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
+     *
+     * @param pkcolumnName the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
+     */
+    void setPkcolumnName(final String pkcolumnName) {
         this.pkcolumnName = pkcolumnName;
     }
 
-    // ------------------------------------------------------------------------------------------------------ fktableCat
+    // ----------------------------------------------------------------------------------------------------- fktableCat
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
+     */
     @Nullable
     public String getFktableCat() {
         return fktableCat;
     }
 
-    protected void setFktableCat(@Nullable final String fktableCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
+     *
+     * @param fktableCat the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
+     */
+    void setFktableCat(final String fktableCat) {
         this.fktableCat = fktableCat;
     }
 
-    // ---------------------------------------------------------------------------------------------------- fktableSchem
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_FKTABLE_CAT} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getFktableCatForMetadataLookup() {
+        return fktableCat == null ? "" : fktableCat;
+    }
+
+    // --------------------------------------------------------------------------------------------------- fktableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
+     */
     @Nullable
     public String getFktableSchem() {
         return fktableSchem;
     }
 
-    protected void setFktableSchem(@Nullable final String fktableSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
+     *
+     * @param fktableSchem the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
+     */
+    void setFktableSchem(final String fktableSchem) {
         this.fktableSchem = fktableSchem;
     }
 
-    // ----------------------------------------------------------------------------------------------------- fktableName
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getFktableSchemForMetadataLookup() {
+        return fktableSchem == null ? "" : fktableSchem;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- fktableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
+     */
     public String getFktableName() {
         return fktableName;
     }
 
-    protected void setFktableName(final String fktableName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
+     *
+     * @param fktableName the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
+     */
+    void setFktableName(final String fktableName) {
         this.fktableName = fktableName;
     }
 
-    // ---------------------------------------------------------------------------------------------------- fkcolumnName
+    // --------------------------------------------------------------------------------------------------- fkcolumnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
+     */
     public String getFkcolumnName() {
         return fkcolumnName;
     }
 
-    protected void setFkcolumnName(final String fkcolumnName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
+     *
+     * @param fkcolumnName the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
+     */
+    void setFkcolumnName(final String fkcolumnName) {
         this.fkcolumnName = fkcolumnName;
     }
 
     // ---------------------------------------------------------------------------------------------------------- keySeq
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     */
     public Integer getKeySeq() {
         return keySeq;
     }
 
-    protected void setKeySeq(final Integer keySeq) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     *
+     * @param keySeq the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     */
+    void setKeySeq(final Integer keySeq) {
         this.keySeq = keySeq;
     }
 
     // ------------------------------------------------------------------------------------------------------ updateRule
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     */
+    public Integer getUpdateRule() {
+        return updateRule;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     *
+     * @param updateRule the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     */
+    void setUpdateRule(final Integer updateRule) {
+        this.updateRule = updateRule;
+    }
+
     // ------------------------------------------------------------------------------------------------------ deleteRule
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
+     */
+    public Integer getDeleteRule() {
+        return deleteRule;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
+     *
+     * @param deleteRule the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
+     */
+    void setDeleteRule(final Integer deleteRule) {
+        this.deleteRule = deleteRule;
+    }
 
     // ---------------------------------------------------------------------------------------------------------- fkName
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FK_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FK_NAME} column.
+     */
     @Nullable
     public String getFkName() {
         return fkName;
     }
 
-    public void setFkName(@Nullable final String fkName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FK_NAME} column.
+     *
+     * @param fkName the value of {@value #COLUMN_LABEL_FK_NAME} column.
+     */
+    void setFkName(final String fkName) {
         this.fkName = fkName;
     }
 
     // ---------------------------------------------------------------------------------------------------------- pkName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     */
     @Nullable
     public String getPkName() {
         return pkName;
     }
 
-    public void setPkName(@Nullable final String pkName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     *
+     * @param pkName the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     */
+    void setPkName(final String pkName) {
         this.pkName = pkName;
     }
 
     // --------------------------------------------------------------------------------------------------- deferrability
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
-    private String pktableCat;
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     */
+    public Integer getDeferrability() {
+        return deferrability;
+    }
 
-    @Nullable
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
-    private String pktableSchem;
-
-    @_ColumnLabel(COLUMN_NAME_PKTABLE_NAME)
-    private String pktableName;
-
-    @_ColumnLabel(COLUMN_NAME_PKCOLUMN_NAME)
-    private String pkcolumnName;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
-    private String fktableCat;
-
-    @Nullable
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
-    private String fktableSchem;
-
-    @_ColumnLabel(COLUMN_NAME_FKTABLE_NAME)
-    private String fktableName;
-
-    @_ColumnLabel(COLUMN_NAME_FKCOLUMN_NAME)
-    private String fkcolumnName;
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     *
+     * @param deferrability the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     */
+    void setDeferrability(final Integer deferrability) {
+        this.deferrability = deferrability;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel(COLUMN_NAME_KEY_SEQ)
-    private Integer keySeq;
+    @JsonbNillable
+    @XmlElement(nillable = true)
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_PKTABLE_CAT)
+    String pktableCat;
+
+    @JsonbNillable
+    @XmlElement(nillable = true)
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_PKTABLE_SCHEM)
+    String pktableSchem;
+
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_PKTABLE_NAME)
+    String pktableName;
+
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_PKCOLUMN_NAME)
+    String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel(COLUMN_NAME_UPDATE_RULE)
+    @JsonbNillable
+    @XmlElement(nillable = true)
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_FKTABLE_CAT)
+    String fktableCat;
+
+    @JsonbNillable
+    @XmlElement(nillable = true)
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_FKTABLE_SCHEM)
+    String fktableSchem;
+
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_FKTABLE_NAME)
+    String fktableName;
+
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_FKCOLUMN_NAME)
+    String fkcolumnName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
+    Integer keySeq;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_ColumnLabel(COLUMN_LABEL_UPDATE_RULE)
     private Integer updateRule;
 
-    @_ColumnLabel(COLUMN_NAME_DELETE_RULE)
+    @_ColumnLabel(COLUMN_LABEL_DELETE_RULE)
     private Integer deleteRule;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel(COLUMN_NAME_FK_NAME)
+    @_ColumnLabel(COLUMN_LABEL_FK_NAME)
     private String fkName;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel(COLUMN_NAME_PK_NAME)
+    @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel(COLUMN_NAME_DEFERRABILITY)
+    @_ColumnLabel(COLUMN_LABEL_DEFERRABILITY)
     private Integer deferrability;
 
     // -----------------------------------------------------------------------------------------------------------------
-    private transient Column pkColumn_;
 
-    private transient Column fkColumn_;
-
-    Column getPkColumn_() {
-        if (pkColumn_ == null) {
-            pkColumn_ = Column.of(pktableCat, pktableSchem, pktableName, pkcolumnName);
-        }
-        return pkColumn_;
+    /**
+     * Returns the primary-key column reference identified by the {@code PKTABLE_*} columns and
+     * {@value #COLUMN_LABEL_PKCOLUMN_NAME}.
+     *
+     * @return the primary-key column reference identified by this key row.
+     */
+    Column getPkColumnRef() {
+        final var column = new Column();
+        column.setTableCat(pktableCat);
+        column.setTableSchem(pktableSchem);
+        column.setTableName(pktableName);
+        column.setColumnName(pkcolumnName);
+        return column;
     }
 
-    void setPkColumn_(final Column pkColumn_) {
-        this.pkColumn_ = pkColumn_;
-        setPktableCat(
-                Optional.ofNullable(this.pkColumn_)
-                        .map(Column::getTableCat)
-                        .orElse(null)
-        );
-        setPktableSchem(
-                Optional.ofNullable(pkColumn_)
-                        .map(Column::getTableSchem)
-                        .orElse(null)
-        );
-        setPktableName(
-                Optional.ofNullable(pkColumn_)
-                        .map(Column::getTableName)
-                        .orElse(null)
-        );
-        setPkcolumnName(
-                Optional.ofNullable(pkColumn_)
-                        .map(Column::getColumnName)
-                        .orElse(null)
-        );
-    }
-
-    Column getFkColumn_() {
-        if (fkColumn_ == null) {
-            fkColumn_ = Column.of(fktableCat, fktableSchem, fktableName, fkcolumnName);
-        }
-        return fkColumn_;
-    }
-
-    void setFkColumn_(final Column fkColumn_) {
-        this.fkColumn_ = fkColumn_;
-        setFktableCat(
-                Optional.ofNullable(this.fkColumn_)
-                        .map(Column::getTableCat)
-                        .orElse(null)
-        );
-        setFktableSchem(
-                Optional.ofNullable(fkColumn_)
-                        .map(Column::getTableSchem)
-                        .orElse(null)
-        );
-        setFktableName(
-                Optional.ofNullable(fkColumn_)
-                        .map(Column::getTableName)
-                        .orElse(null)
-        );
-        setFkcolumnName(
-                Optional.ofNullable(fkColumn_)
-                        .map(Column::getColumnName)
-                        .orElse(null)
-        );
+    /**
+     * Returns the foreign-key column reference identified by the {@code FKTABLE_*} columns and
+     * {@value #COLUMN_LABEL_FKCOLUMN_NAME}.
+     *
+     * @return the foreign-key column reference identified by this key row.
+     */
+    Column getFkColumnRef() {
+        final var column = new Column();
+        column.setTableCat(fktableCat);
+        column.setTableSchem(fktableSchem);
+        column.setTableName(fktableName);
+        column.setColumnName(fkcolumnName);
+        return column;
     }
 }

@@ -20,13 +20,21 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Optional;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -34,103 +42,166 @@ import java.util.Optional;
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getTables(String, String, String, String[])
  * @see Context#getTables(String, String, String, String[])
  */
-
-@_ChildOf(Catalog.class)
-@_ChildOf(Schema.class)
-@_ParentOf(Column.class)
-@_ParentOf(IndexInfo.class)
-@_ParentOf(PseudoColumn.class)
 @_ParentOf(VersionColumn.class)
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
+@_ParentOf(PseudoColumn.class)
+@_ParentOf(TablePrivilege.class)
+@_ParentOf(PrimaryKey.class)
+@_ParentOf(IndexInfo.class)
+@_ParentOf(ImportedKey.class)
+@_ParentOf(ExportedKey.class)
+@_ParentOf(CrossReference.class)
+@_ParentOf(SuperTable.class)
+@_ParentOf(Column.class)
+@_ParentOf(ColumnPrivilege.class)
+@_ParentOf(BestRowIdentifier.class)
+@_ChildOf(Schema.class)
+@_ChildOf(Catalog.class)
+@_ChildOfNone
+@XmlRootElement(name = "table")
+@XmlType(name = "table")
 public class Table
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 6590036695540141125L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Table> comparing(final Context context, final Comparator<? super String> comparator)
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
+
+    /**
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getTables(String, String, String, String[])}, placing {@code null} values as the
+     * specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getTables(String, String, String, String[])}.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
+     */
+    static Comparator<Table> comparingInJdbcOrder(final Context context,
+                                                  final Comparator<? super String> comparator)
             throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .comparing(Table::getTableType, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Table::getTableCat, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Table::getTableSchem, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Table::getTableName, comparator);
+                .<Table, String>comparing(Table::getTableType, s)
+                .thenComparing(Table::getTableCat, s)
+                .thenComparing(Table::getTableSchem, s)
+                .thenComparing(Table::getTableName, s);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
     // ------------------------------------------------------------------------------------------------------ TABLE_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     // ------------------------------------------------------------------------------------------------------ TABLE_TYPE
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
     // --------------------------------------------------------------------------------------------------------- REMARKS
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_REMARKS = "REMARKS";
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 
     // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
 
     // ------------------------------------------------------------------------------------------------------- TYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
     // --------------------------------------------------------------------------------------- SELF_REFERENCING_COL_NAME
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME";
 
     // -------------------------------------------------------------------------------------------------- REF_GENERATION
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_REF_GENERATION = "REF_GENERATION";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
     public static final String COLUMN_VALUE_REF_GENERATION_SYSTEM = "SYSTEM";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
     public static final String COLUMN_VALUE_REF_GENERATION_USER = "USER";
 
+    /**
+     * A column value of {@value} for the {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
     public static final String COLUMN_VALUE_REF_GENERATION_DERIVED = "DERIVED";
 
-    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
-    static Table of(final String tableCat, final String tableSchem, final String tableName) {
-        final var table = new Table();
-        table.setTableCat(tableCat);
-        table.setTableSchem(tableSchem);
-        table.setTableName(tableName);
-        return table;
-    }
+    static final List<String> COLUMN_VALUES_REF_GENERATION = List.of(
+            COLUMN_VALUE_REF_GENERATION_SYSTEM,
+            COLUMN_VALUE_REF_GENERATION_USER,
+            COLUMN_VALUE_REF_GENERATION_DERIVED
+    );
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
      */
-    public Table() {
+    protected Table() {
         super();
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -144,13 +215,8 @@ public class Table
                ",typeName=" + typeName +
                ",selfReferencingColName=" + selfReferencingColName +
                ",refGeneration=" + refGeneration +
-               ",tableCatalog_=" + tableCatalog_ +
-               ",tableSchema_=" + tableSchema_ +
-               ",typeCatalog_=" + typeCatalog_ +
-               ",typeSchema_=" + typeSchema_ +
                '}';
     }
-
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**
@@ -158,29 +224,63 @@ public class Table
      *
      * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-
+    @Nullable
     public String getTableCat() {
         return tableCat;
     }
 
-    public void setTableCat(final String tableCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    void setTableCat(@Nullable final String tableCat) {
         this.tableCat = tableCat;
     }
 
-    // ------------------------------------------------------------------------------------------------------- tableShem
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTableCatForMetadataLookup() {
+        return tableCat == null ? "" : tableCat;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
      * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      *
      * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-
+    @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
 
-    public void setTableSchem(final String tableSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    void setTableSchem(@Nullable final String tableSchem) {
         this.tableSchem = tableSchem;
+    }
+
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTableSchemForMetadataLookup() {
+        return tableSchem == null ? "" : tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
@@ -194,7 +294,12 @@ public class Table
         return tableName;
     }
 
-    public void setTableName(final String tableName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
@@ -209,193 +314,313 @@ public class Table
         return tableType;
     }
 
-    public void setTableType(final String tableType) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     *
+     * @param tableType the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     */
+    void setTableType(final String tableType) {
         this.tableType = tableType;
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
+    @Nullable
     public String getRemarks() {
         return remarks;
     }
 
-    public void setRemarks(final String remarks) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    @Nullable
     public String getTypeCat() {
         return typeCat;
     }
 
-    public void setTypeCat(final String typeCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TYPE_CAT} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTypeCatForMetadataLookup() {
+        return typeCat == null ? "" : typeCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------- typeSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    @Nullable
     public String getTypeSchem() {
         return typeSchem;
     }
 
-    public void setTypeSchem(final String typeSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TYPE_SCHEM} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTypeSchemForMetadataLookup() {
+        return typeSchem == null ? "" : typeSchem;
+    }
+
     // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    @Nullable
     public String getTypeName() {
         return typeName;
     }
 
-    public void setTypeName(String typeName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
     // --------------------------------------------------------------------------------------- selfReferencingColumnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
+     */
+    @Nullable
     public String getSelfReferencingColName() {
         return selfReferencingColName;
     }
 
-    public void setSelfReferencingColName(final String selfReferencingColName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
+     *
+     * @param selfReferencingColName the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
+     */
+    void setSelfReferencingColName(final String selfReferencingColName) {
         this.selfReferencingColName = selfReferencingColName;
     }
 
     // --------------------------------------------------------------------------------------------------- refGeneration
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
+    @Nullable
     public String getRefGeneration() {
         return refGeneration;
     }
 
-    public void setRefGeneration(final String refGeneration) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
+     *
+     * @param refGeneration the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
+    void setRefGeneration(final String refGeneration) {
         this.refGeneration = refGeneration;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SELF_REFERENCING_COL_NAME)
     private String selfReferencingColName;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REF_GENERATION)
     private String refGeneration;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Catalog tableCatalog_;
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Schema tableSchema_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Catalog typeCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Schema typeSchema_;
-
-    Catalog getTableCatalog_() {
-        if (tableCatalog_ == null) {
-            tableCatalog_ = Catalog.of(tableCat);
+    /**
+     * Returns the typed-table UDT reference identified by {@value #COLUMN_LABEL_TYPE_CAT},
+     * {@value #COLUMN_LABEL_TYPE_SCHEM}, and {@value #COLUMN_LABEL_TYPE_NAME}.
+     *
+     * @return the typed-table UDT reference identified by this table; {@code null} when
+     * {@value #COLUMN_LABEL_TYPE_NAME} is {@code null}.
+     */
+    @Nullable
+    UDT getTypeRef() {
+        if (typeName == null) {
+            return null;
         }
-        return tableCatalog_;
+        final var udt = new UDT();
+        udt.setTypeCat(typeCat);
+        udt.setTypeSchem(typeSchem);
+        udt.setTypeName(typeName);
+        return udt;
     }
 
-    void setTableCatalog_(final Catalog tableCatalog_) {
-        this.tableCatalog_ = tableCatalog_;
-        setTableCat(
-                Optional.ofNullable(this.tableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getTableSchema_() {
-        if (tableSchema_ == null) {
-            tableSchema_ = Schema.of(getTableCatalog_(), tableSchem);
+    /**
+     * Returns the catalog reference identified by {@value #COLUMN_LABEL_TABLE_CAT}.
+     *
+     * @return the catalog reference identified by this table; {@code null} when {@value #COLUMN_LABEL_TABLE_CAT} is
+     * {@code null}.
+     */
+    @Nullable
+    Catalog getCatalogRef() {
+        if (tableCat == null) {
+            return null;
         }
-        return tableSchema_;
+        final var catalog = new Catalog();
+        catalog.setTableCat(tableCat);
+        return catalog;
     }
 
-    void setTableSchema_(final Schema tableSchema_) {
-        this.tableSchema_ = tableSchema_;
-        setTableCatalog_(
-                Optional.ofNullable(this.tableSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
-    }
-
-    Catalog getTypeCatalog_() {
-        if (typeCatalog_ == null) {
-            typeCatalog_ = Catalog.of(typeCat);
+    /**
+     * Returns the schema reference identified by {@value #COLUMN_LABEL_TABLE_CAT} and
+     * {@value #COLUMN_LABEL_TABLE_SCHEM}.
+     *
+     * @return the schema reference identified by this table; {@code null} when {@value #COLUMN_LABEL_TABLE_SCHEM} is
+     * {@code null}.
+     */
+    @Nullable
+    Schema getSchemaRef() {
+        if (tableSchem == null) {
+            return null;
         }
-        return typeCatalog_;
+        final var schema = new Schema();
+        schema.setTableCatalog(tableCat);
+        schema.setTableSchem(tableSchem);
+        return schema;
     }
 
-    void setTypeCatalog_(final Catalog typeCatalog_) {
-        this.typeCatalog_ = typeCatalog_;
-        setTypeCat(
-                Optional.ofNullable(this.typeCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
+    // -----------------------------------------------------------------------------------------------------------------
+    @JsonbTransient
+    transient List<ImportedKey> importedKeys;
 
-    Schema getTypeSchema_() {
-        if (typeSchema_ == null) {
-            typeSchema_ = Schema.of(getTypeCatalog_(), typeSchem);
+    @JsonbTransient
+    @XmlTransient
+    List<ImportedKey> getImportedKeys() {
+        if (importedKeys == null) {
+            importedKeys = new ArrayList<>();
         }
-        return typeSchema_;
+        return importedKeys;
     }
 
-    void setTypeSchema_(final Schema typeSchema_) {
-        this.typeSchema_ = typeSchema_;
-        setTypeCatalog_(
-                Optional.ofNullable(this.typeSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
+    @JsonbTransient
+    transient List<ExportedKey> exportedKeys;
+
+    @JsonbTransient
+    @XmlTransient
+    List<ExportedKey> getExportedKeys() {
+        if (exportedKeys == null) {
+            exportedKeys = new ArrayList<>();
+        }
+        return exportedKeys;
     }
 }

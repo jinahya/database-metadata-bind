@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,20 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
-import lombok.EqualsAndHashCode;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -37,68 +42,137 @@ import java.util.Objects;
  * A class for binding results of the {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getColumns(String, String, String, String)
  * @see Context#getColumns(String, String, String, String)
  */
 @_ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
+@XmlRootElement(name = "column")
+@XmlType(name = "column")
 public class Column
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = -409653682729081530L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Column> comparingAsSpecified(final Comparator<? super String> comparator) {
-        return Comparator
-                .comparing(Column::getTableCat, comparator)
-                .thenComparing(Column::getTableSchem, comparator)
-                .thenComparing(Column::getTableName, comparator)
-                .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder());
-    }
-
-    static Comparator<Column> comparingAsSpecified(final Context context, final Comparator<? super String> comparator)
-            throws SQLException {
-        return comparingAsSpecified(ContextUtils.nullPrecedence(context, comparator));
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
     /**
-     * The column label of {@value}.
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getColumns(String, String, String, String)}, placing {@code null} values (of all
+     * keys) as the specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getColumns(String, String, String, String)}.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
+     */
+    static Comparator<Column> comparingInJdbcOrder(final Context context,
+                                                   final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        final var i = ContextUtils.withDatabaseNullOrdering(
+                context, Comparator.<Integer>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
+        return Comparator
+                .<Column, String>comparing(Column::getTableCat, s)
+                .thenComparing(Column::getTableSchem, s)
+                .thenComparing(Column::getTableName, s)
+                .thenComparing(Column::getOrdinalPosition, i);
+    }
+
+    // ------------------------------------------------------------------------------------------------------- TABLE_CAT
+
+    /**
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------ TABLE_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- DATA_TYPE
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
+
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // ----------------------------------------------------------------------------------------------------- COLUMN_SIZE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_COLUMN_SIZE = "COLUMN_SIZE";
+
+    // --------------------------------------------------------------------------------------------------- BUFFER_LENGTH
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_BUFFER_LENGTH = "BUFFER_LENGTH";
+
+    // -------------------------------------------------------------------------------------------------- DECIMAL_DIGITS
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_DECIMAL_DIGITS = "DECIMAL_DIGITS";
+
+    // -------------------------------------------------------------------------------------------------- NUM_PREC_RADIX
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_NUM_PREC_RADIX = "NUM_PREC_RADIX";
+
+    // -------------------------------------------------------------------------------------------------------- NULLABLE
+
+    /**
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public static final int COLUMN_VALUE_NULLABLE_COLUMN_NO_NULLS = DatabaseMetaData.columnNoNulls;
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE = DatabaseMetaData.columnNullable;
 
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE_UNKNOWN = DatabaseMetaData.columnNullableUnknown;
 
     static final List<Integer> COLUMN_VALUES_NULLABLE = List.of(
@@ -107,33 +181,176 @@ public class Column
             COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE_UNKNOWN // 2
     );
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- REMARKS
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
+
+    // ------------------------------------------------------------------------------------------------------ COLUMN_DEF
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_COLUMN_DEF = "COLUMN_DEF";
+
+    // --------------------------------------------------------------------------------------------------- SQL_DATA_TYPE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SQL_DATA_TYPE = "SQL_DATA_TYPE";
+
+    // ------------------------------------------------------------------------------------------------ SQL_DATETIME_SUB
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
+
+    // ----------------------------------------------------------------------------------------------- CHAR_OCTET_LENGTH
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
+
+    // ------------------------------------------------------------------------------------------------ ORDINAL_POSITION
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_ORDINAL_POSITION = "ORDINAL_POSITION";
+
+    // ----------------------------------------------------------------------------------------------------- IS_NULLABLE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     */
+    public static final String COLUMN_VALUE_IS_NULLABLE_YES = MetadataTypeConstants.YES;
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     */
+    public static final String COLUMN_VALUE_IS_NULLABLE_NO = MetadataTypeConstants.NO;
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     */
+    public static final String COLUMN_VALUE_IS_NULLABLE_UNKNOWN = MetadataTypeConstants.EMPTY;
+
+    static final List<String> COLUMN_VALUES_IS_NULLABLE = List.of(
+            COLUMN_VALUE_IS_NULLABLE_YES,
+            COLUMN_VALUE_IS_NULLABLE_NO,
+            COLUMN_VALUE_IS_NULLABLE_UNKNOWN
+    );
+
+    // --------------------------------------------------------------------------------------------------- SCOPE_CATALOG
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SCOPE_CATALOG = "SCOPE_CATALOG";
+
+    // ---------------------------------------------------------------------------------------------------- SCOPE_SCHEMA
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SCOPE_SCHEMA = "SCOPE_SCHEMA";
+
+    // ----------------------------------------------------------------------------------------------------- SCOPE_TABLE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SCOPE_TABLE = "SCOPE_TABLE";
+
+    // ------------------------------------------------------------------------------------------------ SOURCE_DATA_TYPE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
+
+    // ------------------------------------------------------------------------------------------------ IS_AUTOINCREMENT
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     */
+    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_YES = MetadataTypeConstants.YES;
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     */
+    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_NO = MetadataTypeConstants.NO;
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     */
+    public static final String COLUMN_VALUE_IS_AUTOINCREMENT_UNKNOWN = MetadataTypeConstants.EMPTY;
+
+    static final List<String> COLUMN_VALUES_IS_AUTOINCREMENT = List.of(
+            COLUMN_VALUE_IS_AUTOINCREMENT_YES,
+            COLUMN_VALUE_IS_AUTOINCREMENT_NO,
+            COLUMN_VALUE_IS_AUTOINCREMENT_UNKNOWN
+    );
+
+    // ---------------------------------------------------------------------------------------------- IS_GENERATEDCOLUMN
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
-    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
-    static Column of(final String tableCat, final String tableSchem, final String tableName, final String columnName) {
-        final var instance = new Column();
-        instance.setTableCat(tableCat);
-        instance.setTableSchem(tableSchem);
-        instance.setTableName(tableName);
-        instance.setColumnName(columnName);
-        return instance;
-    }
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     */
+    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_YES = MetadataTypeConstants.YES;
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     */
+    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_NO = MetadataTypeConstants.NO;
+
+    /**
+     * A value of {@value} for the {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     */
+    public static final String COLUMN_VALUE_IS_GENERATEDCOLUMN_UNKNOWN = MetadataTypeConstants.EMPTY;
+
+    static final List<String> COLUMN_VALUES_IS_GENERATEDCOLUMN = List.of(
+            COLUMN_VALUE_IS_GENERATEDCOLUMN_YES,
+            COLUMN_VALUE_IS_GENERATEDCOLUMN_NO,
+            COLUMN_VALUE_IS_GENERATEDCOLUMN_UNKNOWN
+    );
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
      */
-    public Column() {
+    protected Column() {
         super();
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -164,377 +381,831 @@ public class Column
                '}';
     }
 
-    // ------------------------------------------------------------------------------------------------- Bean-Validation
-    @AssertTrue(message = "nullable must be 1, 2, or 3")
-    private boolean isNullableValid() {
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_NULLABLE} column, when present, is one of the values defined for
+     * the column.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    protected boolean isNullableValid() {
         if (nullable == null) {
             return true;
         }
         return COLUMN_VALUES_NULLABLE.contains(nullable);
     }
 
-    @AssertTrue(message = "scopeCatalog must be null when dataType is not REF")
-    private boolean isScopeCatalogValid() {
-        if (scopeCatalog != null) {
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SCOPE_CATALOG} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is not {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    @AssertTrue
+    // Correct: null if DATA_TYPE isn't REF
+    protected boolean isScopeCatalogNullWhenDataTypeIsNotRef() {
+        if (dataType == null) {
             return true;
         }
-        return dataType == null || !Objects.equals(dataType, Types.REF);
+        if (dataType != java.sql.Types.REF) {
+            return scopeCatalog == null;
+        }
+        return true;
     }
 
-    @AssertTrue(message = "scopeSchema must be null when dataType is not REF")
-    private boolean isScopeSchemaValid() {
-        if (scopeSchema != null) {
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SCOPE_SCHEMA} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is not {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    @AssertTrue
+    // Correct: null if DATA_TYPE isn't REF
+    protected boolean isScopeSchemaNullWhenDataTypeIsNotRef() {
+        if (dataType == null) {
             return true;
         }
-        return dataType == null || !Objects.equals(dataType, Types.REF);
+        if (dataType != java.sql.Types.REF) {
+            return scopeSchema == null;
+        }
+        return true;
     }
 
-    @AssertTrue(message = "scopeTable must be null when dataType is not REF")
-    private boolean isScopeTableValid() {
-        if (scopeTable != null) {
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SCOPE_TABLE} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is not {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    @AssertTrue
+    // Correct: null if DATA_TYPE isn't REF
+    protected boolean isScopeTableNullWhenDataTypeIsNotRef() {
+        if (dataType == null) {
             return true;
         }
-        return dataType == null || !Objects.equals(dataType, Types.REF);
+        if (dataType != java.sql.Types.REF) {
+            return scopeTable == null;
+        }
+        return true;
     }
 
-    @AssertTrue(message = "sourceDataType must be null if DATA_TYPE is not DISTINCT or user-generated REF")
-    private boolean isSourceDataTypeValid() {
-        if (sourceDataType != null) {
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_SOURCE_DATA_TYPE} column is {@code null} when the value of
+     * {@value #COLUMN_LABEL_DATA_TYPE} column is neither {@link java.sql.Types#DISTINCT} nor
+     * {@link java.sql.Types#REF}.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    // null if DATA_TYPE isn't DISTINCT or user-generated REF
+    // Note: This validation uses Types.REF without distinguishing user-generated vs system-generated REF.
+    //       This is slightly more permissive than the spec, but JDBC doesn't provide an easy way to distinguish them.
+    protected boolean isSourceDataTypeNullWhenDataTypeIsNotDistinctOrUserGeneratedRef() {
+        if (dataType == null) {
             return true;
         }
-        return dataType == null ||
-               (!Objects.equals(dataType, Types.DISTINCT) ||
-                Objects.equals(dataType, Types.REF));
+        if (dataType != java.sql.Types.DISTINCT && dataType != java.sql.Types.REF) {
+            return sourceDataType == null;
+        }
+        return true;
+    }
+
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column, when present, is one of the values
+     * defined for the column.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    protected boolean isIsAutoincrementValid() {
+        if (isAutoincrement == null) {
+            return true;
+        }
+        return COLUMN_VALUES_IS_AUTOINCREMENT.contains(isAutoincrement);
+    }
+
+    /**
+     * Asserts that the value of {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column, when present, is one of the values
+     * defined for the column.
+     *
+     * @return {@code true} if the constraint holds; {@code false} otherwise.
+     */
+    protected boolean isIsGeneratedcolumnValid() {
+        if (isGeneratedcolumn == null) {
+            return true;
+        }
+        return COLUMN_VALUES_IS_GENERATEDCOLUMN.contains(isGeneratedcolumn);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     @Nullable
     public String getTableCat() {
         return tableCat;
     }
 
-    public void setTableCat(@Nullable final String tableCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    void setTableCat(@Nullable final String tableCat) {
         this.tableCat = tableCat;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTableCatForMetadataLookup() {
+        return tableCat == null ? "" : tableCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
 
-    public void setTableSchem(@Nullable final String tableSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    void setTableSchem(@Nullable final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
-    // ------------------------------------------------------------------------------------------------------ tableName
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTableSchemForMetadataLookup() {
+        return tableSchem == null ? "" : tableSchem;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     public String getTableName() {
         return tableName;
     }
 
-    public void setTableName(final String tableName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
     // ------------------------------------------------------------------------------------------------------ columnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     public String getColumnName() {
         return columnName;
     }
 
-    public void setColumnName(final String columnName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
     // -------------------------------------------------------------------------------------------------------- dataType
+
+    /**
+     * Returns the value of {@code DATA_TYPE} column.
+     *
+     * @return the value of {@code DATA_TYPE} column.
+     */
     public Integer getDataType() {
         return dataType;
     }
 
-    public void setDataType(final Integer dataType) {
+    /**
+     * Sets the value of {@code DATA_TYPE} column.
+     *
+     * @param dataType the value of {@code DATA_TYPE} column.
+     */
+    void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@code TYPE_NAME} column.
+     *
+     * @return the value of {@code TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
-    public void setTypeName(final String typeName) {
+    /**
+     * Sets the value of {@code TYPE_NAME} column.
+     *
+     * @param typeName the value of {@code TYPE_NAME} column.
+     */
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
     // ------------------------------------------------------------------------------------------------------ columnSize
+
+    /**
+     * Returns the value of {@code COLUMN_SIZE} column.
+     *
+     * @return the value of {@code COLUMN_SIZE} column.
+     */
     @Nullable
     public Integer getColumnSize() {
         return columnSize;
     }
 
-    public void setColumnSize(@Nullable final Integer columnSize) {
+    /**
+     * Sets the value of {@code COLUMN_SIZE} column.
+     *
+     * @param columnSize the value of {@code COLUMN_SIZE} column.
+     */
+    void setColumnSize(final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
-    // --------------------------------------------------------------------------------------------------- bufferLength
+    // ---------------------------------------------------------------------------------------------------- bufferLength
+
+    /**
+     * Returns the value of {@code BUFFER_LENGTH} column.
+     *
+     * @return the value of {@code BUFFER_LENGTH} column.
+     */
+    @Nullable
     public Integer getBufferLength() {
         return bufferLength;
     }
 
-    public void setBufferLength(final Integer bufferLength) {
+    /**
+     * Sets the value of {@code BUFFER_LENGTH} column.
+     *
+     * @param bufferLength the value of {@code BUFFER_LENGTH} column.
+     */
+    void setBufferLength(final Integer bufferLength) {
         this.bufferLength = bufferLength;
     }
 
     // --------------------------------------------------------------------------------------------------- decimalDigits
+
+    /**
+     * Returns the value of {@code DECIMAL_DIGITS} column.
+     *
+     * @return the value of {@code DECIMAL_DIGITS} column.
+     */
     @Nullable
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
-    public void setDecimalDigits(@Nullable final Integer decimalDigits) {
+    /**
+     * Sets the value of {@code DECIMAL_DIGITS} column.
+     *
+     * @param decimalDigits the value of {@code DECIMAL_DIGITS} column.
+     */
+    void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
-    // ------------------------------------------------------------------------------------------------------ numPrecRadix
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
+
+    /**
+     * Returns the value of {@code NUM_PREC_RADIX} column.
+     *
+     * @return the value of {@code NUM_PREC_RADIX} column.
+     */
     public Integer getNumPrecRadix() {
         return numPrecRadix;
     }
 
-    public void setNumPrecRadix(final Integer numPrecRadix) {
+    /**
+     * Sets the value of {@code NUM_PREC_RADIX} column.
+     *
+     * @param numPrecRadix the value of {@code NUM_PREC_RADIX} column.
+     */
+    void setNumPrecRadix(final Integer numPrecRadix) {
         this.numPrecRadix = numPrecRadix;
     }
 
     // -------------------------------------------------------------------------------------------------------- nullable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     * @see DatabaseMetaData#columnNoNulls
+     * @see DatabaseMetaData#columnNullable
+     * @see DatabaseMetaData#columnNullableUnknown
+     */
     public Integer getNullable() {
         return nullable;
     }
 
-    public void setNullable(final Integer nullable) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     *
+     * @param nullable the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     */
+    void setNullable(final Integer nullable) {
         this.nullable = nullable;
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@code REMARKS} column.
+     *
+     * @return the value of {@code REMARKS} column.
+     */
     @Nullable
     public String getRemarks() {
         return remarks;
     }
 
-    public void setRemarks(@Nullable final String remarks) {
+    /**
+     * Sets the value of {@code REMARKS} column.
+     *
+     * @param remarks the value of {@code REMARKS} column.
+     */
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
     // ------------------------------------------------------------------------------------------------------- columnDef
+
+    /**
+     * Returns the value of {@code COLUMN_DEF} column.
+     *
+     * @return the value of {@code COLUMN_DEF} column.
+     */
     @Nullable
     public String getColumnDef() {
         return columnDef;
     }
 
-    public void setColumnDef(@Nullable final String columnDef) {
+    /**
+     * Sets the value of {@code COLUMN_DEF} column.
+     *
+     * @param columnDef the value of {@code COLUMN_DEF} column.
+     */
+    void setColumnDef(final String columnDef) {
         this.columnDef = columnDef;
     }
 
     // ----------------------------------------------------------------------------------------------------- sqlDataType
+
+    /**
+     * Returns the value of {@code SQL_DATA_TYPE} column.
+     *
+     * @return the value of {@code SQL_DATA_TYPE} column.
+     */
+    @Nullable
     public Integer getSqlDataType() {
         return sqlDataType;
     }
 
-    public void setSqlDataType(final Integer sqlDataType) {
+    /**
+     * Sets the value of {@code SQL_DATA_TYPE} column.
+     *
+     * @param sqlDataType the value of {@code SQL_DATA_TYPE} column.
+     */
+    void setSqlDataType(final Integer sqlDataType) {
         this.sqlDataType = sqlDataType;
     }
 
     // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
+
+    /**
+     * Returns the value of {@code SQL_DATETIME_SUB} column.
+     *
+     * @return the value of {@code SQL_DATETIME_SUB} column.
+     */
+    @Nullable
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
 
-    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+    /**
+     * Sets the value of {@code SQL_DATETIME_SUB} column.
+     *
+     * @param sqlDatetimeSub the value of {@code SQL_DATETIME_SUB} column.
+     */
+    void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
     // ------------------------------------------------------------------------------------------------- charOctetLength
+
+    /**
+     * Returns the value of {@code CHAR_OCTET_LENGTH} column.
+     *
+     * @return the value of {@code CHAR_OCTET_LENGTH} column.
+     */
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
 
-    public void setCharOctetLength(final Integer charOctetLength) {
+    /**
+     * Sets the value of {@code CHAR_OCTET_LENGTH} column.
+     *
+     * @param charOctetLength the value of {@code CHAR_OCTET_LENGTH} column.
+     */
+    void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
     // ------------------------------------------------------------------------------------------------- ordinalPosition
+
+    /**
+     * Returns the value of {@code ORDINAL_POSITION} column.
+     *
+     * @return the value of {@code ORDINAL_POSITION} column.
+     */
     public Integer getOrdinalPosition() {
         return ordinalPosition;
     }
 
-    public void setOrdinalPosition(final Integer ordinalPosition) {
+    /**
+     * Sets the value of {@code ORDINAL_POSITION} column.
+     *
+     * @param ordinalPosition the value of {@code ORDINAL_POSITION} column.
+     */
+    void setOrdinalPosition(final Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
     }
 
     // ------------------------------------------------------------------------------------------------------ isNullable
+
+    /**
+     * Returns the value of {@code IS_NULLABLE} column.
+     *
+     * @return the value of {@code IS_NULLABLE} column.
+     */
     public String getIsNullable() {
         return isNullable;
     }
 
-    public void setIsNullable(final String isNullable) {
+    /**
+     * Sets the value of {@code IS_NULLABLE} column.
+     *
+     * @param isNullable the value of {@code IS_NULLABLE} column.
+     */
+    void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }
 
     // ---------------------------------------------------------------------------------------------------- scopeCatalog
+
+    /**
+     * Returns the value of {@code SCOPE_CATALOG} column.
+     *
+     * @return the value of {@code SCOPE_CATALOG} column.
+     */
     @Nullable
     public String getScopeCatalog() {
         return scopeCatalog;
     }
 
-    public void setScopeCatalog(@Nullable final String scopeCatalog) {
+    /**
+     * Sets the value of {@code SCOPE_CATALOG} column.
+     *
+     * @param scopeCatalog the value of {@code SCOPE_CATALOG} column.
+     */
+    void setScopeCatalog(final String scopeCatalog) {
         this.scopeCatalog = scopeCatalog;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_SCOPE_CATALOG} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_SCOPE_CATALOG} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getScopeCatalogForMetadataLookup() {
+        return scopeCatalog == null ? "" : scopeCatalog;
+    }
+
     // ----------------------------------------------------------------------------------------------------- scopeSchema
+
+    /**
+     * Returns the value of {@code SCOPE_SCHEMA} column.
+     *
+     * @return the value of {@code SCOPE_SCHEMA} column.
+     */
     @Nullable
     public String getScopeSchema() {
         return scopeSchema;
     }
 
-    public void setScopeSchema(@Nullable final String scopeSchema) {
+    /**
+     * Sets the value of {@code SCOPE_SCHEMA} column.
+     *
+     * @param scopeSchema the value of {@code SCOPE_SCHEMA} column.
+     */
+    void setScopeSchema(final String scopeSchema) {
         this.scopeSchema = scopeSchema;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_SCOPE_SCHEMA} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_SCOPE_SCHEMA} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getScopeSchemaForMetadataLookup() {
+        return scopeSchema == null ? "" : scopeSchema;
+    }
+
     // ------------------------------------------------------------------------------------------------------ scopeTable
+
+    /**
+     * Returns the value of {@code SCOPE_TABLE} column.
+     *
+     * @return the value of {@code SCOPE_TABLE} column.
+     */
     @Nullable
     public String getScopeTable() {
         return scopeTable;
     }
 
-    public void setScopeTable(@Nullable final String scopeTable) {
+    /**
+     * Sets the value of {@code SCOPE_TABLE} column.
+     *
+     * @param scopeTable the value of {@code SCOPE_TABLE} column.
+     */
+    void setScopeTable(final String scopeTable) {
         this.scopeTable = scopeTable;
     }
 
     // -------------------------------------------------------------------------------------------------- sourceDataType
+
+    /**
+     * Returns the value of {@code SOURCE_DATA_TYPE} column.
+     *
+     * @return the value of {@code SOURCE_DATA_TYPE} column.
+     */
     @Nullable
     public Integer getSourceDataType() {
         return sourceDataType;
     }
 
-    public void setSourceDataType(@Nullable final Integer sourceDataType) {
+    /**
+     * Sets the value of {@code SOURCE_DATA_TYPE} column.
+     *
+     * @param sourceDataType the value of {@code SOURCE_DATA_TYPE} column.
+     */
+    void setSourceDataType(final Integer sourceDataType) {
         this.sourceDataType = sourceDataType;
     }
 
     // ------------------------------------------------------------------------------------------------- isAutoincrement
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     */
     public String getIsAutoincrement() {
         return isAutoincrement;
     }
 
-    public void setIsAutoincrement(final String isAutoincrement) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     *
+     * @param isAutoincrement the value of {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
+     */
+    void setIsAutoincrement(final String isAutoincrement) {
         this.isAutoincrement = isAutoincrement;
     }
 
     // ----------------------------------------------------------------------------------------------- isGeneratedcolumn
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     */
     public String getIsGeneratedcolumn() {
         return isGeneratedcolumn;
     }
 
-    public void setIsGeneratedcolumn(final String isGeneratedcolumn) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     *
+     * @param isGeneratedcolumn the value of {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
+     */
+    void setIsGeneratedcolumn(final String isGeneratedcolumn) {
         this.isGeneratedcolumn = isGeneratedcolumn;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-
     private String tableSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-
     private String tableName;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
-
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel("DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @_ColumnLabel("TYPE_NAME")
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("COLUMN_SIZE")
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
+    @Nullable
     @_NotUsedBySpecification
-    @_ColumnLabel("BUFFER_LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_BUFFER_LENGTH)
     private Integer bufferLength;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("DECIMAL_DIGITS")
+    @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
 
-    @_ColumnLabel("NUM_PREC_RADIX")
+    @_ColumnLabel(COLUMN_LABEL_NUM_PREC_RADIX)
     private Integer numPrecRadix;
 
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("REMARKS")
+    @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("COLUMN_DEF")
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_DEF)
     private String columnDef;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
+    @Nullable
     @_NotUsedBySpecification
-    @_ColumnLabel("SQL_DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
+    @Nullable
     @_NotUsedBySpecification
-    @_ColumnLabel("SQL_DATETIME_SUB")
+    @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
-    @_ColumnLabel("CHAR_OCTET_LENGTH")
+    //    @Nullable
+//    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
     @Positive
-    @_ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 
-    @_ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("SCOPE_CATALOG")
+    @_ColumnLabel(COLUMN_LABEL_SCOPE_CATALOG)
     private String scopeCatalog;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("SCOPE_SCHEMA")
+    @_ColumnLabel(COLUMN_LABEL_SCOPE_SCHEMA)
     private String scopeSchema;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("SCOPE_TABLE")
+    @_ColumnLabel(COLUMN_LABEL_SCOPE_TABLE)
     private String scopeTable;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("SOURCE_DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_SOURCE_DATA_TYPE)
     private Integer sourceDataType;
 
-    @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_NO_OR_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_AUTOINCREMENT)
     private String isAutoincrement;
 
-    @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_NO_OR_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
+     * and {@value #COLUMN_LABEL_TABLE_NAME}.
+     *
+     * @return the table reference identified by this column.
+     */
+    Table getTableRef() {
+        final var table = new Table();
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
+        table.setTableName(tableName);
+        return table;
+    }
+
+    /**
+     * Returns the table reference identified by {@value #COLUMN_LABEL_SCOPE_CATALOG},
+     * {@value #COLUMN_LABEL_SCOPE_SCHEMA}, and {@value #COLUMN_LABEL_SCOPE_TABLE}.
+     *
+     * @return the REF scope table reference identified by this column.
+     */
+    @Nullable
+    Table getScopeTableRef() {
+        if (!Objects.equals(dataType, java.sql.Types.REF)) {
+            return null;
+        }
+        final var table = new Table();
+        table.setTableCat(scopeCatalog);
+        table.setTableSchem(scopeSchema);
+        table.setTableName(scopeTable);
+        return table;
+    }
 }

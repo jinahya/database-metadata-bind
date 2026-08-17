@@ -26,4 +26,12 @@ class TypeInfoTest
     TypeInfoTest() {
         super(TypeInfo.class);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    TypeInfo newTypeInstance() {
+        final TypeInfo instance = super.newTypeInstance();
+        instance.setTypeName("VARCHAR");
+        return instance;
+    }
 }

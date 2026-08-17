@@ -20,10 +20,44 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 class VersionColumnTest
         extends AbstractMetadataType_Test<VersionColumn> {
 
     VersionColumnTest() {
         super(VersionColumn.class);
+    }
+
+    @Override
+    VersionColumn newTypeInstance() {
+        final var instance = super.newTypeInstance();
+        instance.setColumnName("COLUMN_NAME");
+        instance.setTypeName("TYPE_NAME");
+        return instance;
+    }
+
+    // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+    // Note: these assert the (Bean-Validation-free) predicate logic ported from the 'jakarta' branch. This branch does
+    //       NOT depend on Jakarta Bean Validation; the predicates are plain methods, exercised here directly.
+
+    @Test
+    void isPseudoColumnValid_HoldsForKnownValuesAndNull() {
+        final var instance = newTypeInstance();
+        // null -> holds
+        instance.setPseudoColumn(null);
+        assertThat(instance.isPseudoColumnValid()).isTrue();
+        // known values -> hold
+        instance.setPseudoColumn(VersionColumn.COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_UNKNOWN);
+        assertThat(instance.isPseudoColumnValid()).isTrue();
+        instance.setPseudoColumn(VersionColumn.COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_NOT_PSEUDO);
+        assertThat(instance.isPseudoColumnValid()).isTrue();
+        instance.setPseudoColumn(VersionColumn.COLUMN_VALUE_PSEUDO_COLUMN_VERSION_COLUMN_PSEUDO);
+        assertThat(instance.isPseudoColumnValid()).isTrue();
+        // unknown value -> violated
+        instance.setPseudoColumn(Integer.MIN_VALUE);
+        assertThat(instance.isPseudoColumnValid()).isFalse();
     }
 }

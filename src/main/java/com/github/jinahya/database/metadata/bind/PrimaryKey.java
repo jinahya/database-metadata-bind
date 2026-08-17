@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2026 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,74 +20,99 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
+import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
  * @see Context#getPrimaryKeys(String, String, String)
  */
-@EqualsAndHashCode(callSuper = true)
+@_ChildOf(Table.class)
+@XmlRootElement(name = "primaryKey")
+@XmlType(name = "primaryKey")
 public class PrimaryKey
         extends AbstractMetadataType {
 
+    @Serial
     private static final long serialVersionUID = 3159826510060898330L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<PrimaryKey> comparing(final Comparator<? super String> comparator) {
-        return Comparator.comparing(PrimaryKey::getColumnName, comparator);
-    }
+    // ----------------------------------------------------------------------------------------------------- COMPARATORS
 
-    static Comparator<PrimaryKey> comparing(final Context context, final Comparator<? super String> comparator)
+    /**
+     * Returns a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getPrimaryKeys(String, String, String)}, placing {@code null} values as the
+     * specified context's database sorts them.
+     *
+     * @param context    a context whose metadata determines the {@code null} ordering.
+     * @param comparator a comparator for comparing (non-{@code null}) string values.
+     * @return a comparator ordering elements in the order documented by
+     * {@link java.sql.DatabaseMetaData#getPrimaryKeys(String, String, String)}.
+     * @throws SQLException if a database access error occurs.
+     * @see ContextUtils#withDatabaseNullOrdering(Context, Comparator, ContextConstants.SortDirection)
+     */
+    static Comparator<PrimaryKey> comparingInJdbcOrder(final Context context,
+                                                       final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        return Comparator.comparing(PrimaryKey::getColumnName, s);
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
 
     /**
-     * x The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
     // ------------------------------------------------------------------------------------------------------ TABLE_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
     // --------------------------------------------------------------------------------------------------------- KEY_SEQ
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_KEY_SEQ = "KEY_SEQ";
 
     // --------------------------------------------------------------------------------------------------------- PK_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
 
@@ -103,6 +128,12 @@ public class PrimaryKey
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a string representation of this object.
+     */
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -116,85 +147,200 @@ public class PrimaryKey
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     @Nullable
     public String getTableCat() {
         return tableCat;
     }
 
-    protected void setTableCat(@Nullable final String tableCat) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column, with {@code null} normalized to an
+     * empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTableCatForMetadataLookup() {
+        return tableCat == null ? "" : tableCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
 
-    protected void setTableSchem(@Nullable final String tableSchem) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
+    /**
+     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to
+     * an empty string.
+     *
+     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    @JsonbTransient
+    @XmlTransient
+    String getTableSchemForMetadataLookup() {
+        return tableSchem == null ? "" : tableSchem;
+    }
+
     // ------------------------------------------------------------------------------------------------------- tableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     public String getTableName() {
         return tableName;
     }
 
-    protected void setTableName(final String tableName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
     // ------------------------------------------------------------------------------------------------------ columnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     public String getColumnName() {
         return columnName;
     }
 
-    protected void setColumnName(final String columnName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
     // ---------------------------------------------------------------------------------------------------------- keySeq
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     */
     public Integer getKeySeq() {
         return keySeq;
     }
 
-    protected void setKeySeq(final Integer keySeq) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     *
+     * @param keySeq the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     */
+    void setKeySeq(final Integer keySeq) {
         this.keySeq = keySeq;
     }
 
     // ---------------------------------------------------------------------------------------------------------- pkName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     */
     @Nullable
     public String getPkName() {
         return pkName;
     }
 
-    protected void setPkName(@Nullable final String pkName) {
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     *
+     * @param pkName the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     */
+    void setPkName(final String pkName) {
         this.pkName = pkName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
     @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private Integer keySeq;
 
+    @JsonbNillable
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the column reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
+     * {@value #COLUMN_LABEL_TABLE_NAME}, and {@value #COLUMN_LABEL_COLUMN_NAME}.
+     *
+     * @return the column reference identified by this primary-key row.
+     */
+    Column getColumnRef() {
+        final var column = new Column();
+        column.setTableCat(tableCat);
+        column.setTableSchem(tableSchem);
+        column.setTableName(tableName);
+        column.setColumnName(columnName);
+        return column;
+    }
 }
