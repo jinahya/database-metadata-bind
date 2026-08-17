@@ -200,13 +200,6 @@
       <!--      <version>3.27.3</version>-->
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.duckdb</groupId>
-      <artifactId>duckdb_jdbc</artifactId>
-      <!-- https://central.sonatype.com/artifact/org.duckdb/duckdb_jdbc/versions -->
-      <version>1.5.4.0</version>
-      <scope>test</scope>
-    </dependency>
     <dependency><!-- Jakarta JSON-B implementation (jakarta.json.bind-api) -->
       <groupId>org.eclipse</groupId>
       <artifactId>yasson</artifactId>
