@@ -112,17 +112,50 @@ abstract class AbstractMetadataType_Test<T extends AbstractMetadataType>
         }
     }
 
+    /**
+     * Verifies that {@link Object#toString() toString()} renders exactly the {@link _ColumnLabel}-annotated fields,
+     * and nothing else.
+     * <p>
+     * {@link AbstractMetadataType#unknownColumns} is deliberately absent. Its values are whatever
+     * {@link java.sql.ResultSet#getObject(String)} returned, so interpolating them would call {@code toString()} on a
+     * driver-chosen object - a locator with no meaningful {@code toString()} contract, possibly already invalid, and
+     * possibly unbounded in size. {@link AbstractMetadataType#getUnknownColumns()} is the only access point.
+     */
     @Test
-    void toString_ContainsExactlyUnknownColumnsAndColumnLabeledFields_() {
+    void toString_ContainsExactlyColumnLabeledFields_() {
         final var actual = namesInToString(newTypeInstance().toString());
         assertThat(actual)
                 .as("field names in %s.toString()", typeClass.getSimpleName())
                 .containsExactlyElementsOf(namesExpectedInToString());
     }
 
+    /**
+     * Verifies that no unknown column reaches {@link Object#toString() toString()}, neither its label nor its value,
+     * and that a value whose {@code toString()} throws cannot make {@code toString()} throw.
+     */
+    @Test
+    void toString_ExcludesUnknownColumns_() {
+        final var instance = newTypeInstance();
+        instance.putUnknownColumn("UNKNOWN_COLUMN", "UNKNOWN_VALUE");
+        instance.putUnknownColumn("HOSTILE_COLUMN", new Object() {
+            @Override
+            public String toString() {
+                throw new UnsupportedOperationException("should never be invoked by toString()");
+            }
+        });
+        final var string = instance.toString();
+        assertThat(string)
+                .as("%s.toString() with unknown columns present", typeClass.getSimpleName())
+                .doesNotContain("unknownColumns")
+                .doesNotContain("UNKNOWN_COLUMN")
+                .doesNotContain("UNKNOWN_VALUE")
+                .doesNotContain("HOSTILE_COLUMN");
+        assertThat(namesInToString(string))
+                .containsExactlyElementsOf(namesExpectedInToString());
+    }
+
     private Set<String> namesExpectedInToString() {
         final var expected = new LinkedHashSet<String>();
-        expected.add("unknownColumns");
         for (Class<?> c = typeClass; c != null && c != AbstractMetadataType.class; c = c.getSuperclass()) {
             for (final var field : c.getDeclaredFields()) {
                 if (Modifier.isStatic(field.getModifiers())) {

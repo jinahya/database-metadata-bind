@@ -94,6 +94,11 @@ public interface MetadataType
      * <p>
      * Consequently, an instance restored by deserialization has no unknown columns; this method returns an empty map
      * rather than {@code null}.
+     * <p>
+     * For the same reason, unknown columns are omitted from {@link Object#toString() toString()}, which renders only
+     * the {@link _ColumnLabel}-annotated fields. This method is the only access point: rendering a value the driver
+     * chose would mean calling {@code toString()} on a locator that has no meaningful contract for it, that may no
+     * longer be valid, and that may hold an unbounded amount of text.
      *
      * @return an unmodifiable view of unknown columns and values.
      */

@@ -54,19 +54,8 @@ abstract class AbstractMetadataType
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Returns a string representation of this object.
-     *
-     * @return a string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "unknownColumns=" + unknownColumns +
-               '}';
-    }
+    // NOTE: no toString() here, deliberately. Subclasses render their own @_ColumnLabel-annotated fields, whose types
+    // this library controls; unknown columns are omitted. See the unknownColumns field Javadoc below.
 
     // -------------------------------------------------------------------------------------------------- unknownColumns
 
@@ -131,6 +120,14 @@ abstract class AbstractMetadataType
      * </ul>
      * The {@code @XmlTransient} / {@code @JsonbTransient} pair on {@link #getUnknownColumns()} covers accessor-based
      * configurations; those annotations are not consulted once binding is field-based.
+     * <p>
+     * These entries are excluded from {@link Object#toString() toString()} as well, for the same reason they are
+     * excluded from Java serialization: their runtime types are the driver's to choose. Interpolating them would
+     * invoke {@code toString()} on whatever {@link java.sql.ResultSet#getObject(String)} returned - a
+     * {@link java.sql.Blob}, {@link java.sql.Clob}, or {@link java.sql.SQLXML} locator has no meaningful
+     * {@code toString()} contract, may already be invalid once its result set is closed, and may render an unbounded
+     * amount of text. A diagnostic string must stay cheap and must not throw, so {@link #getUnknownColumns()} is the
+     * only way to reach these values.
      */
     @JsonbTransient
     transient Map<String, Object> unknownColumns;
