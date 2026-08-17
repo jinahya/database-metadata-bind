@@ -45,7 +45,7 @@ class Context_DirectMetadataMapping_Test {
                                                   FOREIGN KEY (PARENT_ID) REFERENCES DIRECT_PARENT (ID)
                                           )""");
             }
-            final var context = Context.newInstance(connection);
+            final var context = Context.from(connection);
             assertDirect("attributes", () -> context.getAttributes(null, null, "%", "%"),
                          c -> context.forEachAttribute(null, null, "%", "%", c));
             assertDirect("bestRowIdentifier", () -> context.getBestRowIdentifier(

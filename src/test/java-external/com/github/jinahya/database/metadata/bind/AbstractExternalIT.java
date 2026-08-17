@@ -69,7 +69,7 @@ public abstract class AbstractExternalIT {
 
     private void withContext(final CheckedConsumer<? super Context> action) throws Throwable {
         __JavaSqlTestUtils.applyConnection(url(), user(), password(), connection -> {
-            action.accept(Context.newInstance(connection));
+            action.accept(Context.from(connection));
             return null;
         });
     }

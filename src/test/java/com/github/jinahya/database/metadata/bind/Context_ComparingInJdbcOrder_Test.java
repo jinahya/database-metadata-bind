@@ -31,7 +31,7 @@ class Context_ComparingInJdbcOrder_Test {
                 Context_ComparingInJdbcOrder_Test_Utils.preparePortedKeyTables(statement);
             }
             Context_ComparingInJdbcOrder_Test_Utils.assertComparingInJdbcOrder(
-                    Context.newInstance(connection),
+                    Context.from(connection),
                     getClass().getSimpleName()
             );
         });

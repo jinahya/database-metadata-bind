@@ -27,6 +27,10 @@ import java.util.Optional;
 
 /**
  * The parent interface for binding database metadata types.
+ * <p>
+ * Implementations are {@link Serializable}, with one deliberate exclusion: the
+ * {@link #getUnknownColumns() unknown columns} of an instance are <em>not</em> part of its serialized form. See
+ * {@link #getUnknownColumns()} for why.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
@@ -68,6 +72,24 @@ public interface MetadataType
 
     /**
      * Returns an unmodifiable view of unknown columns and values.
+     * <p>
+     * An <em>unknown column</em> is a column present in the driver's result set for which this type declares no
+     * {@link _ColumnLabel}-annotated field, that is, a vendor extension beyond the columns the JDBC specification
+     * defines for the corresponding {@link java.sql.DatabaseMetaData} method. Values are exactly what
+     * {@link java.sql.ResultSet#getObject(String)} returned, so their runtime types are constrained only by the
+     * driver.
+     * <p>
+     * These entries are deliberately excluded from the serialized form of an instance, as they are from the XML and
+     * JSON bindings. {@link java.sql.ResultSet#getObject(String)} is permitted to return values that do not implement
+     * {@link Serializable} at all - {@link java.sql.Array}, {@link java.sql.Blob}, {@link java.sql.Clob},
+     * {@link java.sql.Ref}, {@link java.sql.RowId}, {@link java.sql.SQLXML}, and {@link java.sql.Struct} are each
+     * declared without it - and Java serialization aborts an entire object graph on the first such value rather than
+     * skipping the offending entry. Retaining unknown columns would therefore make serializing any metadata type
+     * succeed or fail depending on which driver produced it. Read whatever is needed from this map before
+     * serializing.
+     * <p>
+     * Consequently, an instance restored by deserialization has no unknown columns; this method returns an empty map
+     * rather than {@code null}.
      *
      * @return an unmodifiable view of unknown columns and values.
      */

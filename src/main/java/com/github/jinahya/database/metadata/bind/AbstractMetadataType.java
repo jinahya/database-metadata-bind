@@ -114,8 +114,14 @@ abstract class AbstractMetadataType
     /**
      * The map holding result-set columns, by label, that have no field of this type mapped to them.
      * <p>
-     * The exclusion of this field from both bindings is deliberately asymmetric:
+     * This field is excluded from every serialized form of an instance, by three different mechanisms:
      * <ul>
+     *   <li><strong>Java serialization:</strong> excluded by the {@code transient} modifier, deliberately. Values here
+     *       are whatever {@link java.sql.ResultSet#getObject(String)} returned and need not implement
+     *       {@link java.io.Serializable}; because Java serialization aborts the whole object graph on the first
+     *       non-serializable value instead of skipping it, retaining them would make serializing any metadata type
+     *       succeed or fail depending on which driver produced it. See
+     *       {@link MetadataType#getUnknownColumns()}.</li>
      *   <li><strong>XML (JAXB):</strong> excluded by the {@code transient} modifier alone. JAXB rejects a
      *       {@code transient} field that carries <em>any</em> JAXB annotation ("Transient field cannot have any JAXB
      *       annotations"), so {@link XmlTransient} <em>must not</em> be added here.</li>

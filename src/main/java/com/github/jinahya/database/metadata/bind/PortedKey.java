@@ -686,22 +686,6 @@ abstract class PortedKey
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Returns the primary-key table reference identified by {@value #COLUMN_LABEL_PKTABLE_CAT},
-     * {@value #COLUMN_LABEL_PKTABLE_SCHEM}, and {@value #COLUMN_LABEL_PKTABLE_NAME}.
-     *
-     * @return the primary-key table reference identified by this key row.
-     * @deprecated use {@link #getPkColumnRef()}'s {@link Column#getTableRef()}.
-     */
-    @Deprecated(since = "4.5.1", forRemoval = true)
-    Table getPkTableRef() {
-        final var table = new Table();
-        table.setTableCat(pktableCat);
-        table.setTableSchem(pktableSchem);
-        table.setTableName(pktableName);
-        return table;
-    }
-
-    /**
      * Returns the primary-key column reference identified by the {@code PKTABLE_*} columns and
      * {@value #COLUMN_LABEL_PKCOLUMN_NAME}.
      *
@@ -714,22 +698,6 @@ abstract class PortedKey
         column.setTableName(pktableName);
         column.setColumnName(pkcolumnName);
         return column;
-    }
-
-    /**
-     * Returns the foreign-key table reference identified by {@value #COLUMN_LABEL_FKTABLE_CAT},
-     * {@value #COLUMN_LABEL_FKTABLE_SCHEM}, and {@value #COLUMN_LABEL_FKTABLE_NAME}.
-     *
-     * @return the foreign-key table reference identified by this key row.
-     * @deprecated use {@link #getFkColumnRef()}'s {@link Column#getTableRef()}.
-     */
-    @Deprecated(since = "4.5.1", forRemoval = true)
-    Table getFkTableRef() {
-        final var table = new Table();
-        table.setTableCat(fktableCat);
-        table.setTableSchem(fktableSchem);
-        table.setTableName(fktableName);
-        return table;
     }
 
     /**

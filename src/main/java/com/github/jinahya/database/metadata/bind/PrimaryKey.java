@@ -330,22 +330,6 @@ public class PrimaryKey
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Returns the table reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
-     * and {@value #COLUMN_LABEL_TABLE_NAME}.
-     *
-     * @return the table reference identified by this primary-key row.
-     * @deprecated use {@link #getColumnRef()}'s {@link Column#getTableRef()}.
-     */
-    @Deprecated(since = "4.5.1", forRemoval = true)
-    Table getTableRef() {
-        final var table = new Table();
-        table.setTableCat(tableCat);
-        table.setTableSchem(tableSchem);
-        table.setTableName(tableName);
-        return table;
-    }
-
-    /**
      * Returns the column reference identified by {@value #COLUMN_LABEL_TABLE_CAT}, {@value #COLUMN_LABEL_TABLE_SCHEM},
      * {@value #COLUMN_LABEL_TABLE_NAME}, and {@value #COLUMN_LABEL_COLUMN_NAME}.
      *

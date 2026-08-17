@@ -61,7 +61,7 @@ abstract class TestContainers_$_IT {
 
     // --------------------------------------------------------------------------------------------------------- context
     <R> R applyContext(final CheckedFunction1<? super Context, ? extends R> function) throws Throwable {
-        return applyConnection(c -> function.apply(Context.newInstance(c)));
+        return applyConnection(c -> function.apply(Context.from(c)));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ abstract class TestContainers_$_IT {
     void test() throws Throwable {
         applyConnection(c -> {
             try {
-                final var context = Context.newInstance(c);
+                final var context = Context.from(c);
                 ContextMetadataWalkthrough.walk(context);
             } catch (final SQLException sqle) {
                 if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
@@ -106,7 +106,7 @@ abstract class TestContainers_$_IT {
             try (var statement = c.createStatement()) {
                 Context_ComparingInJdbcOrder_Test_Utils.preparePortedKeyTables(statement);
                 Context_ComparingInJdbcOrder_Test_Utils.assertComparingInJdbcOrder(
-                        Context.newInstance(c),
+                        Context.from(c),
                         getClass().getSimpleName()
                 );
             } catch (final SQLException sqle) {

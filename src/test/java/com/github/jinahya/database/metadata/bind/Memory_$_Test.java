@@ -52,7 +52,7 @@ abstract class Memory_$_Test {
     // --------------------------------------------------------------------------------------------------------- context
     <R> R applyContext(final CheckedFunction1<? super Context, ? extends R> function) throws Throwable {
         return applyConnection(c -> {
-            return function.apply(Context.newInstance(c));
+            return function.apply(Context.from(c));
         });
     }
 

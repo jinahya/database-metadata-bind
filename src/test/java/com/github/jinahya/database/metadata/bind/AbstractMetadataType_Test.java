@@ -23,8 +23,16 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -52,6 +60,56 @@ abstract class AbstractMetadataType_Test<T extends AbstractMetadataType>
         assertThatExceptionOfType(UnsupportedOperationException.class)
                 .isThrownBy(() -> unknownColumns.clear());
         assertThat(instance.getUnknownColumns()).containsEntry(label, value);
+    }
+
+    /**
+     * Verifies the documented serialized form: {@link _ColumnLabel}-annotated fields survive a round-trip, while
+     * {@link AbstractMetadataType#unknownColumns} is dropped because it is {@code transient}.
+     * <p>
+     * The non-serializable unknown value is the point of the test. {@link java.sql.ResultSet#getObject(String)} may
+     * return values that do not implement {@link java.io.Serializable}, and Java serialization aborts the whole
+     * object graph on the first such value; keeping the field {@code transient} is what makes serializing a metadata
+     * type independent of which driver produced it.
+     */
+    @Test
+    void serialization_KeepsLabeledFieldsAndDropsUnknownColumns_() throws Exception {
+        final var instance = newTypeInstance();
+        final Map<Field, String> expected = new LinkedHashMap<>();
+        for (final var field : ContextUtils.getBindingFields(typeClass).keySet()) {
+            if (field.getType() != String.class) {
+                continue;
+            }
+            final var value = field.getName() + "-value";
+            field.set(instance, value);
+            expected.put(field, value);
+        }
+        instance.putUnknownColumn("UNKNOWN_SERIALIZABLE", "value");
+        instance.putUnknownColumn("UNKNOWN_NOT_SERIALIZABLE", new Object());
+        assertThat(instance.getUnknownColumns()).hasSize(2);
+
+        final var deserialized = roundTrip(instance);
+
+        for (final var entry : expected.entrySet()) {
+            assertThat(entry.getKey().get(deserialized))
+                    .as("%s.%s after deserialization", typeClass.getSimpleName(), entry.getKey().getName())
+                    .isEqualTo(entry.getValue());
+        }
+        assertThat(deserialized.getUnknownColumns())
+                .as("unknown columns of a deserialized %s", typeClass.getSimpleName())
+                .isNotNull()
+                .isEmpty();
+        assertThatExceptionOfType(UnsupportedOperationException.class)
+                .isThrownBy(() -> deserialized.getUnknownColumns().put("K", "V"));
+    }
+
+    private T roundTrip(final T instance) throws IOException, ClassNotFoundException {
+        final var baos = new ByteArrayOutputStream();
+        try (var oos = new ObjectOutputStream(baos)) {
+            oos.writeObject(instance);
+        }
+        try (var ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
+            return typeClass.cast(ois.readObject());
+        }
     }
 
     @Test

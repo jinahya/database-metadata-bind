@@ -93,28 +93,13 @@ public class Context {
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     /**
-     * Creates a new instance from the specified connection.
-     *
-     * @param connection the connection.
-     * @return a new instance.
-     * @throws SQLException if a database error occurs.
-     * @see #from(Connection)
-     * @deprecated Use {@link #from(Connection)}.
-     */
-    @Deprecated(since = "4.5.1", forRemoval = true)
-    public static Context newInstance(final Connection connection) throws SQLException {
-        return from(connection);
-    }
-
-    /**
      * Creates a new instance with the specified instance of {@link DatabaseMetaData}.
      *
      * @param metadata the instance of {@link DatabaseMetaData} to proxy.
      * @return a new instance.
-     * @throws SQLException if a database access error occurs.
      * @see #Context(DatabaseMetaData)
      */
-    public static Context of(final DatabaseMetaData metadata) throws SQLException {
+    public static Context of(final DatabaseMetaData metadata) {
         Objects.requireNonNull(metadata, "metadata is null");
         return new Context(metadata);
     }
