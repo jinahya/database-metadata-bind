@@ -39,7 +39,8 @@ import java.util.List;
  * {@value #ROOT_ELEMENT_NAME} root element. The type variable {@code T} is erased at runtime, which is harmless here
  * since element naming is delegated to the children:
  * {@snippet lang = "java":
- * var wrapper = MetadataTypeWrapper.of(context.getSchemas(null, null));
+ * var wrapper = new MetadataTypeWrapper<Schema>();
+ * wrapper.getElements().addAll(context.getSchemas(null, null));
  * // marshals to: <metadataTypes><schema>...</schema>...</metadataTypes>
  *}
  * <p>
