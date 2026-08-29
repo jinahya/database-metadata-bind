@@ -27,7 +27,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A marker annotation for columns unused by the specification.
+ * A marker for a column the JDBC specification documents as not used.
+ * <p>
+ * Applied to a binding field when the corresponding {@link java.sql.DatabaseMetaData} method documents that column as
+ * "not used". The column is still bound, because this library binds what a driver reports rather than what the
+ * specification expects, but no meaning is defined for whatever arrives.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */

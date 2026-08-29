@@ -27,7 +27,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A marker annotation for columns whose value may be {@code null}.
+ * A meta-annotation for the field-level markers whose columns may hold {@code null}.
+ * <p>
+ * This annotation targets {@link java.lang.annotation.ElementType#ANNOTATION_TYPE ANNOTATION_TYPE}, not fields: it is
+ * applied to {@link _NullableBySpecification}, {@link _NotUsed} and {@link _Reserved} to group them as "the column may
+ * be {@code null}", and is never applied to a binding field directly. Note that a meta-annotation does not propagate to
+ * the fields the annotated marker is placed on, so this cannot be read off a field. Nullability visible to tooling is
+ * expressed by JSpecify {@link org.jspecify.annotations.Nullable} instead.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */

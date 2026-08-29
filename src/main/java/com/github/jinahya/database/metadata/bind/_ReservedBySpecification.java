@@ -27,7 +27,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A marker annotation for reserved columns.
+ * A marker for a column the JDBC specification reserves for future use.
+ * <p>
+ * Applied to a binding field when the corresponding {@link java.sql.DatabaseMetaData} method documents that column as
+ * reserved. As with {@link _NotUsedBySpecification}, the column is still bound; the specification simply defines no
+ * meaning for it.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
