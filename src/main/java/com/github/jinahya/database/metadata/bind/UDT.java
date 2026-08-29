@@ -431,7 +431,4 @@ public class UDT
         schema.setTableSchem(typeSchem);
         return schema;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    private transient List<Attribute> attributes_;
 }

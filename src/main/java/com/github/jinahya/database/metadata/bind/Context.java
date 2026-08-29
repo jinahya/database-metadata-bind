@@ -39,6 +39,54 @@ import java.util.function.Consumer;
 /**
  * A class for retrieving information from an instance of {@link java.sql.DatabaseMetaData}.
  *
+ * <h2 id="navigation">Navigating from a bound row</h2>
+ * <p>
+ * The {@code getXxxOf(...)} and {@code forEachXxxOf(...)} methods take an already-bound row and retrieve what belongs
+ * to it: {@link #getColumnsOf(Table, String) getColumnsOf(table, ...)} rather than
+ * {@link #getColumns(String, String, String, String) getColumns(catalog, schema, ...)}.
+ * <p>
+ * They are not merely shorthand. Each one maps the parent row's own values into the arguments the corresponding
+ * {@link DatabaseMetaData} method expects, and that mapping is not the identity: a {@code null} catalog or schema on a
+ * bound row becomes {@code ""} in the lookup. The distinction is load-bearing. In
+ * {@link DatabaseMetaData#getColumns(String, String, String, String)}, {@code ""} selects those <em>without</em> a
+ * catalog while {@code null} means <em>do not narrow</em> by catalog. Navigating from a specific row whose
+ * {@code TABLE_CAT} is {@code null}, {@code ""} is correct and {@code null} is wrong - and passing the wrong one
+ * returns <em>extra rows rather than an error</em>, silently folding in same-named tables from other catalogs. These
+ * methods are the only place that normalization is applied.
+ *
+ * <h3>Cost: one round trip each</h3>
+ * <p>
+ * Every navigation call is a separate {@link DatabaseMetaData} invocation, so walking a collection is an N+1 pattern:
+ * {@snippet lang = "java":
+ * for (var table : context.getAllTables()) {      // 1 call
+ *     var columns = context.getColumnsOf(table, "%");  // + 1 call per table
+ * }
+ *}
+ * When the whole set is wanted, prefer one non-narrowing sweep plus in-memory grouping:
+ * {@snippet lang = "java":
+ * var byTable = context.getAllColumns().stream()   // 1 call, total
+ *         .collect(Collectors.groupingBy(Column::getTableName));
+ *}
+ * That trade is not free either - a match-all sweep can be expensive on large databases, and what it returns depends
+ * on how the driver interprets JDBC pattern parameters. Navigate row by row when the set is small or already narrowed;
+ * sweep when it is not.
+ *
+ * <h3>Unknown-column values are only valid for as long as their result set is</h3>
+ * <p>
+ * {@link MetadataType#getUnknownColumns()} holds whatever {@link java.sql.ResultSet#getObject(String)} returned for
+ * result-set columns this library does not map. If a driver returns a locator there - a {@link java.sql.Blob},
+ * {@link java.sql.Clob}, {@link java.sql.Array}, or {@link java.sql.SQLXML} - how long it stays usable depends on
+ * which of these two shapes was used:
+ * <ul>
+ *   <li>{@code forEachXxx}/{@code forEachXxxOf} invoke the consumer while the result set is <em>still open</em> and
+ *       positioned on the producing row, so a locator is live <em>during the callback</em>. Retaining the instance and
+ *       reading it after the callback returns yields a dead locator.</li>
+ *   <li>{@code getXxx}/{@code getXxxOf} return only after the result set has been closed, so any locator they hand
+ *       back is <em>already dead</em>.</li>
+ * </ul>
+ * Read what is needed from such a value inside the callback. This caveat applies to unknown columns only; the mapped,
+ * {@code @_ColumnLabel}-annotated fields are read out eagerly during binding and are unaffected.
+ *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public class Context {
@@ -478,8 +526,9 @@ public class Context {
      * @return a list of bound values for the {@code table}.
      * @throws SQLException if a database error occurs.
      * @see #getBestRowIdentifier(String, String, String, int, boolean)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    List<BestRowIdentifier> getBestRowIdentifierOf(final Table table, final int scope, final boolean nullable)
+    public List<BestRowIdentifier> getBestRowIdentifierOf(final Table table, final int scope, final boolean nullable)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getBestRowIdentifier(
@@ -500,9 +549,10 @@ public class Context {
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
      * @see #forEachBestRowIdentifier(String, String, String, int, boolean, Consumer)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    void forEachBestRowIdentifierOf(final Table table, final int scope, final boolean nullable,
-                                    final Consumer<? super BestRowIdentifier> consumer)
+    public void forEachBestRowIdentifierOf(final Table table, final int scope, final boolean nullable,
+                                           final Consumer<? super BestRowIdentifier> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachBestRowIdentifier(
@@ -732,8 +782,9 @@ public class Context {
      * @return a list of bound values for the {@code table}.
      * @throws SQLException if a database error occurs.
      * @see #getColumnPrivileges(String, String, String, String)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    List<ColumnPrivilege> getColumnPrivilegesOf(final Table table, final String columnNamePattern)
+    public List<ColumnPrivilege> getColumnPrivilegesOf(final Table table, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumnPrivileges(
@@ -752,9 +803,10 @@ public class Context {
      * @param consumer          the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
      * @see #forEachColumnPrivilege(String, String, String, String, Consumer)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    void forEachColumnPrivilegeOf(final Table table, final String columnNamePattern,
-                                  final Consumer<? super ColumnPrivilege> consumer)
+    public void forEachColumnPrivilegeOf(final Table table, final String columnNamePattern,
+                                         final Consumer<? super ColumnPrivilege> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachColumnPrivilege(
@@ -886,8 +938,9 @@ public class Context {
      * @return a list of bound values for the {@code table}.
      * @throws SQLException if a database error occurs.
      * @see #getColumns(String, String, String, String)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    List<Column> getColumnsOf(final Table table, final String columnNamePattern) throws SQLException {
+    public List<Column> getColumnsOf(final Table table, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumns(
                 table.getTableCatForMetadataLookup(),
@@ -905,9 +958,10 @@ public class Context {
      * @param consumer          the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
      * @see #forEachColumn(String, String, String, String, Consumer)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    void forEachColumnOf(final Table table, final String columnNamePattern,
-                         final Consumer<? super Column> consumer)
+    public void forEachColumnOf(final Table table, final String columnNamePattern,
+                                final Consumer<? super Column> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachColumn(
@@ -1057,8 +1111,10 @@ public class Context {
      * @return a list of bound values for the {@code parentTable} and the {@code foreignTable}.
      * @throws SQLException if a database error occurs.
      * @see #getCrossReference(String, String, String, String, String, String)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    List<CrossReference> getCrossReferenceOf(final Table parentTable, final Table foreignTable) throws SQLException {
+    public List<CrossReference> getCrossReferenceOf(final Table parentTable, final Table foreignTable)
+            throws SQLException {
         Objects.requireNonNull(parentTable, "parentTable is null");
         Objects.requireNonNull(foreignTable, "foreignTable is null");
         return getCrossReference(
@@ -1080,9 +1136,10 @@ public class Context {
      * @param consumer     the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
      * @see #forEachCrossReference(String, String, String, String, String, String, Consumer)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    void forEachCrossReferenceOf(final Table parentTable, final Table foreignTable,
-                                 final Consumer<? super CrossReference> consumer)
+    public void forEachCrossReferenceOf(final Table parentTable, final Table foreignTable,
+                                        final Consumer<? super CrossReference> consumer)
             throws SQLException {
         Objects.requireNonNull(parentTable, "parentTable is null");
         Objects.requireNonNull(foreignTable, "foreignTable is null");
@@ -1186,37 +1243,48 @@ public class Context {
     }
 
     /**
-     * Retrieves exported keys of the specified table.
+     * Retrieves the foreign keys <em>exported by</em> the specified table, that is, the foreign key columns of other
+     * tables that reference the specified table's primary key columns.
+     * <p>
+     * The specified table plays the <strong>primary key (parent)</strong> role here. For the opposite direction - the
+     * keys the table itself imports - use {@link #getImportedKeysOf(Table)}.
      *
-     * @param table the table whose exported keys are retrieved.
-     * @return a list of exported keys of the {@code table}.
+     * @param primaryTable the table whose primary key columns are referenced.
+     * @return a list of exported keys of the {@code primaryTable}.
      * @throws SQLException if a database error occurs.
      * @see #getExportedKeys(String, String, String)
+     * @see #getImportedKeysOf(Table)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-
-    List<ExportedKey> getExportedKeysOf(final Table table) throws SQLException {
-        Objects.requireNonNull(table, "table is null");
+    public List<ExportedKey> getExportedKeysOf(final Table primaryTable) throws SQLException {
+        Objects.requireNonNull(primaryTable, "primaryTable is null");
         return getExportedKeys(
-                table.getTableCatForMetadataLookup(),
-                table.getTableSchemForMetadataLookup(),
-                table.getTableName()
+                primaryTable.getTableCatForMetadataLookup(),
+                primaryTable.getTableSchemForMetadataLookup(),
+                primaryTable.getTableName()
         );
     }
 
     /**
-     * Accepts, to the specified consumer, each bound {@code ExportedKey} of the specified table.
+     * Accepts, to the specified consumer, each bound {@code ExportedKey} <em>exported by</em> the specified table, that
+     * is, each foreign key column of another table that references the specified table's primary key columns.
+     * <p>
+     * The specified table plays the <strong>primary key (parent)</strong> role here.
      *
-     * @param table    the table whose exported keys are accepted.
-     * @param consumer the consumer to which each bound value is accepted.
+     * @param primaryTable the table whose primary key columns are referenced.
+     * @param consumer     the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
      * @see #forEachExportedKey(String, String, String, Consumer)
+     * @see #forEachImportedKeyOf(Table, Consumer)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    void forEachExportedKeyOf(final Table table, final Consumer<? super ExportedKey> consumer) throws SQLException {
-        Objects.requireNonNull(table, "table is null");
+    public void forEachExportedKeyOf(final Table primaryTable, final Consumer<? super ExportedKey> consumer)
+            throws SQLException {
+        Objects.requireNonNull(primaryTable, "primaryTable is null");
         forEachExportedKey(
-                table.getTableCatForMetadataLookup(),
-                table.getTableSchemForMetadataLookup(),
-                table.getTableName(),
+                primaryTable.getTableCatForMetadataLookup(),
+                primaryTable.getTableSchemForMetadataLookup(),
+                primaryTable.getTableName(),
                 consumer
         );
     }
@@ -1688,36 +1756,48 @@ public class Context {
     }
 
     /**
-     * Retrieves imported keys of the specified table.
+     * Retrieves the primary keys <em>imported by</em> the specified table, that is, the primary key columns referenced
+     * by the specified table's own foreign key columns.
+     * <p>
+     * The specified table plays the <strong>foreign key (child)</strong> role here. For the opposite direction - the
+     * keys other tables import from this one - use {@link #getExportedKeysOf(Table)}.
      *
-     * @param table the table whose imported keys are retrieved.
-     * @return a list of imported keys of the {@code table}.
+     * @param foreignTable the table whose foreign key columns reference other tables.
+     * @return a list of imported keys of the {@code foreignTable}.
      * @throws SQLException if a database error occurs.
      * @see #getImportedKeys(String, String, String)
+     * @see #getExportedKeysOf(Table)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    List<ImportedKey> getImportedKeysOf(final Table table) throws SQLException {
-        Objects.requireNonNull(table, "table is null");
+    public List<ImportedKey> getImportedKeysOf(final Table foreignTable) throws SQLException {
+        Objects.requireNonNull(foreignTable, "foreignTable is null");
         return getImportedKeys(
-                table.getTableCatForMetadataLookup(),
-                table.getTableSchemForMetadataLookup(),
-                table.getTableName()
+                foreignTable.getTableCatForMetadataLookup(),
+                foreignTable.getTableSchemForMetadataLookup(),
+                foreignTable.getTableName()
         );
     }
 
     /**
-     * Accepts, to the specified consumer, each bound {@code ImportedKey} of the specified table.
+     * Accepts, to the specified consumer, each bound {@code ImportedKey} <em>imported by</em> the specified table, that
+     * is, each primary key column referenced by the specified table's own foreign key columns.
+     * <p>
+     * The specified table plays the <strong>foreign key (child)</strong> role here.
      *
-     * @param table    the table whose imported keys are accepted.
-     * @param consumer the consumer to which each bound value is accepted.
+     * @param foreignTable the table whose foreign key columns reference other tables.
+     * @param consumer     the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
      * @see #forEachImportedKey(String, String, String, Consumer)
+     * @see #forEachExportedKeyOf(Table, Consumer)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    void forEachImportedKeyOf(final Table table, final Consumer<? super ImportedKey> consumer) throws SQLException {
-        Objects.requireNonNull(table, "table is null");
+    public void forEachImportedKeyOf(final Table foreignTable, final Consumer<? super ImportedKey> consumer)
+            throws SQLException {
+        Objects.requireNonNull(foreignTable, "foreignTable is null");
         forEachImportedKey(
-                table.getTableCatForMetadataLookup(),
-                table.getTableSchemForMetadataLookup(),
-                table.getTableName(),
+                foreignTable.getTableCatForMetadataLookup(),
+                foreignTable.getTableSchemForMetadataLookup(),
+                foreignTable.getTableName(),
                 consumer
         );
     }
@@ -1835,8 +1915,9 @@ public class Context {
      * @return a list of bound values for the {@code table}.
      * @throws SQLException if a database error occurs.
      * @see #getIndexInfo(String, String, String, boolean, boolean)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    List<IndexInfo> getIndexInfoOf(final Table table, final boolean unique, final boolean approximate)
+    public List<IndexInfo> getIndexInfoOf(final Table table, final boolean unique, final boolean approximate)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getIndexInfo(
@@ -1857,9 +1938,10 @@ public class Context {
      * @param consumer    the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
      * @see #forEachIndexInfo(String, String, String, boolean, boolean, Consumer)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    void forEachIndexInfoOf(final Table table, final boolean unique, final boolean approximate,
-                            final Consumer<? super IndexInfo> consumer)
+    public void forEachIndexInfoOf(final Table table, final boolean unique, final boolean approximate,
+                                   final Consumer<? super IndexInfo> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachIndexInfo(
@@ -1967,8 +2049,9 @@ public class Context {
      * @return a list of primary keys of the {@code table}.
      * @throws SQLException if a database error occurs.
      * @see #getPrimaryKeys(String, String, String)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    List<PrimaryKey> getPrimaryKeysOf(final Table table) throws SQLException {
+    public List<PrimaryKey> getPrimaryKeysOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPrimaryKeys(
                 table.getTableCatForMetadataLookup(),
@@ -1984,8 +2067,10 @@ public class Context {
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
      * @see #forEachPrimaryKey(String, String, String, Consumer)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    void forEachPrimaryKeyOf(final Table table, final Consumer<? super PrimaryKey> consumer) throws SQLException {
+    public void forEachPrimaryKeyOf(final Table table, final Consumer<? super PrimaryKey> consumer)
+            throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachPrimaryKey(
                 table.getTableCatForMetadataLookup(),
@@ -2485,8 +2570,10 @@ public class Context {
      * @return a list of bound values for the {@code table}.
      * @throws SQLException if a database error occurs.
      * @see #getPseudoColumns(String, String, String, String)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    List<PseudoColumn> getPseudoColumnsOf(final Table table, final String columnNamePattern) throws SQLException {
+    public List<PseudoColumn> getPseudoColumnsOf(final Table table, final String columnNamePattern)
+            throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPseudoColumns(
                 table.getTableCatForMetadataLookup(), table.getTableSchemForMetadataLookup(), table.getTableName(),
@@ -2502,9 +2589,10 @@ public class Context {
      * @param consumer          the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
      * @see #forEachPseudoColumn(String, String, String, String, Consumer)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    void forEachPseudoColumnOf(final Table table, final String columnNamePattern,
-                               final Consumer<? super PseudoColumn> consumer)
+    public void forEachPseudoColumnOf(final Table table, final String columnNamePattern,
+                                      final Consumer<? super PseudoColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachPseudoColumn(
@@ -2912,36 +3000,42 @@ public class Context {
     }
 
     /**
-     * Retrieves super tables of the specified table.
+     * Retrieves the direct supertables of the specified table.
      *
-     * @param table the table whose super tables are retrieved.
-     * @return a list of bound values for the {@code table}.
+     * @param subtable the table whose supertables are retrieved; it plays the <strong>subtable</strong> role, and each
+     *                 returned row describes a table it directly inherits from.
+     * @return a list of bound values for the {@code subtable}.
      * @throws SQLException if a database error occurs.
      * @see #getSuperTables(String, String, String)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    List<SuperTable> getSuperTablesOf(final Table table) throws SQLException {
-        Objects.requireNonNull(table, "table is null");
+    public List<SuperTable> getSuperTablesOf(final Table subtable) throws SQLException {
+        Objects.requireNonNull(subtable, "subtable is null");
         return getSuperTables(
-                table.getTableCatForMetadataLookup(),
-                table.getTableSchemForMetadataLookup(),
-                table.getTableName()
+                subtable.getTableCatForMetadataLookup(),
+                subtable.getTableSchemForMetadataLookup(),
+                subtable.getTableName()
         );
     }
 
     /**
-     * Accepts, to the specified consumer, each bound {@code SuperTable} of the specified table.
+     * Accepts, to the specified consumer, each bound {@code SuperTable} describing a direct supertable of the specified
+     * table.
      *
-     * @param table    the table whose super tables are accepted.
+     * @param subtable the table whose supertables are accepted; it plays the <strong>subtable</strong> role, and each
+     *                 accepted value describes a table it directly inherits from.
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
      * @see #forEachSuperTable(String, String, String, Consumer)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    void forEachSuperTableOf(final Table table, final Consumer<? super SuperTable> consumer) throws SQLException {
-        Objects.requireNonNull(table, "table is null");
+    public void forEachSuperTableOf(final Table subtable, final Consumer<? super SuperTable> consumer)
+            throws SQLException {
+        Objects.requireNonNull(subtable, "subtable is null");
         forEachSuperTable(
-                table.getTableCatForMetadataLookup(),
-                table.getTableSchemForMetadataLookup(),
-                table.getTableName(),
+                subtable.getTableCatForMetadataLookup(),
+                subtable.getTableSchemForMetadataLookup(),
+                subtable.getTableName(),
                 consumer
         );
     }
@@ -3401,8 +3495,9 @@ public class Context {
      * @return a list of bound values for the {@code table}.
      * @throws SQLException if a database error occurs.
      * @see #getTablePrivileges(String, String, String)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    List<TablePrivilege> getTablePrivilegesOf(final Table table) throws SQLException {
+    public List<TablePrivilege> getTablePrivilegesOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getTablePrivileges(
                 table.getTableCatForMetadataLookup(),
@@ -3418,8 +3513,9 @@ public class Context {
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
      * @see #forEachTablePrivilege(String, String, String, Consumer)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    void forEachTablePrivilegeOf(final Table table, final Consumer<? super TablePrivilege> consumer)
+    public void forEachTablePrivilegeOf(final Table table, final Consumer<? super TablePrivilege> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachTablePrivilege(
@@ -4101,8 +4197,9 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      * @see #getVersionColumns(String, String, String)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    List<VersionColumn> getVersionColumnsOf(final Table table) throws SQLException {
+    public List<VersionColumn> getVersionColumnsOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getVersionColumns(
                 table.getTableCatForMetadataLookup(),
@@ -4118,8 +4215,9 @@ public class Context {
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
      * @see #forEachVersionColumn(String, String, String, Consumer)
+     * @see <a href="#navigation">Navigating from a bound row</a>
      */
-    void forEachVersionColumnOf(final Table table, final Consumer<? super VersionColumn> consumer)
+    public void forEachVersionColumnOf(final Table table, final Consumer<? super VersionColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         forEachVersionColumn(
