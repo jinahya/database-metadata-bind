@@ -33,9 +33,21 @@ public final class JakartaJsonBindingUtils {
     /**
      * A {@link PropertyVisibilityStrategy} that makes all fields visible and all methods invisible, so JSON-B binds
      * directly to fields. The binding types apply this package-wide through
-     * {@link jakarta.json.bind.annotation.JsonbVisibility @JsonbVisibility} declared in {@code package-info}, so an
-     * ordinary {@link jakarta.json.bind.JsonbBuilder#create()} instance both serializes and deserializes them correctly
-     * despite their private fields, non-public setters, and {@code protected} constructors.
+     * {@link jakarta.json.bind.annotation.JsonbVisibility @JsonbVisibility} declared in {@code package-info}.
+     * <p>
+     * What this exists for, precisely: <strong>deserialization</strong>, and only because the setters are not
+     * {@code public}. JSON-B considers only public members by default, so with stock visibility a binding type
+     * <em>serializes</em> perfectly well - the getters are public - but <em>deserializing</em> one yields an instance
+     * whose every property is left {@code null}, because there is no visible setter to write through. Making the
+     * fields visible instead restores the write side.
+     * <p>
+     * Two things this is <em>not</em> for. It does not enable serialization, which needs no help. And it does not
+     * instantiate anything: {@link PropertyVisibilityStrategy} governs fields and methods only, and a provider reaches
+     * the {@code protected} no-argument constructor on its own.
+     * <p>
+     * The failure this prevents is silent. Removing {@code @JsonbVisibility} breaks no compilation and no
+     * serialization; it turns every deserialized instance into a well-formed object with nothing in it. That is what
+     * {@code fromJson_withDefaultJsonb_repopulatesFields_viaPackageVisibility} pins.
      *
      * @apiNote This type is {@code public} so a Jakarta JSON Binding provider can instantiate it reflectively from the
      * {@code @JsonbVisibility} annotation. Application code normally does not need to reference this type directly.
