@@ -26,6 +26,29 @@
  *       every bound column). They are intended for sorting {@link java.util.List}s, not for use as
  *       {@link java.util.TreeSet}/{@link java.util.TreeMap} keys, where equal-comparing rows would be dropped.</li>
  * </ul>
+ * <h2 id="read-only">Why the bound types are read-only from outside this package</h2>
+ * <p>
+ * Every binding type exposes <strong>public getters</strong>, but <strong>package-private setters</strong> and a
+ * <strong>{@code protected} no-argument constructor</strong>. Instances are produced by
+ * {@link com.github.jinahya.database.metadata.bind.Context}, or by a Jakarta XML/JSON Binding provider; they are not
+ * built or modified by callers.
+ * <p>
+ * The reason is this library's one guarantee: a bound instance is a faithful record of a single row that a driver
+ * reported. It is meaningful precisely because nothing has edited it. A public setter would let application code
+ * produce an instance that looks like driver output but is not, and there would then be no way to tell the two apart -
+ * which would undermine the reason to bind driver metadata into objects at all. So the write side stays with the
+ * binder, and the asymmetry between getters and setters is deliberate rather than an oversight to be tidied up.
+ * <p>
+ * <strong>The serialization frameworks are not the reason.</strong> This is worth stating because the arrangement
+ * invites the opposite conclusion. Both bindings are <em>field-based</em>: XML through
+ * {@link jakarta.xml.bind.annotation.XmlAccessType#FIELD @XmlAccessorType(FIELD)}, and JSON through the package-level
+ * {@link jakarta.json.bind.annotation.JsonbVisibility @JsonbVisibility} strategy below, whose
+ * {@code isVisible(Method)} returns {@code false} outright. Neither provider calls a setter, and the binder itself
+ * writes through {@link java.lang.reflect.Field#set(Object, Object)} rather than through accessors. The setters
+ * therefore exist for the package's own use - chiefly the reference helpers that derive a parent row from a child -
+ * and could be narrowed further without affecting XML or JSON binding at all. They must not be widened to
+ * {@code public} to accommodate a framework, because no framework is asking.
+ *
  * <h2>Jakarta XML Binding</h2>
  * <p>
  * XML binding is field-based and namespace-qualified. Each concrete metadata type supplies its own
