@@ -43,7 +43,7 @@ public final class JakartaXmlBindingConstants {
      * The preferred XML namespace prefix for {@value #NAMESPACE_URI}.
      *
      * @implNote Package-private, and currently unreferenced: {@code package-info}'s {@code @XmlSchema} declares no
-     * {@code xmlns}, so this prefix is not actually emitted. See the {@code @XmlSchema} item in {@code _TODOS.asciidoc}.
+     * {@code xmlns}, so this prefix is not actually emitted. See issue #47.
      */
     static final String NAMESPACE_PREFIX = "dmb";
 

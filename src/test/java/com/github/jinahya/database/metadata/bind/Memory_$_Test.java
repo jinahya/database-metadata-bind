@@ -61,7 +61,7 @@ abstract class Memory_$_Test {
     void test() throws Throwable {
         applyConnection(connection -> {
             // Give the walkthrough a real foreign key to find. Without one, getCrossReference is exercised only for
-            // the empty case and its row binding stays unverified. See _TODOS.asciidoc P-038.
+            // the empty case and its row binding stays unverified. See issue #76.
             try (var statement = connection.createStatement()) {
                 Context_ComparingInJdbcOrder_Test_Utils.preparePortedKeyTables(statement);
             } catch (final SQLException sqle) {

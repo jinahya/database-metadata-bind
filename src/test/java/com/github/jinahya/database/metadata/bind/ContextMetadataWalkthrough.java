@@ -208,7 +208,7 @@ final class ContextMetadataWalkthrough {
                                                                       table.getTableName(), c));
         if (firstImportedKey == null && !importedKeys.isEmpty()) {
             // Remember a relationship that genuinely exists, so crossReferences(...) can ask about a
-            // pair of tables that actually relate. See _TODOS.asciidoc P-038.
+            // pair of tables that actually relate. See issue #76.
             firstImportedKey = importedKeys.get(0);
         }
         for (final var unique : new boolean[] {true, false}) {
