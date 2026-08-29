@@ -1517,15 +1517,6 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getFunctions(String, String, String)} method with {@code (null, null, "%")}, and
-     * accepts each bound value to the specified consumer.
-     *
-     * @param consumer the consumer to which bound values are accepted.
-     * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getFunctions(String, String, String)
-     * @see #forEachFunction(String, String, String, Consumer)
-     */
-    /**
      * Accepts all Function rows across the database, to the specified consumer, via a non-narrowing match-all sweep.
      * May be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
      * parameters.
@@ -1537,15 +1528,6 @@ public class Context {
         getFunctionsAndAcceptEach(null, null, "%", consumer);
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getFunctions(String, String, String)} method with {@code (null, null, "%")}, and
-     * returns a list of bound values.
-     *
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getFunctions(String, String, String)
-     * @see #getFunctions(String, String, String)
-     */
     /**
      * Returns a list of all Function rows across the database, via a non-narrowing match-all sweep. May be expensive on
      * large databases, and results depend on the driver's interpretation of JDBC pattern parameters.
@@ -2879,17 +2861,6 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getSuperTables(String, String, String)} method and accepts each bound value to
-     * the specified consumer.
-     *
-     * @param catalog          a value for the {@code catalog} parameter.
-     * @param schemaPattern    a value for the {@code schemaPattern} parameter.
-     * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
-     * @param consumer         the consumer to which bound values are accepted.
-     * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getSuperTables(String, String, String)
-     */
-    /**
      * Accepts all SuperTable rows across the database, to the specified consumer, via a non-narrowing match-all sweep.
      * May be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
      * parameters. Because {@code schemaPattern} is {@code "%"}, rows whose schema is reported as {@code null} by the
@@ -3140,17 +3111,6 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getSuperTypes(String, String, String)} method and accepts each bound value to the
-     * specified consumer.
-     *
-     * @param catalog         a value for the {@code catalog} parameter.
-     * @param schemaPattern   a value for the {@code schemaPattern} parameter.
-     * @param typeNamePattern a value for the {@code typeNamePattern} parameter.
-     * @param consumer        the consumer to which bound values are accepted.
-     * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getSuperTypes(String, String, String)
-     */
     /**
      * Accepts all SuperType rows across the database, to the specified consumer, via a non-narrowing match-all sweep.
      * May be expensive on large databases, and results depend on the driver's interpretation of JDBC pattern
