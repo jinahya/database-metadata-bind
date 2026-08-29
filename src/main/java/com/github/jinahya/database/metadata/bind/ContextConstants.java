@@ -21,9 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 /**
- * A class of utilities for binding {@link java.sql.DatabaseMetaData} result sets to metadata types.
+ * Constants used by {@link Context} and its helpers.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see ContextUtils
  */
 final class ContextConstants {
 

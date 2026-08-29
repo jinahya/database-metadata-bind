@@ -21,7 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 /**
- * The parent interface for binding database metadata types.
+ * Constants shared by more than one metadata type.
+ * <p>
+ * The JDBC specification uses the same {@code "YES"} / {@code "NO"} / {@code ""} vocabulary for several unrelated
+ * columns - {@code IS_NULLABLE}, {@code IS_AUTOINCREMENT}, {@code IS_GENERATEDCOLUMN}, and {@code IS_GRANTABLE} among
+ * them - so the literals and the regular expressions matching them are declared once here rather than repeated by each
+ * binding type.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
