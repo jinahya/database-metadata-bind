@@ -807,8 +807,6 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    //    @Nullable
-//    @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
