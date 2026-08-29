@@ -24,6 +24,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -31,7 +32,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -155,50 +155,95 @@ public class Context {
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Binds given value from specified result set.
+     * Binds the current row of the specified result set into the specified value, following the specified plan.
      *
      * @param <T>      value type parameter
-     * @param results  the result set from which the value is bound.
-     * @param type     the type of the value.
+     * @param results  the result set whose current row is bound.
+     * @param plan     the plan resolved for {@code results}, by {@link #resolve(ResultSet, Class)}.
      * @param instance the value.
-     * @return given {@code value}.
+     * @return given {@code instance}.
      * @throws SQLException if a database error occurs.
      */
-    private static <T extends MetadataType> T bind(final ResultSet results, final Class<T> type, final T instance)
+    private static <T extends MetadataType> T bind(final ResultSet results, final BindingPlan plan, final T instance)
             throws SQLException {
-        final var resultLabels = ContextUtils.getLabels(results);
-        final var fieldLabels = new HashMap<>(ContextUtils.getLabeledFields(type));
-        for (final var i = fieldLabels.entrySet().iterator(); i.hasNext(); ) {
-            final var entry = i.next();
-            final var fieldLabel = entry.getKey();
-            final var field = entry.getValue();
-            if (!resultLabels.remove(fieldLabel)) {
-                logger.log(
-                        System.Logger.Level.WARNING,
-                        () -> String.format("unmapped field; label: %s; field: %s", fieldLabel, field)
-                );
-                i.remove();
-                continue;
-            }
+        for (final var boundColumn : plan.boundColumns()) {
+            final var field = boundColumn.field();
             try {
-                ContextUtils.setFieldValue(field, instance, results, fieldLabel);
+                ContextUtils.setFieldValue(field, instance, results, boundColumn.label());
             } catch (final ReflectiveOperationException roe) {
                 throw new RuntimeException("failed to set " + field, roe);
             }
-            i.remove();
         }
-        for (final var i = resultLabels.iterator(); i.hasNext(); i.remove()) {
-            final String label = i.next();
+        for (final var label : plan.unknownLabels()) {
             final Object value = results.getObject(label);
-            logger.log(System.Logger.Level.TRACE,
-                       "unknown column; type: {0}, label: {1}, value: {2}", type.getSimpleName(), label, value);
             if (instance instanceof AbstractMetadataType metadata) {
                 metadata.putUnknownColumn(label, value);
             }
         }
-        assert resultLabels.isEmpty() : "remaining result labels: " + resultLabels;
-        assert fieldLabels.isEmpty() : "remaining field labels: " + fieldLabels;
         return instance;
+    }
+
+    /**
+     * A result-set column matched to a {@link _ColumnLabel}-annotated field of the type being bound.
+     *
+     * @param label the (upper-cased) column label shared by the column and the field.
+     * @param field the field the column's value is set to.
+     */
+    private record BoundColumn(String label, Field field) {
+
+    }
+
+    /**
+     * Everything about binding a result set into a type that does not vary from row to row.
+     *
+     * @param boundColumns  the result-set columns matched to fields, in no particular order.
+     * @param unknownLabels the labels of result-set columns that matched no field, captured per row into
+     *                      {@link AbstractMetadataType#putUnknownColumn(String, Object)}.
+     * @see #resolve(ResultSet, Class)
+     */
+    private record BindingPlan(List<BoundColumn> boundColumns, List<String> unknownLabels) {
+
+    }
+
+    /**
+     * Resolves, for the specified result set and type, the parts of binding that are invariant across rows.
+     * <p>
+     * The column labels a driver reports, the {@link _ColumnLabel}-annotated fields of a type, and therefore the
+     * matching between the two are all fixed for the lifetime of a result set. Resolving them once and reusing the
+     * result for every row is what keeps {@link ResultSet#getMetaData()},
+     * {@link java.sql.ResultSetMetaData#getColumnCount()}, and
+     * {@link java.sql.ResultSetMetaData#getColumnLabel(int)} to one call each per result set rather than one per row,
+     * and removes a defensive copy of the field map per row.
+     * <p>
+     * The {@code unmapped field} warning is emitted here, so it is logged once per result set per unmapped field
+     * rather than once per row per unmapped field.
+     *
+     * @param results the result set whose column labels are read.
+     * @param type    the type whose labeled fields are matched against those labels.
+     * @return a plan to bind each row of {@code results} into an instance of {@code type}.
+     * @throws SQLException if a database error occurs.
+     */
+    private static BindingPlan resolve(final ResultSet results, final Class<?> type) throws SQLException {
+        final var unmatchedLabels = ContextUtils.getLabels(results);
+        final var labeledFields = ContextUtils.getLabeledFields(type);
+        final List<BoundColumn> boundColumns = new ArrayList<>(Math.min(unmatchedLabels.size(), labeledFields.size()));
+        labeledFields.forEach((label, field) -> {
+            if (unmatchedLabels.remove(label)) {
+                boundColumns.add(new BoundColumn(label, field));
+                return;
+            }
+            logger.log(
+                    System.Logger.Level.WARNING,
+                    () -> String.format("unmapped field; label: %s; field: %s", label, field)
+            );
+        });
+        // whatever is left matched no field; its values are captured per row into unknownColumns, so only the label
+        // set is logged here - the values themselves are reachable through getUnknownColumns()
+        if (!unmatchedLabels.isEmpty()) {
+            logger.log(System.Logger.Level.TRACE, "unknown columns; type: {0}, labels: {1}",
+                       type.getSimpleName(), unmatchedLabels);
+        }
+        return new BindingPlan(List.copyOf(boundColumns), List.copyOf(unmatchedLabels));
     }
 
     /**
@@ -229,14 +274,20 @@ public class Context {
         if (!constructor.canAccess(null)) {
             constructor.setAccessible(true);
         }
+        // resolved on the first row rather than before the loop, so that an empty result set still reads no metadata
+        // and emits no unmapped-field warnings, exactly as it did when resolution happened inside bind(...)
+        BindingPlan plan = null;
         while (results.next()) {
+            if (plan == null) {
+                plan = resolve(results, type);
+            }
             final T value;
             try {
                 value = constructor.newInstance();
             } catch (final ReflectiveOperationException roe) {
                 throw new RuntimeException("failed to instantiate; type: " + type, roe);
             }
-            consumer.accept(bind(results, type, value));
+            consumer.accept(bind(results, plan, value));
         }
     }
 

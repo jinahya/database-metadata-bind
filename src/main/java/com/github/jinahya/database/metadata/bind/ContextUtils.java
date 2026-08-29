@@ -133,11 +133,10 @@ final class ContextUtils {
      * Reads the value of the specified column from the specified result set and sets it to the specified field of the
      * specified object.
      * <p>
-     * The value is first read with {@link ResultSet#getObject(String)} and a direct assignment is attempted. When the
-     * read value is not directly assignable to the field's type, a series of coercion attempts are made: a {@code null}
-     * value is left unset; otherwise the value is re-read using a type-specific accessor
-     * ({@link ResultSet#getBoolean(String)}, {@link ResultSet#getShort(String)}, {@link ResultSet#getInt(String)}, or
-     * {@link ResultSet#getLong(String)}) matching the field type, and finally
+     * The value is first read with {@link ResultSet#getObject(String)} and assigned directly when it is {@code null}
+     * or an instance of the field's type. Otherwise a series of coercion attempts are made: the value is re-read using
+     * a type-specific accessor ({@link ResultSet#getBoolean(String)}, {@link ResultSet#getShort(String)},
+     * {@link ResultSet#getInt(String)}, or {@link ResultSet#getLong(String)}) matching the field type, and finally
      * {@link ResultSet#getObject(String, Class)} is tried. If all coercion attempts fail, a {@link RuntimeException} is
      * thrown.
      *
@@ -167,21 +166,19 @@ final class ContextUtils {
         final Class<?> fieldType = field.getType();
         assert !fieldType.isPrimitive();
         final Object value = results.getObject(label);
-        try {
+        // Field#set throws IllegalArgumentException exactly when the value is not assignable to the field type, and
+        // fieldType is guaranteed non-primitive here, so isInstance is that same test asked in advance. Asking it
+        // instead of catching keeps a column whose driver type never matches the field type - a Short for an Integer
+        // field, say - from throwing and catching one exception per row for the lifetime of the result set. A null
+        // value is always assignable to a reference field, so it is admitted here and leaves the field null.
+        if (value == null || fieldType.isInstance(value)) {
             field.set(obj, value);
-            return;
-        } catch (final IllegalArgumentException iae) {
-            // This block is reached if getObject() returns a type that is not directly assignable
-            // to the field type (e.g., a Short for an Integer field).
-            // We can now try to perform a conversion.
-        }
-        if (value == null) {
             return;
         }
         // Past this point getObject() proved the column is non-NULL, so the primitive accessors below
         // (getBoolean/getShort/getInt/getLong) cannot return a NULL-coerced default; wasNull() is unnecessary.
         // Keep this guard before any primitive read to avoid the classic NULL-as-0/false ambiguity.
-        // The initial assignment failed, so let's try to coerce the type
+        // The value is not assignable to the field, so let's try to coerce the type
         // by asking the JDBC driver to do the conversion for us.
         if (fieldType == Boolean.class) {
             field.set(obj, results.getBoolean(label));
