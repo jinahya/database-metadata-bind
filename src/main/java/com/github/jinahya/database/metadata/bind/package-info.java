@@ -48,6 +48,11 @@
  * therefore exist for the package's own use - chiefly the reference helpers that derive a parent row from a child -
  * and could be narrowed further without affecting XML or JSON binding at all. They must not be widened to
  * {@code public} to accommodate a framework, because no framework is asking.
+ * <p>
+ * The causation runs one way, and it is easy to read backwards: this accessor shape is what <em>obliges</em> the JSON
+ * binding to be configured, not the other way round. Because the setters are not {@code public}, a default JSON-B
+ * would have no visible way to write a property, so the field-access strategy has to be declared for deserialization
+ * to work at all. The shape came first; the configuration follows from it.
  *
  * <h2>Jakarta XML Binding</h2>
  * <p>
@@ -74,12 +79,14 @@
  *}
  * <h2>Jakarta JSON Binding</h2>
  * <p>
- * JSON binding is also field-based. The package-level
- * {@link jakarta.json.bind.annotation.JsonbVisibility @JsonbVisibility} lets a default
- * {@link jakarta.json.bind.Jsonb} instance serialize and deserialize binding types despite their private fields,
- * non-public setters, and protected no-argument constructors. The visibility strategy type is public only so a Jakarta
- * JSON Binding provider can instantiate it reflectively from the package annotation; application code normally does not
- * need to reference it directly.
+ * JSON binding is also field-based, through the package-level
+ * {@link jakarta.json.bind.annotation.JsonbVisibility @JsonbVisibility}. It is needed for
+ * <strong>deserialization</strong> alone, and only because the setters are not {@code public}: JSON-B considers only
+ * public members by default, so a binding type <em>serializes</em> correctly without any help - the getters are public
+ * - while <em>deserializing</em> one would otherwise produce an instance with every property left {@code null}, there
+ * being no visible setter to write through. The {@code protected} no-argument constructor is not what the strategy
+ * addresses; a provider reaches that on its own. The strategy type is public only so a provider can instantiate it
+ * reflectively from the package annotation; application code normally does not need to reference it directly.
  * </p>
  * <p>
  * Unlike XML binding, Jakarta JSON Binding can write a {@link java.util.List} directly as a JSON array, so no
