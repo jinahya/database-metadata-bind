@@ -56,8 +56,8 @@ final class ContextUtils {
      * Returns a map of all declared fields of the specified class (and its superclasses) that are annotated with
      * {@link _ColumnLabel}, each mapped to its annotation.
      * <p>
-     * Each matching non-enum-constant field is made {@linkplain Field#setAccessible(boolean) accessible} so that its
-     * value can later be read or written reflectively. The search walks up through superclasses.
+     * Every matching field is made {@linkplain Field#setAccessible(boolean) accessible} so that its value can later be
+     * read or written reflectively. The search walks up through superclasses.
      *
      * @param c the class whose declared fields, along with those of its superclasses, are inspected.
      * @return a new map of matching fields and their {@link _ColumnLabel} annotations; may be empty but never
@@ -67,10 +67,13 @@ final class ContextUtils {
             "java:S3011" // setAccessible
     })
     static Map<Field, _ColumnLabel> getBindingFields(final Class<?> c) {
-        {
-            final var elementTypes = _ColumnLabel.class.getAnnotation(Target.class).value();
-            assert elementTypes.length == 1 && elementTypes[0] == ElementType.FIELD;
-        }
+        // this method reads _ColumnLabel off fields only, which is sound exactly while the annotation stays
+        // FIELD-targeted. Kept as a single assert expression: Target#value() returns a defensively cloned array on
+        // every call, so hoisting it into a local would allocate on every invocation even with assertions disabled.
+        assert Arrays.equals(_ColumnLabel.class.getAnnotation(Target.class).value(),
+                             new ElementType[] {ElementType.FIELD})
+                : "@_ColumnLabel is no longer FIELD-only: "
+                  + Arrays.toString(_ColumnLabel.class.getAnnotation(Target.class).value());
         final Map<Field, _ColumnLabel> fields = new HashMap<>();
         for (Class<?> k = c; k != null; k = k.getSuperclass()) {
             for (final Field field : k.getDeclaredFields()) {
