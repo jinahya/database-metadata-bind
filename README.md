@@ -60,6 +60,20 @@ List<Table> tables = context.getTables(null, null, "%", null);   // materializes
 context.forEachTable(null, null, "%", null, table -> { ... });   // one row at a time
 ```
 
+## Navigating from a bound row
+
+Once you hold a `Table`, ask for what belongs to it rather than unpacking its catalog and schema by hand:
+
+```java
+List<Column> columns = context.getColumnsOf(table, "%");
+List<PrimaryKey> keys = context.getPrimaryKeysOf(table);
+```
+
+This is worth preferring: a row's catalog may be `null`, and passing that straight back through
+`getColumns(catalog, ...)` means *do not narrow by catalog* rather than *this table's catalog*, which returns extra
+rows instead of an error. See [Model Notes](https://github.com/jinahya/database-metadata-bind/wiki/Model-Notes) and
+[API Reference](https://github.com/jinahya/database-metadata-bind/wiki/API-Reference).
+
 Both read the same result set and bind the same objects. They differ in *when* you see each row.
 
 Reach for `get*` by default — it is the simpler call and the list is yours to keep. Reach for
