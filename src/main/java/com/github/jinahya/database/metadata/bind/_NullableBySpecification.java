@@ -27,7 +27,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A marker annotation for columns may be {@code null}.
+ * A marker for a column the JDBC specification documents as possibly {@code null}.
+ * <p>
+ * Applied to a binding field when, and only when, the corresponding {@link java.sql.DatabaseMetaData} method documents
+ * that column with a "(may be {@code null})" qualifier. The specification is uneven across API families - the same
+ * column name may be nullable in one method and not in another - so this marker records the per-method contract rather
+ * than a guess from the column's name.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */

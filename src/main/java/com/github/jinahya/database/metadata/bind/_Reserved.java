@@ -27,7 +27,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A marker annotation for columns reserved.
+ * A meta-annotation for the field-level markers whose columns are reserved.
+ * <p>
+ * This annotation targets {@link java.lang.annotation.ElementType#ANNOTATION_TYPE ANNOTATION_TYPE}, not fields: it is
+ * applied to {@link _ReservedBySpecification}, and is never applied to a binding field directly. It is itself
+ * {@link _Nullable}, since a reserved column has no defined value yet.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */

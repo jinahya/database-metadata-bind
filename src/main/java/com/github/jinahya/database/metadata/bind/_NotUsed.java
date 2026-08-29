@@ -27,7 +27,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A marker annotation for columns not used.
+ * A meta-annotation for the field-level markers whose columns are not used.
+ * <p>
+ * This annotation targets {@link java.lang.annotation.ElementType#ANNOTATION_TYPE ANNOTATION_TYPE}, not fields: it is
+ * applied to {@link _NotUsedBySpecification}, and is never applied to a binding field directly. It is itself
+ * {@link _Nullable}, since a column that is not used carries no meaningful value.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
