@@ -88,7 +88,7 @@ import java.util.function.Consumer;
  *
  * @see Location
  */
-public final class ContextNavigationUtils {
+final class ContextNavigationUtils {
 
     /**
      * A non-narrowing lookup that accepts each bound row to the specified consumer.

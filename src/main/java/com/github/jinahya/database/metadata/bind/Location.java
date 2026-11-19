@@ -40,7 +40,7 @@ import java.util.Objects;
  * @param schema  the schema value; may be {@code null}.
  * @see ContextNavigationUtils
  */
-public record Location(@Nullable String catalog, @Nullable String schema) {
+record Location(@Nullable String catalog, @Nullable String schema) {
 
     /**
      * Returns the value to pass as the {@code catalog} argument of a {@link DatabaseMetaData} method to select this
