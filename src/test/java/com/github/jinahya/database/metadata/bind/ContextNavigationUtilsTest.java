@@ -51,13 +51,13 @@ class ContextNavigationUtilsTest {
         @Test
         void __nullArguments() {
             final var context = context();
-            assertThatThrownBy(() -> ContextNavigationUtils.getCatalogsAndSchemasOfTables(null, "%"))
+            assertThatThrownBy(() -> ContextNavigationUtils.getLocationsOfTables(null, "%"))
                     .isInstanceOf(NullPointerException.class);
-            assertThatThrownBy(() -> ContextNavigationUtils.getCatalogsAndSchemasOfTables(context, null))
+            assertThatThrownBy(() -> ContextNavigationUtils.getLocationsOfTables(context, null))
                     .isInstanceOf(NullPointerException.class);
-            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(null, "%"))
+            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyLocationOfTables(null, "%"))
                     .isInstanceOf(NullPointerException.class);
-            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, null))
+            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyLocationOfTables(context, null))
                     .isInstanceOf(NullPointerException.class);
         }
 
@@ -66,8 +66,8 @@ class ContextNavigationUtilsTest {
             final var context = context();
             feed(context);
             final var types = new String[] {"VIEW"};
-            ContextNavigationUtils.getCatalogsAndSchemasOfTables(context, "A_B%");
-            ContextNavigationUtils.getCatalogsAndSchemasOfTables(context, "A_B%", types);
+            ContextNavigationUtils.getLocationsOfTables(context, "A_B%");
+            ContextNavigationUtils.getLocationsOfTables(context, "A_B%", types);
             verify(context).forEachTable(isNull(), isNull(), eq("A_B%"), isNull(), any());
             verify(context).forEachTable(isNull(), isNull(), eq("A_B%"), same(types), any());
         }
@@ -83,27 +83,27 @@ class ContextNavigationUtilsTest {
                  table(null, null),
                  table("C2", "s1"),
                  table(null, null));
-            assertThat(ContextNavigationUtils.getCatalogsAndSchemasOfTables(context, "t"))
+            assertThat(ContextNavigationUtils.getLocationsOfTables(context, "t"))
                     .containsExactly(
-                            new CatalogAndSchema("c2", "s1"),
-                            new CatalogAndSchema("c1", null),
-                            new CatalogAndSchema(null, "s1"),
-                            new CatalogAndSchema(null, null),
-                            new CatalogAndSchema("C2", "s1"));
+                            new Location("c2", "s1"),
+                            new Location("c1", null),
+                            new Location(null, "s1"),
+                            new Location(null, null),
+                            new Location("C2", "s1"));
         }
 
         @Test
         void list__emptyWhenNothingMatches() throws SQLException {
             final var context = context();
             feed(context);
-            assertThat(ContextNavigationUtils.getCatalogsAndSchemasOfTables(context, "t")).isEmpty();
+            assertThat(ContextNavigationUtils.getLocationsOfTables(context, "t")).isEmpty();
         }
 
         @Test
         void only__nothingMatched_NoSuchElement() throws SQLException {
             final var context = context();
             feed(context);
-            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "t"))
+            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyLocationOfTables(context, "t"))
                     .isInstanceOf(NoSuchElementException.class)
                     .hasMessageContaining("'t'");
         }
@@ -112,31 +112,31 @@ class ContextNavigationUtilsTest {
         void only__onePair_Returned() throws SQLException {
             final var context = context();
             feed(context, table("c", "s"), table("c", "s"));
-            assertThat(ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "t%"))
-                    .isEqualTo(new CatalogAndSchema("c", "s"));
+            assertThat(ContextNavigationUtils.getOnlyLocationOfTables(context, "t%"))
+                    .isEqualTo(new Location("c", "s"));
         }
 
         @Test
         void only__catalogWithoutSchema_ReturnedWhole() throws SQLException {
             final var context = context();
             feed(context, table("tenant_a", null));
-            assertThat(ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "t"))
-                    .isEqualTo(new CatalogAndSchema("tenant_a", null));
+            assertThat(ContextNavigationUtils.getOnlyLocationOfTables(context, "t"))
+                    .isEqualTo(new Location("tenant_a", null));
         }
 
         @Test
         void only__noLevelAtAll_ReturnedAsNullPair() throws SQLException {
             final var context = context();
             feed(context, table(null, null), table(null, null));
-            assertThat(ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "t%"))
-                    .isEqualTo(new CatalogAndSchema(null, null));
+            assertThat(ContextNavigationUtils.getOnlyLocationOfTables(context, "t%"))
+                    .isEqualTo(new Location(null, null));
         }
 
         @Test
         void only__twoSchemasInOneCatalog_IllegalArgument() throws SQLException {
             final var context = context();
             feed(context, table("tenant_a", "s1"), table("tenant_a", "s2"));
-            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "t"))
+            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyLocationOfTables(context, "t"))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("s1")
                     .hasMessageContaining("s2");
@@ -146,7 +146,7 @@ class ContextNavigationUtilsTest {
         void only__sameSchemaInTwoCatalogs_IllegalArgument() throws SQLException {
             final var context = context();
             feed(context, table("c1", "s"), table("c2", "s"));
-            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "t"))
+            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyLocationOfTables(context, "t"))
                     .isInstanceOf(IllegalArgumentException.class);
         }
 
@@ -154,7 +154,7 @@ class ContextNavigationUtilsTest {
         void only__someWithLevelSomeWithout_IllegalArgument() throws SQLException {
             final var context = context();
             feed(context, table("c", "s"), table("c", null));
-            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "t"))
+            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyLocationOfTables(context, "t"))
                     .isInstanceOf(IllegalArgumentException.class);
         }
 
@@ -162,7 +162,7 @@ class ContextNavigationUtilsTest {
         void only__caseVariants_IllegalArgument() throws SQLException {
             final var context = context();
             feed(context, table("c", "s"), table("c", "S"));
-            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "t"))
+            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyLocationOfTables(context, "t"))
                     .isInstanceOf(IllegalArgumentException.class);
         }
     }
@@ -181,10 +181,10 @@ class ContextNavigationUtilsTest {
                 consumer.accept(procedure("c", "s"));
                 return null;
             }).when(context).forEachProcedure(any(), any(), any(), any());
-            assertThat(ContextNavigationUtils.getCatalogsAndSchemasOfProcedures(context, "p_%"))
-                    .containsExactly(new CatalogAndSchema("c", "s"));
-            assertThat(ContextNavigationUtils.getOnlyCatalogAndSchemaOfProcedures(context, "p_%"))
-                    .isEqualTo(new CatalogAndSchema("c", "s"));
+            assertThat(ContextNavigationUtils.getLocationsOfProcedures(context, "p_%"))
+                    .containsExactly(new Location("c", "s"));
+            assertThat(ContextNavigationUtils.getOnlyLocationOfProcedures(context, "p_%"))
+                    .isEqualTo(new Location("c", "s"));
             verify(context, times(2)).forEachProcedure(isNull(), isNull(), eq("p_%"), any());
         }
 
@@ -197,7 +197,7 @@ class ContextNavigationUtilsTest {
                 consumer.accept(procedure("SHIPPING", "APP"));
                 return null;
             }).when(context).forEachProcedure(any(), any(), any(), any());
-            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyCatalogAndSchemaOfProcedures(context, "RUN"))
+            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyLocationOfProcedures(context, "RUN"))
                     .isInstanceOf(IllegalArgumentException.class);
         }
     }
@@ -214,10 +214,10 @@ class ContextNavigationUtilsTest {
                 consumer.accept(function("c", "s"));
                 return null;
             }).when(context).forEachFunction(any(), any(), any(), any());
-            assertThat(ContextNavigationUtils.getCatalogsAndSchemasOfFunctions(context, "f_%"))
-                    .containsExactly(new CatalogAndSchema("c", "s"));
-            assertThat(ContextNavigationUtils.getOnlyCatalogAndSchemaOfFunctions(context, "f_%"))
-                    .isEqualTo(new CatalogAndSchema("c", "s"));
+            assertThat(ContextNavigationUtils.getLocationsOfFunctions(context, "f_%"))
+                    .containsExactly(new Location("c", "s"));
+            assertThat(ContextNavigationUtils.getOnlyLocationOfFunctions(context, "f_%"))
+                    .isEqualTo(new Location("c", "s"));
             verify(context, times(2)).forEachFunction(isNull(), isNull(), eq("f_%"), any());
         }
 
@@ -226,9 +226,9 @@ class ContextNavigationUtilsTest {
             final var context = context();
             doThrow(new SQLFeatureNotSupportedException())
                     .when(context).forEachFunction(any(), any(), any(), any());
-            assertThatThrownBy(() -> ContextNavigationUtils.getCatalogsAndSchemasOfFunctions(context, "%"))
+            assertThatThrownBy(() -> ContextNavigationUtils.getLocationsOfFunctions(context, "%"))
                     .isInstanceOf(SQLFeatureNotSupportedException.class);
-            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyCatalogAndSchemaOfFunctions(context, "%"))
+            assertThatThrownBy(() -> ContextNavigationUtils.getOnlyLocationOfFunctions(context, "%"))
                     .isInstanceOf(SQLFeatureNotSupportedException.class);
         }
     }
@@ -246,14 +246,14 @@ class ContextNavigationUtilsTest {
                 return null;
             }).when(context).forEachUDT(any(), any(), any(), any(), any());
             final var types = new int[] {java.sql.Types.DISTINCT};
-            assertThat(ContextNavigationUtils.getCatalogsAndSchemasOfUDTs(context, "u_%"))
-                    .containsExactly(new CatalogAndSchema("c", "s"));
-            assertThat(ContextNavigationUtils.getOnlyCatalogAndSchemaOfUDTs(context, "u_%"))
-                    .isEqualTo(new CatalogAndSchema("c", "s"));
-            assertThat(ContextNavigationUtils.getCatalogsAndSchemasOfUDTs(context, "u_%", types))
-                    .containsExactly(new CatalogAndSchema("c", "s"));
-            assertThat(ContextNavigationUtils.getOnlyCatalogAndSchemaOfUDTs(context, "u_%", types))
-                    .isEqualTo(new CatalogAndSchema("c", "s"));
+            assertThat(ContextNavigationUtils.getLocationsOfUDTs(context, "u_%"))
+                    .containsExactly(new Location("c", "s"));
+            assertThat(ContextNavigationUtils.getOnlyLocationOfUDTs(context, "u_%"))
+                    .isEqualTo(new Location("c", "s"));
+            assertThat(ContextNavigationUtils.getLocationsOfUDTs(context, "u_%", types))
+                    .containsExactly(new Location("c", "s"));
+            assertThat(ContextNavigationUtils.getOnlyLocationOfUDTs(context, "u_%", types))
+                    .isEqualTo(new Location("c", "s"));
             verify(context, times(2)).forEachUDT(isNull(), isNull(), eq("u_%"), isNull(), any());
             verify(context, times(2)).forEachUDT(isNull(), isNull(), eq("u_%"), same(types), any());
         }
@@ -272,8 +272,8 @@ class ContextNavigationUtilsTest {
                     statement.execute("CREATE TABLE AXB.OTHER (Y INT)");
                 }
                 final var context = Context.from(c);
-                final var location = ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "ORDERS");
-                assertThat(location).isEqualTo(new CatalogAndSchema(c.getCatalog(), "A_B"));
+                final var location = ContextNavigationUtils.getOnlyLocationOfTables(context, "ORDERS");
+                assertThat(location).isEqualTo(new Location(c.getCatalog(), "A_B"));
                 // passed unescaped, the schema name is a pattern that also matches AXB
                 assertThat(context.getTables(location.catalogForLookup(), location.schema(), "%", null))
                         .extracting(Table::getTableSchem)
@@ -295,11 +295,11 @@ class ContextNavigationUtilsTest {
                     statement.execute("CREATE VIEW S2.EVENTS AS SELECT X FROM S1.EVENTS");
                 }
                 final var context = Context.from(c);
-                assertThatThrownBy(() -> ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "EVENTS"))
+                assertThatThrownBy(() -> ContextNavigationUtils.getOnlyLocationOfTables(context, "EVENTS"))
                         .isInstanceOf(IllegalArgumentException.class);
-                assertThat(ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(
+                assertThat(ContextNavigationUtils.getOnlyLocationOfTables(
                         context, "EVENTS", new String[] {"BASE TABLE"}))
-                        .isEqualTo(new CatalogAndSchema(c.getCatalog(), "S1"));
+                        .isEqualTo(new Location(c.getCatalog(), "S1"));
             });
         }
 
@@ -314,14 +314,14 @@ class ContextNavigationUtilsTest {
                     statement.execute("CREATE TYPE NAVIGATIONTYPE AS INT");
                 }
                 final var context = Context.from(c);
-                final var expected = new CatalogAndSchema(c.getCatalog(), c.getSchema());
-                assertThat(ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "NAVIGATIONUTILS"))
+                final var expected = new Location(c.getCatalog(), c.getSchema());
+                assertThat(ContextNavigationUtils.getOnlyLocationOfTables(context, "NAVIGATIONUTILS"))
                         .isEqualTo(expected);
-                assertThat(ContextNavigationUtils.getOnlyCatalogAndSchemaOfFunctions(context, "NAVIGATIONFN"))
+                assertThat(ContextNavigationUtils.getOnlyLocationOfFunctions(context, "NAVIGATIONFN"))
                         .isEqualTo(expected);
-                assertThat(ContextNavigationUtils.getOnlyCatalogAndSchemaOfProcedures(context, "NAVIGATIONPROC"))
+                assertThat(ContextNavigationUtils.getOnlyLocationOfProcedures(context, "NAVIGATIONPROC"))
                         .isEqualTo(expected);
-                assertThat(ContextNavigationUtils.getOnlyCatalogAndSchemaOfUDTs(context, "NAVIGATIONTYPE"))
+                assertThat(ContextNavigationUtils.getOnlyLocationOfUDTs(context, "NAVIGATIONTYPE"))
                         .isEqualTo(expected);
             });
         }
@@ -333,13 +333,13 @@ class ContextNavigationUtilsTest {
                     statement.execute("CREATE TABLE NAVIGATIONUTILS (X INT)");
                 }
                 final var context = Context.from(c);
-                final var location = ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "NAVIGATIONUTILS");
-                assertThat(location).isEqualTo(new CatalogAndSchema(null, null));
+                final var location = ContextNavigationUtils.getOnlyLocationOfTables(context, "NAVIGATIONUTILS");
+                assertThat(location).isEqualTo(new Location(null, null));
                 assertThat(context.getTables(location.catalogForLookup(), location.schemaPatternForLookup(context),
                                              "NAVIGATIONUTILS", null))
                         .extracting(Table::getTableName)
                         .containsExactly("NAVIGATIONUTILS");
-                assertThatThrownBy(() -> ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "NO_SUCH"))
+                assertThatThrownBy(() -> ContextNavigationUtils.getOnlyLocationOfTables(context, "NO_SUCH"))
                         .isInstanceOf(NoSuchElementException.class);
             });
         }

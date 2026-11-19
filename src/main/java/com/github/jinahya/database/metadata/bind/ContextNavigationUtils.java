@@ -38,8 +38,8 @@ import java.util.function.Consumer;
  * A connection may see many catalogs and schemas, and which ones - and at which level a given engine's namespace is
  * reported - depends on the connection's URL, its user, and its driver's settings. Code that knows only the name of an
  * object it depends on cannot tell in advance which catalog/schema arguments to pass. The methods here answer that
- * from what the driver reports, as {@link CatalogAndSchema} pairs, for each kind of object that JDBC places directly
- * in a catalog/schema: tables, procedures, functions, and user-defined types.
+ * from what the driver reports, as {@link Location}s - catalog/schema pairs - for each kind of object that JDBC
+ * places directly in a catalog/schema: tables, procedures, functions, and user-defined types.
  * <h2 id="contract">Common behavior</h2>
  * <p>
  * Every method makes exactly one call of the corresponding {@link DatabaseMetaData} method, with {@code null} for both
@@ -53,8 +53,8 @@ import java.util.function.Consumer;
  * object, not where the object exists.
  * <p>
  * Each row yields the pair of its catalog and schema values, exactly as reported - either may be {@code null}, and
- * values are compared exactly, without case folding. {@code getCatalogsAndSchemasOfXxx} returns the distinct pairs in
- * the order each is first seen. {@code getOnlyCatalogAndSchemaOfXxx} returns the one pair all rows share, and refuses
+ * values are compared exactly, without case folding. {@code getLocationsOfXxx} returns the distinct pairs in
+ * the order each is first seen. {@code getOnlyLocationOfXxx} returns the one pair all rows share, and refuses
  * rather than guesses when there is not exactly one:
  * <ul>
  *   <li>{@link NoSuchElementException} when there is no row;</li>
@@ -67,13 +67,13 @@ import java.util.function.Consumer;
  * is never reported as "no row".
  * <h2 id="handoff">Using a result</h2>
  * <p>
- * Pass the components of a result through {@link CatalogAndSchema#catalogForLookup()},
- * {@link CatalogAndSchema#schemaForLookup()}, or {@link CatalogAndSchema#schemaPatternForLookup(Context)}, not as
+ * Pass the components of a result through {@link Location#catalogForLookup()},
+ * {@link Location#schemaForLookup()}, or {@link Location#schemaPatternForLookup(Context)}, not as
  * they are: those map an absent level to {@code ""}, which selects objects without that level, and escape a schema
  * name that is about to be used as a pattern. A schema name passed as a pattern unescaped can match other schemas too.
  * {@snippet lang = "java":
  * // where does this application's ORDERS table live on this connection?
- * final var location = ContextNavigationUtils.getOnlyCatalogAndSchemaOfTables(context, "ORDERS");
+ * final var location = ContextNavigationUtils.getOnlyLocationOfTables(context, "ORDERS");
  * final var tables = context.getTables(
  *         location.catalogForLookup(), location.schemaPatternForLookup(context), "%", null);
  *}
@@ -86,7 +86,7 @@ import java.util.function.Consumer;
  * {@link DatabaseMetaData#getProcedures(String, String, String)} reports - procedures only, or functions as well - is
  * the driver's choice, and can depend on its settings and on the server's version.
  *
- * @see CatalogAndSchema
+ * @see Location
  */
 public final class ContextNavigationUtils {
 
@@ -101,17 +101,17 @@ public final class ContextNavigationUtils {
         void forEach(Consumer<? super T> consumer) throws SQLException;
     }
 
-    private static <T> Set<CatalogAndSchema> distinct(
+    private static <T> Set<Location> distinct(
             final Lookup<T> lookup,
             final java.util.function.Function<? super T, @Nullable String> catalogOf,
             final java.util.function.Function<? super T, @Nullable String> schemaOf)
             throws SQLException {
-        final Set<CatalogAndSchema> pairs = new LinkedHashSet<>();
-        lookup.forEach(row -> pairs.add(new CatalogAndSchema(catalogOf.apply(row), schemaOf.apply(row))));
+        final Set<Location> pairs = new LinkedHashSet<>();
+        lookup.forEach(row -> pairs.add(new Location(catalogOf.apply(row), schemaOf.apply(row))));
         return pairs;
     }
 
-    private static <T> List<CatalogAndSchema> all(
+    private static <T> List<Location> all(
             final Lookup<T> lookup,
             final java.util.function.Function<? super T, @Nullable String> catalogOf,
             final java.util.function.Function<? super T, @Nullable String> schemaOf)
@@ -119,7 +119,7 @@ public final class ContextNavigationUtils {
         return new ArrayList<>(distinct(lookup, catalogOf, schemaOf));
     }
 
-    private static <T> CatalogAndSchema only(
+    private static <T> Location only(
             final Lookup<T> lookup,
             final java.util.function.Function<? super T, @Nullable String> catalogOf,
             final java.util.function.Function<? super T, @Nullable String> schemaOf,
@@ -131,7 +131,7 @@ public final class ContextNavigationUtils {
         }
         if (pairs.size() > 1) {
             throw new IllegalArgumentException(
-                    kind + "s matching '" + namePattern + "' are in more than one catalog/schema pair: " + pairs);
+                    kind + "s matching '" + namePattern + "' are in more than one location: " + pairs);
         }
         return pairs.iterator().next();
     }
@@ -147,12 +147,12 @@ public final class ContextNavigationUtils {
      *                         {@link Context#getTables(String, String, String, String[])}.
      * @return a list of distinct pairs, in the order each is first seen; may be empty but never {@code null}.
      * @throws SQLException if a database error occurs.
-     * @see #getCatalogsAndSchemasOfTables(Context, String, String[])
+     * @see #getLocationsOfTables(Context, String, String[])
      */
-    public static List<CatalogAndSchema> getCatalogsAndSchemasOfTables(final Context context,
+    public static List<Location> getLocationsOfTables(final Context context,
                                                                        final String tableNamePattern)
             throws SQLException {
-        return getCatalogsAndSchemasOfTables(context, tableNamePattern, null);
+        return getLocationsOfTables(context, tableNamePattern, null);
     }
 
     /**
@@ -168,7 +168,7 @@ public final class ContextNavigationUtils {
      * @return a list of distinct pairs, in the order each is first seen; may be empty but never {@code null}.
      * @throws SQLException if a database error occurs.
      */
-    public static List<CatalogAndSchema> getCatalogsAndSchemasOfTables(final Context context,
+    public static List<Location> getLocationsOfTables(final Context context,
                                                                        final String tableNamePattern,
                                                                        @Nullable final String[] types)
             throws SQLException {
@@ -183,7 +183,7 @@ public final class ContextNavigationUtils {
      * table name pattern, as described in <a href="#contract">common behavior</a>.
      * <p>
      * Since every table type is included, a view and a base table of the same name in different schemas make the
-     * result ambiguous; narrow by type with {@link #getOnlyCatalogAndSchemaOfTables(Context, String, String[])}.
+     * result ambiguous; narrow by type with {@link #getOnlyLocationOfTables(Context, String, String[])}.
      *
      * @param context          the context whose tables are searched.
      * @param tableNamePattern a value for the {@code tableNamePattern} parameter of
@@ -194,10 +194,10 @@ public final class ContextNavigationUtils {
      * @throws NoSuchElementException   if no table matches.
      * @throws IllegalArgumentException if matching tables are in more than one pair.
      */
-    public static CatalogAndSchema getOnlyCatalogAndSchemaOfTables(final Context context,
+    public static Location getOnlyLocationOfTables(final Context context,
                                                                    final String tableNamePattern)
             throws SQLException {
-        return getOnlyCatalogAndSchemaOfTables(context, tableNamePattern, null);
+        return getOnlyLocationOfTables(context, tableNamePattern, null);
     }
 
     /**
@@ -216,7 +216,7 @@ public final class ContextNavigationUtils {
      * @throws NoSuchElementException   if no table matches.
      * @throws IllegalArgumentException if matching tables are in more than one pair.
      */
-    public static CatalogAndSchema getOnlyCatalogAndSchemaOfTables(final Context context,
+    public static Location getOnlyLocationOfTables(final Context context,
                                                                    final String tableNamePattern,
                                                                    @Nullable final String[] types)
             throws SQLException {
@@ -239,7 +239,7 @@ public final class ContextNavigationUtils {
      * @return a list of distinct pairs, in the order each is first seen; may be empty but never {@code null}.
      * @throws SQLException if a database error occurs.
      */
-    public static List<CatalogAndSchema> getCatalogsAndSchemasOfProcedures(final Context context,
+    public static List<Location> getLocationsOfProcedures(final Context context,
                                                                            final String procedureNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -261,7 +261,7 @@ public final class ContextNavigationUtils {
      * @throws NoSuchElementException   if no procedure matches.
      * @throws IllegalArgumentException if matching procedures are in more than one pair.
      */
-    public static CatalogAndSchema getOnlyCatalogAndSchemaOfProcedures(final Context context,
+    public static Location getOnlyLocationOfProcedures(final Context context,
                                                                        final String procedureNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -283,7 +283,7 @@ public final class ContextNavigationUtils {
      * @return a list of distinct pairs, in the order each is first seen; may be empty but never {@code null}.
      * @throws SQLException if a database error occurs.
      */
-    public static List<CatalogAndSchema> getCatalogsAndSchemasOfFunctions(final Context context,
+    public static List<Location> getLocationsOfFunctions(final Context context,
                                                                           final String functionNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -305,7 +305,7 @@ public final class ContextNavigationUtils {
      * @throws NoSuchElementException   if no function matches.
      * @throws IllegalArgumentException if matching functions are in more than one pair.
      */
-    public static CatalogAndSchema getOnlyCatalogAndSchemaOfFunctions(final Context context,
+    public static Location getOnlyLocationOfFunctions(final Context context,
                                                                       final String functionNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -325,12 +325,12 @@ public final class ContextNavigationUtils {
      *                        {@link Context#getUDTs(String, String, String, int[])}.
      * @return a list of distinct pairs, in the order each is first seen; may be empty but never {@code null}.
      * @throws SQLException if a database error occurs.
-     * @see #getCatalogsAndSchemasOfUDTs(Context, String, int[])
+     * @see #getLocationsOfUDTs(Context, String, int[])
      */
-    public static List<CatalogAndSchema> getCatalogsAndSchemasOfUDTs(final Context context,
+    public static List<Location> getLocationsOfUDTs(final Context context,
                                                                      final String typeNamePattern)
             throws SQLException {
-        return getCatalogsAndSchemasOfUDTs(context, typeNamePattern, null);
+        return getLocationsOfUDTs(context, typeNamePattern, null);
     }
 
     /**
@@ -345,7 +345,7 @@ public final class ContextNavigationUtils {
      * @return a list of distinct pairs, in the order each is first seen; may be empty but never {@code null}.
      * @throws SQLException if a database error occurs.
      */
-    public static List<CatalogAndSchema> getCatalogsAndSchemasOfUDTs(final Context context,
+    public static List<Location> getLocationsOfUDTs(final Context context,
                                                                      final String typeNamePattern,
                                                                      @Nullable final int[] types)
             throws SQLException {
@@ -366,12 +366,12 @@ public final class ContextNavigationUtils {
      * @throws SQLException             if a database error occurs.
      * @throws NoSuchElementException   if no user-defined type matches.
      * @throws IllegalArgumentException if matching user-defined types are in more than one pair.
-     * @see #getOnlyCatalogAndSchemaOfUDTs(Context, String, int[])
+     * @see #getOnlyLocationOfUDTs(Context, String, int[])
      */
-    public static CatalogAndSchema getOnlyCatalogAndSchemaOfUDTs(final Context context,
+    public static Location getOnlyLocationOfUDTs(final Context context,
                                                                  final String typeNamePattern)
             throws SQLException {
-        return getOnlyCatalogAndSchemaOfUDTs(context, typeNamePattern, null);
+        return getOnlyLocationOfUDTs(context, typeNamePattern, null);
     }
 
     /**
@@ -388,7 +388,7 @@ public final class ContextNavigationUtils {
      * @throws NoSuchElementException   if no user-defined type matches.
      * @throws IllegalArgumentException if matching user-defined types are in more than one pair.
      */
-    public static CatalogAndSchema getOnlyCatalogAndSchemaOfUDTs(final Context context,
+    public static Location getOnlyLocationOfUDTs(final Context context,
                                                                  final String typeNamePattern,
                                                                  @Nullable final int[] types)
             throws SQLException {

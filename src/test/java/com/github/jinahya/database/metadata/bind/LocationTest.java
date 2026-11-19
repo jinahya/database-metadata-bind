@@ -33,18 +33,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-class CatalogAndSchemaTest {
+class LocationTest {
 
     @Test
     void forLookup__nullComponentsBecomeEmpty() {
-        final var pair = new CatalogAndSchema(null, null);
+        final var pair = new Location(null, null);
         assertThat(pair.catalogForLookup()).isEmpty();
         assertThat(pair.schemaForLookup()).isEmpty();
     }
 
     @Test
     void forLookup__valuesPassThroughUnescaped() {
-        final var pair = new CatalogAndSchema("c_1", "s_1");
+        final var pair = new Location("c_1", "s_1");
         assertThat(pair.catalogForLookup()).isEqualTo("c_1");
         assertThat(pair.schemaForLookup()).isEqualTo("s_1");
     }
@@ -52,7 +52,7 @@ class CatalogAndSchemaTest {
     @Test
     void schemaPatternForLookup__nullSchema_EmptyWithoutAskingTheDriver() throws SQLException {
         final var metadata = mock(DatabaseMetaData.class);
-        assertThat(new CatalogAndSchema("c", null).schemaPatternForLookup(Context.of(metadata))).isEmpty();
+        assertThat(new Location("c", null).schemaPatternForLookup(Context.of(metadata))).isEmpty();
         verifyNoInteractions(metadata);
     }
 
@@ -60,13 +60,13 @@ class CatalogAndSchemaTest {
     void schemaPatternForLookup__escapedWithTheDriversEscape() throws SQLException {
         final var metadata = mock(DatabaseMetaData.class);
         when(metadata.getSearchStringEscape()).thenReturn("\\");
-        assertThat(new CatalogAndSchema(null, "A_B%").schemaPatternForLookup(Context.of(metadata)))
+        assertThat(new Location(null, "A_B%").schemaPatternForLookup(Context.of(metadata)))
                 .isEqualTo("A\\_B\\%");
     }
 
     @Test
     void schemaPatternForLookup__nullContext() {
-        assertThatThrownBy(() -> new CatalogAndSchema(null, "s").schemaPatternForLookup(null))
+        assertThatThrownBy(() -> new Location(null, "s").schemaPatternForLookup(null))
                 .isInstanceOf(NullPointerException.class);
     }
 
@@ -82,6 +82,6 @@ class CatalogAndSchemaTest {
             "A_B      | ''   | A_B",
     })
     void escape(final String value, final String escape, final String expected) {
-        assertThat(CatalogAndSchema.escape(value, escape)).isEqualTo(expected);
+        assertThat(Location.escape(value, escape)).isEqualTo(expected);
     }
 }

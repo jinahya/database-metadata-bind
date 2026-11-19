@@ -27,8 +27,8 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 /**
- * A catalog value and a schema value, exactly as a driver reported them for one metadata row; either may be
- * {@code null}.
+ * Where an object lives on a connection: the catalog value and the schema value a driver reported for it, exactly as
+ * reported; either may be {@code null}.
  * <p>
  * A {@code null} component means the row was reported without that level - not "any". To point a later
  * {@link DatabaseMetaData} call at the same place, pass {@link #catalogForLookup()} as its {@code catalog} argument,
@@ -40,7 +40,7 @@ import java.util.Objects;
  * @param schema  the schema value; may be {@code null}.
  * @see ContextNavigationUtils
  */
-public record CatalogAndSchema(@Nullable String catalog, @Nullable String schema) {
+public record Location(@Nullable String catalog, @Nullable String schema) {
 
     /**
      * Returns the value to pass as the {@code catalog} argument of a {@link DatabaseMetaData} method to select this
