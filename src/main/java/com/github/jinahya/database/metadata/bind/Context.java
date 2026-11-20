@@ -53,6 +53,13 @@ import java.util.function.Consumer;
  * {@code TABLE_CAT} is {@code null}, {@code ""} is correct and {@code null} is wrong - and passing the wrong one
  * returns <em>extra rows rather than an error</em>, silently folding in same-named tables from other catalogs. These
  * methods are the only place that normalization is applied.
+ * <p>
+ * Extra rows have a second source: a row's schema and object names are literal, but some of the arguments they feed
+ * are <em>patterns</em> ({@code schemaPattern}, {@code tableNamePattern}, ...), in which {@code _} and {@code %} are
+ * wildcards. Those values are therefore escaped with the driver's
+ * {@linkplain DatabaseMetaData#getSearchStringEscape() search string escape}, so that navigating from {@code A_B} does
+ * not also return {@code AXB}'s rows. A driver which supplies no escape gets the values unescaped, and may return
+ * extra rows. Pattern arguments the caller passes, such as {@code columnNamePattern}, are passed through verbatim.
  *
  * <h3>Cost: one round trip each</h3>
  * <p>
@@ -444,10 +451,11 @@ public class Context {
      */
     List<Attribute> getAttributesOf(final UDT udt, final String attributeNamePattern) throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
+        final var escape = metadata.getSearchStringEscape();
         return getAttributes(
                 udt.getTypeCatForMetadataLookup(),
-                udt.getTypeSchemForMetadataLookup(),
-                udt.getTypeName(),
+                Location.escape(udt.getTypeSchemForMetadataLookup(), escape),
+                Location.escape(udt.getTypeName(), escape),
                 attributeNamePattern
         );
     }
@@ -465,10 +473,11 @@ public class Context {
                             final Consumer<? super Attribute> consumer)
             throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachAttribute(
                 udt.getTypeCatForMetadataLookup(),
-                udt.getTypeSchemForMetadataLookup(),
-                udt.getTypeName(),
+                Location.escape(udt.getTypeSchemForMetadataLookup(), escape),
+                Location.escape(udt.getTypeName(), escape),
                 attributeNamePattern,
                 consumer
         );
@@ -1003,10 +1012,11 @@ public class Context {
      */
     public List<Column> getColumnsOf(final Table table, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(table, "table is null");
+        final var escape = metadata.getSearchStringEscape();
         return getColumns(
                 table.getTableCatForMetadataLookup(),
-                table.getTableSchemForMetadataLookup(),
-                table.getTableName(),
+                Location.escape(table.getTableSchemForMetadataLookup(), escape),
+                Location.escape(table.getTableName(), escape),
                 columnNamePattern
         );
     }
@@ -1025,10 +1035,11 @@ public class Context {
                                 final Consumer<? super Column> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachColumn(
                 table.getTableCatForMetadataLookup(),
-                table.getTableSchemForMetadataLookup(),
-                table.getTableName(),
+                Location.escape(table.getTableSchemForMetadataLookup(), escape),
+                Location.escape(table.getTableName(), escape),
                 columnNamePattern,
                 consumer
         );
@@ -1496,9 +1507,10 @@ public class Context {
     List<Function> getFunctionsOf(final Schema schema, final String functionNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         return getFunctions(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 functionNamePattern
         );
     }
@@ -1518,9 +1530,10 @@ public class Context {
                            final Consumer<? super Function> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachFunction(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 functionNamePattern,
                 consumer
         );
@@ -1680,10 +1693,11 @@ public class Context {
     List<FunctionColumn> getFunctionColumnsOf(final Function function, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(function, "function is null");
+        final var escape = metadata.getSearchStringEscape();
         return getFunctionColumns(
                 function.getFunctionCatForMetadataLookup(),
-                function.getFunctionSchemForMetadataLookup(),
-                function.getFunctionName(),
+                Location.escape(function.getFunctionSchemForMetadataLookup(), escape),
+                Location.escape(function.getFunctionName(), escape),
                 columnNamePattern
         );
     }
@@ -1701,10 +1715,11 @@ public class Context {
                                  final Consumer<? super FunctionColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(function, "function is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachFunctionColumn(
                 function.getFunctionCatForMetadataLookup(),
-                function.getFunctionSchemForMetadataLookup(),
-                function.getFunctionName(),
+                Location.escape(function.getFunctionSchemForMetadataLookup(), escape),
+                Location.escape(function.getFunctionName(), escape),
                 columnNamePattern,
                 consumer
         );
@@ -2255,9 +2270,11 @@ public class Context {
     List<ProcedureColumn> getProcedureColumnsOf(final Procedure procedure, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(procedure, "procedure is null");
+        final var escape = metadata.getSearchStringEscape();
         return getProcedureColumns(
-                procedure.getProcedureCatForMetadataLookup(), procedure.getProcedureSchemForMetadataLookup(),
-                procedure.getProcedureName(),
+                procedure.getProcedureCatForMetadataLookup(),
+                Location.escape(procedure.getProcedureSchemForMetadataLookup(), escape),
+                Location.escape(procedure.getProcedureName(), escape),
                 columnNamePattern
         );
     }
@@ -2275,10 +2292,11 @@ public class Context {
                                   final Consumer<? super ProcedureColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(procedure, "procedure is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachProcedureColumn(
                 procedure.getProcedureCatForMetadataLookup(),
-                procedure.getProcedureSchemForMetadataLookup(),
-                procedure.getProcedureName(),
+                Location.escape(procedure.getProcedureSchemForMetadataLookup(), escape),
+                Location.escape(procedure.getProcedureName(), escape),
                 columnNamePattern,
                 consumer
         );
@@ -2454,9 +2472,10 @@ public class Context {
     List<Procedure> getProceduresOf(final Schema schema, final String procedureNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         return getProcedures(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 procedureNamePattern
         );
     }
@@ -2476,9 +2495,10 @@ public class Context {
                             final Consumer<? super Procedure> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachProcedure(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 procedureNamePattern,
                 consumer
         );
@@ -2618,8 +2638,11 @@ public class Context {
     public List<PseudoColumn> getPseudoColumnsOf(final Table table, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
+        final var escape = metadata.getSearchStringEscape();
         return getPseudoColumns(
-                table.getTableCatForMetadataLookup(), table.getTableSchemForMetadataLookup(), table.getTableName(),
+                table.getTableCatForMetadataLookup(),
+                Location.escape(table.getTableSchemForMetadataLookup(), escape),
+                Location.escape(table.getTableName(), escape),
                 columnNamePattern
         );
     }
@@ -2638,10 +2661,11 @@ public class Context {
                                       final Consumer<? super PseudoColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachPseudoColumn(
                 table.getTableCatForMetadataLookup(),
-                table.getTableSchemForMetadataLookup(),
-                table.getTableName(),
+                Location.escape(table.getTableSchemForMetadataLookup(), escape),
+                Location.escape(table.getTableName(), escape),
                 columnNamePattern,
                 consumer
         );
@@ -3003,9 +3027,10 @@ public class Context {
      */
     List<SuperTable> getSuperTablesOf(final Schema schema, final String tableNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         return getSuperTables(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 tableNamePattern
         );
     }
@@ -3023,9 +3048,10 @@ public class Context {
                              final Consumer<? super SuperTable> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachSuperTable(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 tableNamePattern,
                 consumer
         );
@@ -3043,10 +3069,11 @@ public class Context {
      */
     public List<SuperTable> getSuperTablesOf(final Table subtable) throws SQLException {
         Objects.requireNonNull(subtable, "subtable is null");
+        final var escape = metadata.getSearchStringEscape();
         return getSuperTables(
                 subtable.getTableCatForMetadataLookup(),
-                subtable.getTableSchemForMetadataLookup(),
-                subtable.getTableName()
+                Location.escape(subtable.getTableSchemForMetadataLookup(), escape),
+                Location.escape(subtable.getTableName(), escape)
         );
     }
 
@@ -3064,10 +3091,11 @@ public class Context {
     public void forEachSuperTableOf(final Table subtable, final Consumer<? super SuperTable> consumer)
             throws SQLException {
         Objects.requireNonNull(subtable, "subtable is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachSuperTable(
                 subtable.getTableCatForMetadataLookup(),
-                subtable.getTableSchemForMetadataLookup(),
-                subtable.getTableName(),
+                Location.escape(subtable.getTableSchemForMetadataLookup(), escape),
+                Location.escape(subtable.getTableName(), escape),
                 consumer
         );
     }
@@ -3243,9 +3271,10 @@ public class Context {
     List<SuperType> getSuperTypesOf(final Schema schema, final String typeNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         return getSuperTypes(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 typeNamePattern
         );
     }
@@ -3263,9 +3292,10 @@ public class Context {
                             final Consumer<? super SuperType> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachSuperType(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 typeNamePattern,
                 consumer
         );
@@ -3281,10 +3311,11 @@ public class Context {
      */
     List<SuperType> getSuperTypesOf(final UDT udt) throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
+        final var escape = metadata.getSearchStringEscape();
         return getSuperTypes(
                 udt.getTypeCatForMetadataLookup(),
-                udt.getTypeSchemForMetadataLookup(),
-                udt.getTypeName()
+                Location.escape(udt.getTypeSchemForMetadataLookup(), escape),
+                Location.escape(udt.getTypeName(), escape)
         );
     }
 
@@ -3298,10 +3329,11 @@ public class Context {
      */
     void forEachSuperTypeOf(final UDT udt, final Consumer<? super SuperType> consumer) throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachSuperType(
                 udt.getTypeCatForMetadataLookup(),
-                udt.getTypeSchemForMetadataLookup(),
-                udt.getTypeName(),
+                Location.escape(udt.getTypeSchemForMetadataLookup(), escape),
+                Location.escape(udt.getTypeName(), escape),
                 consumer
         );
     }
@@ -3479,9 +3511,10 @@ public class Context {
     List<TablePrivilege> getTablePrivilegesOf(final Schema schema, final String tableNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         return getTablePrivileges(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 tableNamePattern
         );
     }
@@ -3501,9 +3534,10 @@ public class Context {
                                  final Consumer<? super TablePrivilege> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachTablePrivilege(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 tableNamePattern,
                 consumer
         );
@@ -3520,10 +3554,11 @@ public class Context {
      */
     public List<TablePrivilege> getTablePrivilegesOf(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
+        final var escape = metadata.getSearchStringEscape();
         return getTablePrivileges(
                 table.getTableCatForMetadataLookup(),
-                table.getTableSchemForMetadataLookup(),
-                table.getTableName()
+                Location.escape(table.getTableSchemForMetadataLookup(), escape),
+                Location.escape(table.getTableName(), escape)
         );
     }
 
@@ -3539,10 +3574,11 @@ public class Context {
     public void forEachTablePrivilegeOf(final Table table, final Consumer<? super TablePrivilege> consumer)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachTablePrivilege(
                 table.getTableCatForMetadataLookup(),
-                table.getTableSchemForMetadataLookup(),
-                table.getTableName(),
+                Location.escape(table.getTableSchemForMetadataLookup(), escape),
+                Location.escape(table.getTableName(), escape),
                 consumer
         );
     }
@@ -3805,9 +3841,10 @@ public class Context {
                             @Nullable final String[] types)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         return getTables(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 tableNamePattern,
                 types
         );
@@ -3829,9 +3866,10 @@ public class Context {
                         final Consumer<? super Table> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachTable(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 tableNamePattern,
                 types,
                 consumer
@@ -4087,9 +4125,10 @@ public class Context {
     List<UDT> getUDTsOf(final Schema schema, final String typeNamePattern, @Nullable final int[] types)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         return getUDTs(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 typeNamePattern,
                 types
         );
@@ -4111,9 +4150,10 @@ public class Context {
                       final Consumer<? super UDT> consumer)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
+        final var escape = metadata.getSearchStringEscape();
         forEachUDT(
                 schema.getTableCatalogForMetadataLookup(),
-                schema.getTableSchemForMetadataLookup(),
+                Location.escape(schema.getTableSchemForMetadataLookup(), escape),
                 typeNamePattern,
                 types,
                 consumer
