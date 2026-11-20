@@ -27,6 +27,11 @@ import org.junit.jupiter.api.Test;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * An abstract test class for in-memory databases.
@@ -57,6 +62,44 @@ abstract class Memory_$_Test {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Verifies that navigating from a table whose name has a {@code _} does not match a table that differs only where
+     * the {@code _} is. See #79.
+     */
+    @Test
+    void getColumnsOf_doesNotTreatUnderscoreInTableNameAsWildcard() throws Throwable {
+        applyConnection(connection -> {
+            try (var statement = connection.createStatement()) {
+                statement.execute("CREATE TABLE A_B (X INTEGER)");
+                statement.execute("CREATE TABLE AXB (Y INTEGER)");
+            }
+            try {
+                final var context = Context.from(connection);
+                final var escape = connection.getMetaData().getSearchStringEscape();
+                assumeTrue(escape != null && !escape.isEmpty(), "the driver supplies no search string escape");
+                final var table = context.getTables(null, null, "%", null).stream()
+                        .filter(t -> "A_B".equals(t.getTableName()))
+                        .findFirst()
+                        .orElseThrow();
+                assertThat(context.getColumnsOf(table, "%"))
+                        .extracting(Column::getTableName, Column::getColumnName)
+                        .containsExactly(tuple("A_B", "X"));
+                final var columns = new ArrayList<Column>();
+                context.forEachColumnOf(table, "%", columns::add);
+                assertThat(columns)
+                        .extracting(Column::getTableName, Column::getColumnName)
+                        .containsExactly(tuple("A_B", "X"));
+            } finally {
+                try (var statement = connection.createStatement()) {
+                    statement.execute("DROP TABLE A_B");
+                    statement.execute("DROP TABLE AXB");
+                }
+            }
+            return null;
+        });
+    }
+
     @Test
     void test() throws Throwable {
         applyConnection(connection -> {

@@ -45,8 +45,8 @@ try (var connection = dataSource.getConnection()) {
     // Get all tables (null = don't filter)
     List<Table> tables = context.getTables(null, null, "%", null);
 
-    // Get columns for a specific table
-    List<Column> columns = context.getColumns("my_catalog", "my_schema", "my_table", "%");
+    // Get columns for a specific table; the arguments are patterns, so "_" and "%" are wildcards
+    List<Column> columns = context.getColumns("MYCATALOG", "MYSCHEMA", "MYTABLE", "%");
 }
 ```
 
@@ -62,7 +62,8 @@ context.forEachTable(null, null, "%", null, table -> { ... });   // one row at a
 
 ## Navigating from a bound row
 
-Once you hold a `Table`, ask for what belongs to it rather than unpacking its catalog and schema by hand:
+Once you hold a `Table`, ask for what belongs to it rather than unpacking its catalog and schema by hand. The
+row's names are escaped where the lookup takes a pattern, so a `_` in them matches only itself:
 
 ```java
 List<Column> columns = context.getColumnsOf(table, "%");
