@@ -56,10 +56,10 @@ class __JakartaXmlBinding_Test {
         schema.putUnknownColumn("EXTRA", "x"); // must NOT appear (getUnknownColumns is @XmlTransient)
         final var xml = marshal(JAXBContext.newInstance(Schema.class), schema);
         assertThat(xml)
-                // root element is namespace-qualified by the package-level @XmlSchema(namespace = ...); fields are not
-                .contains("<ns2:schema")
-                .contains("<tableSchem>PUBLIC</tableSchem>")
-                .contains("<tableCatalog>CAT</tableCatalog>")
+                // every element, fields included, is qualified with the dmb prefix by the package-level @XmlSchema
+                .contains("<dmb:schema")
+                .contains("<dmb:tableSchem>PUBLIC</dmb:tableSchem>")
+                .contains("<dmb:tableCatalog>CAT</dmb:tableCatalog>")
                 .doesNotContain("unknownColumns")
                 .doesNotContain("EXTRA");
     }
@@ -74,9 +74,9 @@ class __JakartaXmlBinding_Test {
         // element types must be known to the context -> bootstrap by package name (jaxb.index)
         final var xml = marshal(JAXBContext.newInstance(PACKAGE), wrapper);
         assertThat(xml)
-                // root and nested @XmlRootElement elements are namespace-qualified (ns2:) by @XmlSchema(namespace = ...)
-                .contains("<ns2:" + MetadataTypeWrapper.ROOT_ELEMENT_NAME)
-                .contains("<ns2:schema")
+                // root and nested elements are qualified with the dmb prefix by the package-level @XmlSchema
+                .contains("<dmb:" + MetadataTypeWrapper.ROOT_ELEMENT_NAME)
+                .contains("<dmb:schema")
                 .contains("PUBLIC")
                 .contains("SYS")
                 // "unwrapped": no intermediate <elements> wrapper element
@@ -88,11 +88,11 @@ class __JakartaXmlBinding_Test {
         final var table = new Table();
         table.setTableName("EMP");
         final var xml = marshal(JAXBContext.newInstance(PACKAGE), MetadataTypeWrapper.of(List.of(table)));
-        // same wrapper class, T = Table this time; child self-names via its own @XmlRootElement (namespace-qualified)
+        // same wrapper class, T = Table this time; child self-names via its own @XmlRootElement (dmb-qualified)
         assertThat(xml)
-                .contains("<ns2:" + MetadataTypeWrapper.ROOT_ELEMENT_NAME)
-                .contains("<ns2:table")
-                .contains("<tableName>EMP</tableName>");
+                .contains("<dmb:" + MetadataTypeWrapper.ROOT_ELEMENT_NAME)
+                .contains("<dmb:table")
+                .contains("<dmb:tableName>EMP</dmb:tableName>");
     }
 
     @Test
@@ -101,7 +101,7 @@ class __JakartaXmlBinding_Test {
         final var context = JAXBContext.newInstance(PACKAGE);
         assertThat(context).isNotNull();
         // an empty Column marshals self-closing (<column/>), so match the start tag only
-        assertThat(marshal(context, MetadataTypeWrapper.of(List.of(new Column())))).contains("<column");
+        assertThat(marshal(context, MetadataTypeWrapper.of(List.of(new Column())))).contains("<dmb:column");
     }
 
     @Test
@@ -119,9 +119,9 @@ class __JakartaXmlBinding_Test {
                 .isRegularFile();
         assertThat(Files.readString(path))
                 .contains("https://github.com/jinahya/database-metadata-bind")
-                .contains(":metadataTypes")
-                .contains(":schema")
-                .contains("<tableSchem>PUBLIC</tableSchem>")
+                .contains("<dmb:metadataTypes")
+                .contains("<dmb:schema")
+                .contains("<dmb:tableSchem>PUBLIC</dmb:tableSchem>")
                 .doesNotContain("<elements>");
         assertThat(__JakartaXmlBinding_Test_Utils.<Schema>unmarshal(path))
                 .singleElement()
@@ -150,6 +150,7 @@ class __JakartaXmlBinding_Test {
                 .exists()
                 .isRegularFile();
         assertThat(Files.readString(path))
+                .contains("elementFormDefault=\"qualified\"")
                 .contains("<xs:element name=\"metadataTypes\"")
                 .contains("nillable=\"true\"");
     }
