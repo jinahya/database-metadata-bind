@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import io.github.jinahya.validation.test.util.JinahyaValidationTestUtils;
+import io.github.jinahya.validation.test.util.JinahyaValidatorTestUtils;
+import jakarta.validation.Validation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.CaseUtils;
 import org.jspecify.annotations.Nullable;
@@ -52,7 +55,10 @@ abstract class MetadataType_Test<T extends MetadataType> {
     @Test
     void _Valid_NewTypeInstance() {
         final var instance = newTypeInstance();
-        __JakartaValidation_Test_Utils.requireValid(instance);
+        JinahyaValidationTestUtils.applyCachedValidatorFactory(
+                Validation::buildDefaultValidatorFactory,
+                f -> JinahyaValidatorTestUtils.assertValid(f.getValidator(), instance)
+        );
     }
 
     @Test

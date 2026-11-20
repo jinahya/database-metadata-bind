@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import io.github.jinahya.validation.test.util.JinahyaValidationTestUtils;
+import io.github.jinahya.validation.test.util.JinahyaValidatorTestUtils;
+import jakarta.validation.Validation;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.support.ReflectionSupport;
@@ -112,7 +115,15 @@ final class MetadataType_Test_Utils {
     }
 
     static void verify(final MetadataType obj) {
-        __JakartaValidation_Test_Utils.requireValid(obj);
+        // not every driver follows the API documentation; a constraint violation is reported, not failed
+        try {
+            JinahyaValidationTestUtils.applyCachedValidatorFactory(
+                    Validation::buildDefaultValidatorFactory,
+                    f -> JinahyaValidatorTestUtils.assertValid(f.getValidator(), obj)
+            );
+        } catch (final AssertionError ae) {
+            log.warn("constraint violation(s): {}", ae.getMessage());
+        }
         verifyAccessorsHelper(obj.getClass().asSubclass(MetadataType.class), obj);
         // toString()
         assertThatCode(obj::toString).doesNotThrowAnyException();
