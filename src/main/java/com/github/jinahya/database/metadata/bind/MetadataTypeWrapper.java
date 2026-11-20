@@ -20,9 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAnyElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +54,8 @@ import java.util.List;
  */
 @XmlRootElement(name = MetadataTypeWrapper.ROOT_ELEMENT_NAME)
 public class MetadataTypeWrapper<T extends MetadataType> {
+
+    private static final System.Logger logger = System.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     /**
      * The root element name for instances of this class: {@value}.
@@ -100,6 +104,28 @@ public class MetadataTypeWrapper<T extends MetadataType> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Drops, with a warning, each unmarshalled child which is not a {@link MetadataType}.
+     * <p>
+     * With {@code @XmlAnyElement(lax = true)}, a child the context does not know (e.g., a type written by a newer
+     * version of this library) is kept as a DOM element; since {@code T} is erased, it would otherwise sit in
+     * {@link #getElements()} and fail, with a {@link ClassCastException}, only when read. See #84.
+     *
+     * @param unmarshaller the unmarshaller.
+     * @param parent       the parent object, if any.
+     */
+    private void afterUnmarshal(final Unmarshaller unmarshaller, final Object parent) {
+        if (elements == null) {
+            return;
+        }
+        final List<?> unknown = ((List<?>) elements).stream().filter(e -> !(e instanceof MetadataType)).toList();
+        if (unknown.isEmpty()) {
+            return;
+        }
+        logger.log(System.Logger.Level.WARNING, "dropping {0} unknown element(s): {1}", unknown.size(), unknown);
+        ((List<?>) elements).removeAll(unknown);
+    }
 
     /**
      * The wrapped elements, marshalled unwrapped &mdash; each under its own {@code @XmlRootElement} name.
