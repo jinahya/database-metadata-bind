@@ -24,8 +24,9 @@
 #
 # Unlike a plain `set -e` loop, this keeps going when one database fails, so a
 # single flaky/unavailable engine does not hide results from the others. Each
-# profile's full output is tee'd to target/testcontainers-<profile>.log for
-# later inspection (e.g. mining getXxx metadata behavior across drivers), and a
+# profile's full output is tee'd to tmp/<profile>.log - not under target/, which
+# each profile's `clean` deletes - for later inspection (e.g. mining getXxx
+# metadata behavior across drivers), and a
 # pass/fail summary is printed at the end. Exits non-zero if any profile failed.
 
 set -u
@@ -43,7 +44,7 @@ _testcontainers-oracle-xe.sh
 _testcontainers-postgresql.sh
 '
 
-mkdir -p "${PROJECT_DIR}/target"
+mkdir -p "${PROJECT_DIR}/tmp"
 
 summary=''
 failed=0
@@ -54,7 +55,7 @@ trap 'rm -f "$statusfile"' EXIT
 for script in $scripts; do
   profile=${script#_}
   profile=${profile%.sh}
-  log="${PROJECT_DIR}/target/testcontainers-${profile}.log"
+  log="${PROJECT_DIR}/tmp/${profile}.log"
   echo "==> ${SCRIPT_DIR}/$script (log: $log)"
   # capture mvnw's real exit status (a pipe would only report tee's) while still
   # streaming its output to both the terminal and the per-profile log file

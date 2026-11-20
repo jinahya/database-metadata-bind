@@ -49,7 +49,7 @@ trap cleanup EXIT INT TERM
 
 cat <<EOF
 ExternalIT command:
-cd '${PROJECT_DIR}' && ${MVN} -Pfailsafe,external,external-mysql -Dit.test=ExternalIT -Durl='${URL}' -Duser='${MYSQL_USER}' -Dpassword='${PASSWORD}' test-compile failsafe:integration-test
+cd '${PROJECT_DIR}' && ${MVN} -Pfailsafe,external,external-mysql -Dit.test=ExternalIT -Durl='${URL}' -Duser='${MYSQL_USER}' -Dpassword='${PASSWORD}' test-compile failsafe:integration-test failsafe:verify
 
 Starting ${IMAGE}.
 Press Ctrl+C to stop the test and remove the container.
@@ -94,4 +94,4 @@ echo "MySQL is ready."
   -Durl="${URL}" \
   -Duser="${MYSQL_USER}" \
   -Dpassword="${PASSWORD}" \
-  test-compile failsafe:integration-test)
+  test-compile failsafe:integration-test failsafe:verify)
