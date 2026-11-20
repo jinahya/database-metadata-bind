@@ -26,6 +26,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -70,6 +71,16 @@ class LocationTest {
                 .isInstanceOf(NullPointerException.class);
     }
 
+    @Test
+    void schemaPatternForLookup__missingEscapeWithWildcardsThrows() throws SQLException {
+        final var metadata = mock(DatabaseMetaData.class);
+        when(metadata.getSearchStringEscape()).thenReturn("");
+        final var context = Context.of(metadata);
+        assertThat(new Location(null, "PLAIN").schemaPatternForLookup(context)).isEqualTo("PLAIN");
+        assertThatThrownBy(() -> new Location(null, "A_B").schemaPatternForLookup(context))
+                .isInstanceOf(SQLFeatureNotSupportedException.class);
+    }
+
     @ParameterizedTest
     @CsvSource(delimiter = '|', nullValues = "NULL", value = {
             "plain    | \\   | plain",
@@ -78,6 +89,7 @@ class LocationTest {
             "a\\b     | \\   | a\\\\b",
             "a\\_b    | \\   | a\\\\\\_b",
             "A_B      | !    | A!_B",
+            "A_B%     | _    | A__B_%",
             "A_B      | NULL | A_B",
             "A_B      | ''   | A_B",
     })

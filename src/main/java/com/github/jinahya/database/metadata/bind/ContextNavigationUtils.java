@@ -44,8 +44,9 @@ import java.util.function.Consumer;
  * <p>
  * Every method makes exactly one call of the corresponding {@link DatabaseMetaData} method, with {@code null} for both
  * its {@code catalog} and its {@code schemaPattern} argument, and the specified name pattern passed through verbatim -
- * so {@code _} and {@code %} in it are wildcards. Every row of that call is bound, so its cost is that of the call; a
- * broad pattern on a large database is expensive.
+ * so unescaped {@code _} and {@code %} in it are wildcards. To search for a literal name containing either
+ * character, escape it using the driver's {@linkplain DatabaseMetaData#getSearchStringEscape() search string escape}.
+ * Every returned row is bound. A broad pattern on a large database can be expensive.
  * <p>
  * A {@code null} catalog and schema asks the driver not to narrow by either, but what that covers is the driver's to
  * decide: some drivers can be configured to read a {@code null} catalog as the connection's current one, and every
@@ -88,7 +89,7 @@ import java.util.function.Consumer;
  *
  * @see Location
  */
-final class ContextNavigationUtils {
+public final class ContextNavigationUtils {
 
     /**
      * A non-narrowing lookup that accepts each bound row to the specified consumer.
