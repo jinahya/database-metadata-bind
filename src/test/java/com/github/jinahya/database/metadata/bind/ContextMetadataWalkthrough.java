@@ -24,6 +24,7 @@ import io.github.jinahya.validation.test.util.JinahyaValidationTestUtils;
 import io.github.jinahya.validation.util.JinahyaValidatorUtils;
 import jakarta.validation.Validation;
 import lombok.extern.slf4j.Slf4j;
+import org.opentest4j.MultipleFailuresError;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -182,6 +183,11 @@ final class ContextMetadataWalkthrough {
         final var result = new Result(attempted, succeeded, failed);
         log.info("context metadata walkthrough completed: {}", result);
         warnConstraintViolations();
+        // a driver's SQLException is a driver limitation, and only warned; anything else is this library's (or this
+        // walkthrough's) defect, and fails the walk - see #81
+        if (!unexpectedFailures.isEmpty()) {
+            throw new MultipleFailuresError("unexpected metadata walkthrough failure(s)", unexpectedFailures);
+        }
         return result;
     }
 
@@ -336,15 +342,12 @@ final class ContextMetadataWalkthrough {
             return values;
         } catch (final SQLException sqle) {
             failed++;
-            log.error("failed to get {}", name, sqle);
+            log.warn("failed to get {}", name, sqle);
             return List.of();
-        } catch (final AssertionError ae) {
+        } catch (final AssertionError | RuntimeException e) {
             failed++;
-            log.error("failed to verify {}", name, ae);
-            return List.of();
-        } catch (final RuntimeException re) {
-            failed++;
-            log.error("failed to verify {}", name, re);
+            log.error("failed to get or verify {}", name, e);
+            unexpectedFailures.add(new AssertionError("failed to get or verify " + name, e));
             return List.of();
         }
     }
@@ -365,19 +368,17 @@ final class ContextMetadataWalkthrough {
             } catch (final Exception e) {
                 failed++;
                 log.error("failed to sink {}", name, e);
+                unexpectedFailures.add(new AssertionError("failed to sink " + name, e));
             }
             return values;
         } catch (final SQLException sqle) {
             failed++;
-            log.error("failed to get {}", name, sqle);
+            log.warn("failed to get {}", name, sqle);
             return List.of();
-        } catch (final AssertionError ae) {
+        } catch (final AssertionError | RuntimeException e) {
             failed++;
-            log.error("failed to verify {}", name, ae);
-            return List.of();
-        } catch (final RuntimeException re) {
-            failed++;
-            log.error("failed to verify {}", name, re);
+            log.error("failed to get or verify {}", name, e);
+            unexpectedFailures.add(new AssertionError("failed to get or verify " + name, e));
             return List.of();
         }
     }
@@ -394,13 +395,11 @@ final class ContextMetadataWalkthrough {
             succeeded++;
         } catch (final SQLException sqle) {
             failed++;
-            log.error("failed to iterate {}", name, sqle);
-        } catch (final AssertionError ae) {
+            log.warn("failed to iterate {}", name, sqle);
+        } catch (final AssertionError | RuntimeException e) {
             failed++;
-            log.error("failed to verify iteration of {}", name, ae);
-        } catch (final RuntimeException re) {
-            failed++;
-            log.error("failed to verify iteration of {}", name, re);
+            log.error("failed to iterate or verify {}", name, e);
+            unexpectedFailures.add(new AssertionError("failed to iterate or verify " + name, e));
         }
     }
 
@@ -573,6 +572,11 @@ final class ContextMetadataWalkthrough {
     private final Context context;
 
     private final Sink sink;
+
+    /**
+     * Failures other than a driver's {@link SQLException}, thrown together at the end of {@link #walk()}.
+     */
+    private final List<Throwable> unexpectedFailures = new ArrayList<>();
 
     private final List<String> constraintViolations = new ArrayList<>();
 
