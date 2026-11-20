@@ -211,15 +211,13 @@ final class ContextMetadataWalkthrough {
             // pair of tables that actually relate. See issue #76.
             firstImportedKey = importedKeys.get(0);
         }
+        // approximate=false only on fixture tables - on Oracle it runs DBMS_STATS for each table and exhausts cursors; see #9
         for (final var unique : new boolean[] {true, false}) {
-            for (final var approximate : new boolean[] {true, false}) {
-                pair("indexInfo(" + table + ", " + unique + ", " + approximate + ")",
-                     () -> context.getIndexInfo(
-                             table.getTableCat(), table.getTableSchem(), table.getTableName(), unique, approximate),
-                     c -> context.forEachIndexInfo(
-                             table.getTableCat(), table.getTableSchem(), table.getTableName(), unique, approximate,
-                             c));
-            }
+            pair("indexInfo(" + table + ", " + unique + ", true)",
+                 () -> context.getIndexInfo(
+                         table.getTableCat(), table.getTableSchem(), table.getTableName(), unique, true),
+                 c -> context.forEachIndexInfo(
+                         table.getTableCat(), table.getTableSchem(), table.getTableName(), unique, true, c));
         }
         pair("primaryKeys(" + table + ")", () -> context.getPrimaryKeys(
                      table.getTableCat(), table.getTableSchem(), table.getTableName()),

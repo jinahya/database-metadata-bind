@@ -195,12 +195,13 @@ abstract class TestContainers_$_IT {
                                          table.getTableCat(), table.getTableSchem(), table.getTableName()),
                                  c -> context.forEachImportedKey(
                                          table.getTableCat(), table.getTableSchem(), table.getTableName(), c));
+                    // approximate: an arbitrary discovered table; exact statistics run DBMS_STATS on Oracle; see #9
                     assertDirect("indexInfo", () -> context.getIndexInfo(
                                          table.getTableCat(), table.getTableSchem(), table.getTableName(), false,
-                                         false),
+                                         true),
                                  c -> context.forEachIndexInfo(
                                          table.getTableCat(), table.getTableSchem(), table.getTableName(), false,
-                                         false, c));
+                                         true, c));
                     assertDirect("primaryKeys", () -> context.getPrimaryKeys(
                                          table.getTableCat(), table.getTableSchem(), table.getTableName()),
                                  c -> context.forEachPrimaryKey(
