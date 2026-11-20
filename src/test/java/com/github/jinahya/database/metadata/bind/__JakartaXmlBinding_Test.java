@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -93,6 +94,26 @@ class __JakartaXmlBinding_Test {
                 .contains("<dmb:" + MetadataTypeWrapper.ROOT_ELEMENT_NAME)
                 .contains("<dmb:table")
                 .contains("<dmb:tableName>EMP</dmb:tableName>");
+    }
+
+    @Test
+    void unmarshal_genericWrapper_dropsUnknownElements() throws Exception {
+        // an element this context does not know (e.g., from a newer version) is dropped, not kept as a DOM element
+        final var xml = """
+                <d:metadataTypes xmlns:d="https://github.com/jinahya/database-metadata-bind">
+                  <d:schema><d:tableSchem>PUBLIC</d:tableSchem></d:schema>
+                  <d:extension><payload>future</payload></d:extension>
+                  <d:schema><d:tableSchem>SYS</d:tableSchem></d:schema>
+                </d:metadataTypes>
+                """;
+        final var unmarshaller = JAXBContext.newInstance(PACKAGE).createUnmarshaller();
+        @SuppressWarnings("unchecked")
+        final var wrapper = (MetadataTypeWrapper<MetadataType>) unmarshaller.unmarshal(new StringReader(xml));
+        assertThat(wrapper.getElements())
+                .hasSize(2)
+                .allSatisfy(e -> assertThat(e).isInstanceOf(Schema.class))
+                .extracting(e -> ((Schema) e).getTableSchem())
+                .containsExactly("PUBLIC", "SYS");
     }
 
     @Test
