@@ -91,6 +91,18 @@ public class Context {
 
     private static final System.Logger logger = System.getLogger(MethodHandles.lookup().lookupClass().getName());
 
+    /**
+     * The name of the system property that enables {@link #LOG_UNMAPPED_FIELDS}.
+     */
+    static final String LOG_UNMAPPED_FIELDS_PROPERTY = "com.github.jinahya.database.metadata.bind.logUnmappedFields";
+
+    /**
+     * Whether to log, at {@code WARNING}, each {@link _ColumnLabel}-annotated field whose column a result set does not
+     * have; {@code false} unless the {@value #LOG_UNMAPPED_FIELDS_PROPERTY} system property is {@code true}. Meant for
+     * debugging only; see #87.
+     */
+    private static final boolean LOG_UNMAPPED_FIELDS = Boolean.getBoolean(LOG_UNMAPPED_FIELDS_PROPERTY);
+
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
@@ -211,9 +223,6 @@ public class Context {
      * result for every row is what keeps {@link ResultSet#getMetaData()},
      * {@link java.sql.ResultSetMetaData#getColumnCount()}, and {@link java.sql.ResultSetMetaData#getColumnLabel(int)}
      * to one call each per result set rather than one per row, and removes a defensive copy of the field map per row.
-     * <p>
-     * The {@code unmapped field} warning is emitted here, so it is logged once per result set per unmapped field rather
-     * than once per row per unmapped field.
      *
      * @param results the result set whose column labels are read.
      * @param type    the type whose labeled fields are matched against those labels.
@@ -229,10 +238,14 @@ public class Context {
                 boundColumns.add(new BoundColumn(label, field));
                 return;
             }
-            logger.log(
-                    System.Logger.Level.WARNING,
-                    () -> String.format("unmapped field; label: %s; field: %s", label, field)
-            );
+            // a column the driver did not return is a driver fact, not a problem for the consumer; and with the
+            // navigation API's one-call-per-row pattern this would repeat on every call - see #87
+            if (LOG_UNMAPPED_FIELDS) {
+                logger.log(
+                        System.Logger.Level.WARNING,
+                        () -> String.format("unmapped field; label: %s; field: %s", label, field)
+                );
+            }
         });
         // whatever is left matched no field; its values are captured per row into unknownColumns, so only the label
         // set is logged here - the values themselves are reachable through getUnknownColumns()
