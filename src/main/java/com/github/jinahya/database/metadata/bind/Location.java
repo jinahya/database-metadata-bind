@@ -24,6 +24,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.Objects;
 
 /**
@@ -40,7 +41,7 @@ import java.util.Objects;
  * @param schema  the schema value; may be {@code null}.
  * @see ContextNavigationUtils
  */
-record Location(@Nullable String catalog, @Nullable String schema) {
+public record Location(@Nullable String catalog, @Nullable String schema) {
 
     /**
      * Returns the value to pass as the {@code catalog} argument of a {@link DatabaseMetaData} method to select this
@@ -70,12 +71,12 @@ record Location(@Nullable String catalog, @Nullable String schema) {
      * <p>
      * The schema value is escaped with the specified context's
      * {@linkplain DatabaseMetaData#getSearchStringEscape() search string escape}, so that a {@code _} or {@code %} in
-     * it matches only itself. If the driver reports no escape string, the value is returned unescaped, and a schema
-     * name containing either character may then also match other schemas.
+     * it matches only itself. A schema name containing either character requires a search string escape.
      *
      * @param context the context whose driver will receive the pattern.
      * @return an escaped pattern matching the {@link #schema() schema}, or {@code ""} if it is {@code null}.
      * @throws SQLException if a database error occurs while reading the search string escape.
+     * @throws SQLFeatureNotSupportedException if the schema contains a wildcard and the driver supplies no escape.
      * @see #schemaForLookup()
      */
     public String schemaPatternForLookup(final Context context) throws SQLException {
@@ -83,7 +84,11 @@ record Location(@Nullable String catalog, @Nullable String schema) {
         if (schema == null) {
             return "";
         }
-        return escape(schema, context.metadata.getSearchStringEscape());
+        final var escape = context.metadata.getSearchStringEscape();
+        if ((escape == null || escape.isEmpty()) && (schema.indexOf('_') >= 0 || schema.indexOf('%') >= 0)) {
+            throw new SQLFeatureNotSupportedException("the driver supplies no search string escape for schema " + schema);
+        }
+        return escape(schema, escape);
     }
 
     /**
@@ -97,8 +102,19 @@ record Location(@Nullable String catalog, @Nullable String schema) {
         if (escape == null || escape.isEmpty()) {
             return value;
         }
-        return value.replace(escape, escape + escape)
-                .replace("_", escape + "_")
-                .replace("%", escape + "%");
+        final var escaped = new StringBuilder(value.length());
+        for (int index = 0; index < value.length();) {
+            if (value.startsWith(escape, index)) {
+                escaped.append(escape).append(escape);
+                index += escape.length();
+                continue;
+            }
+            final var character = value.charAt(index++);
+            if (character == '_' || character == '%') {
+                escaped.append(escape);
+            }
+            escaped.append(character);
+        }
+        return escaped.toString();
     }
 }

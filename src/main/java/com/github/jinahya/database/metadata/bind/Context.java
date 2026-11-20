@@ -61,13 +61,11 @@ import java.util.function.Consumer;
  * for (var table : context.getAllTables()) {      // 1 call
  *     var columns = context.getColumnsOf(table, "%");  // + 1 call per table
  * }
- *}
- * When the whole set is wanted, prefer one non-narrowing sweep plus in-memory grouping:
+ *} When the whole set is wanted, prefer one non-narrowing sweep plus in-memory grouping:
  * {@snippet lang = "java":
  * var byTable = context.getAllColumns().stream()   // 1 call, total
  *         .collect(Collectors.groupingBy(Column::getTableName));
- *}
- * That trade is not free either - a match-all sweep can be expensive on large databases, and what it returns depends
+ *} That trade is not free either - a match-all sweep can be expensive on large databases, and what it returns depends
  * on how the driver interprets JDBC pattern parameters. Navigate row by row when the set is small or already narrowed;
  * sweep when it is not.
  *
@@ -75,8 +73,8 @@ import java.util.function.Consumer;
  * <p>
  * {@link MetadataType#getUnknownColumns()} holds whatever {@link java.sql.ResultSet#getObject(String)} returned for
  * result-set columns this library does not map. If a driver returns a locator there - a {@link java.sql.Blob},
- * {@link java.sql.Clob}, {@link java.sql.Array}, or {@link java.sql.SQLXML} - how long it stays usable depends on
- * which of these two shapes was used:
+ * {@link java.sql.Clob}, {@link java.sql.Array}, or {@link java.sql.SQLXML} - how long it stays usable depends on which
+ * of these two shapes was used:
  * <ul>
  *   <li>{@code forEachXxx}/{@code forEachXxxOf} invoke the consumer while the result set is <em>still open</em> and
  *       positioned on the producing row, so a locator is live <em>during the callback</em>. Retaining the instance and
@@ -211,12 +209,11 @@ public class Context {
      * The column labels a driver reports, the {@link _ColumnLabel}-annotated fields of a type, and therefore the
      * matching between the two are all fixed for the lifetime of a result set. Resolving them once and reusing the
      * result for every row is what keeps {@link ResultSet#getMetaData()},
-     * {@link java.sql.ResultSetMetaData#getColumnCount()}, and
-     * {@link java.sql.ResultSetMetaData#getColumnLabel(int)} to one call each per result set rather than one per row,
-     * and removes a defensive copy of the field map per row.
+     * {@link java.sql.ResultSetMetaData#getColumnCount()}, and {@link java.sql.ResultSetMetaData#getColumnLabel(int)}
+     * to one call each per result set rather than one per row, and removes a defensive copy of the field map per row.
      * <p>
-     * The {@code unmapped field} warning is emitted here, so it is logged once per result set per unmapped field
-     * rather than once per row per unmapped field.
+     * The {@code unmapped field} warning is emitted here, so it is logged once per result set per unmapped field rather
+     * than once per row per unmapped field.
      *
      * @param results the result set whose column labels are read.
      * @param type    the type whose labeled fields are matched against those labels.
@@ -4239,7 +4236,21 @@ public class Context {
         );
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- metadata
+
+    /**
+     * Returns the wrapped instance of {@link DatabaseMetaData}.
+     * <p>
+     * The returned value is the very instance this context was created with, not a copy or a proxy; it is never
+     * {@code null}.
+     *
+     * @return the wrapped instance of {@link DatabaseMetaData}.
+     * @see #of(DatabaseMetaData)
+     * @see #from(Connection)
+     */
+    DatabaseMetaData getMetadata() {
+        return metadata;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -4278,7 +4289,7 @@ public class Context {
      * Invokes {@link DatabaseMetaData#getStringFunctions() getStringFunctions()} method, on the wrapped
      * {@link #metadata}, and returns the result as a list of comma-split elements.
      *
-     * @return a list of string functions.
+     * @return an unmodifiable list of string functions.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getStringFunctions()
      */
@@ -4290,7 +4301,7 @@ public class Context {
      * Invokes {@link DatabaseMetaData#getSystemFunctions() getSystemFunctions()} method, on the wrapped
      * {@link #metadata}, and returns the result as a list of comma-split elements.
      *
-     * @return a list of system functions.
+     * @return an unmodifiable list of system functions.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSystemFunctions()
      */
@@ -4302,7 +4313,7 @@ public class Context {
      * Invokes {@link DatabaseMetaData#getTimeDateFunctions() getTimeDateFunctions()} method, on the wrapped
      * {@link #metadata}, and returns the result as a list of comma-split elements.
      *
-     * @return a list of time and date functions.
+     * @return an unmodifiable list of time and date functions.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTimeDateFunctions()
      */
