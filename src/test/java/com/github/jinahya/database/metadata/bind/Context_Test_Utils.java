@@ -479,14 +479,13 @@ final class Context_Test_Utils {
             log.error("failed to getImportedKey({})", value, sqle);
         }
         // --------------------------------------------------------------------------------------------------- indexInfo
+        // approximate=false only on fixture tables - on Oracle it runs DBMS_STATS for each table and exhausts cursors; see #9
         for (final boolean unique : new boolean[] {true, false}) {
-            for (final boolean approximate : new boolean[] {true, false}) {
-                try {
-                    final var values = context.getIndexInfoOf(value, unique, approximate);
-                    indexInfo(context, values);
-                } catch (final SQLException sqle) {
-                    log.error("failed to getIndexInfo({}, {}, {})", value, unique, approximate, sqle);
-                }
+            try {
+                final var values = context.getIndexInfoOf(value, unique, true);
+                indexInfo(context, values);
+            } catch (final SQLException sqle) {
+                log.error("failed to getIndexInfo({}, {}, true)", value, unique, sqle);
             }
         }
         // ------------------------------------------------------------------------------------------------- primaryKeys
