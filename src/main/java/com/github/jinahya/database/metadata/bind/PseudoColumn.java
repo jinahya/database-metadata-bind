@@ -33,7 +33,6 @@ import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -178,14 +177,6 @@ public class PseudoColumn
      */
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY = MetadataTypeConstants.EMPTY;
 
-    /**
-     * A list of values for the {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
-     */
-    static final List<String> COLUMN_VALUES_IS_NULLABLE = List.of(
-            COLUMN_VALUE_COLUMN_IS_NULLABLE_YES,
-            COLUMN_VALUE_COLUMN_IS_NULLABLE_NO,
-            COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY
-    );
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 

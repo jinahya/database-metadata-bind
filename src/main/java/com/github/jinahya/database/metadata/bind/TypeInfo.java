@@ -31,7 +31,6 @@ import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -146,11 +145,6 @@ public class TypeInfo
      */
     public static final int COLUMN_VALUE_NULLABLE_TYPE_NULLABLE_UNKNOWN = DatabaseMetaData.typeNullableUnknown; // 2
 
-    static final List<Integer> COLUMN_VALUES_NULLABLE = List.of(
-            COLUMN_VALUE_NULLABLE_TYPE_NO_NULLS,        // 0
-            COLUMN_VALUE_NULLABLE_TYPE_NULLABLE,        // 1
-            COLUMN_VALUE_NULLABLE_TYPE_NULLABLE_UNKNOWN // 2
-    );
 
     // -------------------------------------------------------------------------------------------------- CASE_SENSITIVE
 
@@ -190,12 +184,6 @@ public class TypeInfo
      */
     public static final int COLUMN_VALUE_SEARCHABLE_TYPE_SEARCHABLE = DatabaseMetaData.typeSearchable; // 3
 
-    static final List<Integer> COLUMN_VALUES_SEARCHABLE = List.of(
-            COLUMN_VALUE_SEARCHABLE_TYPE_PREC_NONE,
-            COLUMN_VALUE_SEARCHABLE_TYPE_PREC_CHAR,
-            COLUMN_VALUE_SEARCHABLE_TYPE_PREC_BASIC,
-            COLUMN_VALUE_SEARCHABLE_TYPE_SEARCHABLE
-    );
 
     // ---------------------------------------------------------------------------------------------- UNSIGNED_ATTRIBUTE
 
