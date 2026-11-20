@@ -56,9 +56,10 @@
  *
  * <h2>Jakarta XML Binding</h2>
  * <p>
- * XML binding is field-based and namespace-qualified. Each concrete metadata type supplies its own
- * {@code @XmlRootElement} name, and the package namespace is
- * {@link com.github.jinahya.database.metadata.bind.JakartaXmlBindingConstants#NAMESPACE_URI}. Lists are represented by
+ * XML binding is field-based and namespace-qualified: every element, including each field's, is in
+ * {@link com.github.jinahya.database.metadata.bind.JakartaXmlBindingConstants#NAMESPACE_URI}, bound to the
+ * {@value com.github.jinahya.database.metadata.bind.JakartaXmlBindingConstants#NAMESPACE_PREFIX} prefix. Each concrete
+ * metadata type supplies its own {@code @XmlRootElement} name. Lists are represented by
  * {@link com.github.jinahya.database.metadata.bind.MetadataTypeWrapper} because Jakarta XML Binding cannot marshal a
  * bare {@link java.util.List} as a document.
  * </p>
@@ -108,7 +109,14 @@
 // ------------------------------------------------------------------------------------------------- Jakarta XML Binding
 @jakarta.xml.bind.annotation.XmlAccessorType(jakarta.xml.bind.annotation.XmlAccessType.FIELD)
 @jakarta.xml.bind.annotation.XmlSchema(
-        namespace = com.github.jinahya.database.metadata.bind.JakartaXmlBindingConstants.NAMESPACE_URI
+        namespace = com.github.jinahya.database.metadata.bind.JakartaXmlBindingConstants.NAMESPACE_URI,
+        elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED,
+        xmlns = {
+                @jakarta.xml.bind.annotation.XmlNs(
+                        prefix = com.github.jinahya.database.metadata.bind.JakartaXmlBindingConstants.NAMESPACE_PREFIX,
+                        namespaceURI = com.github.jinahya.database.metadata.bind.JakartaXmlBindingConstants.NAMESPACE_URI
+                )
+        }
 )
 // ------------------------------------------------------------------------------------------------ Jakarta JSON Binding
 @jakarta.json.bind.annotation.JsonbVisibility(

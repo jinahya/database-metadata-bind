@@ -41,7 +41,7 @@ import java.util.List;
  * {@snippet lang = "java":
  * var wrapper = new MetadataTypeWrapper<Schema>();
  * wrapper.getElements().addAll(context.getSchemas(null, null));
- * // marshals to: <metadataTypes><schema>...</schema>...</metadataTypes>
+ * // marshals to: <dmb:metadataTypes xmlns:dmb="..."><dmb:schema>...</dmb:schema>...</dmb:metadataTypes>
  *}
  * <p>
  * Note the trade-off: a single generic wrapper yields one shared root element ({@value #ROOT_ELEMENT_NAME}) rather than

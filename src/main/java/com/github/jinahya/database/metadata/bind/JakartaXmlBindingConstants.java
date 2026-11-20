@@ -40,10 +40,7 @@ public final class JakartaXmlBindingConstants {
     public static final String NAMESPACE_URI = "https://github.com/jinahya/database-metadata-bind";
 
     /**
-     * The preferred XML namespace prefix for {@value #NAMESPACE_URI}.
-     *
-     * @implNote Package-private, and currently unreferenced: {@code package-info}'s {@code @XmlSchema} declares no
-     * {@code xmlns}, so this prefix is not actually emitted. See issue #47.
+     * The XML namespace prefix for {@value #NAMESPACE_URI}, bound by {@code package-info}'s {@code @XmlSchema}.
      */
     static final String NAMESPACE_PREFIX = "dmb";
 
