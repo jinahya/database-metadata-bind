@@ -151,6 +151,13 @@
       <version>2.5.252</version>
       <scope>test</scope>
     </dependency>
+    <dependency><!-- Jakarta Validation test utilities; the -11 generation matches jakarta.jakartaee-bom 11 -->
+      <groupId>io.github.jinahya</groupId>
+      <artifactId>jinahya-validation-test-utils-11</artifactId>
+      <!-- https://central.sonatype.com/artifact/io.github.jinahya/jinahya-validation-test-utils-11/versions -->
+      <version>0.0.4</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>io.vavr</groupId>
       <artifactId>vavr</artifactId>
