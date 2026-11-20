@@ -33,7 +33,6 @@ import java.io.Serial;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -159,14 +158,6 @@ public class ProcedureColumn
      */
     public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RESULT = DatabaseMetaData.procedureColumnResult;
 
-    static final List<Integer> COLUMN_VALUES_COLUMN_TYPE = List.of(
-            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_UNKNOWN, // 0
-            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_IN,      // 1
-            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_INOUT,   // 2
-            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_OUT,     // 4
-            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RETURN,  // 5
-            COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RESULT   // 3
-    );
 
     // ------------------------------------------------------------------------------------------------------- DATA_TYPE
 

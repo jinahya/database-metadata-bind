@@ -51,7 +51,7 @@ final class _DatabaseMetaDataUtils {
         return new _DeletesAreDetected(type, metaData.deletesAreDetected(type));
     }
 
-    _DatabaseMetaDataUtils() {
+    private _DatabaseMetaDataUtils() {
         throw new AssertionError("instantiation is not allowed");
     }
 }
