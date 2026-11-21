@@ -20,14 +20,18 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.math.BigDecimal;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +74,7 @@ class Context_Binding_Test {
     }
 
     @Test
-    void getClientInfoProperties_CoercesIntegerFieldWithTypedGetter_() throws SQLException {
+    void getClientInfoProperties_CoercesIntegerField_() throws SQLException {
         final var results = resultSet(
                 List.of(
                         ClientInfoProperty.COLUMN_LABEL_NAME,
@@ -88,6 +92,50 @@ class Context_Binding_Test {
         final var properties = new Context(metadata("getClientInfoProperties", results)).getClientInfoProperties();
         assertThat(properties).singleElement().satisfies(property -> {
             assertThat(property.getMaxLen()).isEqualTo(4);
+        });
+    }
+
+    @DisplayName("a value needing coercion is converted from the one read, not read again")
+    @Test
+    void getIndexInfo_CoercesWithoutReadingAgain_() throws SQLException {
+        final var labels = List.of(
+                IndexInfo.COLUMN_LABEL_TABLE_NAME,
+                IndexInfo.COLUMN_LABEL_NON_UNIQUE,
+                IndexInfo.COLUMN_LABEL_TYPE,
+                IndexInfo.COLUMN_LABEL_CARDINALITY
+        );
+        // as Oracle reports NUMBER columns
+        final Map<String, Object> row = Map.of(
+                IndexInfo.COLUMN_LABEL_TABLE_NAME, "T",
+                IndexInfo.COLUMN_LABEL_NON_UNIQUE, BigDecimal.ONE,
+                IndexInfo.COLUMN_LABEL_TYPE, new BigDecimal("3"),
+                IndexInfo.COLUMN_LABEL_CARDINALITY, new BigDecimal("42")
+        );
+        final var metadata = resultSetMetaData(labels);
+        final var read = new HashSet<String>();
+        final var index = new int[] {-1};
+        final var results = proxy(ResultSet.class, (proxy, method, args) -> {
+            final var name = method.getName();
+            if (name.equals("next")) {
+                return ++index[0] < 1;
+            }
+            if (name.equals("getMetaData")) {
+                return metadata;
+            }
+            if (name.startsWith("get")) {
+                if (name.equals("getObject") && args.length == 1 && read.add((String) args[0])) {
+                    return row.get((String) args[0]);
+                }
+                throw new SQLException("unexpected read: " + name + " " + Arrays.toString(args));
+            }
+            return defaultValue(method.getReturnType());
+        });
+        final var indexInfo = new Context(metadata("getIndexInfo", results))
+                .getIndexInfo(null, null, "T", false, true);
+        assertThat(indexInfo).singleElement().satisfies(i -> {
+            assertThat(i.getNonUnique()).isTrue();
+            assertThat(i.getType()).isEqualTo(3);
+            assertThat(i.getCardinality()).isEqualTo(42L);
         });
     }
 

@@ -26,6 +26,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -136,11 +137,10 @@ final class ContextUtils {
      * Reads the value of the specified column from the specified result set and sets it to the specified field of the
      * specified object.
      * <p>
-     * The value is first read with {@link ResultSet#getObject(String)} and assigned directly when it is {@code null}
-     * or an instance of the field's type. Otherwise a series of coercion attempts are made: the value is re-read using
-     * a type-specific accessor ({@link ResultSet#getBoolean(String)}, {@link ResultSet#getShort(String)},
-     * {@link ResultSet#getInt(String)}, or {@link ResultSet#getLong(String)}) matching the field type, and finally
-     * {@link ResultSet#getObject(String, Class)} is tried. If all coercion attempts fail, a {@link RuntimeException} is
+     * The value is read once, with {@link ResultSet#getObject(String)}, and assigned directly when it is {@code null}
+     * or an instance of the field's type. Otherwise it is {@linkplain #convert(Object, Class) converted} to the field's
+     * type without reading the column again. Only a value no exact conversion covers is read a second time, with
+     * {@link ResultSet#getObject(String, Class)}, as a last resort; if that fails too, a {@link RuntimeException} is
      * thrown.
      *
      * @param field   the field to set; must be accessible on {@code obj} and of a non-primitive type.
@@ -178,28 +178,16 @@ final class ContextUtils {
             field.set(obj, value);
             return;
         }
-        // Past this point getObject() proved the column is non-NULL, so the primitive accessors below
-        // (getBoolean/getShort/getInt/getLong) cannot return a NULL-coerced default; wasNull() is unnecessary.
-        // Keep this guard before any primitive read to avoid the classic NULL-as-0/false ambiguity.
-        // The value is not assignable to the field, so let's try to coerce the type
-        // by asking the JDBC driver to do the conversion for us.
-        if (fieldType == Boolean.class) {
-            field.set(obj, results.getBoolean(label));
+        // The value is not assignable to the field. Convert the value already read rather than read the column again:
+        // a row's columns are read once each, left to right (see ResultSet), and a driver may stream a column it
+        // cannot return twice - Oracle's LONG, for one.
+        final var converted = convert(value, fieldType);
+        if (converted != null) {
+            field.set(obj, converted);
             return;
         }
-        if (fieldType == Short.class) {
-            field.set(obj, results.getShort(label));
-            return;
-        }
-        if (fieldType == Integer.class) {
-            field.set(obj, results.getInt(label));
-            return;
-        }
-        if (fieldType == Long.class) {
-            field.set(obj, results.getLong(label));
-            return;
-        }
-        // As a last resort, try the modern getObject(label, type) method.
+        // As a last resort, ask the driver to convert. This is the one second read of a column, reached only by a
+        // value that would otherwise fail the row.
         try {
             field.set(obj, results.getObject(label, fieldType));
         } catch (final Exception e) {
@@ -211,6 +199,63 @@ final class ContextUtils {
                                   label, value, value.getClass().getName(), field),
                     e);
         }
+    }
+
+    /**
+     * Converts the specified value, read from a column, to the specified field type, exactly, or returns {@code null}
+     * if no exact conversion applies.
+     * <ul>
+     *   <li>{@link Short}, {@link Integer}, {@link Long}: a {@link Number}, or a numeric {@link String}, whose value
+     *   the type represents exactly - no truncation, no overflow.</li>
+     *   <li>{@link Boolean}: {@code 0}/{@code 1}, as a number or a string, as {@link ResultSet#getBoolean(String)}
+     *   documents; and {@code "true"}/{@code "false"}, ignoring case.</li>
+     * </ul>
+     *
+     * @param value the non-{@code null} value to convert.
+     * @param type  the field type to convert to.
+     * @return the converted value; {@code null} if none of the conversions above applies.
+     */
+    static @Nullable Object convert(final Object value, final Class<?> type) {
+        assert value != null;
+        assert type != null;
+        if (type == Boolean.class && value instanceof String string) {
+            final var trimmed = string.trim();
+            if (trimmed.equalsIgnoreCase(Boolean.TRUE.toString())) {
+                return Boolean.TRUE;
+            }
+            if (trimmed.equalsIgnoreCase(Boolean.FALSE.toString())) {
+                return Boolean.FALSE;
+            }
+        }
+        if (!(value instanceof Number) && !(value instanceof String)) {
+            return null;
+        }
+        final BigDecimal decimal;
+        try {
+            decimal = new BigDecimal(value.toString().trim());
+        } catch (final NumberFormatException nfe) {
+            return null;
+        }
+        try {
+            if (type == Boolean.class) {
+                if (decimal.signum() == 0) {
+                    return Boolean.FALSE;
+                }
+                return decimal.compareTo(BigDecimal.ONE) == 0 ? Boolean.TRUE : null;
+            }
+            if (type == Short.class) {
+                return decimal.shortValueExact();
+            }
+            if (type == Integer.class) {
+                return decimal.intValueExact();
+            }
+            if (type == Long.class) {
+                return decimal.longValueExact();
+            }
+        } catch (final ArithmeticException ae) {
+            return null;
+        }
+        return null;
     }
 
     /**

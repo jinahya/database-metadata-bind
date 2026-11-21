@@ -25,6 +25,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -80,6 +81,36 @@ class ContextUtilsTest {
         final var results = mock(ResultSet.class);
         when(results.getMetaData()).thenReturn(metadata);
         assertThat(ContextUtils.getLabels(results)).isEqualTo(labeledFields.keySet());
+    }
+
+    @DisplayName("convert(value, type) converts numbers and numeric strings exactly, or not at all")
+    @Test
+    void convert__Exact() {
+        assertThat(ContextUtils.convert((short) 4, Integer.class)).isEqualTo(4);
+        assertThat(ContextUtils.convert(new BigDecimal("4"), Integer.class)).isEqualTo(4);
+        assertThat(ContextUtils.convert(new BigDecimal("4.0"), Short.class)).isEqualTo((short) 4);
+        assertThat(ContextUtils.convert(" 4 ", Long.class)).isEqualTo(4L);
+        assertThat(ContextUtils.convert(Integer.MAX_VALUE, Long.class)).isEqualTo((long) Integer.MAX_VALUE);
+        // no truncation, no overflow
+        assertThat(ContextUtils.convert(new BigDecimal("4.5"), Integer.class)).isNull();
+        assertThat(ContextUtils.convert(Long.MAX_VALUE, Integer.class)).isNull();
+        assertThat(ContextUtils.convert(Integer.MAX_VALUE, Short.class)).isNull();
+        assertThat(ContextUtils.convert("four", Integer.class)).isNull();
+        assertThat(ContextUtils.convert(new Object(), Integer.class)).isNull();
+        assertThat(ContextUtils.convert(4, String.class)).isNull();
+    }
+
+    @DisplayName("convert(value, Boolean.class) takes 0/1 as ResultSet#getBoolean documents, and true/false")
+    @Test
+    void convert__Boolean() {
+        assertThat(ContextUtils.convert(BigDecimal.ZERO, Boolean.class)).isEqualTo(Boolean.FALSE);
+        assertThat(ContextUtils.convert(1, Boolean.class)).isEqualTo(Boolean.TRUE);
+        assertThat(ContextUtils.convert("0", Boolean.class)).isEqualTo(Boolean.FALSE);
+        assertThat(ContextUtils.convert("1", Boolean.class)).isEqualTo(Boolean.TRUE);
+        assertThat(ContextUtils.convert("TRUE", Boolean.class)).isEqualTo(Boolean.TRUE);
+        assertThat(ContextUtils.convert("false", Boolean.class)).isEqualTo(Boolean.FALSE);
+        assertThat(ContextUtils.convert(2, Boolean.class)).isNull();
+        assertThat(ContextUtils.convert("yes", Boolean.class)).isNull();
     }
 
     @DisplayName("getLabeledFields(c) loses no field, for any metadata type")
