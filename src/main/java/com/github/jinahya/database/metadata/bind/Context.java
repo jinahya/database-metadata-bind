@@ -183,42 +183,44 @@ public class Context {
      */
     private static <T extends MetadataType> T bind(final ResultSet results, final BindingPlan plan, final T instance)
             throws SQLException {
-        for (final var boundColumn : plan.boundColumns()) {
-            final var field = boundColumn.field();
+        // columns are read once each, left to right; a driver may stream a column (e.g. Oracle's LONG) and close it
+        // as soon as a later column is read - see ResultSet's "for maximum portability"
+        for (final var column : plan.columns()) {
+            final var field = column.field();
+            if (field == null) {
+                final Object value = results.getObject(column.label());
+                if (instance instanceof AbstractMetadataType metadata) {
+                    metadata.putUnknownColumn(column.label(), value);
+                }
+                continue;
+            }
             try {
-                ContextUtils.setFieldValue(field, instance, results, boundColumn.label());
+                ContextUtils.setFieldValue(field, instance, results, column.label());
             } catch (final ReflectiveOperationException roe) {
                 throw new RuntimeException("failed to set " + field, roe);
-            }
-        }
-        for (final var label : plan.unknownLabels()) {
-            final Object value = results.getObject(label);
-            if (instance instanceof AbstractMetadataType metadata) {
-                metadata.putUnknownColumn(label, value);
             }
         }
         return instance;
     }
 
     /**
-     * A result-set column matched to a {@link _ColumnLabel}-annotated field of the type being bound.
+     * A result-set column, matched to a {@link _ColumnLabel}-annotated field of the type being bound or to none.
      *
-     * @param label the (upper-cased) column label shared by the column and the field.
-     * @param field the field the column's value is set to.
+     * @param label the (upper-cased) column label.
+     * @param field the field the column's value is set to; {@code null} if the column matched no field, in which case
+     *              its value is captured per row into {@link AbstractMetadataType#putUnknownColumn(String, Object)}.
      */
-    private record BoundColumn(String label, Field field) {
+    private record BoundColumn(String label, @Nullable Field field) {
 
     }
 
     /**
      * Everything about binding a result set into a type that does not vary from row to row.
      *
-     * @param boundColumns  the result-set columns matched to fields, in no particular order.
-     * @param unknownLabels the labels of result-set columns that matched no field, captured per row into
-     *                      {@link AbstractMetadataType#putUnknownColumn(String, Object)}.
+     * @param columns the result-set columns, in the result set's column order.
      * @see #resolve(ResultSet, Class)
      */
-    private record BindingPlan(List<BoundColumn> boundColumns, List<String> unknownLabels) {
+    private record BindingPlan(List<BoundColumn> columns) {
 
     }
 
@@ -237,30 +239,36 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     private static BindingPlan resolve(final ResultSet results, final Class<?> type) throws SQLException {
-        final var unmatchedLabels = ContextUtils.getLabels(results);
+        final var labels = ContextUtils.getLabels(results);
         final var labeledFields = ContextUtils.getLabeledFields(type);
-        final List<BoundColumn> boundColumns = new ArrayList<>(Math.min(unmatchedLabels.size(), labeledFields.size()));
-        labeledFields.forEach((label, field) -> {
-            if (unmatchedLabels.remove(label)) {
-                boundColumns.add(new BoundColumn(label, field));
-                return;
+        final List<BoundColumn> columns = new ArrayList<>(labels.size());
+        final List<String> unknownLabels = new ArrayList<>();
+        for (final var label : labels) {
+            final var field = labeledFields.get(label);
+            columns.add(new BoundColumn(label, field));
+            if (field == null) {
+                unknownLabels.add(label);
             }
-            // a column the driver did not return is a driver fact, not a problem for the consumer; and with the
-            // navigation API's one-call-per-row pattern this would repeat on every call - see #87
-            if (LOG_UNMAPPED_FIELDS) {
-                logger.log(
-                        System.Logger.Level.WARNING,
-                        () -> String.format("unmapped field; label: %s; field: %s", label, field)
-                );
-            }
-        });
-        // whatever is left matched no field; its values are captured per row into unknownColumns, so only the label
-        // set is logged here - the values themselves are reachable through getUnknownColumns()
-        if (!unmatchedLabels.isEmpty()) {
-            logger.log(System.Logger.Level.TRACE, "unknown columns; type: {0}, labels: {1}",
-                       type.getSimpleName(), unmatchedLabels);
         }
-        return new BindingPlan(List.copyOf(boundColumns), List.copyOf(unmatchedLabels));
+        // a column the driver did not return is a driver fact, not a problem for the consumer; and with the
+        // navigation API's one-call-per-row pattern this would repeat on every call - see #87
+        if (LOG_UNMAPPED_FIELDS) {
+            labeledFields.forEach((label, field) -> {
+                if (!labels.contains(label)) {
+                    logger.log(
+                            System.Logger.Level.WARNING,
+                            () -> String.format("unmapped field; label: %s; field: %s", label, field)
+                    );
+                }
+            });
+        }
+        // the unknown columns' values are captured per row into unknownColumns, so only the label set is logged here
+        // - the values themselves are reachable through getUnknownColumns()
+        if (!unknownLabels.isEmpty()) {
+            logger.log(System.Logger.Level.TRACE, "unknown columns; type: {0}, labels: {1}",
+                       type.getSimpleName(), unknownLabels);
+        }
+        return new BindingPlan(List.copyOf(columns));
     }
 
     /**

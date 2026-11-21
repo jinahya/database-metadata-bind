@@ -33,7 +33,7 @@ import java.sql.Types;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -115,17 +115,17 @@ final class ContextUtils {
     }
 
     /**
-     * Returns a set of column labels of given result set.
+     * Returns a set of column labels of given result set, in the order of the result set's columns.
      *
      * @param results the result set from which column labels are read.
-     * @return a set of column labels
+     * @return a set of column labels, iterating in column order.
      * @throws SQLException if a database error occurs.
      * @see ResultSet#getMetaData()
      */
     static Set<String> getLabels(final ResultSet results) throws SQLException {
         final ResultSetMetaData metadata = results.getMetaData();
         final int count = metadata.getColumnCount();
-        final Set<String> labels = new HashSet<>(count);
+        final Set<String> labels = new LinkedHashSet<>(count);
         for (int i = 1; i <= count; i++) {
             labels.add(metadata.getColumnLabel(i).toUpperCase(Locale.ROOT));
         }

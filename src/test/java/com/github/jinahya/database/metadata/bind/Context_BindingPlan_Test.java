@@ -124,6 +124,49 @@ class Context_BindingPlan_Test {
         }
     }
 
+    @DisplayName("columns are read once each, in the result set's column order, unknown columns included")
+    @Test
+    void columns_AreReadLeftToRight() throws SQLException {
+        // the field order of Catalog cannot decide this; a driver that streams a column (Oracle's LONG COLUMN_DEF,
+        // ORA-17027) closes it as soon as a later column is read
+        final var labels = List.of("DRIVER_FIRST", Catalog.COLUMN_LABEL_TABLE_CAT, "DRIVER_LAST");
+        final var row = new HashMap<String, Object>();
+        labels.forEach(label -> row.put(label, "value of " + label));
+        final var reads = new ArrayList<String>();
+        final var metadata = proxy(ResultSetMetaData.class, (proxy, method, args) -> {
+            if (method.getName().equals("getColumnCount")) {
+                return labels.size();
+            }
+            if (method.getName().equals("getColumnLabel")) {
+                return labels.get(((Integer) args[0]) - 1);
+            }
+            return defaultValue(method.getReturnType());
+        });
+        final var index = new int[] {-1};
+        final var results = proxy(ResultSet.class, (proxy, method, args) -> {
+            final var name = method.getName();
+            if (name.equals("next")) {
+                return ++index[0] < 1;
+            }
+            if (name.equals("getMetaData")) {
+                return metadata;
+            }
+            if (name.startsWith("get") && args != null && args.length >= 1 && args[0] instanceof String label) {
+                reads.add(label);
+                return row.get(label);
+            }
+            return defaultValue(method.getReturnType());
+        });
+        final var catalogs = new Context(metadata("getCatalogs", results)).getCatalogs();
+        assertThat(catalogs).singleElement().satisfies(c -> {
+            assertThat(c.getTableCat()).isEqualTo("value of TABLE_CAT");
+            assertThat(c.getUnknownColumns())
+                    .containsEntry("DRIVER_FIRST", "value of DRIVER_FIRST")
+                    .containsEntry("DRIVER_LAST", "value of DRIVER_LAST");
+        });
+        assertThat(reads).containsExactlyElementsOf(labels);
+    }
+
     // ------------------------------------------------------------------------------------------------------- helpers
 
     private static List<Map<String, Object>> rowsOf(final int count) {
