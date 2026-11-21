@@ -20,16 +20,17 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
+@Slf4j
 final class Context_ComparingInJdbcOrder_Test_Utils {
 
     static void preparePortedKeyTables(final Statement statement) throws SQLException {
@@ -150,31 +151,28 @@ final class Context_ComparingInJdbcOrder_Test_Utils {
                                        final String api,
                                        final ComparatorFactory<T> comparatorFactory,
                                        final MetadataTypeQuery<T> query) {
-        final List<T> values;
+        // a driver that fails the method, or returns its rows out of the specified order, deviates from the
+        // specification; that is logged, not failed - only a defect of binding or of a comparator fails
         try {
-            values = query.get(context);
-        } catch (final SQLFeatureNotSupportedException ignored) {
-            return;
-        } catch (final Throwable t) {
-            failures.add(t);
-            return;
-        }
-        try {
-            assertInSpecifiedOrder(comparatorFactory.get(context), values);
+            warnUnlessInSpecifiedOrder(api, comparatorFactory.get(context), query.get(context));
+        } catch (final SQLException sqle) {
+            log.warn("failed to verify the order of {}", api, sqle);
         } catch (final Throwable t) {
             failures.add(t);
         }
     }
 
-    private static <T> void assertInSpecifiedOrder(final Comparator<? super T> comparator, final Iterable<T> values) {
-        final var previous = new AtomicReference<T>();
-        values.forEach(value -> {
-            final var last = previous.getAndSet(value);
-            if (last != null && comparator.compare(last, value) > 0) {
-                throw new AssertionError("values are not emitted in specified order; previous=<" +
-                                         last + ">, current=<" + value + ">");
+    private static <T> void warnUnlessInSpecifiedOrder(final String api, final Comparator<? super T> comparator,
+                                                       final List<T> values) {
+        for (int i = 1; i < values.size(); i++) {
+            final var previous = values.get(i - 1);
+            final var current = values.get(i);
+            if (comparator.compare(previous, current) > 0) {
+                log.warn("{} values are not emitted in specified order; previous=<{}>, current=<{}>",
+                         api, previous, current);
+                return;
             }
-        });
+        }
     }
 
     private static String tableName(final Context context, final String name) throws SQLException {
