@@ -1703,6 +1703,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getFunctionColumns(String, String, String, String)
      */
+    @SuppressWarnings({
+            "java:S2583", "java:S2589" // SPECIFIC_NAME is non-null by specification, yet a driver may report null
+    })
     List<FunctionColumn> getFunctionColumnsOf(final Function function, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(function, "function is null");
@@ -1730,6 +1733,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #forEachFunctionColumn(String, String, String, String, Consumer)
      */
+    @SuppressWarnings({
+            "java:S2583", "java:S2589" // SPECIFIC_NAME is non-null by specification, yet a driver may report null
+    })
     void forEachFunctionColumnOf(final Function function, final String columnNamePattern,
                                  final Consumer<? super FunctionColumn> consumer)
             throws SQLException {
@@ -2302,6 +2308,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getProcedureColumns(String, String, String, String)
      */
+    @SuppressWarnings({
+            "java:S2583", "java:S2589" // SPECIFIC_NAME is non-null by specification, yet a driver may report null
+    })
     List<ProcedureColumn> getProcedureColumnsOf(final Procedure procedure, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(procedure, "procedure is null");
@@ -2329,6 +2338,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #forEachProcedureColumn(String, String, String, String, Consumer)
      */
+    @SuppressWarnings({
+            "java:S2583", "java:S2589" // SPECIFIC_NAME is non-null by specification, yet a driver may report null
+    })
     void forEachProcedureColumnOf(final Procedure procedure, final String columnNamePattern,
                                   final Consumer<? super ProcedureColumn> consumer)
             throws SQLException {
@@ -4001,7 +4013,7 @@ public class Context {
      * @param catalog         a value for {@code catalog} parameter.
      * @param schemaPattern   a value for {@code schemaPattern} parameter
      * @param typeNamePattern a value for {@code typeNamePattern} parameter.
-     * @param types           a value for {@code type} parameter
+     * @param types           a value for {@code types} parameter
      * @param consumer        the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
      */
@@ -4074,7 +4086,7 @@ public class Context {
      * @param catalog         a value for the {@code catalog} parameter.
      * @param schemaPattern   a value for the {@code schemaPattern} parameter
      * @param typeNamePattern a value for the {@code typeNamePattern} parameter.
-     * @param types           a value for the {@code type} parameter
+     * @param types           a value for the {@code types} parameter
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getUDTs(String, String, String, int[])

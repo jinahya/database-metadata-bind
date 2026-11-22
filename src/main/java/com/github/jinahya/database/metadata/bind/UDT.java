@@ -167,6 +167,9 @@ public class UDT
     /**
      * Creates a new instance.
      */
+    @SuppressWarnings({
+            "java:S2637" // "@NonNull" values should not be set to null
+    })
     protected UDT() {
         super();
     }

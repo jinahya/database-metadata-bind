@@ -78,6 +78,9 @@ public class MetadataTypeWrapper<T extends MetadataType> {
     /**
      * Creates a new, empty instance.
      */
+    @SuppressWarnings({
+            "java:S2637" // "@NonNull" values should not be set to null
+    })
     public MetadataTypeWrapper() {
         super();
     }
