@@ -63,6 +63,8 @@
     <version.ojdbc10>19.17.0.0</version.ojdbc10>
     <version.ojdbc11>21.8.0.0</version.ojdbc11>
     <version.postgresql>42.7.14</version.postgresql>
+    <!-- https://central.sonatype.com/artifact/net.sourceforge.pmd/pmd-core/versions -->
+    <version.pmd>7.29.0</version.pmd>
   </properties>
 
   <dependencyManagement>
@@ -294,7 +296,8 @@
             </additionalOptions>
             <links>
               <!--              <link>https://javadoc.io/doc/jakarta.annotation/jakarta.annotation-api/latest</link>-->
-              <link>https://javadoc.io/doc/jakarta.validation/jakarta.validation-api/latest</link>
+              <!-- pinned to the jakartaee-bom version; "latest" resolves to the next platform's pre-releases -->
+              <link>https://javadoc.io/doc/jakarta.validation/jakarta.validation-api/3.1.1</link>
               <link>https://jspecify.dev/docs/api</link>
             </links>
             <release>${maven.compiler.testRelease}</release>
@@ -354,6 +357,24 @@
           <groupId>org.sonarsource.scanner.maven</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
           <version>5.9.0.7382</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>3.28.0</version>
+          <dependencies>
+            <!-- the plugin's default PMD cannot read the class files of the JDK the build runs on -->
+            <dependency>
+              <groupId>net.sourceforge.pmd</groupId>
+              <artifactId>pmd-core</artifactId>
+              <version>${version.pmd}</version>
+            </dependency>
+            <dependency>
+              <groupId>net.sourceforge.pmd</groupId>
+              <artifactId>pmd-java</artifactId>
+              <version>${version.pmd}</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
