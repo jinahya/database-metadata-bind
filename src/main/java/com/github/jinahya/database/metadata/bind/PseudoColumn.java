@@ -70,7 +70,8 @@ public class PseudoColumn
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        final var s =
+                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         return Comparator
                 .<PseudoColumn, String>comparing(PseudoColumn::getTableCat, s)
                 .thenComparing(PseudoColumn::getTableSchem, s)
@@ -176,7 +177,6 @@ public class PseudoColumn
      * A column value of {@value} for the {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
      */
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY = MetadataTypeConstants.EMPTY;
-
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 

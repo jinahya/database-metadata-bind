@@ -145,7 +145,6 @@ public class TypeInfo
      */
     public static final int COLUMN_VALUE_NULLABLE_TYPE_NULLABLE_UNKNOWN = DatabaseMetaData.typeNullableUnknown; // 2
 
-
     // -------------------------------------------------------------------------------------------------- CASE_SENSITIVE
 
     /**
@@ -183,7 +182,6 @@ public class TypeInfo
      * {@value #COLUMN_LABEL_SEARCHABLE} column.
      */
     public static final int COLUMN_VALUE_SEARCHABLE_TYPE_SEARCHABLE = DatabaseMetaData.typeSearchable; // 3
-
 
     // ---------------------------------------------------------------------------------------------- UNSIGNED_ATTRIBUTE
 

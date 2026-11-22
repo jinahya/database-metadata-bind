@@ -82,9 +82,9 @@ abstract class AbstractMetadataType_Test<T extends AbstractMetadataType>
      * {@link AbstractMetadataType#unknownColumns} is dropped because it is {@code transient}.
      * <p>
      * The non-serializable unknown value is the point of the test. {@link java.sql.ResultSet#getObject(String)} may
-     * return values that do not implement {@link java.io.Serializable}, and Java serialization aborts the whole
-     * object graph on the first such value; keeping the field {@code transient} is what makes serializing a metadata
-     * type independent of which driver produced it.
+     * return values that do not implement {@link java.io.Serializable}, and Java serialization aborts the whole object
+     * graph on the first such value; keeping the field {@code transient} is what makes serializing a metadata type
+     * independent of which driver produced it.
      */
     @Test
     void serialization_KeepsLabeledFieldsAndDropsUnknownColumns_() throws Exception {
@@ -135,8 +135,8 @@ abstract class AbstractMetadataType_Test<T extends AbstractMetadataType>
     }
 
     /**
-     * Verifies that {@link Object#toString() toString()} renders exactly the {@link _ColumnLabel}-annotated fields,
-     * and nothing else.
+     * Verifies that {@link Object#toString() toString()} renders exactly the {@link _ColumnLabel}-annotated fields, and
+     * nothing else.
      * <p>
      * {@link AbstractMetadataType#unknownColumns} is deliberately absent. Its values are whatever
      * {@link java.sql.ResultSet#getObject(String)} returned, so interpolating them would call {@code toString()} on a

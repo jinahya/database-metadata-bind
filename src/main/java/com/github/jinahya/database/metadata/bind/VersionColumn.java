@@ -173,6 +173,7 @@ public class VersionColumn
     }
 
     // ---------------------------------------------------------------------------------------------- Jakarta-Validation
+
     /**
      * Asserts that the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column, when present, is one of the values defined
      * for the column.

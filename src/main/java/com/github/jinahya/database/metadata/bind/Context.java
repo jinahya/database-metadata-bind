@@ -55,11 +55,12 @@ import java.util.function.Consumer;
  * methods are the only place that normalization is applied.
  * <p>
  * Extra rows have a second source: a row's schema and object names are literal, but some of the arguments they feed
- * are <em>patterns</em> ({@code schemaPattern}, {@code tableNamePattern}, ...), in which {@code _} and {@code %} are
+ * are
+ * <em>patterns</em> ({@code schemaPattern}, {@code tableNamePattern}, ...), in which {@code _} and {@code %} are
  * wildcards. Those values are therefore escaped with the driver's
  * {@linkplain DatabaseMetaData#getSearchStringEscape() search string escape}, so that navigating from {@code A_B} does
- * not also return {@code AXB}'s rows. A driver which supplies no escape gets the values unescaped, and may return
- * extra rows. Pattern arguments the caller passes, such as {@code columnNamePattern}, are passed through verbatim.
+ * not also return {@code AXB}'s rows. A driver which supplies no escape gets the values unescaped, and may return extra
+ * rows. Pattern arguments the caller passes, such as {@code columnNamePattern}, are passed through verbatim.
  *
  * <h3>Cost: one round trip each</h3>
  * <p>

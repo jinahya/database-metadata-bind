@@ -75,7 +75,7 @@ public record Location(@Nullable String catalog, @Nullable String schema) {
      *
      * @param context the context whose driver will receive the pattern.
      * @return an escaped pattern matching the {@link #schema() schema}, or {@code ""} if it is {@code null}.
-     * @throws SQLException if a database error occurs while reading the search string escape.
+     * @throws SQLException                    if a database error occurs while reading the search string escape.
      * @throws SQLFeatureNotSupportedException if the schema contains a wildcard and the driver supplies no escape.
      * @see #schemaForLookup()
      */
@@ -86,7 +86,8 @@ public record Location(@Nullable String catalog, @Nullable String schema) {
         }
         final var escape = context.metadata.getSearchStringEscape();
         if ((escape == null || escape.isEmpty()) && (schema.indexOf('_') >= 0 || schema.indexOf('%') >= 0)) {
-            throw new SQLFeatureNotSupportedException("the driver supplies no search string escape for schema " + schema);
+            throw new SQLFeatureNotSupportedException(
+                    "the driver supplies no search string escape for schema " + schema);
         }
         return escape(schema, escape);
     }
@@ -103,7 +104,7 @@ public record Location(@Nullable String catalog, @Nullable String schema) {
             return value;
         }
         final var escaped = new StringBuilder(value.length());
-        for (int index = 0; index < value.length();) {
+        for (int index = 0; index < value.length(); ) {
             if (value.startsWith(escape, index)) {
                 escaped.append(escape).append(escape);
                 index += escape.length();

@@ -75,7 +75,8 @@ public class ProcedureColumn
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        final var s = ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
+        final var s =
+                ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         final var i = ContextUtils.withDatabaseNullOrdering(
                 context, Comparator.<Integer>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
         return Comparator
@@ -157,7 +158,6 @@ public class ProcedureColumn
      * for the {@value #COLUMN_LABEL_COLUMN_TYPE} column.
      */
     public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RESULT = DatabaseMetaData.procedureColumnResult;
-
 
     // ------------------------------------------------------------------------------------------------------- DATA_TYPE
 
