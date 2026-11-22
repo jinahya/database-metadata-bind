@@ -113,6 +113,30 @@ class ContextUtilsTest {
         assertThat(ContextUtils.convert("yes", Boolean.class)).isNull();
     }
 
+    @DisplayName("labels normalize the same under a Turkish default locale")
+    @Test
+    void getLabels__TurkishDefaultLocale() throws SQLException {
+        // under tr-TR, "i".toUpperCase() is the dotted "\u0130", so a default-locale case mapping would turn
+        // "index_name" into a label no field matches - see #40
+        final var defaultLocale = Locale.getDefault();
+        Locale.setDefault(Locale.forLanguageTag("tr-TR"));
+        try {
+            final var metadata = mock(ResultSetMetaData.class);
+            when(metadata.getColumnCount()).thenReturn(2);
+            when(metadata.getColumnLabel(1)).thenReturn("index_name");
+            when(metadata.getColumnLabel(2)).thenReturn("is_nullable");
+            final var results = mock(ResultSet.class);
+            when(results.getMetaData()).thenReturn(metadata);
+            assertThat(ContextUtils.getLabels(results)).containsExactly("INDEX_NAME", "IS_NULLABLE");
+            assertThat(ContextUtils.getLabeledFields(IndexInfo.class)).containsKey("INDEX_NAME");
+            final var indexInfo = new IndexInfo();
+            indexInfo.setIndexName("idx");
+            assertThat(indexInfo.getValue(String.class, "index_name")).hasValue("idx");
+        } finally {
+            Locale.setDefault(defaultLocale);
+        }
+    }
+
     @DisplayName("getLabeledFields(c) loses no field, for any metadata type")
     @Test
     void getLabeledFields__NoLabelCollision() throws IOException {
