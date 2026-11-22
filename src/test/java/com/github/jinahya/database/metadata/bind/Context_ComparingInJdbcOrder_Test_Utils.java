@@ -162,8 +162,9 @@ final class Context_ComparingInJdbcOrder_Test_Utils {
         }
     }
 
-    private static <T> void warnUnlessInSpecifiedOrder(final String api, final Comparator<? super T> comparator,
-                                                       final List<T> values) {
+    // shared with Context_Test_Utils: a driver's out-of-order rows are logged, not failed - see #89
+    static <T> void warnUnlessInSpecifiedOrder(final String api, final Comparator<? super T> comparator,
+                                               final List<T> values) {
         for (int i = 1; i < values.size(); i++) {
             final var previous = values.get(i - 1);
             final var current = values.get(i);
