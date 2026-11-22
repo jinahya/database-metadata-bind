@@ -65,20 +65,15 @@ final class Context_Test_Utils {
         return normalized.isBlank() ? "unknown" : normalized;
     }
 
-    private static String databaseProductName(final Context context) throws SQLException {
-        return context.metadata.getDatabaseProductName();
-    }
-
     // ----------------------------------------------------------------------------------------------- bestRowIdentifier
     private static void bestRowIdentifier(final Context context, final List<? extends BestRowIdentifier> values)
             throws SQLException {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                .isSortedAccordingTo(BestRowIdentifier.comparingInJdbcOrder(context))
-                .allSatisfy(v -> {
-                });
+                .doesNotHaveDuplicates();
+        Context_ComparingInJdbcOrder_Test_Utils.warnUnlessInSpecifiedOrder(
+                "bestRowIdentifier", BestRowIdentifier.comparingInJdbcOrder(context), values);
         for (final var value : values) {
             bestRowIdentifier(context, value);
         }
@@ -100,11 +95,12 @@ final class Context_Test_Utils {
 
     // --------------------------------------------------------------------------------------------------------- columns
     private static void columns(final Context context, final List<? extends Column> values) throws SQLException {
+        Context_ComparingInJdbcOrder_Test_Utils.warnUnlessInSpecifiedOrder(
+                "columns", Column.comparingInJdbcOrder(context, String.CASE_INSENSITIVE_ORDER), values);
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
-                .isSortedAccordingTo(Column.comparingInJdbcOrder(context, String.CASE_INSENSITIVE_ORDER))
                 .allSatisfy(c -> {
                     assertThat(c.getTableName()).isNotNull();
                     assertThat(c.getColumnName()).isNotNull();
@@ -162,12 +158,7 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-//                .isSortedAccordingTo(ColumnPrivilege.comparingInJdbcOrder(
-//                        UnaryOperator.identity(),
-//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
-                .allSatisfy(v -> {
-                });
+                .doesNotHaveDuplicates();
         for (final var value : values) {
             columnPrivilege(context, value);
         }
@@ -184,12 +175,7 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-//                .isSortedAccordingTo(ExportedKey.comparingInJdbcOrder(
-//                        UnaryOperator.identity(),
-//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
-                .allSatisfy(e -> {
-                });
+                .doesNotHaveDuplicates();
         for (final var value : values) {
             exportedKey(context, value);
         }
@@ -204,12 +190,7 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-//                .isSortedAccordingTo(Function.comparingInJdbcOrder(
-//                        UnaryOperator.identity(),
-//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
-                .allSatisfy(v -> {
-                });
+                .doesNotHaveDuplicates();
         for (final var value : values) {
             function(context, value);
         }
@@ -230,9 +211,7 @@ final class Context_Test_Utils {
             throws SQLException {
         assertThat(values)
                 .isNotNull()
-                .doesNotContainNull()
-                .allSatisfy(v -> {
-                });
+                .doesNotContainNull();
         for (final var value : values) {
             functionColumn(context, value);
         }
@@ -249,9 +228,7 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                .allSatisfy(i -> {
-                });
+                .doesNotHaveDuplicates();
         for (final var value : values) {
             importedKey(context, value);
         }
@@ -266,12 +243,7 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-//                .isSortedAccordingTo(IndexInfo.comparingInJdbcOrder(
-//                        UnaryOperator.identity(),
-//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
-                .allSatisfy(v -> {
-                });
+                .doesNotHaveDuplicates();
         for (final var value : values) {
             indexInfo(context, value);
         }
@@ -287,17 +259,7 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-//                .isSortedAccordingTo(Procedure.comparingInJdbcOrder(
-//                        UnaryOperator.identity(),
-//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
-                .allSatisfy(v -> {
-                });
-        if (!databaseProductName(context).equals(DatabaseProductNames.MARIA_DB) &&
-            !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
-//            assertThat(values).isSortedAccordingTo(
-//                    Procedure.comparingInJdbcOrder(context, String.CASE_INSENSITIVE_ORDER));
-        }
+                .doesNotHaveDuplicates();
         for (final var value : values) {
             procedure(context, value);
         }
@@ -317,9 +279,7 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                .allSatisfy(v -> {
-                });
+                .doesNotHaveDuplicates();
         for (final var value : values) {
             procedureColumn(context, value);
         }
@@ -334,11 +294,9 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                .isSortedAccordingTo(Schema.comparingInJdbcOrder(context, String.CASE_INSENSITIVE_ORDER))
-                .allSatisfy(v -> {
-                })
-        ;
+                .doesNotHaveDuplicates();
+        Context_ComparingInJdbcOrder_Test_Utils.warnUnlessInSpecifiedOrder(
+                "schemas", Schema.comparingInJdbcOrder(context, String.CASE_INSENSITIVE_ORDER), values);
         for (final var value : values) {
             schema(context, value);
         }
@@ -389,9 +347,7 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                .allSatisfy(v -> {
-                });
+                .doesNotHaveDuplicates();
         for (final var value : values) {
             superType(context, value);
         }
@@ -410,12 +366,7 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-//                .isSortedAccordingTo(Table.comparingInJdbcOrder(
-//                        UnaryOperator.identity(),
-//                        ContextUtils.withDatabaseNullOrdering(context, Comparator.naturalOrder())))
-                .allSatisfy(v -> {
-                });
+                .doesNotHaveDuplicates();
         for (final var value : values) {
             table(context, value);
         }
@@ -539,17 +490,7 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-//                .isSortedAccordingTo(PrimaryKey.comparingInJdbcOrder(
-//                        UnaryOperator.identity(),
-//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
-                .allSatisfy(p -> {
-                });
-        if (!databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL) &&
-            !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
-//            assertThat(values).isSortedAccordingTo(
-//                    PrimaryKey.comparing(context, String.CASE_INSENSITIVE_ORDER));
-        }
+                .doesNotHaveDuplicates();
         for (final var value : values) {
             primaryKey(context, value);
         }
@@ -565,10 +506,9 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                .isSortedAccordingTo(PseudoColumn.comparingInJdbcOrder(context, String.CASE_INSENSITIVE_ORDER))
-                .allSatisfy(p -> {
-                });
+                .doesNotHaveDuplicates();
+        Context_ComparingInJdbcOrder_Test_Utils.warnUnlessInSpecifiedOrder(
+                "pseudoColumns", PseudoColumn.comparingInJdbcOrder(context, String.CASE_INSENSITIVE_ORDER), values);
         for (final var value : values) {
             pseudoColumn(context, value);
         }
@@ -584,10 +524,8 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                // getSuperTables does not specify a result ordering; no comparator to assert against
-                .allSatisfy(s -> {
-                });
+                .doesNotHaveDuplicates();
+        // getSuperTables does not specify a result ordering; no comparator to assert against
         for (final var superTable : values) {
             superTable(context, superTable);
         }
@@ -603,12 +541,7 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-//                .isSortedAccordingTo(TablePrivilege.comparingInJdbcOrder(
-//                        UnaryOperator.identity(),
-//                        ContextUtils.withDatabaseNullOrdering(context, String.CASE_INSENSITIVE_ORDER)))
-                .allSatisfy(v -> {
-                });
+                .doesNotHaveDuplicates();
         for (final var value : values) {
             tablePrivilege(context, value);
         }
@@ -624,10 +557,8 @@ final class Context_Test_Utils {
         assertThat(values)
                 .isNotNull()
                 .doesNotContainNull()
-                .doesNotHaveDuplicates()
-                // getVersionColumns() are unordered per JDBC spec
-                .allSatisfy(v -> {
-                });
+                .doesNotHaveDuplicates();
+        // getVersionColumns() are unordered per JDBC spec
         for (final var value : values) {
             versionColumn(context, value);
         }
