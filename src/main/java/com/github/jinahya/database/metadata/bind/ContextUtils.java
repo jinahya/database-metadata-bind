@@ -39,7 +39,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A class of utilities for binding {@link java.sql.DatabaseMetaData} result sets to metadata types.
@@ -49,9 +48,22 @@ import java.util.concurrent.ConcurrentHashMap;
 final class ContextUtils {
 
     /**
-     * A cache mapping each class to its {@link #getLabeledFields(Class) labeled fields}.
+     * A cache of each class's {@link #getLabeledFields(Class) labeled fields}.
+     * <p>
+     * A {@link ClassValue}, not a static map: {@code MetadataType.getValue} adds any implementing class, including
+     * one from a child class loader, and a static map would keep that class, and its loader, alive - see #86.
      */
-    private static final Map<Class<?>, Map<String, Field>> CLASSES_AND_LABELED_FIELDS = new ConcurrentHashMap<>();
+    private static final ClassValue<Map<String, Field>> LABELED_FIELDS = new ClassValue<>() {
+        @Override
+        protected Map<String, Field> computeValue(final Class<?> type) {
+            final Map<String, Field> labeledFields = new HashMap<>();
+            getBindingFields(type).forEach((field, label) -> {
+                final var previous = labeledFields.put(label.value().toUpperCase(Locale.ROOT), field);
+                assert previous == null : "duplicate label: " + label.value() + "; " + field + "; " + previous;
+            });
+            return Map.copyOf(labeledFields);
+        }
+    };
 
     /**
      * Returns a map of all declared fields of the specified class (and its superclasses) that are annotated with
@@ -105,14 +117,7 @@ final class ContextUtils {
      */
     static Map<String, Field> getLabeledFields(final Class<?> c) {
         Objects.requireNonNull(c, "c is null");
-        return CLASSES_AND_LABELED_FIELDS.computeIfAbsent(c, k -> {
-            final Map<String, Field> labeledFields = new HashMap<>();
-            getBindingFields(k).forEach((field, label) -> {
-                final var previous = labeledFields.put(label.value().toUpperCase(Locale.ROOT), field);
-                assert previous == null : "duplicate label: " + label.value() + "; " + field + "; " + previous;
-            });
-            return Map.copyOf(labeledFields);
-        });
+        return LABELED_FIELDS.get(c);
     }
 
     /**
