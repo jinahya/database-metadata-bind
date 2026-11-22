@@ -30,10 +30,12 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -137,6 +139,41 @@ class Context_Binding_Test {
             assertThat(i.getType()).isEqualTo(3);
             assertThat(i.getCardinality()).isEqualTo(42L);
         });
+    }
+
+    @DisplayName("forEach accepts each value with the result set open; get returns only after it is closed")
+    @Test
+    void resultSetState_PerApiFamily_() throws SQLException {
+        // the contract MetadataType#getUnknownColumns documents for locator values - see #34
+        final var closed = new boolean[1];
+        final var metadata = resultSetMetaData(List.of(Catalog.COLUMN_LABEL_TABLE_CAT));
+        final var rows = 3;
+        final Supplier<ResultSet> results = () -> {
+            closed[0] = false;
+            final var index = new int[] {-1};
+            return proxy(ResultSet.class, (proxy, method, args) -> {
+                switch (method.getName()) {
+                    case "next":
+                        return ++index[0] < rows;
+                    case "getMetaData":
+                        return metadata;
+                    case "getObject":
+                        return "catalog" + index[0];
+                    case "close":
+                        closed[0] = true;
+                        return null;
+                    case "isClosed":
+                        return closed[0];
+                    default:
+                        return defaultValue(method.getReturnType());
+                }
+            });
+        };
+        final var openWhenAccepted = new ArrayList<Boolean>();
+        new Context(metadata("getCatalogs", results.get())).forEachCatalog(c -> openWhenAccepted.add(!closed[0]));
+        assertThat(openWhenAccepted).hasSize(rows).containsOnly(true);
+        assertThat(new Context(metadata("getCatalogs", results.get())).getCatalogs()).hasSize(rows);
+        assertThat(closed[0]).as("closed when get returns").isTrue();
     }
 
     @Test
