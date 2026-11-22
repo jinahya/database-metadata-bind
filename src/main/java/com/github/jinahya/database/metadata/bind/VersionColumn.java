@@ -147,6 +147,9 @@ public class VersionColumn
     /**
      * Creates a new instance.
      */
+    @SuppressWarnings({
+            "java:S2637" // "@NonNull" values should not be set to null
+    })
     protected VersionColumn() {
         super();
     }

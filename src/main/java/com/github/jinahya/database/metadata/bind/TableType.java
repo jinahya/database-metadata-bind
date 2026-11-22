@@ -83,6 +83,9 @@ public class TableType
     /**
      * Creates a new instance.
      */
+    @SuppressWarnings({
+            "java:S2637" // "@NonNull" values should not be set to null
+    })
     protected TableType() {
         super();
     }
