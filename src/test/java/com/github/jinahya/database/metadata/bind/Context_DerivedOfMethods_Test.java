@@ -25,10 +25,14 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -400,6 +404,46 @@ class Context_DerivedOfMethods_Test {
         }
 
         @Test
+        void functionColumns_KeepOnlyTheOverloadsColumns() throws SQLException {
+            final var context = context();
+            final var function = function();
+            function.setSpecificName("fn_1");
+            doReturn(new ArrayList<>(List.of(functionColumn("fn_1"), functionColumn("fn_2"), functionColumn(null))))
+                    .when(context).getFunctionColumns("fc", "fs", "fn", "c");
+            assertThat(context.getFunctionColumnsOf(function, "c"))
+                    .extracting(FunctionColumn::getSpecificName)
+                    .containsExactly("fn_1", null);
+            doAnswer(i -> {
+                final Consumer<? super FunctionColumn> c = i.getArgument(4);
+                List.of(functionColumn("fn_1"), functionColumn("fn_2"), functionColumn(null)).forEach(c);
+                return null;
+            }).when(context).forEachFunctionColumn(eq("fc"), eq("fs"), eq("fn"), eq("c"), any());
+            final var accepted = new ArrayList<FunctionColumn>();
+            context.forEachFunctionColumnOf(function, "c", accepted::add);
+            assertThat(accepted).extracting(FunctionColumn::getSpecificName).containsExactly("fn_1", null);
+        }
+
+        @Test
+        void procedureColumns_KeepOnlyTheOverloadsColumns() throws SQLException {
+            final var context = context();
+            final var procedure = procedure();
+            procedure.setSpecificName("pn_1");
+            doReturn(new ArrayList<>(List.of(procedureColumn("pn_1"), procedureColumn("pn_2"), procedureColumn(null))))
+                    .when(context).getProcedureColumns("pc", "ps", "pn", "c");
+            assertThat(context.getProcedureColumnsOf(procedure, "c"))
+                    .extracting(ProcedureColumn::getSpecificName)
+                    .containsExactly("pn_1", null);
+            doAnswer(i -> {
+                final Consumer<? super ProcedureColumn> c = i.getArgument(4);
+                List.of(procedureColumn("pn_1"), procedureColumn("pn_2"), procedureColumn(null)).forEach(c);
+                return null;
+            }).when(context).forEachProcedureColumn(eq("pc"), eq("ps"), eq("pn"), eq("c"), any());
+            final var accepted = new ArrayList<ProcedureColumn>();
+            context.forEachProcedureColumnOf(procedure, "c", accepted::add);
+            assertThat(accepted).extracting(ProcedureColumn::getSpecificName).containsExactly("pn_1", null);
+        }
+
+        @Test
         void superTypes_DelegateWithUdtFields() throws SQLException {
             final var context = context();
             final var superTypes = List.<SuperType>of();
@@ -457,6 +501,18 @@ class Context_DerivedOfMethods_Test {
         procedure.setProcedureSchem("ps");
         procedure.setProcedureName("pn");
         return procedure;
+    }
+
+    private static FunctionColumn functionColumn(final String specificName) {
+        final var column = new FunctionColumn();
+        column.setSpecificName(specificName);
+        return column;
+    }
+
+    private static ProcedureColumn procedureColumn(final String specificName) {
+        final var column = new ProcedureColumn();
+        column.setSpecificName(specificName);
+        return column;
     }
 
     private static UDT udt() {
