@@ -21,6 +21,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      # empty for pull requests from forks, which receive no secrets; the analysis step is skipped then
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
     steps:
     - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       with:
@@ -37,11 +41,13 @@ jobs:
         path: ~/.sonar/cache
         key: ${{ runner.os }}-sonar
         restore-keys: ${{ runner.os }}-sonar
-    - name: Build and analyze
+    - name: Build
+      run: ./mvnw -B verify
+    - name: Analyze
+      if: env.SONAR_TOKEN != ''
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jinahya_database-metadata-bind
+      run: ./mvnw -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jinahya_database-metadata-bind
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
