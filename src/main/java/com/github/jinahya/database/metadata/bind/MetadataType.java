@@ -58,6 +58,13 @@ public interface MetadataType
      * it with {@link Locale#ROOT}, which is how the labels a driver reports are normalized while binding. Both lookups
      * apply that same normalization, so {@code getValue(String.class, "table_cat")} and
      * {@code getValue(String.class, "TABLE_CAT")} are equivalent.
+     * <p>
+     * A mapped label yields the value of its field, so {@code type} must match the field's declared Java type, which
+     * is not always the type the JDBC documentation gives the column. Bound fields are wrapper types, and a column the
+     * documentation types {@code short} may be modeled wider - {@code KEY_SEQ} of {@link PrimaryKey} is an
+     * {@link Integer}, so {@code getValue(Integer.class, "KEY_SEQ")} succeeds while
+     * {@code getValue(Short.class, "KEY_SEQ")} throws {@link ClassCastException}. An unknown column yields whatever
+     * the driver returned.
      *
      * @param type  the type of the value.
      * @param label the column label whose bound value is returned.
@@ -107,6 +114,13 @@ public interface MetadataType
      * the {@link _ColumnLabel}-annotated fields. This method is the only access point: rendering a value the driver
      * chose would mean calling {@code toString()} on a locator that has no meaningful contract for it, that may no
      * longer be valid, and that may hold an unbounded amount of text.
+     * <p>
+     * A non-scalar value - a {@link java.sql.Blob}, {@link java.sql.Clob}, {@link java.sql.Array}, or
+     * {@link java.sql.SQLXML} - is a locator, usable only while the result set that produced it is open. Which API
+     * family produced the instance decides whether it is: the {@code forEach...} methods of {@link Context} accept each
+     * instance while the result set is open and positioned on the producing row, whereas the {@code get...} methods
+     * return their list only after the result set is closed, by which time any such locator may already be invalid.
+     * Read a locator inside a {@code forEach...} consumer; scalar values behave the same in both families.
      *
      * @return an unmodifiable view of unknown columns and values.
      */
