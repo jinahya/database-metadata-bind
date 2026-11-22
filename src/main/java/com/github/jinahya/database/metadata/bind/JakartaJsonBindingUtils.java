@@ -38,8 +38,8 @@ public final class JakartaJsonBindingUtils {
      * What this exists for, precisely: <strong>deserialization</strong>, and only because the setters are not
      * {@code public}. JSON-B considers only public members by default, so with stock visibility a binding type
      * <em>serializes</em> perfectly well - the getters are public - but <em>deserializing</em> one yields an instance
-     * whose every property is left {@code null}, because there is no visible setter to write through. Making the
-     * fields visible instead restores the write side.
+     * whose every property is left {@code null}, because there is no visible setter to write through. Making the fields
+     * visible instead restores the write side.
      * <p>
      * Two things this is <em>not</em> for. It does not enable serialization, which needs no help. And it does not
      * instantiate anything: {@link PropertyVisibilityStrategy} governs fields and methods only, and a provider reaches

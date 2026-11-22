@@ -37,16 +37,16 @@ import java.util.function.Consumer;
  * <p>
  * A connection may see many catalogs and schemas, and which ones - and at which level a given engine's namespace is
  * reported - depends on the connection's URL, its user, and its driver's settings. Code that knows only the name of an
- * object it depends on cannot tell in advance which catalog/schema arguments to pass. The methods here answer that
- * from what the driver reports, as {@link Location}s - catalog/schema pairs - for each kind of object that JDBC
- * places directly in a catalog/schema: tables, procedures, functions, and user-defined types.
+ * object it depends on cannot tell in advance which catalog/schema arguments to pass. The methods here answer that from
+ * what the driver reports, as {@link Location}s - catalog/schema pairs - for each kind of object that JDBC places
+ * directly in a catalog/schema: tables, procedures, functions, and user-defined types.
  * <h2 id="contract">Common behavior</h2>
  * <p>
  * Every method makes exactly one call of the corresponding {@link DatabaseMetaData} method, with {@code null} for both
  * its {@code catalog} and its {@code schemaPattern} argument, and the specified name pattern passed through verbatim -
- * so unescaped {@code _} and {@code %} in it are wildcards. To search for a literal name containing either
- * character, escape it using the driver's {@linkplain DatabaseMetaData#getSearchStringEscape() search string escape}.
- * Every returned row is bound. A broad pattern on a large database can be expensive.
+ * so unescaped {@code _} and {@code %} in it are wildcards. To search for a literal name containing either character,
+ * escape it using the driver's {@linkplain DatabaseMetaData#getSearchStringEscape() search string escape}. Every
+ * returned row is bound. A broad pattern on a large database can be expensive.
  * <p>
  * A {@code null} catalog and schema asks the driver not to narrow by either, but what that covers is the driver's to
  * decide: some drivers can be configured to read a {@code null} catalog as the connection's current one, and every
@@ -54,9 +54,9 @@ import java.util.function.Consumer;
  * object, not where the object exists.
  * <p>
  * Each row yields the pair of its catalog and schema values, exactly as reported - either may be {@code null}, and
- * values are compared exactly, without case folding. {@code getLocationsOfXxx} returns the distinct pairs in
- * the order each is first seen. {@code getOnlyLocationOfXxx} returns the one pair all rows share, and refuses
- * rather than guesses when there is not exactly one:
+ * values are compared exactly, without case folding. {@code getLocationsOfXxx} returns the distinct pairs in the order
+ * each is first seen. {@code getOnlyLocationOfXxx} returns the one pair all rows share, and refuses rather than guesses
+ * when there is not exactly one:
  * <ul>
  *   <li>{@link NoSuchElementException} when there is no row;</li>
  *   <li>{@link IllegalArgumentException} when the rows are in more than one pair, so the pattern did not identify one
@@ -151,7 +151,7 @@ public final class ContextNavigationUtils {
      * @see #getLocationsOfTables(Context, String, String[])
      */
     public static List<Location> getLocationsOfTables(final Context context,
-                                                                       final String tableNamePattern)
+                                                      final String tableNamePattern)
             throws SQLException {
         return getLocationsOfTables(context, tableNamePattern, null);
     }
@@ -170,8 +170,8 @@ public final class ContextNavigationUtils {
      * @throws SQLException if a database error occurs.
      */
     public static List<Location> getLocationsOfTables(final Context context,
-                                                                       final String tableNamePattern,
-                                                                       @Nullable final String[] types)
+                                                      final String tableNamePattern,
+                                                      @Nullable final String[] types)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
@@ -183,8 +183,8 @@ public final class ContextNavigationUtils {
      * Returns the only {@code TABLE_CAT}/{@code TABLE_SCHEM} pair of tables, of any table type, matching the specified
      * table name pattern, as described in <a href="#contract">common behavior</a>.
      * <p>
-     * Since every table type is included, a view and a base table of the same name in different schemas make the
-     * result ambiguous; narrow by type with {@link #getOnlyLocationOfTables(Context, String, String[])}.
+     * Since every table type is included, a view and a base table of the same name in different schemas make the result
+     * ambiguous; narrow by type with {@link #getOnlyLocationOfTables(Context, String, String[])}.
      *
      * @param context          the context whose tables are searched.
      * @param tableNamePattern a value for the {@code tableNamePattern} parameter of
@@ -196,14 +196,14 @@ public final class ContextNavigationUtils {
      * @throws IllegalArgumentException if matching tables are in more than one pair.
      */
     public static Location getOnlyLocationOfTables(final Context context,
-                                                                   final String tableNamePattern)
+                                                   final String tableNamePattern)
             throws SQLException {
         return getOnlyLocationOfTables(context, tableNamePattern, null);
     }
 
     /**
-     * Returns the only {@code TABLE_CAT}/{@code TABLE_SCHEM} pair of tables, of the specified table types, matching
-     * the specified table name pattern, as described in <a href="#contract">common behavior</a>.
+     * Returns the only {@code TABLE_CAT}/{@code TABLE_SCHEM} pair of tables, of the specified table types, matching the
+     * specified table name pattern, as described in <a href="#contract">common behavior</a>.
      *
      * @param context          the context whose tables are searched.
      * @param tableNamePattern a value for the {@code tableNamePattern} parameter of
@@ -218,8 +218,8 @@ public final class ContextNavigationUtils {
      * @throws IllegalArgumentException if matching tables are in more than one pair.
      */
     public static Location getOnlyLocationOfTables(final Context context,
-                                                                   final String tableNamePattern,
-                                                                   @Nullable final String[] types)
+                                                   final String tableNamePattern,
+                                                   @Nullable final String[] types)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
@@ -241,7 +241,7 @@ public final class ContextNavigationUtils {
      * @throws SQLException if a database error occurs.
      */
     public static List<Location> getLocationsOfProcedures(final Context context,
-                                                                           final String procedureNamePattern)
+                                                          final String procedureNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedureNamePattern, "procedureNamePattern is null");
@@ -263,7 +263,7 @@ public final class ContextNavigationUtils {
      * @throws IllegalArgumentException if matching procedures are in more than one pair.
      */
     public static Location getOnlyLocationOfProcedures(final Context context,
-                                                                       final String procedureNamePattern)
+                                                       final String procedureNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedureNamePattern, "procedureNamePattern is null");
@@ -285,7 +285,7 @@ public final class ContextNavigationUtils {
      * @throws SQLException if a database error occurs.
      */
     public static List<Location> getLocationsOfFunctions(final Context context,
-                                                                          final String functionNamePattern)
+                                                         final String functionNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(functionNamePattern, "functionNamePattern is null");
@@ -307,7 +307,7 @@ public final class ContextNavigationUtils {
      * @throws IllegalArgumentException if matching functions are in more than one pair.
      */
     public static Location getOnlyLocationOfFunctions(final Context context,
-                                                                      final String functionNamePattern)
+                                                      final String functionNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(functionNamePattern, "functionNamePattern is null");
@@ -329,7 +329,7 @@ public final class ContextNavigationUtils {
      * @see #getLocationsOfUDTs(Context, String, int[])
      */
     public static List<Location> getLocationsOfUDTs(final Context context,
-                                                                     final String typeNamePattern)
+                                                    final String typeNamePattern)
             throws SQLException {
         return getLocationsOfUDTs(context, typeNamePattern, null);
     }
@@ -347,8 +347,8 @@ public final class ContextNavigationUtils {
      * @throws SQLException if a database error occurs.
      */
     public static List<Location> getLocationsOfUDTs(final Context context,
-                                                                     final String typeNamePattern,
-                                                                     @Nullable final int[] types)
+                                                    final String typeNamePattern,
+                                                    @Nullable final int[] types)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
@@ -370,14 +370,14 @@ public final class ContextNavigationUtils {
      * @see #getOnlyLocationOfUDTs(Context, String, int[])
      */
     public static Location getOnlyLocationOfUDTs(final Context context,
-                                                                 final String typeNamePattern)
+                                                 final String typeNamePattern)
             throws SQLException {
         return getOnlyLocationOfUDTs(context, typeNamePattern, null);
     }
 
     /**
-     * Returns the only {@code TYPE_CAT}/{@code TYPE_SCHEM} pair of user-defined types, of the specified kinds,
-     * matching the specified type name pattern, as described in <a href="#contract">common behavior</a>.
+     * Returns the only {@code TYPE_CAT}/{@code TYPE_SCHEM} pair of user-defined types, of the specified kinds, matching
+     * the specified type name pattern, as described in <a href="#contract">common behavior</a>.
      *
      * @param context         the context whose user-defined types are searched.
      * @param typeNamePattern a value for the {@code typeNamePattern} parameter of
@@ -390,8 +390,8 @@ public final class ContextNavigationUtils {
      * @throws IllegalArgumentException if matching user-defined types are in more than one pair.
      */
     public static Location getOnlyLocationOfUDTs(final Context context,
-                                                                 final String typeNamePattern,
-                                                                 @Nullable final int[] types)
+                                                 final String typeNamePattern,
+                                                 @Nullable final int[] types)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");

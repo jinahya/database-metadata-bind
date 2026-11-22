@@ -50,9 +50,9 @@ final class ContextMetadataWalkthrough {
     private static final int VIOLATIONS_TO_REPORT = 20;
 
     /**
-     * The maximum number of constraint violation descriptions retained. Violations keep being counted past this
-     * point; only their (long) descriptions are dropped, so that a driver emitting a violation on every row of a
-     * large catalog can't exhaust the heap.
+     * The maximum number of constraint violation descriptions retained. Violations keep being counted past this point;
+     * only their (long) descriptions are dropped, so that a driver emitting a violation on every row of a large catalog
+     * can't exhaust the heap.
      */
     private static final int VIOLATIONS_TO_RETAIN = 1024;
 

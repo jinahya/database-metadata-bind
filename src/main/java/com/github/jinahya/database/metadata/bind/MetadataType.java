@@ -39,8 +39,8 @@ import java.util.Optional;
  * happen after binding completes and through a safe-publication mechanism of the caller's choosing - handing the
  * instance over via a {@code synchronized} block, a {@code volatile} field, a concurrent collection, or the
  * happens-before edge of the executor that produced it. Once published this way an instance is effectively immutable,
- * since nothing outside the package can mutate it: setters are package-private and
- * {@link #getUnknownColumns()} returns an unmodifiable view.
+ * since nothing outside the package can mutate it: setters are package-private and {@link #getUnknownColumns()} returns
+ * an unmodifiable view.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
@@ -54,10 +54,10 @@ public interface MetadataType
      * (and its superclasses); if no field is mapped to the specified label, the value is looked up in
      * {@link #getUnknownColumns() unknown columns}.
      * <p>
-     * The {@code label} is matched <em>case-insensitively</em>, by
-     * {@linkplain String#toUpperCase(Locale) upper-casing} it with {@link Locale#ROOT}, which is
-     * how the labels a driver reports are normalized while binding. Both lookups apply that same normalization, so
-     * {@code getValue(String.class, "table_cat")} and {@code getValue(String.class, "TABLE_CAT")} are equivalent.
+     * The {@code label} is matched <em>case-insensitively</em>, by {@linkplain String#toUpperCase(Locale) upper-casing}
+     * it with {@link Locale#ROOT}, which is how the labels a driver reports are normalized while binding. Both lookups
+     * apply that same normalization, so {@code getValue(String.class, "table_cat")} and
+     * {@code getValue(String.class, "TABLE_CAT")} are equivalent.
      *
      * @param type  the type of the value.
      * @param label the column label whose bound value is returned.
@@ -98,8 +98,7 @@ public interface MetadataType
      * {@link java.sql.Ref}, {@link java.sql.RowId}, {@link java.sql.SQLXML}, and {@link java.sql.Struct} are each
      * declared without it - and Java serialization aborts an entire object graph on the first such value rather than
      * skipping the offending entry. Retaining unknown columns would therefore make serializing any metadata type
-     * succeed or fail depending on which driver produced it. Read whatever is needed from this map before
-     * serializing.
+     * succeed or fail depending on which driver produced it. Read whatever is needed from this map before serializing.
      * <p>
      * Consequently, an instance restored by deserialization has no unknown columns; this method returns an empty map
      * rather than {@code null}.
