@@ -1692,6 +1692,10 @@ public class Context {
 
     /**
      * Retrieves function columns of the specified function.
+     * <p>
+     * Columns are looked up by the function's catalog, schema, and name, which an overloaded function shares with its
+     * overloads; when the function reports a {@code SPECIFIC_NAME}, only the columns with the same
+     * {@code SPECIFIC_NAME}, or with none, are returned.
      *
      * @param function          the function whose columns are retrieved.
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
@@ -1703,12 +1707,18 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(function, "function is null");
         final var escape = metadata.getSearchStringEscape();
-        return getFunctionColumns(
+        final var columns = getFunctionColumns(
                 function.getFunctionCatForMetadataLookup(),
                 Location.escape(function.getFunctionSchemForMetadataLookup(), escape),
                 Location.escape(function.getFunctionName(), escape),
                 columnNamePattern
         );
+        // overloads share a name, not a SPECIFIC_NAME; keep only this function's columns - see #80
+        final var specificName = function.getSpecificName();
+        if (specificName != null) {
+            columns.removeIf(c -> c.getSpecificName() != null && !specificName.equals(c.getSpecificName()));
+        }
+        return columns;
     }
 
     /**
@@ -1725,12 +1735,24 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(function, "function is null");
         final var escape = metadata.getSearchStringEscape();
+        // overloads share a name, not a SPECIFIC_NAME; accept only this function's columns - see #80
+        final var specificName = function.getSpecificName();
+        final Consumer<? super FunctionColumn> accepting;
+        if (specificName == null) {
+            accepting = consumer;
+        } else {
+            accepting = c -> {
+                if (c.getSpecificName() == null || specificName.equals(c.getSpecificName())) {
+                    consumer.accept(c);
+                }
+            };
+        }
         forEachFunctionColumn(
                 function.getFunctionCatForMetadataLookup(),
                 Location.escape(function.getFunctionSchemForMetadataLookup(), escape),
                 Location.escape(function.getFunctionName(), escape),
                 columnNamePattern,
-                consumer
+                accepting
         );
     }
 
@@ -2269,6 +2291,10 @@ public class Context {
 
     /**
      * Retrieves columns of the specified procedure.
+     * <p>
+     * Columns are looked up by the procedure's catalog, schema, and name, which an overloaded procedure shares with its
+     * overloads; when the procedure reports a {@code SPECIFIC_NAME}, only the columns with the same
+     * {@code SPECIFIC_NAME}, or with none, are returned.
      *
      * @param procedure         the procedure whose columns are retrieved.
      * @param columnNamePattern a value for the {@code columnNamePattern} parameter.
@@ -2280,12 +2306,18 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(procedure, "procedure is null");
         final var escape = metadata.getSearchStringEscape();
-        return getProcedureColumns(
+        final var columns = getProcedureColumns(
                 procedure.getProcedureCatForMetadataLookup(),
                 Location.escape(procedure.getProcedureSchemForMetadataLookup(), escape),
                 Location.escape(procedure.getProcedureName(), escape),
                 columnNamePattern
         );
+        // overloads share a name, not a SPECIFIC_NAME; keep only this procedure's columns - see #80
+        final var specificName = procedure.getSpecificName();
+        if (specificName != null) {
+            columns.removeIf(c -> c.getSpecificName() != null && !specificName.equals(c.getSpecificName()));
+        }
+        return columns;
     }
 
     /**
@@ -2302,12 +2334,24 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(procedure, "procedure is null");
         final var escape = metadata.getSearchStringEscape();
+        // overloads share a name, not a SPECIFIC_NAME; accept only this procedure's columns - see #80
+        final var specificName = procedure.getSpecificName();
+        final Consumer<? super ProcedureColumn> accepting;
+        if (specificName == null) {
+            accepting = consumer;
+        } else {
+            accepting = c -> {
+                if (c.getSpecificName() == null || specificName.equals(c.getSpecificName())) {
+                    consumer.accept(c);
+                }
+            };
+        }
         forEachProcedureColumn(
                 procedure.getProcedureCatForMetadataLookup(),
                 Location.escape(procedure.getProcedureSchemForMetadataLookup(), escape),
                 Location.escape(procedure.getProcedureName(), escape),
                 columnNamePattern,
-                consumer
+                accepting
         );
     }
 
