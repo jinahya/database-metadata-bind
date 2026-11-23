@@ -78,7 +78,7 @@ public class Function
         final var s =
                 ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<Function, String>comparing(Function::getFunctionCat, s)
+                .comparing(Function::getFunctionCat, s)
                 .thenComparing(Function::getFunctionSchem, s)
                 .thenComparing(Function::getFunctionName, s)
                 .thenComparing(Function::getSpecificName, s);

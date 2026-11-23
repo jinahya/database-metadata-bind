@@ -80,7 +80,7 @@ public class ProcedureColumn
         final var i = ContextUtils.withDatabaseNullOrdering(
                 context, Comparator.<Integer>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<ProcedureColumn, String>comparing(ProcedureColumn::getProcedureCat, s)
+                .comparing(ProcedureColumn::getProcedureCat, s)
                 .thenComparing(ProcedureColumn::getProcedureSchem, s)
                 .thenComparing(ProcedureColumn::getProcedureName, s)
                 .thenComparing(ProcedureColumn::getSpecificName, s)
