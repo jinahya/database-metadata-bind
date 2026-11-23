@@ -78,7 +78,7 @@ public class Column
         final var i = ContextUtils.withDatabaseNullOrdering(
                 context, Comparator.<Integer>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<Column, String>comparing(Column::getTableCat, s)
+                .comparing(Column::getTableCat, s)
                 .thenComparing(Column::getTableSchem, s)
                 .thenComparing(Column::getTableName, s)
                 .thenComparing(Column::getOrdinalPosition, i);

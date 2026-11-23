@@ -81,7 +81,7 @@ public class IndexInfo
         final var b = ContextUtils.withDatabaseNullOrdering(
                 context, Comparator.<Boolean>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<IndexInfo, Boolean>comparing(IndexInfo::getNonUnique, b)
+                .comparing(IndexInfo::getNonUnique, b)
                 .thenComparing(IndexInfo::getType, i)
                 .thenComparing(IndexInfo::getIndexName, s)
                 .thenComparing(IndexInfo::getOrdinalPosition, i);

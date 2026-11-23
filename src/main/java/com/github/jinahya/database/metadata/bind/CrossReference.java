@@ -77,7 +77,7 @@ public class CrossReference
         final var i = ContextUtils.withDatabaseNullOrdering(
                 context, Comparator.<Integer>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<CrossReference, String>comparing(CrossReference::getFktableCat, s)
+                .comparing(CrossReference::getFktableCat, s)
                 .thenComparing(CrossReference::getFktableSchem, s)
                 .thenComparing(CrossReference::getFktableName, s)
                 .thenComparing(CrossReference::getKeySeq, i);

@@ -77,7 +77,7 @@ public class Schema
         final var s =
                 ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<Schema, String>comparing(Schema::getTableCatalog, s)
+                .comparing(Schema::getTableCatalog, s)
                 .thenComparing(Schema::getTableSchem, s);
     }
     // The results are ordered by TABLE_CATALOG and TABLE_SCHEM.

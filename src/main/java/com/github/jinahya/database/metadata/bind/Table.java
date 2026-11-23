@@ -89,7 +89,7 @@ public class Table
         final var s =
                 ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<Table, String>comparing(Table::getTableType, s)
+                .comparing(Table::getTableType, s)
                 .thenComparing(Table::getTableCat, s)
                 .thenComparing(Table::getTableSchem, s)
                 .thenComparing(Table::getTableName, s);

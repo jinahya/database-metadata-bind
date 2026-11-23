@@ -79,7 +79,7 @@ public class Procedure
         final var s =
                 ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<Procedure, String>comparing(Procedure::getProcedureCat, s)
+                .comparing(Procedure::getProcedureCat, s)
                 .thenComparing(Procedure::getProcedureSchem, s)
                 .thenComparing(Procedure::getProcedureName, s)
                 .thenComparing(Procedure::getSpecificName, s);

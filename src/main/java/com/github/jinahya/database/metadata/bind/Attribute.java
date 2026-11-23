@@ -79,7 +79,7 @@ public class Attribute
         final var i = ContextUtils.withDatabaseNullOrdering(
                 context, Comparator.<Integer>naturalOrder(), ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<Attribute, String>comparing(Attribute::getTypeCat, s)
+                .comparing(Attribute::getTypeCat, s)
                 .thenComparing(Attribute::getTypeSchem, s)
                 .thenComparing(Attribute::getTypeName, s)
                 .thenComparing(Attribute::getOrdinalPosition, i);

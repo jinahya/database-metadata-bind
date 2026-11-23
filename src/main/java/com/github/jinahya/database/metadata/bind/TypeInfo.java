@@ -72,7 +72,7 @@ public class TypeInfo
                 TypeInfo::getDataType,
                 ContextUtils.withDatabaseNullOrdering(
                         context,
-                        Comparator.<Integer>naturalOrder(),
+                        Comparator.naturalOrder(),
                         ContextConstants.SortDirection.ASCENDING
                 )
         );

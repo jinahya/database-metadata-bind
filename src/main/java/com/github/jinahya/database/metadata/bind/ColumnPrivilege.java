@@ -75,7 +75,7 @@ public class ColumnPrivilege
         final var s =
                 ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<ColumnPrivilege, String>comparing(ColumnPrivilege::getColumnName, s)
+                .comparing(ColumnPrivilege::getColumnName, s)
                 .thenComparing(ColumnPrivilege::getPrivilege, s);
     }
 

@@ -73,7 +73,7 @@ public class TablePrivilege
         final var s =
                 ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<TablePrivilege, String>comparing(TablePrivilege::getTableCat, s)
+                .comparing(TablePrivilege::getTableCat, s)
                 .thenComparing(TablePrivilege::getTableSchem, s)
                 .thenComparing(TablePrivilege::getTableName, s)
                 .thenComparing(TablePrivilege::getPrivilege, s);

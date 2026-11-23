@@ -73,7 +73,7 @@ public class PseudoColumn
         final var s =
                 ContextUtils.withDatabaseNullOrdering(context, comparator, ContextConstants.SortDirection.ASCENDING);
         return Comparator
-                .<PseudoColumn, String>comparing(PseudoColumn::getTableCat, s)
+                .comparing(PseudoColumn::getTableCat, s)
                 .thenComparing(PseudoColumn::getTableSchem, s)
                 .thenComparing(PseudoColumn::getTableName, s)
                 .thenComparing(PseudoColumn::getColumnName, s);
