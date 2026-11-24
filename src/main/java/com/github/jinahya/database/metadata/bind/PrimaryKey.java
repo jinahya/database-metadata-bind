@@ -21,11 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.json.bind.annotation.JsonbNillable;
-import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
@@ -171,18 +169,6 @@ public class PrimaryKey
         this.tableCat = tableCat;
     }
 
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column, with {@code null} normalized to an
-     * empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getTableCatForMetadataLookup() {
-        return tableCat == null ? "" : tableCat;
-    }
-
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -202,18 +188,6 @@ public class PrimaryKey
      */
     void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
-    }
-
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to
-     * an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getTableSchemForMetadataLookup() {
-        return tableSchem == null ? "" : tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName

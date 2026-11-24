@@ -368,18 +368,6 @@ public class Table
         this.typeCat = typeCat;
     }
 
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TYPE_CAT} column, with {@code null} normalized to an
-     * empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_TYPE_CAT} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getTypeCatForMetadataLookup() {
-        return typeCat == null ? "" : typeCat;
-    }
-
     // ------------------------------------------------------------------------------------------------------- typeSchem
 
     /**
@@ -399,18 +387,6 @@ public class Table
      */
     void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
-    }
-
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TYPE_SCHEM} column, with {@code null} normalized to an
-     * empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getTypeSchemForMetadataLookup() {
-        return typeSchem == null ? "" : typeSchem;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName

@@ -21,11 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.json.bind.annotation.JsonbNillable;
-import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
@@ -269,18 +267,6 @@ public class FunctionColumn
         this.functionCat = functionCat;
     }
 
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_FUNCTION_CAT} column, with {@code null} normalized to
-     * an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getFunctionCatForMetadataLookup() {
-        return functionCat == null ? "" : functionCat;
-    }
-
     // --------------------------------------------------------------------------------------------------- functionSchem
 
     /**
@@ -300,18 +286,6 @@ public class FunctionColumn
      */
     void setFunctionSchem(final String functionSchem) {
         this.functionSchem = functionSchem;
-    }
-
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column, with {@code null} normalized
-     * to an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getFunctionSchemForMetadataLookup() {
-        return functionSchem == null ? "" : functionSchem;
     }
 
     // ---------------------------------------------------------------------------------------------------- functionName
