@@ -21,11 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.json.bind.annotation.JsonbNillable;
-import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
@@ -349,18 +347,6 @@ public class CrossReference
         this.pktableCat = pktableCat;
     }
 
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_PKTABLE_CAT} column, with {@code null} normalized to
-     * an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getPktableCatForMetadataLookup() {
-        return pktableCat == null ? "" : pktableCat;
-    }
-
     // --------------------------------------------------------------------------------------------------- pktableSchem
 
     /**
@@ -380,18 +366,6 @@ public class CrossReference
      */
     void setPktableSchem(final String pktableSchem) {
         this.pktableSchem = pktableSchem;
-    }
-
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column, with {@code null} normalized to
-     * an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getPktableSchemForMetadataLookup() {
-        return pktableSchem == null ? "" : pktableSchem;
     }
 
     // ---------------------------------------------------------------------------------------------------- pktableName
@@ -455,18 +429,6 @@ public class CrossReference
         this.fktableCat = fktableCat;
     }
 
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_FKTABLE_CAT} column, with {@code null} normalized to
-     * an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getFktableCatForMetadataLookup() {
-        return fktableCat == null ? "" : fktableCat;
-    }
-
     // --------------------------------------------------------------------------------------------------- fktableSchem
 
     /**
@@ -486,18 +448,6 @@ public class CrossReference
      */
     void setFktableSchem(final String fktableSchem) {
         this.fktableSchem = fktableSchem;
-    }
-
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column, with {@code null} normalized to
-     * an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getFktableSchemForMetadataLookup() {
-        return fktableSchem == null ? "" : fktableSchem;
     }
 
     // ---------------------------------------------------------------------------------------------------- fktableName

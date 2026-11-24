@@ -21,13 +21,11 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.json.bind.annotation.JsonbNillable;
-import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
@@ -521,18 +519,6 @@ public class Column
         this.tableCat = tableCat;
     }
 
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column, with {@code null} normalized to an
-     * empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_CAT} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getTableCatForMetadataLookup() {
-        return tableCat == null ? "" : tableCat;
-    }
-
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -552,18 +538,6 @@ public class Column
      */
     void setTableSchem(@Nullable final String tableSchem) {
         this.tableSchem = tableSchem;
-    }
-
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column, with {@code null} normalized to
-     * an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getTableSchemForMetadataLookup() {
-        return tableSchem == null ? "" : tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
@@ -917,18 +891,6 @@ public class Column
         this.scopeCatalog = scopeCatalog;
     }
 
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_SCOPE_CATALOG} column, with {@code null} normalized to
-     * an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_SCOPE_CATALOG} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getScopeCatalogForMetadataLookup() {
-        return scopeCatalog == null ? "" : scopeCatalog;
-    }
-
     // ----------------------------------------------------------------------------------------------------- scopeSchema
 
     /**
@@ -948,18 +910,6 @@ public class Column
      */
     void setScopeSchema(final String scopeSchema) {
         this.scopeSchema = scopeSchema;
-    }
-
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_SCOPE_SCHEMA} column, with {@code null} normalized to
-     * an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_SCOPE_SCHEMA} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getScopeSchemaForMetadataLookup() {
-        return scopeSchema == null ? "" : scopeSchema;
     }
 
     // ------------------------------------------------------------------------------------------------------ scopeTable

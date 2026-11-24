@@ -4356,20 +4356,6 @@ public class Context {
 
     // -------------------------------------------------------------------------------------------------------- metadata
 
-    /**
-     * Returns the wrapped instance of {@link DatabaseMetaData}.
-     * <p>
-     * The returned value is the very instance this context was created with, not a copy or a proxy; it is never
-     * {@code null}.
-     *
-     * @return the wrapped instance of {@link DatabaseMetaData}.
-     * @see #of(DatabaseMetaData)
-     * @see #from(Connection)
-     */
-    DatabaseMetaData getMetadata() {
-        return metadata;
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     /**

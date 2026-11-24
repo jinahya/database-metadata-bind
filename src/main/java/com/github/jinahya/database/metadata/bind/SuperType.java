@@ -21,11 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.json.bind.annotation.JsonbNillable;
-import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
@@ -145,18 +143,6 @@ public class SuperType
         this.typeCat = typeCat;
     }
 
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TYPE_CAT} column, with {@code null} normalized to an
-     * empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_TYPE_CAT} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getTypeCatForMetadataLookup() {
-        return typeCat == null ? "" : typeCat;
-    }
-
     // ------------------------------------------------------------------------------------------------------- typeSchem
 
     /**
@@ -176,18 +162,6 @@ public class SuperType
      */
     void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
-    }
-
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_TYPE_SCHEM} column, with {@code null} normalized to an
-     * empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getTypeSchemForMetadataLookup() {
-        return typeSchem == null ? "" : typeSchem;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
@@ -231,18 +205,6 @@ public class SuperType
         this.supertypeCat = supertypeCat;
     }
 
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column, with {@code null} normalized to
-     * an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getSupertypeCatForMetadataLookup() {
-        return supertypeCat == null ? "" : supertypeCat;
-    }
-
     // -------------------------------------------------------------------------------------------------- supertypeSchem
 
     /**
@@ -262,18 +224,6 @@ public class SuperType
      */
     void setSupertypeSchem(final String supertypeSchem) {
         this.supertypeSchem = supertypeSchem;
-    }
-
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column, with {@code null} normalized
-     * to an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getSupertypeSchemForMetadataLookup() {
-        return supertypeSchem == null ? "" : supertypeSchem;
     }
 
     // --------------------------------------------------------------------------------------------------- supertypeName

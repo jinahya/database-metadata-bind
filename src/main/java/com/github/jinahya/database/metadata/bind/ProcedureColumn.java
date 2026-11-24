@@ -21,11 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.json.bind.annotation.JsonbNillable;
-import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import org.jspecify.annotations.Nullable;
 
@@ -334,18 +332,6 @@ public class ProcedureColumn
         this.procedureCat = procedureCat;
     }
 
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column, with {@code null} normalized to
-     * an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_PROCEDURE_CAT} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getProcedureCatForMetadataLookup() {
-        return procedureCat == null ? "" : procedureCat;
-    }
-
     // -------------------------------------------------------------------------------------------------- procedureSchem
 
     /**
@@ -365,18 +351,6 @@ public class ProcedureColumn
      */
     void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
-    }
-
-    /**
-     * Returns the metadata lookup value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column, with {@code null} normalized
-     * to an empty string.
-     *
-     * @return the metadata lookup value of {@value #COLUMN_LABEL_PROCEDURE_SCHEM} column.
-     */
-    @JsonbTransient
-    @XmlTransient
-    String getProcedureSchemForMetadataLookup() {
-        return procedureSchem == null ? "" : procedureSchem;
     }
 
     // --------------------------------------------------------------------------------------------------- procedureName

@@ -40,7 +40,6 @@ _testcontainers-mariadb.sh
 _testcontainers-mssqlserver.sh
 _testcontainers-mysql.sh
 _testcontainers-oracle-free.sh
-_testcontainers-oracle-xe.sh
 _testcontainers-postgresql.sh
 '
 
