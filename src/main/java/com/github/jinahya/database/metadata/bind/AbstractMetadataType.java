@@ -120,7 +120,11 @@ abstract class AbstractMetadataType
      *       {@link java.io.Serializable}; because Java serialization aborts the whole object graph on the first
      *       non-serializable value instead of skipping it, retaining them would make serializing any metadata type
      *       succeed or fail depending on which driver produced it. See
-     *       {@link MetadataType#getUnknownColumns()}.</li>
+     *       {@link MetadataType#getUnknownColumns()}. Retaining only the {@link java.io.Serializable} entries, by a
+     *       custom {@code writeObject}, is deliberately not done either: the interface does not make a value's object
+     *       graph serializable, so a driver class could still abort the stream; a value of a vendor class fails to
+     *       deserialize without that driver on the reader's class path; and the restored map would hold an
+     *       unpredictable subset of the columns, where an always-empty one is predictable.</li>
      *   <li><strong>XML (JAXB):</strong> excluded by the {@code transient} modifier alone. JAXB rejects a
      *       {@code transient} field that carries <em>any</em> JAXB annotation ("Transient field cannot have any JAXB
      *       annotations"), so {@link XmlTransient} <em>must not</em> be added here.</li>
