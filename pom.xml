@@ -130,17 +130,9 @@
       <artifactId>logback-classic</artifactId>
       <!-- https://central.sonatype.com/artifact/ch.qos.logback/logback-classic/versions -->
       <!-- https://central.sonatype.com/artifact/ch.qos.logback/logback-parent/versions -->
-<!--      <version>1.6.7</version>-->
       <version>1.6.8</version>
-      <!-- slf4j.version: 2.0.17 -->
       <scope>test</scope>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>com.diffplug.durian</groupId>-->
-<!--      <artifactId>durian</artifactId>-->
-<!--      <version>3.4.0</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
@@ -168,11 +160,6 @@
       <version>1.1.0</version>
       <scope>test</scope>
     </dependency>
-    <!--    <dependency>-->
-    <!--      <groupId>jakarta.annotation</groupId>-->
-    <!--      <artifactId>jakarta.annotation-api</artifactId>-->
-    <!--      <scope>provided</scope>-->
-    <!--    </dependency>-->
     <dependency><!-- provided: used by main code; version managed by jakarta.platform:jakarta.jakartaee-bom -->
       <groupId>jakarta.json.bind</groupId>
       <artifactId>jakarta.json.bind-api</artifactId>
@@ -207,7 +194,6 @@
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <!-- https://central.sonatype.com/artifact/org.assertj/assertj-core/versions -->
-      <!--      <version>3.27.3</version>-->
       <scope>test</scope>
     </dependency>
     <dependency><!-- Jakarta JSON-B implementation (jakarta.json.bind-api) -->
@@ -215,13 +201,6 @@
       <artifactId>yasson</artifactId>
       <!-- https://central.sonatype.com/artifact/org.eclipse/yasson/versions -->
       <version>3.0.5</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.owasp.esapi</groupId>
-      <artifactId>esapi</artifactId>
-      <!-- https://central.sonatype.com/artifact/org.owasp.esapi/esapi/versions -->
-      <version>2.7.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency><!-- Jakarta Expression Language implementation (for Hibernate Validator) -->
