@@ -990,55 +990,6 @@
       </build>
     </profile>
     <profile>
-      <id>testcontainers-oracle-xe</id>
-      <dependencyManagement>
-        <dependencies>
-          <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc-bom</artifactId>
-            <!-- https://central.sonatype.com/artifact/com.oracle.database.jdbc/ojdbc-bom/versions -->
-            <version>23.26.4.0.0</version>
-            <type>pom</type>
-            <scope>import</scope>
-          </dependency>
-        </dependencies>
-      </dependencyManagement>
-      <dependencies>
-        <dependency>
-          <groupId>com.oracle.database.jdbc</groupId>
-          <artifactId>ojdbc11</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>testcontainers-oracle-xe</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>add-test-source-testcontainers-oracle-xe</id>
-                <phase>generate-sources</phase>
-                <goals>
-                  <goal>add-test-source</goal>
-                </goals>
-                <configuration>
-                  <sources>
-                    <source>${project.basedir}/src/test/java-testcontainers-oracle-xe</source>
-                  </sources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
       <id>testcontainers-postgresql</id>
       <dependencyManagement>
         <dependencies>
